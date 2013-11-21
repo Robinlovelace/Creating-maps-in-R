@@ -1,0 +1,16 @@
+{
+    "contents" : "# distances\nt$od <- paste(t$START_DOCK_ID, t$END_DOCK_ID)\nlibrary(rgeos); library(rgdal)\nt.sp <- SpatialPoints(coords=cbind(s$LON, s$LAT), proj4string=CRS(\"+proj=longlat +datum=WGS84\"))\nt.sp <- SpatialPointsDataFrame(t.sp, data=s)\nt.sp <- spTransform(t.sp, CRSobj=CRS(\"+init=epsg:27700\"))\nt.dists <- gDistance(t.sp, byid=T, )\nt.dists[1:3,1:3]\n\nlibrary(reshape2)\nhead(melt(t.dists))\nt.dists <- melt(t.dists)\nt.dists$od <- paste(s$DOCK_ID[t.dists$Var1], s$DOCK_ID[t.dists$Var2])\nhead(t.dists)\nhead(t);head(t.dists)\nclass(t$od); class(t.dists$od)\n\nlibrary(plyr)\nt <- join(t, t.dists[3:4])\nexample(substr)\nhead(t.sp)\nhead(t)\n\n# get a nice visualisation of this\nhist(t$value)\n\n# Waterloo station\nhist(t$value[which(t$START_DOCK_ID == 40374)])\nhist(t$value[which(t$END_DOCK_ID == 40374)])\n\n# Distribution of trips ending in speaker's corner\nhist(t$value[which(t$START_DOCK_ID == 40406)])\nhist(t$value[which(t$END_DOCK_ID == 40406)])\n\n# Categorising dock by distance\nmedian(t$value, na.rm=T)\nt.dag <- aggregate(t, by=list(t$START_DOCK_ID), FUN=mean, data=t, na.rm=T)\nsummary(t.dag)\nt.dag <- rename(t.dag, replace=c(\"Group.1\" = \"DOCK_ID\"))\nhead(t.dag)\nhead(s)\n\ns <- join(s, t.dag[c(\"value\", \"DOCK_ID\")])\nhead(s)\ns <- rename(s, replace=c(\"value\" = \"av.dist\"))\ns$dist.cat <- ifelse(s$av.dist < 2000, \"Leisure\", \"Commuter\")\n\nlibrary(ggmap)\nexample(ggmap)\nggplot(get_map()) + \n  gg\n\nsgeo <- SpatialPoints(coords=s[c(\"LON\",\"LAT\")], proj4string=CRS(\"+init=epsg:4326\"))\nbbox(sgeo)\nb <- c(bbox(sgeo))\n# bbPoints<- c(-0.293806, 51.484451, -0.050339, 51.575325)\n\n#   ggmap(get_map(location=\"London\", zoom=13 )) +\nggmap(get_map(location=b ,maptype='toner', crop=T), \n      extent=\"device\", legend=\"topleft\") +\n  geom_point(aes(x=s$LON, y=s$LAT, col=s$dist.cat), data=s) +\n  scale_color_discrete(name=\"Distance < 2 km\")\n\nggmap(get_map(\"London\")) +\n  geom_density2d(aes(x=s$LON, y=s$LAT, fill = ..av.dist..),\n                 bins = 4,\n                 alpha=0.5, data = s, \n                 geom=\"polygon\")\n\nggsave(\"~/Dropbox/Hacking_Bikes/distance-class-1.png\", dpi=300, scale=1)\nlist.files(\"~/Dropbox/Hacking_Bikes/\")\n\nplot(t.sp, col=s$dist.cat)\n\nt$xo <- t$xd <- t$yo <- t$yd <- 0\n\nsid <- head(t$START_DOCK_ID)\nt.sp$xproj <- coordinates(t.sp)[,1]\nt.sp$yproj <- coordinates(t.sp)[,2]\nplot(t.sp$xproj, t.sp$yproj)\n\n\nt.test <- join(t, t.sp, by.x=t$START_DOCK_ID, by.y=t.sp$DOCK_ID)\nhead(t.sp$LAT[which(sid == t$START_DOCK_ID)])\n\nhead(t)\n\nbbPoints<- c(-0.293806, 51.484451, -0.050339, 51.575325)\n\nMap <- get_map(c(bbPoints),maptype='toner', crop=T, zoom=14)\nggmap(Map)",
+    "created" : 1384961250917.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "688877888",
+    "id" : "E9E86E44",
+    "lastKnownWriteTime" : 1384002920,
+    "path" : "/media/SAMSUNG/backups/Hacking_Bikes/code/flow-prelim.R",
+    "project_path" : null,
+    "properties" : {
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}

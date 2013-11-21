@@ -1,0 +1,16 @@
+{
+    "contents" : "library(ggplot2)\nlibrary(reshape2)\nlibrary(foreign)\nlibrary(plyr)\n\n# object.sizes function\nobject.sizes <- function()\n{\n    return(rev(sort(sapply(ls(envir=.GlobalEnv), function (object.name)\n        object.size(get(object.name))))))\n}\n\n\n# Multiple plot function\n#\n# ggplot objects can be passed in ..., or to plotlist (as a list of ggplot objects)\n# - cols:   Number of columns in layout\n# - layout: A matrix specifying the layout. If present, 'cols' is ignored.\n#\n# If the layout is something like matrix(c(1,2,3,3), nrow=2, byrow=TRUE),\n# then plot 1 will go in the upper left, 2 will go in the upper right, and\n# 3 will go all the way across the bottom.\n#\nmultiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {\n  require(grid)\n  \n  # Make a list from the ... arguments and plotlist\n  plots <- c(list(...), plotlist)\n  \n  numPlots = length(plots)\n  \n  # If layout is NULL, then use 'cols' to determine layout\n  if (is.null(layout)) {\n    # Make the panel\n    # ncol: Number of columns of plots\n    # nrow: Number of rows needed, calculated from # of cols\n    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),\n                     ncol = cols, nrow = ceiling(numPlots/cols))\n  }\n  \n  if (numPlots==1) {\n    print(plots[[1]])\n    \n  } else {\n    # Set up the page\n    grid.newpage()\n    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))\n    \n    # Make each plot, in the correct location\n    for (i in 1:numPlots) {\n      # Get the i,j matrix positions of the regions that contain this subplot\n      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))\n      \n      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,\n                                      layout.pos.col = matchidx$col))\n    }\n  }\n}\n\n",
+    "created" : 1384949675058.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3328401983",
+    "id" : "37EDCDC1",
+    "lastKnownWriteTime" : 1375114175,
+    "path" : "~/.Rprofile",
+    "project_path" : null,
+    "properties" : {
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}
