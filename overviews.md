@@ -28,8 +28,9 @@ plot(x,y, type = "line", col = "blue",
      ylab = "sin(x)",
      lty = 2, # make the line dotted
      lwd = 3, # make line thicker
-     bty = "n" # remove the bounding box
-     ) # ...
+     bty = "n", # remove the bounding box
+     asp = 1
+     ) 
 ```
 
 ```
@@ -37,6 +38,15 @@ plot(x,y, type = "line", col = "blue",
 ```
 
 ![plot of chunk unnamed-chunk-2](figure/unnamed-chunk-2.png) 
+
+```r
+dev.off() # this resets the plot options
+```
+
+```
+## null device 
+##           1
+```
 
 Although we will be using the more recent ggplot package, which works differently from R's base graphics,
 the principles will be the same: you start with a basic representation of your data and add 
@@ -62,11 +72,11 @@ list.files()  # shows what's in your working director - should include zip file
 ```
 
 ```
-##  [1] "figure"           "ggmapTemp.png"    "london_sport.dbf"
-##  [4] "london_sport.prj" "london_sport.sbn" "london_sport.sbx"
-##  [7] "london_sport.shp" "london_sport.shx" "London_Sport.zip"
-## [10] "overviews.html"   "overviews.md"     "overviews.Rmd"   
-## [13] "README.md"
+##  [1] "figure"           "ggmapTemp.png"    "Intro-2-R.Rproj" 
+##  [4] "london_sport.dbf" "london_sport.prj" "london_sport.sbn"
+##  [7] "london_sport.sbx" "london_sport.shp" "london_sport.shx"
+## [10] "London_Sport.zip" "overviews.html"   "overviews.md"    
+## [13] "overviews.Rmd"    "README.md"
 ```
 
 ```r
@@ -75,11 +85,11 @@ list.files()  # should have .shp file added
 ```
 
 ```
-##  [1] "figure"           "ggmapTemp.png"    "london_sport.dbf"
-##  [4] "london_sport.prj" "london_sport.sbn" "london_sport.sbx"
-##  [7] "london_sport.shp" "london_sport.shx" "London_Sport.zip"
-## [10] "overviews.html"   "overviews.md"     "overviews.Rmd"   
-## [13] "README.md"
+##  [1] "figure"           "ggmapTemp.png"    "Intro-2-R.Rproj" 
+##  [4] "london_sport.dbf" "london_sport.prj" "london_sport.sbn"
+##  [7] "london_sport.sbx" "london_sport.shp" "london_sport.shx"
+## [10] "London_Sport.zip" "overviews.html"   "overviews.md"    
+## [13] "overviews.Rmd"    "README.md"
 ```
 
 

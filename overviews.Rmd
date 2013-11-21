@@ -4,6 +4,9 @@ attractive, focussing on the addition of basemaps using the ggmap package.
 We assume little background knowledge of graphics in R, so begin with a basic graph
 in R's basic graphics package. Then we will move on to the graphically superiour ggplot/ggmap
 approach, to show how maps can be built as layers.
+It is recommended that the excellent RStudio program is used to work through this 
+tutorial, although any will do. If you would like to improve this tutorial, 
+please see the project's [github page](https://github.com/Robinlovelace/Creating-maps-in-R/).
 
 ## Introduction: tweaking graphics in R
 R has very powerful graphical functionality, but a reputation for being fiddly if 
@@ -12,13 +15,13 @@ such as:
 ```{r}
 x <- seq(from = -pi, to = pi, by = 0.1)
 y <- sin(x)
-plot(x,y)
+plot(x, y)
 ```
 
 It is quite easy to tweak the base graphics, with a few extra lines of code:
 ```{r}
 par(family = "serif", font = 5)
-plot(x,y, type = "line", col = "blue", 
+plot(x, y, type = "line", col = "blue", 
      cex.axis = 0.7, # make axis labels smaller
      ylab = "sin(x)",
      lty = 2, # make the line dotted
@@ -57,7 +60,7 @@ At present although we have the data files, there is very little we can do with
 them because geographical functions are lacking from R's base install.
 Therefore we need to install them. It is important to think carefully about 
 what packages will be needed in R for a given project and ensure they are 
-loaded at the right time. There are 
+loaded at the right time. 
 
 To see what is currently installed, type the following:
 ```{r}
@@ -95,7 +98,7 @@ Packages can be 'unloaded' using the following command:
 
 ## Basic maps with the sp package 
 ```{r}
-lnd <- readOGR(dsn=".", "london_sport")
+lnd <- readOGR(dsn = ".", "london_sport")
 plot(lnd)
 ```
 Note that the plot is quite different from that displayed in the first plot:
