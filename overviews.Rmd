@@ -17,7 +17,16 @@ plot(x,y)
 
 It is quite easy to tweak the base graphics, with a few extra lines of code:
 ```{r}
-plot(x,y, type = "line", col = "blue", xlim = c(-pi, pi)) # ...
+par(family = "serif", font = 5)
+plot(x,y, type = "line", col = "blue", 
+     cex.axis = 0.7, # make axis labels smaller
+     ylab = "sin(x)",
+     lty = 2, # make the line dotted
+     lwd = 3, # make line thicker
+     bty = "n", # remove the bounding box
+     asp = 1
+     ) 
+dev.off() # this resets the plot options
 ```
 Although we will be using the more recent ggplot package, which works differently from R's base graphics,
 the principles will be the same: you start with a basic representation of your data and add 
@@ -213,9 +222,6 @@ lnd.b3 + geom_polygon(data = lnd.f, aes(x = long, y = lat, group = group,
 
 ```
 
-
-
-ggmap()
 
 
 
