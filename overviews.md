@@ -4,6 +4,9 @@ attractive, focussing on the addition of basemaps using the ggmap package.
 We assume little background knowledge of graphics in R, so begin with a basic graph
 in R's basic graphics package. Then we will move on to the graphically superiour ggplot/ggmap
 approach, to show how maps can be built as layers.
+It is recommended that the excellent RStudio program is used to work through this 
+tutorial, although any will do. If you would like to improve this tutorial, 
+please see the project's [github page](https://github.com/Robinlovelace/Creating-maps-in-R/).
 
 ## Introduction: tweaking graphics in R
 R has very powerful graphical functionality, but a reputation for being fiddly if 
@@ -23,7 +26,7 @@ It is quite easy to tweak the base graphics, with a few extra lines of code:
 
 ```r
 par(family = "serif", font = 5)
-plot(x,y, type = "line", col = "blue", 
+plot(x, y, type = "line", col = "blue", 
      cex.axis = 0.7, # make axis labels smaller
      ylab = "sin(x)",
      lty = 2, # make the line dotted
@@ -72,11 +75,16 @@ list.files()  # shows what's in your working director - should include zip file
 ```
 
 ```
-##  [1] "figure"           "ggmapTemp.png"    "Intro-2-R.Rproj" 
-##  [4] "london_sport.dbf" "london_sport.prj" "london_sport.sbn"
-##  [7] "london_sport.sbx" "london_sport.shp" "london_sport.shx"
-## [10] "London_Sport.zip" "overviews.html"   "overviews.md"    
-## [13] "overviews.Rmd"    "README.md"
+##  [1] "figure"                         "ggmapTemp.png"                 
+##  [3] "Intro-2-R.Rproj"                "joining-clipping.html"         
+##  [5] "joining-clipping.md"            "joining-clipping.Rmd"          
+##  [7] "london_sport.dbf"               "london_sport.prj"              
+##  [9] "london_sport.sbn"               "london_sport.sbx"              
+## [11] "london_sport.shp"               "london_sport.shx"              
+## [13] "London_Sport.zip"               "mps-recordedcrime-borough.csv" 
+## [15] "mps-recordedcrime-borough.csve" "overviews.html"                
+## [17] "overviews.md"                   "overviews.Rmd"                 
+## [19] "README.md"
 ```
 
 ```r
@@ -85,11 +93,16 @@ list.files()  # should have .shp file added
 ```
 
 ```
-##  [1] "figure"           "ggmapTemp.png"    "Intro-2-R.Rproj" 
-##  [4] "london_sport.dbf" "london_sport.prj" "london_sport.sbn"
-##  [7] "london_sport.sbx" "london_sport.shp" "london_sport.shx"
-## [10] "London_Sport.zip" "overviews.html"   "overviews.md"    
-## [13] "overviews.Rmd"    "README.md"
+##  [1] "figure"                         "ggmapTemp.png"                 
+##  [3] "Intro-2-R.Rproj"                "joining-clipping.html"         
+##  [5] "joining-clipping.md"            "joining-clipping.Rmd"          
+##  [7] "london_sport.dbf"               "london_sport.prj"              
+##  [9] "london_sport.sbn"               "london_sport.sbx"              
+## [11] "london_sport.shp"               "london_sport.shx"              
+## [13] "London_Sport.zip"               "mps-recordedcrime-borough.csv" 
+## [15] "mps-recordedcrime-borough.csve" "overviews.html"                
+## [17] "overviews.md"                   "overviews.Rmd"                 
+## [19] "README.md"
 ```
 
 
@@ -98,7 +111,7 @@ At present although we have the data files, there is very little we can do with
 them because geographical functions are lacking from R's base install.
 Therefore we need to install them. It is important to think carefully about 
 what packages will be needed in R for a given project and ensure they are 
-loaded at the right time. There are 
+loaded at the right time. 
 
 To see what is currently installed, type the following:
 
@@ -109,9 +122,8 @@ search()
 ```
 ##  [1] ".GlobalEnv"        "package:knitr"     "package:graphics" 
 ##  [4] "package:grDevices" "package:utils"     "package:datasets" 
-##  [7] "package:plyr"      "package:foreign"   "package:reshape2" 
-## [10] "package:ggplot2"   "package:stats"     "package:methods"  
-## [13] "Autoloads"         "package:base"
+##  [7] "package:ggplot2"   "package:foreign"   "package:stats"    
+## [10] "package:methods"   "Autoloads"         "package:base"
 ```
 
 As you can see, there are already multiple packages in the base installation. 
@@ -127,35 +139,31 @@ SpatialPolygonsDataFrame
 ```
 
 ```r
-# install.packages('rgeos', 'sp') # uncomment this line if rgeos and sp
-# are not already on your system
+# install.packages('rgeos', 'sp') # uncomment this line if rgeos and sp are
+# not already on your system
 library(rgdal)  # add the powerful rgdal package - note that it automatically loads the sp package also
 ```
 
 ```
 ## Loading required package: sp
-```
-
-```
-## rgdal: version: 0.8-9, (SVN revision 470) Geospatial Data Abstraction
-## Library extensions to R successfully loaded Loaded GDAL runtime: GDAL
-## 1.10.0, released 2013/04/24 but rgdal build and GDAL runtime not in sync:
-## ... consider re-installing rgdal!! Path to GDAL shared files:
-## /usr/share/gdal/1.10 Loaded PROJ.4 runtime: Rel. 4.8.0, 6 March 2012,
-## [PJ_VERSION: 480] Path to PROJ.4 shared files: (autodetected)
+## rgdal: version: 0.8-10, (SVN revision 478)
+## Geospatial Data Abstraction Library extensions to R successfully loaded
+## Loaded GDAL runtime: GDAL 1.10.0, released 2013/04/24
+## Path to GDAL shared files: /usr/share/gdal/1.10
+## Loaded PROJ.4 runtime: Rel. 4.8.0, 6 March 2012, [PJ_VERSION: 480]
+## Path to PROJ.4 shared files: (autodetected)
 ```
 
 ```r
-search()  # see the sp and rgeos packages has now been added
+search()  # see the sp and rgeos packages has now been added 
 ```
 
 ```
 ##  [1] ".GlobalEnv"        "package:rgdal"     "package:sp"       
 ##  [4] "package:knitr"     "package:graphics"  "package:grDevices"
-##  [7] "package:utils"     "package:datasets"  "package:plyr"     
-## [10] "package:foreign"   "package:reshape2"  "package:ggplot2"  
-## [13] "package:stats"     "package:methods"   "Autoloads"        
-## [16] "package:base"
+##  [7] "package:utils"     "package:datasets"  "package:ggplot2"  
+## [10] "package:foreign"   "package:stats"     "package:methods"  
+## [13] "Autoloads"         "package:base"
 ```
 
 ```r
@@ -180,6 +188,33 @@ Here some of my favourites (not run as we don't need all of them):
 ```r
 x = c("ggplot2", "rgeos", "reshape2", "foreign", "plyr")
 lapply(x, require, character.only = T)  # the R packages we'll be using
+```
+
+```
+## Loading required package: rgeos
+## rgeos version: 0.2-19, (SVN revision 394)
+##  GEOS runtime version: 3.3.8-CAPI-1.7.8 
+##  Polygon checking: TRUE 
+## 
+## Loading required package: reshape2
+## Loading required package: plyr
+```
+
+```
+## [[1]]
+## [1] TRUE
+## 
+## [[2]]
+## [1] TRUE
+## 
+## [[3]]
+## [1] TRUE
+## 
+## [[4]]
+## [1] TRUE
+## 
+## [[5]]
+## [1] TRUE
 ```
 
 (Note: you may want to consider adding a line similar to this to your
@@ -239,7 +274,7 @@ data are using the same coordinate system. Web maps use the
 comes in OSGB19636:
 
 ```r
-bbox(lnd)  # this tells us that we are in lat/long
+bbox(lnd)  # this tells us that we are in lat/long 
 ```
 
 ```
@@ -335,8 +370,8 @@ same applies to maps.  Below we see two identical ways of creating the same plot
 ![plot of chunk unnamed-chunk-12](figure/unnamed-chunk-121.png) 
 
 ```r
-# this line of code saves the plot as an object (p) because it's enclosed
-# by bracets, it also plots the results
+# this line of code saves the plot as an object (p) because it's enclosed by
+# bracets, it also plots the results
 
 (q <- ggplot() + geom_polygon(data = lnd.f, aes(x = long, y = lat, group = group)))
 ```
@@ -349,8 +384,8 @@ trying to plot objects that do not share the same dimensions as the data frame `
 
 ```r
 # (p1 <- p + geom_point(aes(x = coordinates(lnd)[,1], y =
-# coordinates(lnd)[,2]))) the above code fails because the data frame is
-# set for all layers in qplot - run only to test
+# coordinates(lnd)[,2]))) the above code fails because the data frame is set
+# for all layers in qplot - run only to test
 
 
 (q1 <- q + geom_point(aes(x = coordinates(lnd)[, 1], y = coordinates(lnd)[, 
@@ -360,8 +395,8 @@ trying to plot objects that do not share the same dimensions as the data frame `
 ![plot of chunk unnamed-chunk-13](figure/unnamed-chunk-13.png) 
 
 ```r
-# this line of code succeeds because each layer has its own data
-# associated with it
+# this line of code succeeds because each layer has its own data associated
+# with it
 ```
 
 
@@ -417,14 +452,7 @@ b <- bbox(lnd)
 
 ```
 ## converting bounding box to center/zoom specification. (experimental)
-```
-
-```
-## Map from URL :
-## http://maps.googleapis.com/maps/api/staticmap?center=51.488791,-0.086622&zoom=10&size=%20640x640&scale=%202&maptype=terrain&sensor=false
-```
-
-```
+## Map from URL : http://maps.googleapis.com/maps/api/staticmap?center=51.488791,-0.086622&zoom=10&size=%20640x640&scale=%202&maptype=terrain&sensor=false
 ## Google Maps API Terms of Service : http://developers.google.com/maps/terms
 ```
 

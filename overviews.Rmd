@@ -79,7 +79,7 @@ head(SpatialPolygonsDataFrame) # now you should see a load of code, telling you 
 ```
 If you need multiple R packages, you can save time by creating an object of you favourite packages.
 Here some of my favourites (not run as we don't need all of them):
-```{r, eval=F}
+```{r}
 x = c("ggplot2", "rgeos", "reshape2", "foreign", "plyr")
 lapply(x, require, character.only = T)  # the R packages we'll be using
 ```
