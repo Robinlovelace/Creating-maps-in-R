@@ -1,0 +1,94 @@
+Joining and clipping
+========================================================
+
+This tutorial builds on the previous section on plotting and highlights 
+some of R's more advanced spatial functions. We look at joining new 
+datasets to our data - an attribute join - spatial joins, whereby 
+data is added to the target layer depending on the location of the 
+origins and clipping. 
+
+## Joining based on attributes
+To reaffirm our starting point, let's re-plot the only 
+spatial dataset in our workspace, and count the number
+of polygons:
+```{r}
+library(rgdal)
+lnd <- readOGR(dsn = ".", "london_sport")
+plot(lnd)
+nrow(lnd)
+```
+
+### Downloading additional data
+Because we are using borough-level data, and boroughs are official administrative
+zones, there is much data available at this level. We will use the example 
+of crime data to illustrate this data availability, and join this with the current 
+spatial dataset. As before, we can download and import the data from within R:
+```{r}
+# download.file("http://data.london.gov.uk/datafiles/crime-community-safety/mps-recordedcrime-borough.csv", destfile = "mps-recordedcrime-borough.csv")
+# uncomment the above line of code to download the data
+
+crimeDat <- read.csv("mps-recordedcrime-borough.csv") # flags an error
+```
+Initially, the `read.csv` command flags an error: open the raw .csv file in a 
+text editor such as Notepad, Notepad++ or GVIM, find the problem and correct it.
+Alternatively, you can work out what the file encoding is and use the correct 
+argument (this is not recommended - simpler just to edit the text file
+in most cases).
+
+```{r}
+crimeDat <- read.csv("mps-recordedcrime-borough.csv", fileEncoding = "UCS-2LE")
+head(crimeDat)
+summary(crimeDat$MajorText)
+crimeTheft <- crimeDat[which(crimeDat$MajorText == "Theft & Handling"), ]
+head(crimeTheft)
+crimeAg <- aggregate(CrimeCount ~ Spatial_DistrictName, FUN = "sum", 
+                     data = crimeTheft)
+head(crimeAg) # show the aggregated crime data
+```
+Now that we have crime data at the borough level, the challenge is to join it
+by name. This is not always straightforward. Let us see which names in the 
+crime data match the spatial data:
+```{r}
+lnd$name %in% crimeAg$Spatial_DistrictName 
+lnd$name[which(!lnd$name %in% crimeAg$Spatial_DistrictName)]
+```
+The first line of code above shows that all but one of the borough names matches;
+the second tells us that it is City of London that is named differently in the 
+crime data:
+```{r}
+levels(crimeAg$Spatial_DistrictName)
+levels(crimeAg$Spatial_DistrictName)[25] <- 
+  as.character(lnd$name[which(!lnd$name %in% crimeAg$Spatial_DistrictName)])
+lnd$name %in% crimeAg$Spatial_DistrictName # now all columns match
+```
+The above code block first identified the row with the faulty name and 
+then renamed the level to match the `lnd` dataset. Note that we could not
+rename the variable directly, as it is stored as a factor.
+
+We are now ready to join the datasets. It is recommended to use 
+the `join` function in the `plyr` package but the `merge` function 
+could equally be used.
+```{r}
+?join
+library(plyr)
+?join
+```
+The documentation for join will be displayed if the plyr package is loaded (if not,
+load or install and load it!). It requires all joining variables to have the 
+same name, so we will rename the variable to make the join work:
+```{r}
+head(lnd$name)
+head(crimeAg$Spatial_DistrictName) # the variables to join
+crimeAg <- rename(crimeAg, replace = c("Spatial_DistrictName" = "name"))
+head(join(lnd@data, crimeAg)) # test it works
+lnd@data <- join(lnd@data, crimeAg)
+```
+
+## Spatial joins
+In addition to joing by zone name, it is also possible to do
+[spatial joins](http://help.arcgis.com/en/arcgisdesktop/10.0/help/index.html#//00080000000q000000) in R.,,
+```{r fig.width=7, fig.height=6}
+
+```
+
+## Clipping
