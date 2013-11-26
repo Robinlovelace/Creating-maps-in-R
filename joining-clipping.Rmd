@@ -84,7 +84,7 @@ head(join(lnd@data, crimeAg)) # test it works
 lnd@data <- join(lnd@data, crimeAg)
 ```
 
-## Spatial joins
+## Adding point data for clipping and spatial join
 In addition to joing by zone name, it is also possible to do
 [spatial joins](http://help.arcgis.com/en/arcgisdesktop/10.0/help/index.html#//00080000000q000000) in R. There are three main varieties: many-to-one - where
 the values of many intersecting objects contribute to a new variable in 
@@ -94,7 +94,9 @@ We will be using Tube Stations as the spatial data to join,
 with the aim of finding out which and how many stations
 are found in each London borough.
 ```{r}
-download.file()
+download.file("http://www.personal.leeds.ac.uk/~georl/egs/lnd-stns.zip", 
+              "lnd-stns.zip")
+unzip("lnd-stns.zip")
 library(rgdal)
 stations <- readOGR(dsn = ".", layer = "lnd-stns", p4s="+init=epsg:27700")
 proj4string(stations) # this is the full geographical detail.
@@ -110,7 +112,7 @@ we will convert the stations dataset into lat-long coordinates,
 as this is a more common CRS and enables easy basemap creation:
  
 ```{r}
-stationsWGS <- spTransform(stations, CRSobj = CRS("+init=epsg:4326"))
+stationsWGS <- spTransform(stations, CRSobj = CRS(proj4string(lnd)))
 stations <- stationsWGS; rm(stationsWGS)
 plot(lnd)
 points(stations[sample(1:nrow(stations), size = 500),])
@@ -122,3 +124,46 @@ London borough dataset; we need
 
 
 ## Clipping
+There are a number of functions that we can use to clip the points
+so that only those falling within London boroughs are retained:
+```{r}
+?overlay
+?sp::over
+library(rgeos)
+?rgeos::gIntersects
+```
+We can write off the first one straight away as it is depreciated by the second. 
+It seems that `gIntersects` can produce the same output as `over`, based 
+on [discussion](http://gis.stackexchange.com/questions/63793/how-to-overlay-a-polygon-over-spatialpointsdataframe-and-preserving-the-spdf-dat) 
+in the community,  so either 
+can be used. (See this 
+[discussion](http://stackoverflow.com/questions/15881455/how-to-clip-worldmap-with-polygon-in-r)
+for further alternatives.) 
+In this tutorial we will use `gIntersects`,
+for clipping although we could equally use 
+`gContains`, `gWithin` and other `g...` functions -
+see rgeos help pages by typing `?gOverlaps` or other functions for more.
+`gIntersects` will output information for each point, telling us which 
+polygon it interacts with (i.e. the polygon it is in):
+```{r}
+int <- gIntersects(stations, lnd, byid = T) # find which stations intersect 
+class(int) # it's outputed a matrix
+dim(int) # with 33 rows (one for each zone) and 2532 cols (the points)
+summary(int[,c(200,500)]) # not the output of this
+plot(lnd)
+points(stations[200,], col = "red") # note point id 200 is outside the zones
+points(stations[500,], col = "green") # note point 500 is inside
+which(int[,500] == T) # this tells us that point 500 intersects with zone 32
+points(coordinates(lnd[32,]), col = "black") # test the previous statement
+```
+Now that we know how gIntersects works in general terms, let's use it to 
+allocate a borrough to each of our station points, which we will then 
+aggregate up. Data from these points (e.g. counts, averages in each area etc.)
+can then be transferred to the main polygons table: the essence of a spatial 
+join....
+```{r}
+
+```
+
+## Aggregating the data to complete the join
+
