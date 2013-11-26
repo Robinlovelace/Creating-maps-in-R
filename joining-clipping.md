@@ -290,10 +290,178 @@ lnd@data <- join(lnd@data, crimeAg)
 ```
 
 
-## Spatial joins
+## Adding point data for clipping and spatial join
 In addition to joing by zone name, it is also possible to do
-[spatial joins](http://help.arcgis.com/en/arcgisdesktop/10.0/help/index.html#//00080000000q000000) in R.,,
+[spatial joins](http://help.arcgis.com/en/arcgisdesktop/10.0/help/index.html#//00080000000q000000) in R. There are three main varieties: many-to-one - where
+the values of many intersecting objects contribute to a new variable in 
+the main table - one-to-many, or one-to-one. Because boroughs in London 
+are quite large, we will conduct a many-to-one spatial join.
+We will be using Tube Stations as the spatial data to join, 
+with the aim of finding out which and how many stations
+are found in each London borough.
 
+```r
+download.file("http://www.personal.leeds.ac.uk/~georl/egs/lnd-stns.zip", "lnd-stns.zip")
+unzip("lnd-stns.zip")
+library(rgdal)
+stations <- readOGR(dsn = ".", layer = "lnd-stns", p4s = "+init=epsg:27700")
+```
+
+```
+## OGR data source with driver: ESRI Shapefile 
+## Source: ".", layer: "lnd-stns"
+## with 2532 features and 27 fields
+## Feature type: wkbPoint with 2 dimensions
+```
+
+```r
+proj4string(stations)  # this is the full geographical detail.
+```
+
+```
+## [1] "+init=epsg:27700 +proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 +x_0=400000 +y_0=-100000 +datum=OSGB36 +units=m +no_defs +ellps=airy +towgs84=446.448,-125.157,542.060,0.1502,0.2470,0.8421,-20.4894"
+```
+
+```r
+proj4string(lnd)
+```
+
+```
+## [1] "+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 +x_0=400000 +y_0=-100000 +ellps=airy +units=m +no_defs"
+```
+
+```r
+bbox(stations)
+```
+
+```
+##              min    max
+## coords.x1 455435 602523
+## coords.x2 122266 227704
+```
+
+```r
+bbox(lnd)
+```
+
+```
+##      min    max
+## x 503571 561941
+## y 155851 200932
+```
+
+The above code loads the data correctly, but also shows that 
+there are problems with it: the Coordinate Reference System (CRS)
+differs from that of our shapefile. 
+Although OSGB 1936 (or EPSG 27700) is the 'correct' CRS for the UK, 
+we will convert the stations dataset into lat-long coordinates, 
+as this is a more common CRS and enables easy basemap creation:
+ 
+
+```r
+stationsWGS <- spTransform(stations, CRSobj = CRS(proj4string(lnd)))
+stations <- stationsWGS
+rm(stationsWGS)
+plot(lnd)
+points(stations[sample(1:nrow(stations), size = 500), ])
+```
+
+![plot of chunk unnamed-chunk-9](figure/unnamed-chunk-9.png) 
+
+
+Now we can clearly see that the stations overlay the boroughs.
+The problem is that the stations dataset is far more exentsive than
+London borough dataset; we need 
 
 
 ## Clipping
+There are a number of functions that we can use to clip the points
+so that only those falling within London boroughs are retained:
+
+```r
+`?`(overlay)
+`?`(sp::over)
+library(rgeos)
+```
+
+```
+## rgeos version: 0.2-19, (SVN revision 394)
+##  GEOS runtime version: 3.3.8-CAPI-1.7.8 
+##  Polygon checking: TRUE
+```
+
+```r
+`?`(rgeos::gIntersects)
+```
+
+We can write off the first one straight away as it is depreciated by the second. 
+It seems that `gIntersects` can produce the same output as `over`, based 
+on [discussion](http://gis.stackexchange.com/questions/63793/how-to-overlay-a-polygon-over-spatialpointsdataframe-and-preserving-the-spdf-dat) 
+in the community,  so either 
+can be used. (See this 
+[discussion](http://stackoverflow.com/questions/15881455/how-to-clip-worldmap-with-polygon-in-r)
+for further alternatives.) 
+In this tutorial we will use `gIntersects`,
+for clipping although we could equally use 
+`gContains`, `gWithin` and other `g...` functions -
+see rgeos help pages by typing `?gOverlaps` or other functions for more.
+`gIntersects` will output information for each point, telling us which 
+polygon it interacts with (i.e. the polygon it is in):
+
+```r
+int <- gIntersects(stations, lnd, byid = T)  # find which stations intersect 
+class(int)  # it's outputed a matrix
+```
+
+```
+## [1] "matrix"
+```
+
+```r
+dim(int)  # with 33 rows (one for each zone) and 2532 cols (the points)
+```
+
+```
+## [1]   33 2532
+```
+
+```r
+summary(int[, c(200, 500)])  # not the output of this
+```
+
+```
+##     200             500         
+##  Mode :logical   Mode :logical  
+##  FALSE:33        FALSE:32       
+##  NA's :0         TRUE :1        
+##                  NA's :0
+```
+
+```r
+plot(lnd)
+points(stations[200, ], col = "red")  # note point id 200 is outside the zones
+points(stations[500, ], col = "green")  # note point 500 is inside
+which(int[, 500] == T)  # this tells us that point 500 intersects with zone 32
+```
+
+```
+## 31 
+## 32
+```
+
+```r
+points(coordinates(lnd[32, ]), col = "black")  # test the previous statement
+```
+
+![plot of chunk unnamed-chunk-11](figure/unnamed-chunk-11.png) 
+
+Now that we know how gIntersects works in general terms, let's use it to 
+allocate a borrough to each of our station points, which we will then 
+aggregate up. Data from these points (e.g. counts, averages in each area etc.)
+can then be transferred to the main polygons table: the essence of a spatial 
+join....
+
+
+
+## Aggregating the data to complete the join
+
