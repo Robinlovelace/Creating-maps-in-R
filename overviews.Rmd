@@ -80,7 +80,7 @@ head(SpatialPolygonsDataFrame) # now you should see a load of code, telling you 
 If you need multiple R packages, you can save time by creating an object of you favourite packages.
 Here some of my favourites (not run as we don't need all of them):
 ```{r}
-x = c("ggplot2", "rgeos", "reshape2", "foreign", "plyr")
+x = c("ggplot2", "rgeos", "reshape2", "mapproj", "plyr")
 lapply(x, require, character.only = T)  # the R packages we'll be using
 ```
 (Note: you may want to consider adding a line similar to this to your
@@ -154,7 +154,6 @@ trying to plot objects that do not share the same dimensions as the data frame `
 ```{r, error=T}
 # (p1 <- p + geom_point(aes(x = coordinates(lnd)[,1], y = coordinates(lnd)[,2])))
 # the above code fails because the data frame is set for all layers in qplot - run only to test
-
 
 (q1 <- q + geom_point(aes(x = coordinates(lnd)[,1], y = coordinates(lnd)[,2])))
 # this line of code succeeds because each layer has its own data associated with it
