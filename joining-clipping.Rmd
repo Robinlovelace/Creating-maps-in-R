@@ -86,9 +86,39 @@ lnd@data <- join(lnd@data, crimeAg)
 
 ## Spatial joins
 In addition to joing by zone name, it is also possible to do
-[spatial joins](http://help.arcgis.com/en/arcgisdesktop/10.0/help/index.html#//00080000000q000000) in R.,,
-```{r fig.width=7, fig.height=6}
-
+[spatial joins](http://help.arcgis.com/en/arcgisdesktop/10.0/help/index.html#//00080000000q000000) in R. There are three main varieties: many-to-one - where
+the values of many intersecting objects contribute to a new variable in 
+the main table - one-to-many, or one-to-one. Because boroughs in London 
+are quite large, we will conduct a many-to-one spatial join.
+We will be using Tube Stations as the spatial data to join, 
+with the aim of finding out which and how many stations
+are found in each London borough.
+```{r}
+download.file()
+library(rgdal)
+stations <- readOGR(dsn = ".", layer = "lnd-stns", p4s="+init=epsg:27700")
+proj4string(stations) # this is the full geographical detail.
+proj4string(lnd)
+bbox(stations)
+bbox(lnd)
 ```
+The above code loads the data correctly, but also shows that 
+there are problems with it: the Coordinate Reference System (CRS)
+differs from that of our shapefile. 
+Although OSGB 1936 (or EPSG 27700) is the 'correct' CRS for the UK, 
+we will convert the stations dataset into lat-long coordinates, 
+as this is a more common CRS and enables easy basemap creation:
+ 
+```{r}
+stationsWGS <- spTransform(stations, CRSobj = CRS("+init=epsg:4326"))
+stations <- stationsWGS; rm(stationsWGS)
+plot(lnd)
+points(stations[sample(1:nrow(stations), size = 500),])
+```
+
+Now we can clearly see that the stations overlay the boroughs.
+The problem is that the stations dataset is far more exentsive than
+London borough dataset; we need 
+
 
 ## Clipping
