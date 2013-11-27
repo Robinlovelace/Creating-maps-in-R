@@ -2,4 +2,9 @@
 
 \usepackage[margin=2cm]{geometry}
 % delete renew command for \includegraphics
+
 % do search replace for widths > make (say) 6cm \includegraphics[width=6cm]
+
+% replace "plot of chunk " with ""
+
+
