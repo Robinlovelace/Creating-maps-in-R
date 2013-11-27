@@ -1,0 +1,757 @@
+"Area.Code","Area.Name","variable","value"
+"00AA","City of London","Persons.1801",129000
+"00AB","Barking and Dagenham","Persons.1801",3000
+"00AC","Barnet","Persons.1801",8000
+"00AD","Bexley","Persons.1801",5000
+"00AE","Brent","Persons.1801",2000
+"00AF","Bromley","Persons.1801",8000
+"00AG","Camden","Persons.1801",100000
+"00AH","Croydon","Persons.1801",8000
+"00AJ","Ealing","Persons.1801",7000
+"00AK","Enfield","Persons.1801",11000
+"00AL","Greenwich","Persons.1801",35000
+"00AM","Hackney","Persons.1801",50000
+"00AN","Hammersmith and Fulham","Persons.1801",10000
+"00AP","Haringey","Persons.1801",6000
+"00AQ","Harrow","Persons.1801",4000
+"00AR","Havering","Persons.1801",6000
+"00AS","Hillingdon","Persons.1801",9000
+"00AT","Hounslow","Persons.1801",14000
+"00AU","Islington","Persons.1801",65000
+"00AW","Kensington and Chelsea","Persons.1801",18000
+"00AX","Kingston upon Thames","Persons.1801",5000
+"00AY","Lambeth","Persons.1801",33000
+"00AZ","Lewisham","Persons.1801",16000
+"00BA","Merton","Persons.1801",5000
+"00BB","Newham","Persons.1801",8000
+"00BC","Redbridge","Persons.1801",4000
+"00BD","Richmond upon Thames","Persons.1801",15000
+"00BE","Southwark","Persons.1801",116000
+"00BF","Sutton","Persons.1801",5000
+"00BG","Tower Hamlets","Persons.1801",144000
+"00BH","Waltham Forest","Persons.1801",8000
+"00BJ","Wandsworth","Persons.1801",13000
+"00BK","Westminster","Persons.1801",231000
+"UKI1","Inner London","Persons.1801",939000
+"UKI2","Outer London","Persons.1801",162000
+"H","Greater London","Persons.1801",1097000
+"00AA","City of London","Persons.1811",121000
+"00AB","Barking and Dagenham","Persons.1811",4000
+"00AC","Barnet","Persons.1811",9000
+"00AD","Bexley","Persons.1811",6000
+"00AE","Brent","Persons.1811",2000
+"00AF","Bromley","Persons.1811",9000
+"00AG","Camden","Persons.1811",128000
+"00AH","Croydon","Persons.1811",10000
+"00AJ","Ealing","Persons.1811",8000
+"00AK","Enfield","Persons.1811",13000
+"00AL","Greenwich","Persons.1811",46000
+"00AM","Hackney","Persons.1811",64000
+"00AN","Hammersmith and Fulham","Persons.1811",13000
+"00AP","Haringey","Persons.1811",7000
+"00AQ","Harrow","Persons.1811",5000
+"00AR","Havering","Persons.1811",7000
+"00AS","Hillingdon","Persons.1811",11000
+"00AT","Hounslow","Persons.1811",16000
+"00AU","Islington","Persons.1811",83000
+"00AW","Kensington and Chelsea","Persons.1811",25000
+"00AX","Kingston upon Thames","Persons.1811",5000
+"00AY","Lambeth","Persons.1811",49000
+"00AZ","Lewisham","Persons.1811",20000
+"00BA","Merton","Persons.1811",6000
+"00BB","Newham","Persons.1811",10000
+"00BC","Redbridge","Persons.1811",5000
+"00BD","Richmond upon Thames","Persons.1811",17000
+"00BE","Southwark","Persons.1811",139000
+"00BF","Sutton","Persons.1811",5000
+"00BG","Tower Hamlets","Persons.1811",180000
+"00BH","Waltham Forest","Persons.1811",9000
+"00BJ","Wandsworth","Persons.1811",16000
+"00BK","Westminster","Persons.1811",254000
+"UKI1","Inner London","Persons.1811",1109000
+"UKI2","Outer London","Persons.1811",193000
+"H","Greater London","Persons.1811",1303000
+"00AA","City of London","Persons.1821",125000
+"00AB","Barking and Dagenham","Persons.1821",5000
+"00AC","Barnet","Persons.1821",11000
+"00AD","Bexley","Persons.1821",7000
+"00AE","Brent","Persons.1821",3000
+"00AF","Bromley","Persons.1821",11000
+"00AG","Camden","Persons.1821",163000
+"00AH","Croydon","Persons.1821",12000
+"00AJ","Ealing","Persons.1821",9000
+"00AK","Enfield","Persons.1821",16000
+"00AL","Greenwich","Persons.1821",50000
+"00AM","Hackney","Persons.1821",80000
+"00AN","Hammersmith and Fulham","Persons.1821",15000
+"00AP","Haringey","Persons.1821",9000
+"00AQ","Harrow","Persons.1821",5000
+"00AR","Havering","Persons.1821",8000
+"00AS","Hillingdon","Persons.1821",12000
+"00AT","Hounslow","Persons.1821",19000
+"00AU","Islington","Persons.1821",108000
+"00AW","Kensington and Chelsea","Persons.1821",35000
+"00AX","Kingston upon Thames","Persons.1821",6000
+"00AY","Lambeth","Persons.1821",67000
+"00AZ","Lewisham","Persons.1821",24000
+"00BA","Merton","Persons.1821",7000
+"00BB","Newham","Persons.1821",12000
+"00BC","Redbridge","Persons.1821",6000
+"00BD","Richmond upon Thames","Persons.1821",20000
+"00BE","Southwark","Persons.1821",175000
+"00BF","Sutton","Persons.1821",6000
+"00BG","Tower Hamlets","Persons.1821",219000
+"00BH","Waltham Forest","Persons.1821",11000
+"00BJ","Wandsworth","Persons.1821",19000
+"00BK","Westminster","Persons.1821",298000
+"UKI1","Inner London","Persons.1821",1349000
+"UKI2","Outer London","Persons.1821",224000
+"H","Greater London","Persons.1821",1573000
+"00AA","City of London","Persons.1831",123000
+"00AB","Barking and Dagenham","Persons.1831",6000
+"00AC","Barnet","Persons.1831",13000
+"00AD","Bexley","Persons.1831",9000
+"00AE","Brent","Persons.1831",3000
+"00AF","Bromley","Persons.1831",12000
+"00AG","Camden","Persons.1831",199000
+"00AH","Croydon","Persons.1831",15000
+"00AJ","Ealing","Persons.1831",11000
+"00AK","Enfield","Persons.1831",17000
+"00AL","Greenwich","Persons.1831",56000
+"00AM","Hackney","Persons.1831",105000
+"00AN","Hammersmith and Fulham","Persons.1831",18000
+"00AP","Haringey","Persons.1831",10000
+"00AQ","Harrow","Persons.1831",7000
+"00AR","Havering","Persons.1831",9000
+"00AS","Hillingdon","Persons.1831",14000
+"00AT","Hounslow","Persons.1831",22000
+"00AU","Islington","Persons.1831",137000
+"00AW","Kensington and Chelsea","Persons.1831",46000
+"00AX","Kingston upon Thames","Persons.1831",8000
+"00AY","Lambeth","Persons.1831",99000
+"00AZ","Lewisham","Persons.1831",26000
+"00BA","Merton","Persons.1831",7000
+"00BB","Newham","Persons.1831",14000
+"00BC","Redbridge","Persons.1831",7000
+"00BD","Richmond upon Thames","Persons.1831",22000
+"00BE","Southwark","Persons.1831",207000
+"00BF","Sutton","Persons.1831",7000
+"00BG","Tower Hamlets","Persons.1831",263000
+"00BH","Waltham Forest","Persons.1831",11000
+"00BJ","Wandsworth","Persons.1831",23000
+"00BK","Westminster","Persons.1831",354000
+"UKI1","Inner London","Persons.1831",1624000
+"UKI2","Outer London","Persons.1831",256000
+"H","Greater London","Persons.1831",1878000
+"00AA","City of London","Persons.1841",124000
+"00AB","Barking and Dagenham","Persons.1841",7000
+"00AC","Barnet","Persons.1841",14000
+"00AD","Bexley","Persons.1841",11000
+"00AE","Brent","Persons.1841",5000
+"00AF","Bromley","Persons.1841",14000
+"00AG","Camden","Persons.1841",229000
+"00AH","Croydon","Persons.1841",20000
+"00AJ","Ealing","Persons.1841",13000
+"00AK","Enfield","Persons.1841",18000
+"00AL","Greenwich","Persons.1841",70000
+"00AM","Hackney","Persons.1841",128000
+"00AN","Hammersmith and Fulham","Persons.1841",23000
+"00AP","Haringey","Persons.1841",13000
+"00AQ","Harrow","Persons.1841",7000
+"00AR","Havering","Persons.1841",11000
+"00AS","Hillingdon","Persons.1841",17000
+"00AT","Hounslow","Persons.1841",25000
+"00AU","Islington","Persons.1841",168000
+"00AW","Kensington and Chelsea","Persons.1841",58000
+"00AX","Kingston upon Thames","Persons.1841",10000
+"00AY","Lambeth","Persons.1841",129000
+"00AZ","Lewisham","Persons.1841",34000
+"00BA","Merton","Persons.1841",8000
+"00BB","Newham","Persons.1841",15000
+"00BC","Redbridge","Persons.1841",7000
+"00BD","Richmond upon Thames","Persons.1841",25000
+"00BE","Southwark","Persons.1841",243000
+"00BF","Sutton","Persons.1841",8000
+"00BG","Tower Hamlets","Persons.1841",310000
+"00BH","Waltham Forest","Persons.1841",12000
+"00BJ","Wandsworth","Persons.1841",28000
+"00BK","Westminster","Persons.1841",402000
+"UKI1","Inner London","Persons.1841",1904000
+"UKI2","Outer London","Persons.1841",302000
+"H","Greater London","Persons.1841",2207000
+"00AA","City of London","Persons.1851",128000
+"00AB","Barking and Dagenham","Persons.1851",8000
+"00AC","Barnet","Persons.1851",15000
+"00AD","Bexley","Persons.1851",12000
+"00AE","Brent","Persons.1851",5000
+"00AF","Bromley","Persons.1851",16000
+"00AG","Camden","Persons.1851",270000
+"00AH","Croydon","Persons.1851",23000
+"00AJ","Ealing","Persons.1851",14000
+"00AK","Enfield","Persons.1851",19000
+"00AL","Greenwich","Persons.1851",90000
+"00AM","Hackney","Persons.1851",170000
+"00AN","Hammersmith and Fulham","Persons.1851",30000
+"00AP","Haringey","Persons.1851",14000
+"00AQ","Harrow","Persons.1851",8000
+"00AR","Havering","Persons.1851",11000
+"00AS","Hillingdon","Persons.1851",18000
+"00AT","Hounslow","Persons.1851",27000
+"00AU","Islington","Persons.1851",220000
+"00AW","Kensington and Chelsea","Persons.1851",88000
+"00AX","Kingston upon Thames","Persons.1851",12000
+"00AY","Lambeth","Persons.1851",155000
+"00AZ","Lewisham","Persons.1851",44000
+"00BA","Merton","Persons.1851",8000
+"00BB","Newham","Persons.1851",22000
+"00BC","Redbridge","Persons.1851",7000
+"00BD","Richmond upon Thames","Persons.1851",28000
+"00BE","Southwark","Persons.1851",292000
+"00BF","Sutton","Persons.1851",8000
+"00BG","Tower Hamlets","Persons.1851",377000
+"00BH","Waltham Forest","Persons.1851",13000
+"00BJ","Wandsworth","Persons.1851",36000
+"00BK","Westminster","Persons.1851",462000
+"UKI1","Inner London","Persons.1851",2308000
+"UKI2","Outer London","Persons.1851",342000
+"H","Greater London","Persons.1851",2651000
+"00AA","City of London","Persons.1861",112000
+"00AB","Barking and Dagenham","Persons.1861",8000
+"00AC","Barnet","Persons.1861",20000
+"00AD","Bexley","Persons.1861",15000
+"00AE","Brent","Persons.1861",6000
+"00AF","Bromley","Persons.1861",22000
+"00AG","Camden","Persons.1861",307000
+"00AH","Croydon","Persons.1861",33000
+"00AJ","Ealing","Persons.1861",20000
+"00AK","Enfield","Persons.1861",23000
+"00AL","Greenwich","Persons.1861",125000
+"00AM","Hackney","Persons.1861",218000
+"00AN","Hammersmith and Fulham","Persons.1861",40000
+"00AP","Haringey","Persons.1861",21000
+"00AQ","Harrow","Persons.1861",9000
+"00AR","Havering","Persons.1861",12000
+"00AS","Hillingdon","Persons.1861",20000
+"00AT","Hounslow","Persons.1861",32000
+"00AU","Islington","Persons.1861",283000
+"00AW","Kensington and Chelsea","Persons.1861",120000
+"00AX","Kingston upon Thames","Persons.1861",18000
+"00AY","Lambeth","Persons.1861",182000
+"00AZ","Lewisham","Persons.1861",67000
+"00BA","Merton","Persons.1861",11000
+"00BB","Newham","Persons.1861",43000
+"00BC","Redbridge","Persons.1861",9000
+"00BD","Richmond upon Thames","Persons.1861",34000
+"00BE","Southwark","Persons.1861",346000
+"00BF","Sutton","Persons.1861",11000
+"00BG","Tower Hamlets","Persons.1861",442000
+"00BH","Waltham Forest","Persons.1861",17000
+"00BJ","Wandsworth","Persons.1861",52000
+"00BK","Westminster","Persons.1861",512000
+"UKI1","Inner London","Persons.1861",2745000
+"UKI2","Outer London","Persons.1861",445000
+"H","Greater London","Persons.1861",3188000
+"00AA","City of London","Persons.1871",75000
+"00AB","Barking and Dagenham","Persons.1871",10000
+"00AC","Barnet","Persons.1871",29000
+"00AD","Bexley","Persons.1871",22000
+"00AE","Brent","Persons.1871",19000
+"00AF","Bromley","Persons.1871",42000
+"00AG","Camden","Persons.1871",342000
+"00AH","Croydon","Persons.1871",60000
+"00AJ","Ealing","Persons.1871",31000
+"00AK","Enfield","Persons.1871",30000
+"00AL","Greenwich","Persons.1871",123000
+"00AM","Hackney","Persons.1871",261000
+"00AN","Hammersmith and Fulham","Persons.1871",66000
+"00AP","Haringey","Persons.1871",37000
+"00AQ","Harrow","Persons.1871",11000
+"00AR","Havering","Persons.1871",15000
+"00AS","Hillingdon","Persons.1871",21000
+"00AT","Hounslow","Persons.1871",41000
+"00AU","Islington","Persons.1871",337000
+"00AW","Kensington and Chelsea","Persons.1871",177000
+"00AX","Kingston upon Thames","Persons.1871",27000
+"00AY","Lambeth","Persons.1871",236000
+"00AZ","Lewisham","Persons.1871",101000
+"00BA","Merton","Persons.1871",17000
+"00BB","Newham","Persons.1871",70000
+"00BC","Redbridge","Persons.1871",12000
+"00BD","Richmond upon Thames","Persons.1871",48000
+"00BE","Southwark","Persons.1871",407000
+"00BF","Sutton","Persons.1871",16000
+"00BG","Tower Hamlets","Persons.1871",512000
+"00BH","Waltham Forest","Persons.1871",28000
+"00BJ","Wandsworth","Persons.1871",99000
+"00BK","Westminster","Persons.1871",524000
+"UKI1","Inner London","Persons.1871",3244000
+"UKI2","Outer London","Persons.1871",602000
+"H","Greater London","Persons.1871",3841000
+"00AA","City of London","Persons.1881",51000
+"00AB","Barking and Dagenham","Persons.1881",13000
+"00AC","Barnet","Persons.1881",41000
+"00AD","Bexley","Persons.1881",29000
+"00AE","Brent","Persons.1881",31000
+"00AF","Bromley","Persons.1881",62000
+"00AG","Camden","Persons.1881",357000
+"00AH","Croydon","Persons.1881",85000
+"00AJ","Ealing","Persons.1881",47000
+"00AK","Enfield","Persons.1881",42000
+"00AL","Greenwich","Persons.1881",139000
+"00AM","Hackney","Persons.1881",329000
+"00AN","Hammersmith and Fulham","Persons.1881",115000
+"00AP","Haringey","Persons.1881",73000
+"00AQ","Harrow","Persons.1881",13000
+"00AR","Havering","Persons.1881",16000
+"00AS","Hillingdon","Persons.1881",23000
+"00AT","Hounslow","Persons.1881",55000
+"00AU","Islington","Persons.1881",401000
+"00AW","Kensington and Chelsea","Persons.1881",234000
+"00AX","Kingston upon Thames","Persons.1881",36000
+"00AY","Lambeth","Persons.1881",293000
+"00AZ","Lewisham","Persons.1881",145000
+"00BA","Merton","Persons.1881",28000
+"00BB","Newham","Persons.1881",142000
+"00BC","Redbridge","Persons.1881",18000
+"00BD","Richmond upon Thames","Persons.1881",61000
+"00BE","Southwark","Persons.1881",514000
+"00BF","Sutton","Persons.1881",24000
+"00BG","Tower Hamlets","Persons.1881",566000
+"00BH","Waltham Forest","Persons.1881",54000
+"00BJ","Wandsworth","Persons.1881",173000
+"00BK","Westminster","Persons.1881",513000
+"UKI1","Inner London","Persons.1881",3906000
+"UKI2","Outer London","Persons.1881",817000
+"H","Greater London","Persons.1881",4713000
+"00AA","City of London","Persons.1891",38000
+"00AB","Barking and Dagenham","Persons.1891",19000
+"00AC","Barnet","Persons.1891",58000
+"00AD","Bexley","Persons.1891",37000
+"00AE","Brent","Persons.1891",65000
+"00AF","Bromley","Persons.1891",83000
+"00AG","Camden","Persons.1891",370000
+"00AH","Croydon","Persons.1891",110000
+"00AJ","Ealing","Persons.1891",63000
+"00AK","Enfield","Persons.1891",68000
+"00AL","Greenwich","Persons.1891",175000
+"00AM","Hackney","Persons.1891",372000
+"00AN","Hammersmith and Fulham","Persons.1891",189000
+"00AP","Haringey","Persons.1891",142000
+"00AQ","Harrow","Persons.1891",15000
+"00AR","Havering","Persons.1891",20000
+"00AS","Hillingdon","Persons.1891",25000
+"00AT","Hounslow","Persons.1891",68000
+"00AU","Islington","Persons.1891",429000
+"00AW","Kensington and Chelsea","Persons.1891",243000
+"00AX","Kingston upon Thames","Persons.1891",45000
+"00AY","Lambeth","Persons.1891",333000
+"00AZ","Lewisham","Persons.1891",191000
+"00BA","Merton","Persons.1891",41000
+"00BB","Newham","Persons.1891",240000
+"00BC","Redbridge","Persons.1891",31000
+"00BD","Richmond upon Thames","Persons.1891",77000
+"00BE","Southwark","Persons.1891",572000
+"00BF","Sutton","Persons.1891",30000
+"00BG","Tower Hamlets","Persons.1891",581000
+"00BH","Waltham Forest","Persons.1891",112000
+"00BJ","Wandsworth","Persons.1891",251000
+"00BK","Westminster","Persons.1891",481000
+"UKI1","Inner London","Persons.1891",4432000
+"UKI2","Outer London","Persons.1891",1142000
+"H","Greater London","Persons.1891",5572000
+"00AA","City of London","Persons.1901",27000
+"00AB","Barking and Dagenham","Persons.1901",27000
+"00AC","Barnet","Persons.1901",76000
+"00AD","Bexley","Persons.1901",54000
+"00AE","Brent","Persons.1901",120000
+"00AF","Bromley","Persons.1901",100000
+"00AG","Camden","Persons.1901",377000
+"00AH","Croydon","Persons.1901",143000
+"00AJ","Ealing","Persons.1901",95000
+"00AK","Enfield","Persons.1901",105000
+"00AL","Greenwich","Persons.1901",210000
+"00AM","Hackney","Persons.1901",389000
+"00AN","Hammersmith and Fulham","Persons.1901",250000
+"00AP","Haringey","Persons.1901",209000
+"00AQ","Harrow","Persons.1901",24000
+"00AR","Havering","Persons.1901",26000
+"00AS","Hillingdon","Persons.1901",29000
+"00AT","Hounslow","Persons.1901",85000
+"00AU","Islington","Persons.1901",436000
+"00AW","Kensington and Chelsea","Persons.1901",250000
+"00AX","Kingston upon Thames","Persons.1901",56000
+"00AY","Lambeth","Persons.1901",384000
+"00AZ","Lewisham","Persons.1901",238000
+"00BA","Merton","Persons.1901",62000
+"00BB","Newham","Persons.1901",366000
+"00BC","Redbridge","Persons.1901",66000
+"00BD","Richmond upon Thames","Persons.1901",95000
+"00BE","Southwark","Persons.1901",596000
+"00BF","Sutton","Persons.1901",38000
+"00BG","Tower Hamlets","Persons.1901",597000
+"00BH","Waltham Forest","Persons.1901",198000
+"00BJ","Wandsworth","Persons.1901",319000
+"00BK","Westminster","Persons.1901",460000
+"UKI1","Inner London","Persons.1901",4898000
+"UKI2","Outer London","Persons.1901",1609000
+"H","Greater London","Persons.1901",6510000
+"00AA","City of London","Persons.1911",20000
+"00AB","Barking and Dagenham","Persons.1911",39000
+"00AC","Barnet","Persons.1911",118000
+"00AD","Bexley","Persons.1911",60000
+"00AE","Brent","Persons.1911",166000
+"00AF","Bromley","Persons.1911",116000
+"00AG","Camden","Persons.1911",353000
+"00AH","Croydon","Persons.1911",190000
+"00AJ","Ealing","Persons.1911",165000
+"00AK","Enfield","Persons.1911",155000
+"00AL","Greenwich","Persons.1911",213000
+"00AM","Hackney","Persons.1911",385000
+"00AN","Hammersmith and Fulham","Persons.1911",275000
+"00AP","Haringey","Persons.1911",271000
+"00AQ","Harrow","Persons.1911",42000
+"00AR","Havering","Persons.1911",33000
+"00AS","Hillingdon","Persons.1911",38000
+"00AT","Hounslow","Persons.1911",109000
+"00AU","Islington","Persons.1911",415000
+"00AW","Kensington and Chelsea","Persons.1911",239000
+"00AX","Kingston upon Thames","Persons.1911",68000
+"00AY","Lambeth","Persons.1911",408000
+"00AZ","Lewisham","Persons.1911",270000
+"00BA","Merton","Persons.1911",99000
+"00BB","Newham","Persons.1911",427000
+"00BC","Redbridge","Persons.1911",113000
+"00BD","Richmond upon Thames","Persons.1911",124000
+"00BE","Southwark","Persons.1911",579000
+"00BF","Sutton","Persons.1911",54000
+"00BG","Tower Hamlets","Persons.1911",570000
+"00BH","Waltham Forest","Persons.1911",258000
+"00BJ","Wandsworth","Persons.1911",369000
+"00BK","Westminster","Persons.1911",421000
+"UKI1","Inner London","Persons.1911",5002000
+"UKI2","Outer London","Persons.1911",2160000
+"H","Greater London","Persons.1911",7162000
+"00AA","City of London","Persons.1921",14000
+"00AB","Barking and Dagenham","Persons.1921",44000
+"00AC","Barnet","Persons.1921",147000
+"00AD","Bexley","Persons.1921",76000
+"00AE","Brent","Persons.1921",184000
+"00AF","Bromley","Persons.1921",127000
+"00AG","Camden","Persons.1921",341000
+"00AH","Croydon","Persons.1921",213000
+"00AJ","Ealing","Persons.1921",181000
+"00AK","Enfield","Persons.1921",167000
+"00AL","Greenwich","Persons.1921",237000
+"00AM","Hackney","Persons.1921",379000
+"00AN","Hammersmith and Fulham","Persons.1921",288000
+"00AP","Haringey","Persons.1921",285000
+"00AQ","Harrow","Persons.1921",49000
+"00AR","Havering","Persons.1921",38000
+"00AS","Hillingdon","Persons.1921",48000
+"00AT","Hounslow","Persons.1921",117000
+"00AU","Islington","Persons.1921",407000
+"00AW","Kensington and Chelsea","Persons.1921",240000
+"00AX","Kingston upon Thames","Persons.1921",74000
+"00AY","Lambeth","Persons.1921",419000
+"00AZ","Lewisham","Persons.1921",287000
+"00BA","Merton","Persons.1921",114000
+"00BB","Newham","Persons.1921",448000
+"00BC","Redbridge","Persons.1921",124000
+"00BD","Richmond upon Thames","Persons.1921",141000
+"00BE","Southwark","Persons.1921",571000
+"00BF","Sutton","Persons.1921",60000
+"00BG","Tower Hamlets","Persons.1921",529000
+"00BH","Waltham Forest","Persons.1921",267000
+"00BJ","Wandsworth","Persons.1921",380000
+"00BK","Westminster","Persons.1921",390000
+"UKI1","Inner London","Persons.1921",4978000
+"UKI2","Outer London","Persons.1921",2408000
+"H","Greater London","Persons.1921",7387000
+"00AA","City of London","Persons.1931",11000
+"00AB","Barking and Dagenham","Persons.1931",138000
+"00AC","Barnet","Persons.1931",231000
+"00AD","Bexley","Persons.1931",95000
+"00AE","Brent","Persons.1931",251000
+"00AF","Bromley","Persons.1931",165000
+"00AG","Camden","Persons.1931",326000
+"00AH","Croydon","Persons.1931",271000
+"00AJ","Ealing","Persons.1931",226000
+"00AK","Enfield","Persons.1931",201000
+"00AL","Greenwich","Persons.1931",244000
+"00AM","Hackney","Persons.1931",364000
+"00AN","Hammersmith and Fulham","Persons.1931",286000
+"00AP","Haringey","Persons.1931",307000
+"00AQ","Harrow","Persons.1931",97000
+"00AR","Havering","Persons.1931",77000
+"00AS","Hillingdon","Persons.1931",84000
+"00AT","Hounslow","Persons.1931",156000
+"00AU","Islington","Persons.1931",392000
+"00AW","Kensington and Chelsea","Persons.1931",240000
+"00AX","Kingston upon Thames","Persons.1931",93000
+"00AY","Lambeth","Persons.1931",421000
+"00AZ","Lewisham","Persons.1931",327000
+"00BA","Merton","Persons.1931",158000
+"00BB","Newham","Persons.1931",440000
+"00BC","Redbridge","Persons.1931",179000
+"00BD","Richmond upon Thames","Persons.1931",161000
+"00BE","Southwark","Persons.1931",535000
+"00BF","Sutton","Persons.1931",103000
+"00BG","Tower Hamlets","Persons.1931",489000
+"00BH","Waltham Forest","Persons.1931",283000
+"00BJ","Wandsworth","Persons.1931",388000
+"00BK","Westminster","Persons.1931",372000
+"UKI1","Inner London","Persons.1931",4898000
+"UKI2","Outer London","Persons.1931",3213000
+"H","Greater London","Persons.1931",8110000
+"00AA","City of London","Persons.1939",9000
+"00AB","Barking and Dagenham","Persons.1939",184000
+"00AC","Barnet","Persons.1939",296000
+"00AD","Bexley","Persons.1939",179000
+"00AE","Brent","Persons.1939",310000
+"00AF","Bromley","Persons.1939",237000
+"00AG","Camden","Persons.1939",301000
+"00AH","Croydon","Persons.1939",297000
+"00AJ","Ealing","Persons.1939",285000
+"00AK","Enfield","Persons.1939",272000
+"00AL","Greenwich","Persons.1939",243000
+"00AM","Hackney","Persons.1939",332000
+"00AN","Hammersmith and Fulham","Persons.1939",259000
+"00AP","Haringey","Persons.1939",292000
+"00AQ","Harrow","Persons.1939",190000
+"00AR","Havering","Persons.1939",139000
+"00AS","Hillingdon","Persons.1939",159000
+"00AT","Hounslow","Persons.1939",196000
+"00AU","Islington","Persons.1939",343000
+"00AW","Kensington and Chelsea","Persons.1939",228000
+"00AX","Kingston upon Thames","Persons.1939",129000
+"00AY","Lambeth","Persons.1939",391000
+"00AZ","Lewisham","Persons.1939",325000
+"00BA","Merton","Persons.1939",197000
+"00BB","Newham","Persons.1939",381000
+"00BC","Redbridge","Persons.1939",232000
+"00BD","Richmond upon Thames","Persons.1939",178000
+"00BE","Southwark","Persons.1939",456000
+"00BF","Sutton","Persons.1939",167000
+"00BG","Tower Hamlets","Persons.1939",419000
+"00BH","Waltham Forest","Persons.1939",286000
+"00BJ","Wandsworth","Persons.1939",358000
+"00BK","Westminster","Persons.1939",347000
+"UKI1","Inner London","Persons.1939",4441000
+"UKI2","Outer London","Persons.1939",4176000
+"H","Greater London","Persons.1939",8615000
+"00AA","City of London","Persons.1951",5000
+"00AB","Barking and Dagenham","Persons.1951",189000
+"00AC","Barnet","Persons.1951",320000
+"00AD","Bexley","Persons.1951",205000
+"00AE","Brent","Persons.1951",311000
+"00AF","Bromley","Persons.1951",268000
+"00AG","Camden","Persons.1951",258000
+"00AH","Croydon","Persons.1951",310000
+"00AJ","Ealing","Persons.1951",311000
+"00AK","Enfield","Persons.1951",288000
+"00AL","Greenwich","Persons.1951",236000
+"00AM","Hackney","Persons.1951",265000
+"00AN","Hammersmith and Fulham","Persons.1951",241000
+"00AP","Haringey","Persons.1951",277000
+"00AQ","Harrow","Persons.1951",219000
+"00AR","Havering","Persons.1951",192000
+"00AS","Hillingdon","Persons.1951",210000
+"00AT","Hounslow","Persons.1951",211000
+"00AU","Islington","Persons.1951",271000
+"00AW","Kensington and Chelsea","Persons.1951",219000
+"00AX","Kingston upon Thames","Persons.1951",147000
+"00AY","Lambeth","Persons.1951",347000
+"00AZ","Lewisham","Persons.1951",303000
+"00BA","Merton","Persons.1951",200000
+"00BB","Newham","Persons.1951",294000
+"00BC","Redbridge","Persons.1951",257000
+"00BD","Richmond upon Thames","Persons.1951",188000
+"00BE","Southwark","Persons.1951",338000
+"00BF","Sutton","Persons.1951",176000
+"00BG","Tower Hamlets","Persons.1951",231000
+"00BH","Waltham Forest","Persons.1951",275000
+"00BJ","Wandsworth","Persons.1951",331000
+"00BK","Westminster","Persons.1951",300000
+"UKI1","Inner London","Persons.1951",3680000
+"UKI2","Outer London","Persons.1951",4513000
+"H","Greater London","Persons.1951",8197000
+"00AA","City of London","Persons.1961",4767
+"00AB","Barking and Dagenham","Persons.1961",177092
+"00AC","Barnet","Persons.1961",318373
+"00AD","Bexley","Persons.1961",209893
+"00AE","Brent","Persons.1961",295893
+"00AF","Bromley","Persons.1961",294440
+"00AG","Camden","Persons.1961",245707
+"00AH","Croydon","Persons.1961",327427
+"00AJ","Ealing","Persons.1961",301646
+"00AK","Enfield","Persons.1961",273857
+"00AL","Greenwich","Persons.1961",229810
+"00AM","Hackney","Persons.1961",257522
+"00AN","Hammersmith and Fulham","Persons.1961",222124
+"00AP","Haringey","Persons.1961",259156
+"00AQ","Harrow","Persons.1961",209080
+"00AR","Havering","Persons.1961",245598
+"00AS","Hillingdon","Persons.1961",228370
+"00AT","Hounslow","Persons.1961",208893
+"00AU","Islington","Persons.1961",261232
+"00AW","Kensington and Chelsea","Persons.1961",218528
+"00AX","Kingston upon Thames","Persons.1961",146010
+"00AY","Lambeth","Persons.1961",341626
+"00AZ","Lewisham","Persons.1961",290582
+"00BA","Merton","Persons.1961",189013
+"00BB","Newham","Persons.1961",265388
+"00BC","Redbridge","Persons.1961",250080
+"00BD","Richmond upon Thames","Persons.1961",181052
+"00BE","Southwark","Persons.1961",313413
+"00BF","Sutton","Persons.1961",169095
+"00BG","Tower Hamlets","Persons.1961",205682
+"00BH","Waltham Forest","Persons.1961",248591
+"00BJ","Wandsworth","Persons.1961",335451
+"00BK","Westminster","Persons.1961",271703
+"UKI1","Inner London","Persons.1961",3492881
+"UKI2","Outer London","Persons.1961",4504213
+"H","Greater London","Persons.1961",7997094
+"00AA","City of London","Persons.1971",4000
+"00AB","Barking and Dagenham","Persons.1971",161000
+"00AC","Barnet","Persons.1971",307000
+"00AD","Bexley","Persons.1971",217000
+"00AE","Brent","Persons.1971",281000
+"00AF","Bromley","Persons.1971",305000
+"00AG","Camden","Persons.1971",207000
+"00AH","Croydon","Persons.1971",334000
+"00AJ","Ealing","Persons.1971",301000
+"00AK","Enfield","Persons.1971",268000
+"00AL","Greenwich","Persons.1971",218000
+"00AM","Hackney","Persons.1971",220000
+"00AN","Hammersmith and Fulham","Persons.1971",187000
+"00AP","Haringey","Persons.1971",240000
+"00AQ","Harrow","Persons.1971",203000
+"00AR","Havering","Persons.1971",248000
+"00AS","Hillingdon","Persons.1971",235000
+"00AT","Hounslow","Persons.1971",207000
+"00AU","Islington","Persons.1971",202000
+"00AW","Kensington and Chelsea","Persons.1971",188000
+"00AX","Kingston upon Thames","Persons.1971",141000
+"00AY","Lambeth","Persons.1971",308000
+"00AZ","Lewisham","Persons.1971",268000
+"00BA","Merton","Persons.1971",177000
+"00BB","Newham","Persons.1971",237000
+"00BC","Redbridge","Persons.1971",240000
+"00BD","Richmond upon Thames","Persons.1971",175000
+"00BE","Southwark","Persons.1971",262000
+"00BF","Sutton","Persons.1971",169000
+"00BG","Tower Hamlets","Persons.1971",166000
+"00BH","Waltham Forest","Persons.1971",235000
+"00BJ","Wandsworth","Persons.1971",302000
+"00BK","Westminster","Persons.1971",240000
+"UKI1","Inner London","Persons.1971",3031000
+"UKI2","Outer London","Persons.1971",4422000
+"H","Greater London","Persons.1971",7452000
+"00AA","City of London","Persons.1981",5864
+"00AB","Barking and Dagenham","Persons.1981",149786
+"00AC","Barnet","Persons.1981",293436
+"00AD","Bexley","Persons.1981",215233
+"00AE","Brent","Persons.1981",253275
+"00AF","Bromley","Persons.1981",296539
+"00AG","Camden","Persons.1981",172014
+"00AH","Croydon","Persons.1981",317980
+"00AJ","Ealing","Persons.1981",279846
+"00AK","Enfield","Persons.1981",258770
+"00AL","Greenwich","Persons.1981",211840
+"00AM","Hackney","Persons.1981",180434
+"00AN","Hammersmith and Fulham","Persons.1981",148447
+"00AP","Haringey","Persons.1981",203553
+"00AQ","Harrow","Persons.1981",196571
+"00AR","Havering","Persons.1981",240849
+"00AS","Hillingdon","Persons.1981",229913
+"00AT","Hounslow","Persons.1981",200829
+"00AU","Islington","Persons.1981",160890
+"00AW","Kensington and Chelsea","Persons.1981",138837
+"00AX","Kingston upon Thames","Persons.1981",132957
+"00AY","Lambeth","Persons.1981",246426
+"00AZ","Lewisham","Persons.1981",231324
+"00BA","Merton","Persons.1981",166100
+"00BB","Newham","Persons.1981",209494
+"00BC","Redbridge","Persons.1981",226280
+"00BD","Richmond upon Thames","Persons.1981",159693
+"00BE","Southwark","Persons.1981",211858
+"00BF","Sutton","Persons.1981",169343
+"00BG","Tower Hamlets","Persons.1981",142841
+"00BH","Waltham Forest","Persons.1981",215947
+"00BJ","Wandsworth","Persons.1981",254898
+"00BK","Westminster","Persons.1981",191098
+"UKI1","Inner London","Persons.1981",2497978
+"UKI2","Outer London","Persons.1981",4215187
+"H","Greater London","Persons.1981",6713165
+"00AA","City of London","Persons.1991",4230
+"00AB","Barking and Dagenham","Persons.1991",140728
+"00AC","Barnet","Persons.1991",284106
+"00AD","Bexley","Persons.1991",211404
+"00AE","Brent","Persons.1991",227903
+"00AF","Bromley","Persons.1991",282920
+"00AG","Camden","Persons.1991",165274
+"00AH","Croydon","Persons.1991",301904
+"00AJ","Ealing","Persons.1991",264867
+"00AK","Enfield","Persons.1991",250750
+"00AL","Greenwich","Persons.1991",201545
+"00AM","Hackney","Persons.1991",162772
+"00AN","Hammersmith and Fulham","Persons.1991",137720
+"00AP","Haringey","Persons.1991",186490
+"00AQ","Harrow","Persons.1991",194893
+"00AR","Havering","Persons.1991",225144
+"00AS","Hillingdon","Persons.1991",228476
+"00AT","Hounslow","Persons.1991",196602
+"00AU","Islington","Persons.1991",154873
+"00AW","Kensington and Chelsea","Persons.1991",126285
+"00AX","Kingston upon Thames","Persons.1991",131436
+"00AY","Lambeth","Persons.1991",220252
+"00AZ","Lewisham","Persons.1991",215483
+"00BA","Merton","Persons.1991",162741
+"00BB","Newham","Persons.1991",200678
+"00BC","Redbridge","Persons.1991",221107
+"00BD","Richmond upon Thames","Persons.1991",155698
+"00BE","Southwark","Persons.1991",198916
+"00BF","Sutton","Persons.1991",164868
+"00BG","Tower Hamlets","Persons.1991",153255
+"00BH","Waltham Forest","Persons.1991",203343
+"00BJ","Wandsworth","Persons.1991",239162
+"00BK","Westminster","Persons.1991",177743
+"UKI1","Inner London","Persons.1991",2343133
+"UKI2","Outer London","Persons.1991",4050435
+"H","Greater London","Persons.1991",6393568
+"00AA","City of London","Persons.2001",7181
+"00AB","Barking and Dagenham","Persons.2001",163944
+"00AC","Barnet","Persons.2001",314565
+"00AD","Bexley","Persons.2001",218301
+"00AE","Brent","Persons.2001",263466
+"00AF","Bromley","Persons.2001",295535
+"00AG","Camden","Persons.2001",198022
+"00AH","Croydon","Persons.2001",330584
+"00AJ","Ealing","Persons.2001",300943
+"00AK","Enfield","Persons.2001",273565
+"00AL","Greenwich","Persons.2001",214402
+"00AM","Hackney","Persons.2001",202825
+"00AN","Hammersmith and Fulham","Persons.2001",165238
+"00AP","Haringey","Persons.2001",216505
+"00AQ","Harrow","Persons.2001",206822
+"00AR","Havering","Persons.2001",224262
+"00AS","Hillingdon","Persons.2001",243006
+"00AT","Hounslow","Persons.2001",212352
+"00AU","Islington","Persons.2001",175789
+"00AW","Kensington and Chelsea","Persons.2001",158921
+"00AX","Kingston upon Thames","Persons.2001",147271
+"00AY","Lambeth","Persons.2001",266170
+"00AZ","Lewisham","Persons.2001",248917
+"00BA","Merton","Persons.2001",187919
+"00BB","Newham","Persons.2001",243884
+"00BC","Redbridge","Persons.2001",238623
+"00BD","Richmond upon Thames","Persons.2001",172330
+"00BE","Southwark","Persons.2001",244867
+"00BF","Sutton","Persons.2001",179767
+"00BG","Tower Hamlets","Persons.2001",196083
+"00BH","Waltham Forest","Persons.2001",218335
+"00BJ","Wandsworth","Persons.2001",260379
+"00BK","Westminster","Persons.2001",181284
+"UKI1","Inner London","Persons.2001",2766065
+"UKI2","Outer London","Persons.2001",4405992
+"H","Greater London","Persons.2001",7172057
