@@ -18,10 +18,10 @@ library(rgdal)
 
 ```
 ## Loading required package: sp
-## rgdal: version: 0.8-10, (SVN revision 478)
+## rgdal: version: 0.8-11, (SVN revision 479M)
 ## Geospatial Data Abstraction Library extensions to R successfully loaded
-## Loaded GDAL runtime: GDAL 1.10.0, released 2013/04/24
-## Path to GDAL shared files: /usr/share/gdal/1.10
+## Loaded GDAL runtime: GDAL 1.9.2, released 2012/10/08
+## Path to GDAL shared files: /usr/share/gdal
 ## Loaded PROJ.4 runtime: Rel. 4.8.0, 6 March 2012, [PJ_VERSION: 480]
 ## Path to PROJ.4 shared files: (autodetected)
 ```
@@ -64,10 +64,6 @@ spatial dataset. As before, we can download and import the data from within R:
 # code to download the data
 
 crimeDat <- read.csv("mps-recordedcrime-borough.csv")  # flags an error
-```
-
-```
-## Error: invalid multibyte string at '<ff><fe>M'
 ```
 
 Initially, the `read.csv` command flags an error: open the raw .csv file in a 
@@ -226,14 +222,6 @@ could equally be used.
 
 ```r
 `?`(join)
-```
-
-```
-## No documentation for 'join' in specified packages and libraries:
-## you could try '??join'
-```
-
-```r
 library(plyr)
 `?`(join)
 ```
@@ -385,8 +373,8 @@ library(rgeos)
 ```
 
 ```
-## rgeos version: 0.2-19, (SVN revision 394)
-##  GEOS runtime version: 3.3.8-CAPI-1.7.8 
+## rgeos version: 0.3-2, (SVN revision 413M)
+##  GEOS runtime version: 3.3.9-CAPI-1.7.9 
 ##  Polygon checking: TRUE
 ```
 
@@ -407,6 +395,7 @@ for clipping although we could equally use
 see rgeos help pages by typing `?gOverlaps` or other functions for more.
 `gIntersects` will output information for each point, telling us which 
 polygon it interacts with (i.e. the polygon it is in):
+
 
 ```r
 int <- gIntersects(stations, lnd, byid = T)  # find which stations intersect 
@@ -455,13 +444,149 @@ points(coordinates(lnd[32, ]), col = "black")  # test the previous statement
 
 ![plot of chunk unnamed-chunk-11](figure/unnamed-chunk-11.png) 
 
-Now that we know how gIntersects works in general terms, let's use it to 
+
+In the above code, only the first line actually 'does' anything
+in our workspace, by creating the object `int`. The proceeding 
+lines are dedicated to exploring this object and what it means. 
+Note that it is a matrix with columns corresponding to the points and 
+rows corresponding to boroughs. The borough in which a particular 
+point can be extracted from `int` as we shall see below.
+For the purposes of clipping, we are only interested in whether
+the point intersects with _any_ of the boroughs. This is where the 
+function `apply`, which is unique to R, comes into play:
+
+
+```r
+clipped <- apply(int == F, MARGIN = 2, all)
+plot(stations[which(clipped), ])  # shows all stations we DO NOT want
+stations.cl <- stations[which(!clipped), ]  # use ! to select the invers
+points(stations.cl, col = "green")  # check that it's worked
+```
+
+![plot of chunk unnamed-chunk-12](figure/unnamed-chunk-12.png) 
+
+```r
+stations <- stations.cl
+rm(stations.cl)  # tidy up: we're only interested in clipped ones
+```
+
+
+The first line instructs R to look at each column (`MARGIN = 2`, we would use
+`MARGIN = 1` for row-by-row analysis) and report back whether `all` of the values are
+false. This creates the inverse selection that we want, hence the use of `!` to invert it.
+We test that the function works on a new object (often a good idea, to avoid overwriting 
+useful data) with plots and, once content that the clip has worked, save the sample of 
+points to our main `stations` object and remove the now duplicated `stations.cl` object.
+
+## Aggregating the data to complete the spatial join
+
+Now that we know how `gIntersects` works in general terms and for clipping, 
+let's use it to 
 allocate a borrough to each of our station points, which we will then 
 aggregate up. Data from these points (e.g. counts, averages in each area etc.)
 can then be transferred to the main polygons table: the essence of a spatial 
-join....
+join. Again, `apply` is our friend in this instance, meaning we can avoid `for` loops:
 
 
+```r
+int <- gIntersects(stations, lnd, byid = T)  # re-run the intersection query 
+head(apply(int, MARGIN = 2, FUN = which))
+```
 
-## Aggregating the data to complete the join
+```
+## 91 92 93 94 95 96 
+##  6 10 10 10 10 10
+```
+
+```r
+b.indexes <- which(int, arr.ind = T)
+summary(b.indexes)
+```
+
+```
+##       row          col     
+##  Min.   : 1   Min.   :  1  
+##  1st Qu.: 7   1st Qu.:183  
+##  Median :15   Median :366  
+##  Mean   :15   Mean   :366  
+##  3rd Qu.:22   3rd Qu.:548  
+##  Max.   :33   Max.   :730
+```
+
+```r
+b.names <- lnd$name[b.indexes[, 1]]
+b.count <- aggregate(b.indexes ~ b.names, FUN = length)
+head(b.count)
+```
+
+```
+##                b.names row col
+## 1 Barking and Dagenham  12  12
+## 2               Barnet  29  29
+## 3               Bexley  28  28
+## 4                Brent  30  30
+## 5              Bromley  54  54
+## 6               Camden  14  14
+```
+
+
+The above code first extracts the index of the row (borough) for 
+which the corresponding column is true and then converts this into 
+names. The final object created, `b.count` contains the number of station 
+points in each zone. According to this, Barking and Dagenham should contain
+30 station points. It is important to check the output makes sense at 
+every stage with R, so let's check to see this is indeed the case with a quick plot:
+
+
+```r
+plot(lnd[which(grepl("Barking", lnd$name)), ])
+points(stations)
+```
+
+![plot of chunk unnamed-chunk-14](figure/unnamed-chunk-14.png) 
+
+
+Now the fun part: count the points in the polygon and report back how many there are!
+
+The final stage is to transfer the data on station counts back into the 
+polygon data frame. We have used `merge` to join two datasets before.
+In R there is often more than one way to acheive the same result.
+It's good to experiment with different functions, so we will use
+`join` from the `plyr` package. `join` requires identical joining 
+names in both data frames, so first we will rename them (type 
+`?rename` for more details).
+
+
+```r
+b.count <- rename(b.count, replace = c(b.names = "name"))
+b.count.tmp <- join(lnd@data, b.count)
+```
+
+```
+## Joining by: name
+```
+
+```r
+head(b.count.tmp)
+```
+
+```
+##   ons_label                 name Partic_Per Pop_2001 CrimeCount row col
+## 1      00AF              Bromley       21.7   295535      15172  54  54
+## 2      00BD Richmond upon Thames       26.6   172330       9715  22  22
+## 3      00AS           Hillingdon       21.5   243006      15302  43  43
+## 4      00AR             Havering       17.9   224262      12611  18  18
+## 5      00AX Kingston upon Thames       24.4   147271       9023  12  12
+## 6      00BF               Sutton       19.3   179767       8810  12  12
+```
+
+```r
+lnd$station.count <- b.count.tmp[, 7]
+```
+
+
+We have now seen how to join and clip data. Next, for a stronger grounding 
+in how ggplot works, we will look at plotting non-spatial data.
+
+
 
