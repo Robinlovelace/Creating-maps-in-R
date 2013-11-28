@@ -1,6 +1,5 @@
 \documentclass[]{article}
 \usepackage{amssymb,amsmath}
-
 \usepackage{ifxetex,ifluatex}
 \ifxetex
   \usepackage{fontspec,xltxtra,xunicode}
@@ -36,13 +35,13 @@
 \usepackage{graphicx}
 % We will generate all images so they have a width \maxwidth. This means
 % that they will get their normal width if they fit onto the page, but
-% are scaled down if they would overflow th e margins.
+% are scaled down if they would overflow the margins.
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth
 \else\Gin@nat@width\fi}
 \makeatother
-% \let\Oldincludegraphics\includegraphics[width=8cm][width=8cm][width=7cm][width=8cm][width=9cm]
-% \renewcommand{\includegraphics[width=8cm][width=8cm][width=7cm][width=8cm][width=9cm]}[1]{\Oldincludegraphics[width=\maxwidth]{#1}}
+\let\Oldincludegraphics\includegraphics
+\renewcommand{\includegraphics}[1]{\Oldincludegraphics[width=\maxwidth]{#1}}
 \ifxetex
   \usepackage[setpagesize=false, % page size defined by xetex
               unicode=false, % unicode breaks when used with xetex
@@ -60,31 +59,17 @@
 \setlength{\emergencystretch}{3em}  % prevent overfull lines
 \setcounter{secnumdepth}{0}
 
-\usepackage[margin=2cm]{geometry}
-\usepackage{hyperref}
-
-\author{
-   Cheshire, James\\
-  \texttt{james.cheshire@ucl.ac.uk}
-  \and
-  Lovelace, Robin\\
-  \texttt{r.lovelace@leeds.ac.uk}
-}
-\title{Introduction to Spatial Data and ggplot2}
-
 
 \begin{document}
 
-\maketitle
-
-\section{Introduction}
+\section{Introduction to Spatial Data and ggplot2}
 
 Building on the introduction provided by the previous worksheet, the
 next set of exercises are concerned with specific functions for spatial
 data and also the use of a package called ggplot2 for data
 visualisation.
 
-\section{Spatial Data}
+\subsection{Spatial Data}
 
 R has a huge (and growing) number of spatial data packages. On your own
 machine these are easily installed with the help of the ``ctv'' package.
@@ -231,7 +216,7 @@ we would use the following code:
 The different epsg codes are a bit of hassle to remember but you can
 find them all here: http://spatialreference.org/
 
-\section{ggplot2}
+\subsection{ggplot2}
 
 This next section of the practical introduces a slightly different
 method of creating plots in R using the ggplot2 package. The package is
@@ -300,7 +285,7 @@ ggplot what you want to do with the data. We do this by adding so-called
 \end{Shaded}
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=8cm]{figure/A_simple_ggplot.png}
+\includegraphics{figure/A_simple_ggplot.png}
 \caption{A simple ggplot}
 \end{figure}
 
@@ -328,7 +313,7 @@ In this case we can add text to the plot.
 \end{Shaded}
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=8cm]{figure/ggplot_for_text.png}
+\includegraphics{figure/ggplot_for_text.png}
 \caption{ggplot for text}
 \end{figure}
 
@@ -447,7 +432,7 @@ in black and white, which should produce a map like that shown below:
 \end{Shaded}
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=8cm]{figure/Greyscale_map.png}
+\includegraphics{figure/Greyscale_map.png}
 \caption{Greyscale map}
 \end{figure}
 
@@ -461,7 +446,7 @@ following:
 \KeywordTok{ggsave}\NormalTok{(}\StringTok{"my_large_plot.png"}\NormalTok{, }\DataTypeTok{scale =} \DecValTok{3}\NormalTok{, }\DataTypeTok{dpi =} \DecValTok{400}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
-\section{Adding basemaps to ggplot2 with ggmap}
+\subsection{Adding basemaps to ggplot2 with ggmap}
 
 ggmap is a package that uses the ggplot2 syntax as a template to create
 maps with image tiles from the likes of Google and OpenStreetMap:
@@ -542,7 +527,7 @@ We can then produce the plot as before.
 \end{Shaded}
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=8cm]{figure/Basemap_2.png}
+\includegraphics{figure/Basemap_2.png}
 \caption{Basemap 2}
 \end{figure}
 
@@ -560,11 +545,11 @@ a zoom parameter.
 \end{Shaded}
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=8cm]{figure/Basemap_3.png}
+\includegraphics{figure/Basemap_3.png}
 \caption{Basemap 3}
 \end{figure}
 
-\section{Joining and clipping}
+\subsection{Joining and clipping}
 
 This section builds on the previous information on plotting and
 highlights some of R's more advanced spatial functions from the
@@ -594,7 +579,7 @@ in our workspace, and count the number of polygons:
 \end{Shaded}
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=8cm]{figure/Plot_of_London.png}
+\includegraphics{figure/Plot_of_London.png}
 \caption{Plot of London}
 \end{figure}
 
@@ -756,7 +741,7 @@ basemap creation:
 \end{Shaded}
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=8cm]{figure/unnamed-chunk-27.png}
+\includegraphics{figure/unnamed-chunk-27.png}
 \caption{unnamed-chunk-27}
 \end{figure}
 
@@ -764,7 +749,7 @@ Now we can clearly see that the stations overlay the boroughs. The
 problem is that the stations dataset is far more exentsive than London
 borough dataset; we need
 
-\section{Clipping}
+\subsection{Clipping}
 
 There are a number of functions that we can use to clip the points so
 that only those falling within London boroughs are retained:
@@ -797,7 +782,7 @@ telling us which polygon it interacts with (i.e.~the polygon it is in):
 \end{Shaded}
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=8cm]{figure/unnamed-chunk-28.png}
+\includegraphics{figure/unnamed-chunk-28.png}
 \caption{unnamed-chunk-28}
 \end{figure}
 
@@ -821,7 +806,7 @@ unique to R, comes into play:
 \end{Shaded}
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=8cm]{figure/unnamed-chunk-29.png}
+\includegraphics{figure/unnamed-chunk-29.png}
 \caption{unnamed-chunk-29}
 \end{figure}
 
@@ -840,7 +825,7 @@ to avoid overwriting useful data) with plots and, once content that the
 clip has worked, save the sample of points to our main \texttt{stations}
 object and remove the now duplicated \texttt{stations.cl} object.
 
-\section{Aggregating the data to complete the spatial join}
+\subsection{Aggregating the data to complete the spatial join}
 
 Now that we know how \texttt{gIntersects} works in general terms and for
 clipping, let's use it to allocate a borrough to each of our station
@@ -877,7 +862,7 @@ case with a quick plot:
 \end{Shaded}
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=8cm]{figure/unnamed-chunk-31.png}
+\includegraphics{figure/unnamed-chunk-31.png}
 \caption{unnamed-chunk-31}
 \end{figure}
 
@@ -920,7 +905,7 @@ We have now seen how to join and clip data. Next, for a stronger
 grounding in how ggplot works, we will look at plotting non-spatial
 data.
 
-\section{Using ggplot2 for Descriptive Statistics}
+\subsection{Using ggplot2 for Descriptive Statistics}
 
 For this we will use a new dataset:
 
@@ -993,7 +978,7 @@ density distribution as the y variable.
 \end{verbatim}
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=8cm]{figure/unnamed-chunk-38.png}
+\includegraphics{figure/unnamed-chunk-38.png}
 \caption{unnamed-chunk-38}
 \end{figure}
 
@@ -1034,7 +1019,7 @@ and convert it to a boxplot.
 \end{Shaded}
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=8cm]{figure/unnamed-chunk-41.png}
+\includegraphics{figure/unnamed-chunk-41.png}
 \caption{unnamed-chunk-41}
 \end{figure}
 
@@ -1047,7 +1032,7 @@ Perhaps this would look a little better flipped round.
 \end{Shaded}
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=8cm]{figure/unnamed-chunk-42.png}
+\includegraphics{figure/unnamed-chunk-42.png}
 \caption{unnamed-chunk-42}
 \end{figure}
 
@@ -1068,7 +1053,7 @@ histogram plot above.
 \end{Shaded}
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=8cm]{figure/unnamed-chunk-43.png}
+\includegraphics{figure/unnamed-chunk-43.png}
 \caption{unnamed-chunk-43}
 \end{figure}
 
@@ -1078,7 +1063,7 @@ single page! Faceting is an extremely powerful way of visualizing
 multidimensional datasets and is especially good for showing change over
 time.
 
-\section{Advanced Task: Facetting for Maps}
+\subsection{Advanced Task: Facetting for Maps}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1135,7 +1120,7 @@ little while to appear).
 \end{Shaded}
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=8cm]{figure/unnamed-chunk-50.png}
+\includegraphics{figure/unnamed-chunk-50.png}
 \caption{unnamed-chunk-50}
 \end{figure}
 
@@ -1146,4 +1131,3 @@ Add a title and replace the axes names with ``easting'' and ``northing''
 and save your map as a pdf.
 
 \end{document}
-
