@@ -1,7 +1,39 @@
-Introduction to Spatial Data and ggplot2
+Introduction 
 ========================================================
 
-Building on the introduction provided by the previous worksheet, the next set of exercises are concerned with specific functions for spatial data and also the use of a package called ggplot2 for data visualisation.
+This tutorial is an "Introduction to Spatial Data and ggplot2" and assumes no prior knowledge in spatial data analysis  in R. 
+We do recommend users are already acquainted with the R command line though,
+perhaps by following an 'Introduction to R' type tutorial, such as
+"A (very) short introduction to R" (Torfs and Brauer, 2012) or the more 
+geographically inclined "Short introduction to R" (Harris, 2012). 
+
+Building on such background material, 
+the following set of exercises are concerned with specific functions for spatial data and also the use of a package called ggplot2 for data visualisation.
+
+## Typographic conventions
+
+To ensure reproducibility and allow automatic syntax highlighting, 
+this document has been written in RMarkdown. 
+Be aware of the following typographic conventions: R code (e.g. `plot(x,y)`) is
+written in `monospace` fonts while prose is not. Blocks of code such as, 
+
+
+```r
+c(1:3, 5)^2
+```
+
+```
+## [1]  1  4  9 25
+```
+
+
+are compiled in-line: the `##` indicates this is output from R. Some of the 
+output from the code below is quite long; we only show the output that is 
+useful. A single hash (`#`) is a comment for humans to read that R will ignore.
+All images in this document are small and low-quality to save space; they should 
+display better on your computer screen and can be saved at any resolution.
+The code presented here not the only way to do things: we encourage you to 
+play with it to gain a deeper understanding of R.
 
 ## Spatial Data
 
@@ -56,19 +88,6 @@ R to handle a broader range of spatial data formats.
 
 ```r
 library(rgdal)
-```
-
-```
-## Loading required package: sp
-## rgdal: version: 0.8-13, (SVN revision 494)
-## Geospatial Data Abstraction Library extensions to R successfully loaded
-## Loaded GDAL runtime: GDAL 1.9.0, released 2011/12/29
-## Path to GDAL shared files: /usr/share/gdal/1.9
-## Loaded PROJ.4 runtime: Rel. 4.7.1, 23 September 2009, [PJ_VERSION: 470]
-## Path to PROJ.4 shared files: (autodetected)
-```
-
-```r
 sport <- readOGR(dsn = ".", "london_sport")
 ```
 
@@ -230,32 +249,19 @@ This idea of layers (or geoms) is quite different from the standard plot functio
 The following steps will create a map to show the percentage of the population in each London Borough who regularly participate in sports activities. 
 
 To get the shapefiles into a format that can be plotted we have to use the `fortify()` function. Spatial objects in R have a number of slots containing the various items of data (polygon geometry, projection, attribute information) associated with a shapefile. Slots can be thought of as shelves within the data object that contain the different attributes. The "polygons" slot contains the geometry of the polygons in the form of the XY coordinates used to draw the polygon outline. The generic plot function can work out what to do with these, ggplot2 cannot. We therefore need to extract them as a data frame. The fortify function was written specifically for this purpose.
-For this to work, an additional command must be run to enable the appropriate permissions.
+For this to work, either `gpclib` or `rgeos` packages must be installed.
 
 
 ```r
-library(gpclib)
-```
-
-```
-## Error: there is no package called 'gpclib'
-```
-
-```r
-gpclibPermit()  # allow permissions for non-commercial use
-```
-
-```
-## Error: could not find function "gpclibPermit"
-```
-
-```r
+# library(gpclib); gpclibPermit() # uncomment if rgeos not installed
 sport.f <- fortify(sport, region = "ons_label")
 ```
 
 ```
-## Error: maptools package required for this functionality.  Please install
-## and try again.
+## Loading required package: rgeos
+## rgeos version: 0.2-19, (SVN revision 394)
+##  GEOS runtime version: 3.3.8-CAPI-1.7.8 
+##  Polygon checking: TRUE
 ```
 
 
@@ -267,12 +273,8 @@ the output of typing `?merge`.
 sport.f <- merge(sport.f, sport@data, by.x = "id", by.y = "ons_label")
 ```
 
-```
-## Error: error in evaluating the argument 'x' in selecting a method for function 'merge': Error: object 'sport.f' not found
-```
 
-
-Take a look at the `sport.f` object to see its contents.  You should see a large data frame containing the latitude and longitude (they are actually eastings and northings as the data are in British National Grid format) coordinates alongside the attribute information associated with each London Borough. If you type `print(sport.f)` you will just how many coordinate pairs are required!
+Take a look at the `sport.f` object to see its contents.  You should see a large data frame containing the latitude and longitude (they are actually Easting and Northing as the data are in British National Grid format) coordinates alongside the attribute information associated with each London Borough. If you type `print(sport.f)` you will just how many coordinate pairs are required!
 To keep the output to a minimum, take a peak at the object just using the `head` command:
 
 
@@ -281,7 +283,13 @@ head(sport.f[, 1:8])
 ```
 
 ```
-## Error: object 'sport.f' not found
+##     id   long    lat order  hole piece  group           name
+## 1 00AA 531027 181611     1 FALSE     1 00AA.1 City of London
+## 2 00AA 531555 181659     2 FALSE     1 00AA.1 City of London
+## 3 00AA 532136 182198     3 FALSE     1 00AA.1 City of London
+## 4 00AA 532946 181895     4 FALSE     1 00AA.1 City of London
+## 5 00AA 533411 182038     5 FALSE     1 00AA.1 City of London
+## 6 00AA 533843 180794     6 FALSE     1 00AA.1 City of London
 ```
 
 
@@ -294,10 +302,6 @@ It is now straightforward to produce a map using all the built in tools
 Map <- ggplot(sport.f, aes(long, lat, group = group, fill = Partic_Per)) + geom_polygon() + 
     coord_equal() + labs(x = "Easting (m)", y = "Northing (m)", fill = "% Sport Partic.") + 
     ggtitle("London Sports Participation")
-```
-
-```
-## Error: object 'sport.f' not found
 ```
 
 
@@ -320,9 +324,7 @@ which should produce a map like that shown below:
 Map + scale_fill_gradient(low = "white", high = "black")
 ```
 
-```
-## Error: non-numeric argument to binary operator
-```
+![plot of chunk Greyscale map](figure/Greyscale_map.png) 
 
 
 Saving plot images is also easy. You just need to use `ggsave` after each plot, e.g.
@@ -336,7 +338,7 @@ ggsave("my_large_plot.png", scale = 3, dpi = 400)
 
 
 
-## Adding basemaps to ggplot2 with ggmap
+# Adding base maps to ggplot2 with ggmap
 
 ggmap is a package that uses the ggplot2 syntax as a 
 template to create maps with image tiles from the likes of Google and OpenStreetMap:
@@ -364,7 +366,7 @@ b[2, ] <- (b[2, ] - mean(b[2, ])) * 1.05 + mean(b[2, ])
 ```
 
 
-This is then fed into the `get_map` function as the location parameter. The syntax below contains 2 functions. `ggmap` is required to produce the plot and provides the basemap data.
+This is then fed into the `get_map` function as the location parameter. The syntax below contains 2 functions. `ggmap` is required to produce the plot and provides the base map data.
 
 
 ```r
@@ -384,24 +386,12 @@ data (we already did this step to create the sport.f object).
 
 ```r
 sport.wgs84.f <- fortify(sport.wgs84, region = "ons_label")
-```
-
-```
-## Error: maptools package required for this functionality.  Please install
-## and try again.
-```
-
-```r
 sport.wgs84.f <- merge(sport.wgs84.f, sport.wgs84@data, by.x = "id", by.y = "ons_label")
 ```
 
-```
-## Error: error in evaluating the argument 'x' in selecting a method for function 'merge': Error: object 'sport.wgs84.f' not found
-```
 
 
-
-We can now overlay this on our basemap.
+We can now overlay this on our base map.
 
 
 ```r
@@ -411,7 +401,7 @@ lnd.b1 + geom_polygon(data = sport.wgs84.f, aes(x = long, y = lat, group = group
 
 
 The code above contains a lot of parameters. Use the ggplot2 help pages to find out what they are. 
-The resulting map looks okay, but it would be improved with a simpler basemap in black and white. 
+The resulting map looks okay, but it would be improved with a simpler base map in black and white. 
 A design firm called stamen provide the tiles we need and they can be brought into the 
 plot with the `get_map` function:
 
@@ -430,12 +420,10 @@ lnd.b2 + geom_polygon(data = sport.wgs84.f, aes(x = long, y = lat, group = group
     fill = Partic_Per), alpha = 0.5)
 ```
 
-```
-## Error: object 'sport.wgs84.f' not found
-```
+![plot of chunk Basemap 2](figure/Basemap_2.png) 
 
 
-Finally, if we want to increase the detail of the basemap, get_map has a zoom parameter.
+Finally, if we want to increase the detail of the base map, get_map has a zoom parameter.
 
 
 ```r
@@ -446,12 +434,10 @@ lnd.b3 + geom_polygon(data = sport.wgs84.f, aes(x = long, y = lat, group = group
     fill = Partic_Per), alpha = 0.5)
 ```
 
-```
-## Error: object 'sport.wgs84.f' not found
-```
+![plot of chunk Basemap 3](figure/Basemap_3.png) 
 
 
-## Joining and clipping
+# Joining and clipping
 
 This section builds on the previous information on plotting and highlights 
 some of R's more advanced spatial functions from the `rgeos` package. 
@@ -492,7 +478,7 @@ nrow(lnd)
 ```
 
 
-### Downloading additional data
+## Downloading additional data
 
 Because we are using borough-level data, and boroughs are official administrative
 zones, there is much data available at this level. We will use the example 
@@ -606,8 +592,8 @@ lnd@data <- join(lnd@data, crimeAg)
 ```
 
 
-### Adding point data for clipping and spatial join
-In addition to joing by zone name, it is also possible to do
+## Adding point data for clipping and spatial join
+In addition to joining by zone name, it is also possible to do
 [spatial joins](http://help.arcgis.com/en/arcgisdesktop/10.0/help/index.html#//00080000000q000000) in R. There are three main varieties: many-to-one - where
 the values of many intersecting objects contribute to a new variable in 
 the main table - one-to-many, or one-to-one. Because boroughs in London 
@@ -632,7 +618,7 @@ there are problems with it: the Coordinate Reference System (CRS)
 differs from that of our shapefile. 
 Although OSGB 1936 (or EPSG 27700) is the 'correct' CRS for the UK, 
 we will convert the stations dataset into lat-long coordinates, 
-as this is a more common CRS and enables easy basemap creation:
+as this is a more common CRS and enables easy base map creation:
  
 
 ```r
@@ -643,11 +629,11 @@ plot(lnd)
 points(stations[sample(1:nrow(stations), size = 500), ])
 ```
 
-![plot of chunk unnamed-chunk-27](figure/unnamed-chunk-27.png) 
+![plot of chunk Sampling and plotting stations](figure/Sampling_and_plotting_stations.png) 
 
 
 Now we can clearly see that the stations overlay the boroughs.
-The problem is that the stations dataset is far more exentsive than
+The problem is that the stations dataset is far more extensive than
 London borough dataset; we need 
 
 
@@ -677,52 +663,17 @@ polygon it interacts with (i.e. the polygon it is in):
 
 ```r
 int <- gIntersects(stations, lnd, byid = T)  # find which stations intersect 
-```
-
-```
-## Error: could not find function "gIntersects"
-```
-
-```r
 class(int)  # it's outputed a matrix
-```
-
-```
-## Error: object 'int' not found
-```
-
-```r
 dim(int)  # with 33 rows (one for each zone) and 2532 cols (the points)
-```
-
-```
-## Error: object 'int' not found
-```
-
-```r
 summary(int[, c(200, 500)])  # not the output of this
-```
-
-```
-## Error: error in evaluating the argument 'object' in selecting a method for function 'summary': Error: object 'int' not found
-```
-
-```r
 plot(lnd)
 points(stations[200, ], col = "red")  # note point id 200 is outside the zones
 points(stations[500, ], col = "green")  # note point 500 is inside
 which(int[, 500] == T)  # this tells us that point 500 intersects with zone 32
-```
-
-```
-## Error: object 'int' not found
-```
-
-```r
 points(coordinates(lnd[32, ]), col = "black")  # test the previous statement
 ```
 
-![plot of chunk unnamed-chunk-28](figure/unnamed-chunk-28.png) 
+![plot of chunk Identifying and plotting individual stations](figure/Identifying_and_plotting_individual_stations.png) 
 
 
 In the above code, only the first line actually 'does' anything
@@ -738,51 +689,16 @@ function `apply`, which is unique to R, comes into play:
 
 ```r
 clipped <- apply(int == F, MARGIN = 2, all)
-```
-
-```
-## Error: object 'int' not found
-```
-
-```r
 plot(stations[which(clipped), ])  # shows all stations we DO NOT want
-```
-
-```
-## Error: error in evaluating the argument 'x' in selecting a method for function 'plot': Error in which(clipped) : object 'clipped' not found
-## Calls: [ -> [ -> which
-```
-
-```r
 stations.cl <- stations[which(!clipped), ]  # use ! to select the invers
-```
-
-```
-## Error: object 'clipped' not found
-```
-
-```r
 points(stations.cl, col = "green")  # check that it's worked
 ```
 
-```
-## Error: object 'stations.cl' not found
-```
+![plot of chunk Clipped points (within London boroughs)](figure/Clipped_points__within_London_boroughs_.png) 
 
 ```r
 stations <- stations.cl
-```
-
-```
-## Error: object 'stations.cl' not found
-```
-
-```r
 rm(stations.cl)  # tidy up: we're only interested in clipped ones
-```
-
-```
-## Warning: object 'stations.cl' not found
 ```
 
 
@@ -797,7 +713,7 @@ points to our main `stations` object and remove the now duplicated `stations.cl`
 
 Now that we know how `gIntersects` works in general terms and for clipping, 
 let's use it to 
-allocate a borrough to each of our station points, which we will then 
+allocate a borough to each of our station points, which we will then 
 aggregate up. Data from these points (e.g. counts, averages in each area etc.)
 can then be transferred to the main polygons table: the essence of a spatial 
 join. Again, `apply` is our friend in this instance, meaning we can avoid `for` loops:
@@ -805,58 +721,12 @@ join. Again, `apply` is our friend in this instance, meaning we can avoid `for` 
 
 ```r
 int <- gIntersects(stations, lnd, byid = T)  # re-run the intersection query 
-```
-
-```
-## Error: could not find function "gIntersects"
-```
-
-```r
 head(apply(int, MARGIN = 2, FUN = which))
-```
-
-```
-## Error: object 'int' not found
-```
-
-```r
 b.indexes <- which(int, arr.ind = T)
-```
-
-```
-## Error: object 'int' not found
-```
-
-```r
 summary(b.indexes)
-```
-
-```
-## Error: error in evaluating the argument 'object' in selecting a method for function 'summary': Error: object 'b.indexes' not found
-```
-
-```r
 b.names <- lnd$name[b.indexes[, 1]]
-```
-
-```
-## Error: object 'b.indexes' not found
-```
-
-```r
 b.count <- aggregate(b.indexes ~ b.names, FUN = length)
-```
-
-```
-## Error: object 'b.indexes' not found
-```
-
-```r
 head(b.count)
-```
-
-```
-## Error: object 'b.count' not found
 ```
 
 
@@ -864,8 +734,9 @@ The above code first extracts the index of the row (borough) for
 which the corresponding column is true and then converts this into 
 names. The final object created, `b.count` contains the number of station 
 points in each zone. According to this, Barking and Dagenham should contain
-30 station points. It is important to check the output makes sense at 
-every stage with R, so let's check to see this is indeed the case with a quick plot:
+12 station points. It is important to check the output makes sense at 
+every stage with R, so let's check to see this is indeed the case with 
+a quick plot:
 
 
 ```r
@@ -873,14 +744,14 @@ plot(lnd[which(grepl("Barking", lnd$name)), ])
 points(stations)
 ```
 
-![plot of chunk unnamed-chunk-31](figure/unnamed-chunk-31.png) 
+![plot of chunk Train/tube stations in Barking and Dagenham](figure/Train/tube_stations_in_Barking_and_Dagenham.png) 
 
 
 Now the fun part: count the points in the polygon and report back how many there are!
 
 The final stage is to transfer the data on station counts back into the 
 polygon data frame. We have used `merge` to join two datasets before.
-In R there is often more than one way to acheive the same result.
+In R there is often more than one way to achieve the same result.
 It's good to experiment with different functions, so we will use
 `join` from the `plyr` package. `join` requires identical joining 
 names in both data frames, so first we will rename them (type 
@@ -889,18 +760,11 @@ names in both data frames, so first we will rename them (type
 
 ```r
 b.count <- rename(b.count, replace = c(b.names = "name"))
-```
-
-```
-## Error: object 'b.count' not found
-```
-
-```r
 b.count.tmp <- join(lnd@data, b.count)
 ```
 
 ```
-## Error: object 'b.count' not found
+## Joining by: name
 ```
 
 ```r
@@ -908,22 +772,20 @@ head(b.count.tmp, 2)
 ```
 
 ```
-## Error: object 'b.count.tmp' not found
+##   ons_label                 name Partic_Per Pop_2001 CrimeCount row col
+## 1      00AF              Bromley       21.7   295535      15172  54  54
+## 2      00BD Richmond upon Thames       26.6   172330       9715  22  22
 ```
 
 ```r
 lnd$station.count <- b.count.tmp[, 7]
 ```
 
-```
-## Error: object 'b.count.tmp' not found
-```
-
 
 We have now seen how to join and clip data. Next, for a stronger grounding 
 in how ggplot works, we will look at plotting non-spatial data.
 
-## Using ggplot2 for Descriptive Statistics
+# Using ggplot2 for Descriptive Statistics
 
 For this we will use a new dataset:
 
@@ -996,7 +858,7 @@ p2.ass + geom_histogram() + geom_density(fill = NA, colour = "red")
 ## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
 ```
 
-![plot of chunk unnamed-chunk-38](figure/unnamed-chunk-38.png) 
+![plot of chunk Histogram with density overlay](figure/Histogram_with_density_overlay.png) 
 
 
 What kind of distribution is this plot showing? You can see that there are
@@ -1016,7 +878,6 @@ input[which(input$assault_09_11 > 750), ]
 ```
 
 
-
 It is perhaps unsurprising that St James's and the West End have the highest counts.
 The plot has provided a good impression of the overall distribution,
 but what are the characteristics of each distribution within the Boroughs?
@@ -1031,15 +892,12 @@ p3.ass <- ggplot(input, aes(x = Bor_Code, y = assault_09_11))
 ```
 
 
-
 and convert it to a boxplot.
 
 
 ```r
 p3.ass + geom_boxplot()
 ```
-
-![plot of chunk unnamed-chunk-41](figure/unnamed-chunk-41.png) 
 
 
 Perhaps this would look a little better flipped round.
@@ -1049,7 +907,7 @@ Perhaps this would look a little better flipped round.
 p3.ass + geom_boxplot() + coord_flip()
 ```
 
-![plot of chunk unnamed-chunk-42](figure/unnamed-chunk-42.png) 
+![plot of chunk Bar and whisker plot](figure/Bar_and_whisker_plot.png) 
 
 
 Now each of the borough codes can be easily seen. 
@@ -1065,12 +923,12 @@ If you want an insight into some of the visualisations you can develop with this
 p.ass + geom_histogram() + facet_wrap(~Bor_Code)
 ```
 
-![plot of chunk unnamed-chunk-43](figure/unnamed-chunk-43.png) 
+![plot of chunk Faceted histogram](figure/Faceted_histogram.png) 
 
 
 We need to do a little bit of tweaking to make this plot publishable but we want to demonstrate that it is really easy to produce 30+ plots on a single page! Faceting is an extremely powerful way of visualizing multidimensional datasets and is especially good for showing change over time.
 
-## Advanced Task: Facetting for Maps
+# Advanced Task: Faceting for Maps
 
 
 ```r
@@ -1112,20 +970,12 @@ Merge the population data with the London borough geometry contained within our 
 plot.data <- merge(sport.f, london.data.melt, by.x = "id", by.y = "Area.Code")
 ```
 
-```
-## Error: error in evaluating the argument 'x' in selecting a method for function 'merge': Error: object 'sport.f' not found
-```
-
 
 Reorder this data (ordering is important for plots).
 
 
 ```r
 plot.data <- plot.data[order(plot.data$order), ]
-```
-
-```
-## Error: object 'plot.data' not found
 ```
 
 
@@ -1138,9 +988,7 @@ ggplot(data = plot.data, aes(x = long, y = lat, fill = value, group = group)) +
     facet_wrap(~variable)
 ```
 
-```
-## Error: object 'plot.data' not found
-```
+![plot of chunk Faceted map](figure/Faceted_map.png) 
 
 
 Again there is a lot going on here so explore the documentation to make sure you understand it. 
@@ -1148,3 +996,47 @@ Try out different colour values as well.
 
 Add a title and replace the axes names with "easting" and 
 "northing" and save your map as a pdf.
+
+# Taking spatial data analysis in R further
+
+The skills you have learned in this tutorial are applicable to a very wide 
+range of datasets, spatial or not. Often experimentation is the 
+most rewarding learning method, rather than just searching for the 
+'best' way of doing something (Kabakoff, 2011). We recommend you play around
+with your own data.
+
+The supportive online communities surrounding large open source programs such as R
+are one of their greatest assets, so we recommend you become an active 
+"[open source citizen](http://blog.cleverelephant.ca/2013/10/being-open-source-citizen.html)" rather than a passive consumer (Ramsey & Dubovsky, 2013). 
+
+This does not necessarily mean writing R source code - it can simply mean helping
+others use R. We therefore conclude the tutorial with a list of resources
+that will help you further sharpen you R skills, find help and contribute 
+to the growing online R community:
+
+* R's homepage hosts a wealth of [official](http://cran.r-project.org/manuals.html) and [contributed](http://cran.r-project.org/other-docs.html) guides.
+* Stack Exchange and GIS Stack Exchange groups - try searching for "[R]". If your issue has not been not been addressed yet, you could post a polite question.
+* R's [mailing lists](http://www.r-project.org/mail.html) - the R-sig-geo list may be of particular interest here.
+* Books: despite the strength of R's online community, nothing beats a physical book for concentrated learning. We would particularly recommend the following:
+ * ggplot2: elegant graphics for data analysis (Wickham 2009)
+ * Bivand et al. (2013) Provide a dense and detailed overview of spatial 
+ data analysis in an updated version of the book by the developers of many
+ of R's spatial functions.
+ * Kabacoff (2011) is a more general R book; it has many fun worked examples.
+
+
+# References
+
+Bivand, R. S., Pebesma, E. J., & Rubio, V. G. (2008). Applied spatial data: analysis with R. Springer.
+
+Harris, R. (2012). A Short Introduction to R. 
+[social-statistics.org](http://www.social-statistics.org/).
+
+Kabacoff, R. (2011). R in Action. Manning Publications Co.
+
+Ramsey, P., & Dubovsky, D. (2013). Geospatial Software's Open Future. 
+GeoInformatics, 16(4). 
+
+Torfs and Brauer (2012). A (very) short Introduction to R. The Comprehensive R Archive Network.
+
+Wickham, H. (2009). ggplot2: elegant graphics for data analysis. Springer.

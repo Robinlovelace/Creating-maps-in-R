@@ -1,7 +1,33 @@
-Introduction to Spatial Data and ggplot2
+Introduction 
 ========================================================
 
-Building on the introduction provided by the previous worksheet, the next set of exercises are concerned with specific functions for spatial data and also the use of a package called ggplot2 for data visualisation.
+This tutorial is an "Introduction to Spatial Data and ggplot2" and assumes no prior knowledge in spatial data analysis  in R. 
+We do recommend users are already acquainted with the R command line though,
+perhaps by following an 'Introduction to R' type tutorial, such as
+"A (very) short introduction to R" (Torfs and Brauer, 2012) or the more 
+geographically inclined "Short introduction to R" (Harris, 2012). 
+
+Building on such background material, 
+the following set of exercises are concerned with specific functions for spatial data and also the use of a package called ggplot2 for data visualisation.
+
+## Typographic conventions
+
+To ensure reproducibility and allow automatic syntax highlighting, 
+this document has been written in RMarkdown. 
+Be aware of the following typographic conventions: R code (e.g. `plot(x,y)`) is
+written in `monospace` fonts while prose is not. Blocks of code such as, 
+
+```{r}
+c(1:3,5)^2
+```
+
+are compiled in-line: the `##` indicates this is output from R. Some of the 
+output from the code below is quite long; we only show the output that is 
+useful. A single hash (`#`) is a comment for humans to read that R will ignore.
+All images in this document are small and low-quality to save space; they should 
+display better on your computer screen and can be saved at any resolution.
+The code presented here not the only way to do things: we encourage you to 
+play with it to gain a deeper understanding of R.
 
 ## Spatial Data
 
@@ -46,7 +72,7 @@ This is R’s interface to the "Geospatial Abstraction Library (GDAL)"
 which is used by other open source GIS packages such as QGIS and enables 
 R to handle a broader range of spatial data formats.
 
-```{r}
+```{r, message=FALSE}
 library(rgdal)
 sport <- readOGR(dsn = ".", "london_sport")
 ```
@@ -173,10 +199,10 @@ This idea of layers (or geoms) is quite different from the standard plot functio
 The following steps will create a map to show the percentage of the population in each London Borough who regularly participate in sports activities. 
 
 To get the shapefiles into a format that can be plotted we have to use the `fortify()` function. Spatial objects in R have a number of slots containing the various items of data (polygon geometry, projection, attribute information) associated with a shapefile. Slots can be thought of as shelves within the data object that contain the different attributes. The "polygons" slot contains the geometry of the polygons in the form of the XY coordinates used to draw the polygon outline. The generic plot function can work out what to do with these, ggplot2 cannot. We therefore need to extract them as a data frame. The fortify function was written specifically for this purpose.
-For this to work, an additional command must be run to enable the appropriate permissions.
+For this to work, either `gpclib` or `rgeos` packages must be installed.
 
-```{r}
-library(gpclib); gpclibPermit() # allow permissions for non-commercial use
+```{r, warning=FALSE}
+# library(gpclib); gpclibPermit() # uncomment if rgeos not installed
 sport.f <- fortify(sport, region = "ons_label")
 ```
 
@@ -187,7 +213,7 @@ the output of typing `?merge`.
 sport.f <- merge(sport.f, sport@data, by.x = "id", by.y = "ons_label")
 ```
 
-Take a look at the `sport.f` object to see its contents.  You should see a large data frame containing the latitude and longitude (they are actually eastings and northings as the data are in British National Grid format) coordinates alongside the attribute information associated with each London Borough. If you type `print(sport.f)` you will just how many coordinate pairs are required!
+Take a look at the `sport.f` object to see its contents.  You should see a large data frame containing the latitude and longitude (they are actually Easting and Northing as the data are in British National Grid format) coordinates alongside the attribute information associated with each London Borough. If you type `print(sport.f)` you will just how many coordinate pairs are required!
 To keep the output to a minimum, take a peak at the object just using the `head` command:
 
 ```{r}
@@ -233,7 +259,7 @@ ggsave("my_large_plot.png", scale = 3, dpi = 400)
 ```
 
 
-# Adding basemaps to ggplot2 with ggmap
+# Adding base maps to ggplot2 with ggmap
 
 ggmap is a package that uses the ggplot2 syntax as a 
 template to create maps with image tiles from the likes of Google and OpenStreetMap:
@@ -257,7 +283,7 @@ b[2, ] <- (b[2, ] - mean(b[2, ])) * 1.05 + mean(b[2, ])
 # replace 1.05 with 1.xx for an xx% increase in the plot size
 ```
 
-This is then fed into the `get_map` function as the location parameter. The syntax below contains 2 functions. `ggmap` is required to produce the plot and provides the basemap data.
+This is then fed into the `get_map` function as the location parameter. The syntax below contains 2 functions. `ggmap` is required to produce the plot and provides the base map data.
 
 ```{r, message=FALSE}
 lnd.b1 <- ggmap(get_map(location = b))
@@ -275,7 +301,7 @@ sport.wgs84.f <- merge(sport.wgs84.f, sport.wgs84@data,
 ```
 
 
-We can now overlay this on our basemap.
+We can now overlay this on our base map.
 
 ```{r, eval=FALSE}
 lnd.b1 + 
@@ -285,7 +311,7 @@ lnd.b1 +
 ```
 
 The code above contains a lot of parameters. Use the ggplot2 help pages to find out what they are. 
-The resulting map looks okay, but it would be improved with a simpler basemap in black and white. 
+The resulting map looks okay, but it would be improved with a simpler base map in black and white. 
 A design firm called stamen provide the tiles we need and they can be brought into the 
 plot with the `get_map` function:
 
@@ -303,7 +329,7 @@ lnd.b2 +
                alpha = 0.5)
 ```
 
-Finally, if we want to increase the detail of the basemap, get_map has a zoom parameter.
+Finally, if we want to increase the detail of the base map, get_map has a zoom parameter.
 
 ```{r Basemap 3}
 lnd.b3 <- ggmap(get_map(location = b, source = "stamen", maptype = "toner", crop = T, zoom = 11))
@@ -412,7 +438,7 @@ lnd@data <- join(lnd@data, crimeAg)
 ```
 
 ## Adding point data for clipping and spatial join
-In addition to joing by zone name, it is also possible to do
+In addition to joining by zone name, it is also possible to do
 [spatial joins](http://help.arcgis.com/en/arcgisdesktop/10.0/help/index.html#//00080000000q000000) in R. There are three main varieties: many-to-one - where
 the values of many intersecting objects contribute to a new variable in 
 the main table - one-to-many, or one-to-one. Because boroughs in London 
@@ -436,9 +462,9 @@ there are problems with it: the Coordinate Reference System (CRS)
 differs from that of our shapefile. 
 Although OSGB 1936 (or EPSG 27700) is the 'correct' CRS for the UK, 
 we will convert the stations dataset into lat-long coordinates, 
-as this is a more common CRS and enables easy basemap creation:
+as this is a more common CRS and enables easy base map creation:
  
-```{r}
+```{r Sampling and plotting stations}
 stationsWGS <- spTransform(stations, CRSobj = CRS(proj4string(lnd)))
 stations <- stationsWGS; rm(stationsWGS)
 plot(lnd)
@@ -446,7 +472,7 @@ points(stations[sample(1:nrow(stations), size = 500),])
 ```
 
 Now we can clearly see that the stations overlay the boroughs.
-The problem is that the stations dataset is far more exentsive than
+The problem is that the stations dataset is far more extensive than
 London borough dataset; we need 
 
 
@@ -473,7 +499,7 @@ see rgeos help pages by typing `?gOverlaps` or other functions for more.
 `gIntersects` will output information for each point, telling us which 
 polygon it interacts with (i.e. the polygon it is in):
 
-```{r, results='hide'}
+```{r Identifying and plotting individual stations, results='hide'}
 int <- gIntersects(stations, lnd, byid = T) # find which stations intersect 
 class(int) # it's outputed a matrix
 dim(int) # with 33 rows (one for each zone) and 2532 cols (the points)
@@ -495,7 +521,7 @@ For the purposes of clipping, we are only interested in whether
 the point intersects with _any_ of the boroughs. This is where the 
 function `apply`, which is unique to R, comes into play:
 
-```{r}
+```{r Clipped points (within London boroughs)}
 clipped <- apply(int == F, MARGIN = 2, all)
 plot(stations[which(clipped),]) # shows all stations we DO NOT want
 stations.cl <- stations[which(!clipped),] # use ! to select the invers
@@ -514,7 +540,7 @@ points to our main `stations` object and remove the now duplicated `stations.cl`
 
 Now that we know how `gIntersects` works in general terms and for clipping, 
 let's use it to 
-allocate a borrough to each of our station points, which we will then 
+allocate a borough to each of our station points, which we will then 
 aggregate up. Data from these points (e.g. counts, averages in each area etc.)
 can then be transferred to the main polygons table: the essence of a spatial 
 join. Again, `apply` is our friend in this instance, meaning we can avoid `for` loops:
@@ -533,10 +559,11 @@ The above code first extracts the index of the row (borough) for
 which the corresponding column is true and then converts this into 
 names. The final object created, `b.count` contains the number of station 
 points in each zone. According to this, Barking and Dagenham should contain
-30 station points. It is important to check the output makes sense at 
-every stage with R, so let's check to see this is indeed the case with a quick plot:
+12 station points. It is important to check the output makes sense at 
+every stage with R, so let's check to see this is indeed the case with 
+a quick plot:
 
-```{r}
+```{r Train/tube stations in Barking and Dagenham}
 plot(lnd[which(grepl("Barking", lnd$name)),])
 points(stations)
 ```
@@ -545,7 +572,7 @@ Now the fun part: count the points in the polygon and report back how many there
 
 The final stage is to transfer the data on station counts back into the 
 polygon data frame. We have used `merge` to join two datasets before.
-In R there is often more than one way to acheive the same result.
+In R there is often more than one way to achieve the same result.
 It's good to experiment with different functions, so we will use
 `join` from the `plyr` package. `join` requires identical joining 
 names in both data frames, so first we will rename them (type 
@@ -605,7 +632,7 @@ p.ass +
 It is also possible to overlay a density distribution over the top of the histogram. 
 For this we need to produce a second plot object with the density distribution as the y variable.
 
-```{r}
+```{r Histogram with density overlay}
 p2.ass <- ggplot(input, aes(x = assault_09_11, y = ..density..))
 
 p2.ass + 
@@ -621,7 +648,6 @@ To find out which ones these are we can select them.
 input[which(input$assault_09_11>750),]
 ```
 
-
 It is perhaps unsurprising that St James's and the West End have the highest counts.
 The plot has provided a good impression of the overall distribution,
 but what are the characteristics of each distribution within the Boroughs?
@@ -634,16 +660,15 @@ is a box and whisker plot. These too can be easily produced in R
 p3.ass <- ggplot(input, aes(x = Bor_Code, y = assault_09_11))
 ```
 
-
 and convert it to a boxplot.
 
-```{r}
+```{r, eval=FALSE}
 p3.ass + geom_boxplot()
 ```
 
 Perhaps this would look a little better flipped round.
 
-```{r}
+```{r Bar and whisker plot}
 p3.ass + geom_boxplot() +
   coord_flip()
 ```
@@ -656,14 +681,14 @@ This demonstrates why R is such a useful program for these kinds of statistics.
 
 If you want an insight into some of the visualisations you can develop with this type of data we can do faceting based on the example of the histogram plot above. 
 
-```{r, message=FALSE}
+```{r Faceted histogram, message=FALSE}
 p.ass + geom_histogram() +
   facet_wrap( ~ Bor_Code)
 ```
 
 We need to do a little bit of tweaking to make this plot publishable but we want to demonstrate that it is really easy to produce 30+ plots on a single page! Faceting is an extremely powerful way of visualizing multidimensional datasets and is especially good for showing change over time.
 
-# Advanced Task: Facetting for Maps
+# Advanced Task: Faceting for Maps
 
 ```{r}
 library(reshape2) # this may not be installed. 
@@ -687,7 +712,7 @@ london.data.melt <- melt(london.data, id = c("Area.Code", "Area.Name"))
 Only do this step if reshape and melt failed
 
 ```{r, eval=F}
-london.data.melt<-read.csv("london_data_melt.csv")
+london.data.melt <- read.csv("london_data_melt.csv")
 ```
 
 
@@ -705,7 +730,7 @@ plot.data <- plot.data[order(plot.data$order), ]
 
 We can now use faceting to produce one map per year (this may take a little while to appear). 
 
-```{r}
+```{r Faceted map}
 ggplot(data = plot.data, aes(x = long, y = lat, fill = value, group = group)) + 
   geom_polygon() + 
   geom_path(colour="grey", lwd=0.1) + 
@@ -718,3 +743,49 @@ Try out different colour values as well.
 
 Add a title and replace the axes names with "easting" and 
 "northing" and save your map as a pdf.
+
+# Taking spatial data analysis in R further
+
+The skills you have learned in this tutorial are applicable to a very wide 
+range of datasets, spatial or not. Often experimentation is the 
+most rewarding learning method, rather than just searching for the 
+'best' way of doing something (Kabakoff, 2011). We recommend you play around
+with your own data.
+
+The supportive online communities surrounding large open source programs such as R
+are one of their greatest assets, so we recommend you become an active 
+"[open source citizen](http://blog.cleverelephant.ca/2013/10/being-open-source-citizen.html)" rather than a passive consumer (Ramsey & Dubovsky, 2013). 
+
+This does not necessarily mean writing R source code - it can simply mean helping
+others use R. We therefore conclude the tutorial with a list of resources
+that will help you further sharpen you R skills, find help and contribute 
+to the growing online R community:
+
+* R's homepage hosts a wealth of [official](http://cran.r-project.org/manuals.html) and [contributed](http://cran.r-project.org/other-docs.html) guides.
+* Stack Exchange and GIS Stack Exchange groups - try searching for "[R]". If your issue has not been not been addressed yet, you could post a polite question.
+* R's [mailing lists](http://www.r-project.org/mail.html) - the R-sig-geo list may be of particular interest here.
+
+Books: despite the strength of R's online community, nothing beats a physical book for concentrated learning. We would particularly recommend the following:
+
+ * ggplot2: elegant graphics for data analysis (Wickham 2009)
+ * Bivand et al. (2013) Provide a dense and detailed overview of spatial 
+ data analysis in an updated version of the book by the developers of many
+ of R's spatial functions.
+ * Kabacoff (2011) is a more general R book; it has many fun worked examples.
+
+
+# References
+
+Bivand, R. S., Pebesma, E. J., & Rubio, V. G. (2008). Applied spatial data: analysis with R. Springer.
+
+Harris, R. (2012). A Short Introduction to R. 
+[social-statistics.org](http://www.social-statistics.org/).
+
+Kabacoff, R. (2011). R in Action. Manning Publications Co.
+
+Ramsey, P., & Dubovsky, D. (2013). Geospatial Software's Open Future. 
+GeoInformatics, 16(4). 
+
+Torfs and Brauer (2012). A (very) short Introduction to R. The Comprehensive R Archive Network.
+
+Wickham, H. (2009). ggplot2: elegant graphics for data analysis. Springer.
