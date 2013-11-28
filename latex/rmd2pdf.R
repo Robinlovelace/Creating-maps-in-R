@@ -1,7 +1,10 @@
 ## Convert Rmd into pdf
 mess <- paste('pandoc -f markdown -t latex -s -o', "intro-spatial.tex", 
               "intro-spatial.md")
-system(mess)
+system(mess) # create latex file
+
+mess2 <- paste("sed 's/plot of.chunk.//g' intro-spatial.tex > intro-spatial-rl.tex")
+system(mess2) # replace "plot of chunk " text with nowth
 
 # from http://conjugateprior.org/2012/12/r-markdown-to-other-document-formats/
 
