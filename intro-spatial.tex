@@ -62,12 +62,42 @@
 
 \begin{document}
 
-\section{Introduction to Spatial Data and ggplot2}
+\section{Introduction}
 
-Building on the introduction provided by the previous worksheet, the
-next set of exercises are concerned with specific functions for spatial
-data and also the use of a package called ggplot2 for data
-visualisation.
+This tutorial is an ``Introduction to Spatial Data and ggplot2'' and
+assumes no prior knowledge in spatial data analysis in R. We do
+recommend users are already acquainted with the R command line though,
+perhaps by following an `Introduction to R' type tutorial, such as ``A
+(very) short introduction to R'' (Torfs and Brauer, 2012) or the more
+geographically inclined ``Short introduction to R'' (Harris, 2012).
+
+Building on such background material, the following set of exercises are
+concerned with specific functions for spatial data and also the use of a
+package called ggplot2 for data visualisation.
+
+\subsection{Typographic conventions}
+
+To ensure reproducibility and allow automatic syntax highlighting, this
+document has been written in RMarkdown. Be aware of the following
+typographic conventions: R code (e.g. \texttt{plot(x,y)}) is written in
+\texttt{monospace} fonts while prose is not. Blocks of code such as,
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{:}\DecValTok{3}\NormalTok{, }\DecValTok{5}\NormalTok{)^}\DecValTok{2}
+\end{Highlighting}
+\end{Shaded}
+\begin{verbatim}
+## [1]  1  4  9 25
+\end{verbatim}
+are compiled in-line: the \texttt{\#\#} indicates this is output from R.
+Some of the output from the code below is quite long; we only show the
+output that is useful. A single hash (\texttt{\#}) is a comment for
+humans to read that R will ignore. All images in this document are small
+and low-quality to save space; they should display better on your
+computer screen and can be saved at any resolution. The code presented
+here not the only way to do things: we encourage you to play with it to
+gain a deeper understanding of R.
 
 \subsection{Spatial Data}
 
@@ -121,19 +151,6 @@ data formats.
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{library}\NormalTok{(rgdal)}
-\end{Highlighting}
-\end{Shaded}
-\begin{verbatim}
-## Loading required package: sp
-## rgdal: version: 0.8-10, (SVN revision 478)
-## Geospatial Data Abstraction Library extensions to R successfully loaded
-## Loaded GDAL runtime: GDAL 1.10.0, released 2013/04/24
-## Path to GDAL shared files: /usr/share/gdal/1.10
-## Loaded PROJ.4 runtime: Rel. 4.8.0, 6 March 2012, [PJ_VERSION: 480]
-## Path to PROJ.4 shared files: (autodetected)
-\end{verbatim}
-\begin{Shaded}
-\begin{Highlighting}[]
 \NormalTok{sport <- }\KeywordTok{readOGR}\NormalTok{(}\DataTypeTok{dsn =} \StringTok{"."}\NormalTok{, }\StringTok{"london_sport"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -216,7 +233,7 @@ we would use the following code:
 The different epsg codes are a bit of hassle to remember but you can
 find them all here: http://spatialreference.org/
 
-\subsection{ggplot2}
+\section{ggplot2}
 
 This next section of the practical introduces a slightly different
 method of creating plots in R using the ggplot2 package. The package is
@@ -336,27 +353,12 @@ polygons in the form of the XY coordinates used to draw the polygon
 outline. The generic plot function can work out what to do with these,
 ggplot2 cannot. We therefore need to extract them as a data frame. The
 fortify function was written specifically for this purpose. For this to
-work, an additional command must be run to enable the appropriate
-permissions.
+work, either \texttt{gpclib} or \texttt{rgeos} packages must be
+installed.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(gpclib)}
-\end{Highlighting}
-\end{Shaded}
-\begin{verbatim}
-## Error: there is no package called 'gpclib'
-\end{verbatim}
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{gpclibPermit}\NormalTok{()  }\CommentTok{# allow permissions for non-commercial use}
-\end{Highlighting}
-\end{Shaded}
-\begin{verbatim}
-## Error: could not find function "gpclibPermit"
-\end{verbatim}
-\begin{Shaded}
-\begin{Highlighting}[]
+\CommentTok{# library(gpclib); gpclibPermit() # uncomment if rgeos not installed}
 \NormalTok{sport.f <- }\KeywordTok{fortify}\NormalTok{(sport, }\DataTypeTok{region =} \StringTok{"ons_label"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -378,7 +380,7 @@ typing \texttt{?merge}.
 \end{Shaded}
 Take a look at the \texttt{sport.f} object to see its contents. You
 should see a large data frame containing the latitude and longitude
-(they are actually eastings and northings as the data are in British
+(they are actually Easting and Northing as the data are in British
 National Grid format) coordinates alongside the attribute information
 associated with each London Borough. If you type \texttt{print(sport.f)}
 you will just how many coordinate pairs are required! To keep the output
@@ -446,7 +448,7 @@ following:
 \KeywordTok{ggsave}\NormalTok{(}\StringTok{"my_large_plot.png"}\NormalTok{, }\DataTypeTok{scale =} \DecValTok{3}\NormalTok{, }\DataTypeTok{dpi =} \DecValTok{400}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
-\subsection{Adding basemaps to ggplot2 with ggmap}
+\section{Adding base maps to ggplot2 with ggmap}
 
 ggmap is a package that uses the ggplot2 syntax as a template to create
 maps with image tiles from the likes of Google and OpenStreetMap:
@@ -475,7 +477,7 @@ that we need.
 \end{Shaded}
 This is then fed into the \texttt{get\_map} function as the location
 parameter. The syntax below contains 2 functions. \texttt{ggmap} is
-required to produce the plot and provides the basemap data.
+required to produce the plot and provides the base map data.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -497,7 +499,7 @@ attribute data (we already did this step to create the sport.f object).
 \NormalTok{sport.wgs84.f <- }\KeywordTok{merge}\NormalTok{(sport.wgs84.f, sport.wgs84@data, }\DataTypeTok{by.x =} \StringTok{"id"}\NormalTok{, }\DataTypeTok{by.y =} \StringTok{"ons_label"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
-We can now overlay this on our basemap.
+We can now overlay this on our base map.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -507,9 +509,9 @@ We can now overlay this on our basemap.
 \end{Shaded}
 The code above contains a lot of parameters. Use the ggplot2 help pages
 to find out what they are. The resulting map looks okay, but it would be
-improved with a simpler basemap in black and white. A design firm called
-stamen provide the tiles we need and they can be brought into the plot
-with the \texttt{get\_map} function:
+improved with a simpler base map in black and white. A design firm
+called stamen provide the tiles we need and they can be brought into the
+plot with the \texttt{get\_map} function:
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -531,7 +533,7 @@ We can then produce the plot as before.
 \caption{plot of chunk Basemap 2}
 \end{figure}
 
-Finally, if we want to increase the detail of the basemap, get\_map has
+Finally, if we want to increase the detail of the base map, get\_map has
 a zoom parameter.
 
 \begin{Shaded}
@@ -549,7 +551,7 @@ a zoom parameter.
 \caption{plot of chunk Basemap 3}
 \end{figure}
 
-\subsection{Joining and clipping}
+\section{Joining and clipping}
 
 This section builds on the previous information on plotting and
 highlights some of R's more advanced spatial functions from the
@@ -591,7 +593,7 @@ in our workspace, and count the number of polygons:
 \begin{verbatim}
 ## [1] 33
 \end{verbatim}
-\subsubsection{Downloading additional data}
+\subsection{Downloading additional data}
 
 Because we are using borough-level data, and boroughs are official
 administrative zones, there is much data available at this level. We
@@ -700,9 +702,9 @@ the join work:
 \begin{verbatim}
 ## Joining by: name
 \end{verbatim}
-\subsubsection{Adding point data for clipping and spatial join}
+\subsection{Adding point data for clipping and spatial join}
 
-In addition to joing by zone name, it is also possible to do
+In addition to joining by zone name, it is also possible to do
 \href{http://help.arcgis.com/en/arcgisdesktop/10.0/help/index.html\#//00080000000q000000}{spatial
 joins} in R. There are three main varieties: many-to-one - where the
 values of many intersecting objects contribute to a new variable in the
@@ -727,8 +729,8 @@ The above code loads the data correctly, but also shows that there are
 problems with it: the Coordinate Reference System (CRS) differs from
 that of our shapefile. Although OSGB 1936 (or EPSG 27700) is the
 `correct' CRS for the UK, we will convert the stations dataset into
-lat-long coordinates, as this is a more common CRS and enables easy
-basemap creation:
+lat-long coordinates, as this is a more common CRS and enables easy base
+map creation:
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -741,12 +743,12 @@ basemap creation:
 \end{Shaded}
 \begin{figure}[htbp]
 \centering
-\includegraphics{figure/unnamed-chunk-27.png}
-\caption{plot of chunk unnamed-chunk-27}
+\includegraphics{figure/Sampling_and_plotting_stations.png}
+\caption{plot of chunk Sampling and plotting stations}
 \end{figure}
 
 Now we can clearly see that the stations overlay the boroughs. The
-problem is that the stations dataset is far more exentsive than London
+problem is that the stations dataset is far more extensive than London
 borough dataset; we need
 
 \subsection{Clipping}
@@ -782,8 +784,8 @@ telling us which polygon it interacts with (i.e.~the polygon it is in):
 \end{Shaded}
 \begin{figure}[htbp]
 \centering
-\includegraphics{figure/unnamed-chunk-28.png}
-\caption{plot of chunk unnamed-chunk-28}
+\includegraphics{figure/Identifying_and_plotting_individual_stations.png}
+\caption{plot of chunk Identifying and plotting individual stations}
 \end{figure}
 
 In the above code, only the first line actually `does' anything in our
@@ -806,8 +808,8 @@ unique to R, comes into play:
 \end{Shaded}
 \begin{figure}[htbp]
 \centering
-\includegraphics{figure/unnamed-chunk-29.png}
-\caption{plot of chunk unnamed-chunk-29}
+\includegraphics{figure/Clipped_points__within_London_boroughs_.png}
+\caption{plot of chunk Clipped points (within London boroughs)}
 \end{figure}
 
 \begin{Shaded}
@@ -828,7 +830,7 @@ object and remove the now duplicated \texttt{stations.cl} object.
 \subsection{Aggregating the data to complete the spatial join}
 
 Now that we know how \texttt{gIntersects} works in general terms and for
-clipping, let's use it to allocate a borrough to each of our station
+clipping, let's use it to allocate a borough to each of our station
 points, which we will then aggregate up. Data from these points
 (e.g.~counts, averages in each area etc.) can then be transferred to the
 main polygons table: the essence of a spatial join. Again,
@@ -850,7 +852,7 @@ The above code first extracts the index of the row (borough) for which
 the corresponding column is true and then converts this into names. The
 final object created, \texttt{b.count} contains the number of station
 points in each zone. According to this, Barking and Dagenham should
-contain 30 station points. It is important to check the output makes
+contain 12 station points. It is important to check the output makes
 sense at every stage with R, so let's check to see this is indeed the
 case with a quick plot:
 
@@ -862,8 +864,8 @@ case with a quick plot:
 \end{Shaded}
 \begin{figure}[htbp]
 \centering
-\includegraphics{figure/unnamed-chunk-31.png}
-\caption{plot of chunk unnamed-chunk-31}
+\includegraphics{figure/Train/tube_stations_in_Barking_and_Dagenham.png}
+\caption{plot of chunk Train/tube stations in Barking and Dagenham}
 \end{figure}
 
 Now the fun part: count the points in the polygon and report back how
@@ -871,7 +873,7 @@ many there are!
 
 The final stage is to transfer the data on station counts back into the
 polygon data frame. We have used \texttt{merge} to join two datasets
-before. In R there is often more than one way to acheive the same
+before. In R there is often more than one way to achieve the same
 result. It's good to experiment with different functions, so we will use
 \texttt{join} from the \texttt{plyr} package. \texttt{join} requires
 identical joining names in both data frames, so first we will rename
@@ -905,7 +907,7 @@ We have now seen how to join and clip data. Next, for a stronger
 grounding in how ggplot works, we will look at plotting non-spatial
 data.
 
-\subsection{Using ggplot2 for Descriptive Statistics}
+\section{Using ggplot2 for Descriptive Statistics}
 
 For this we will use a new dataset:
 
@@ -978,8 +980,8 @@ density distribution as the y variable.
 \end{verbatim}
 \begin{figure}[htbp]
 \centering
-\includegraphics{figure/unnamed-chunk-38.png}
-\caption{plot of chunk unnamed-chunk-38}
+\includegraphics{figure/Histogram_with_density_overlay.png}
+\caption{plot of chunk Histogram with density overlay}
 \end{figure}
 
 What kind of distribution is this plot showing? You can see that there
@@ -1017,12 +1019,6 @@ and convert it to a boxplot.
 \NormalTok{p3.ass + }\KeywordTok{geom_boxplot}\NormalTok{()}
 \end{Highlighting}
 \end{Shaded}
-\begin{figure}[htbp]
-\centering
-\includegraphics{figure/unnamed-chunk-41.png}
-\caption{plot of chunk unnamed-chunk-41}
-\end{figure}
-
 Perhaps this would look a little better flipped round.
 
 \begin{Shaded}
@@ -1032,8 +1028,8 @@ Perhaps this would look a little better flipped round.
 \end{Shaded}
 \begin{figure}[htbp]
 \centering
-\includegraphics{figure/unnamed-chunk-42.png}
-\caption{plot of chunk unnamed-chunk-42}
+\includegraphics{figure/Bar_and_whisker_plot.png}
+\caption{plot of chunk Bar and whisker plot}
 \end{figure}
 
 Now each of the borough codes can be easily seen. No surprise that the
@@ -1053,8 +1049,8 @@ histogram plot above.
 \end{Shaded}
 \begin{figure}[htbp]
 \centering
-\includegraphics{figure/unnamed-chunk-43.png}
-\caption{plot of chunk unnamed-chunk-43}
+\includegraphics{figure/Faceted_histogram.png}
+\caption{plot of chunk Faceted histogram}
 \end{figure}
 
 We need to do a little bit of tweaking to make this plot publishable but
@@ -1063,7 +1059,7 @@ single page! Faceting is an extremely powerful way of visualizing
 multidimensional datasets and is especially good for showing change over
 time.
 
-\subsection{Advanced Task: Facetting for Maps}
+\section{Advanced Task: Faceting for Maps}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1120,8 +1116,8 @@ little while to appear).
 \end{Shaded}
 \begin{figure}[htbp]
 \centering
-\includegraphics{figure/unnamed-chunk-50.png}
-\caption{plot of chunk unnamed-chunk-50}
+\includegraphics{figure/Faceted_map.png}
+\caption{plot of chunk Faceted map}
 \end{figure}
 
 Again there is a lot going on here so explore the documentation to make
@@ -1129,5 +1125,70 @@ sure you understand it. Try out different colour values as well.
 
 Add a title and replace the axes names with ``easting'' and ``northing''
 and save your map as a pdf.
+
+\section{Taking spatial data analysis in R further}
+
+The skills you have learned in this tutorial are applicable to a very
+wide range of datasets, spatial or not. Often experimentation is the
+most rewarding learning method, rather than just searching for the
+`best' way of doing something (Kabakoff, 2011). We recommend you play
+around with your own data.
+
+The supportive online communities surrounding large open source programs
+such as R are one of their greatest assets, so we recommend you become
+an active
+``\href{http://blog.cleverelephant.ca/2013/10/being-open-source-citizen.html}{open
+source citizen}'' rather than a passive consumer (Ramsey \& Dubovsky,
+2013).
+
+This does not necessarily mean writing R source code - it can simply
+mean helping others use R. We therefore conclude the tutorial with a
+list of resources that will help you further sharpen you R skills, find
+help and contribute to the growing online R community:
+
+\begin{itemize}
+\item
+  R's homepage hosts a wealth of
+  \href{http://cran.r-project.org/manuals.html}{official} and
+  \href{http://cran.r-project.org/other-docs.html}{contributed} guides.
+\item
+  Stack Exchange and GIS Stack Exchange groups - try searching for
+  ``{[}R{]}''. If your issue has not been not been addressed yet, you
+  could post a polite question.
+\item
+  R's \href{http://www.r-project.org/mail.html}{mailing lists} - the
+  R-sig-geo list may be of particular interest here.
+\item
+  Books: despite the strength of R's online community, nothing beats a
+  physical book for concentrated learning. We would particularly
+  recommend the following:
+\item
+  ggplot2: elegant graphics for data analysis (Wickham 2009)
+\item
+  Bivand et al. (2013) Provide a dense and detailed overview of spatial
+  data analysis in an updated version of the book by the developers of
+  many of R's spatial functions.
+\item
+  Kabacoff (2011) is a more general R book; it has many fun worked
+  examples.
+\end{itemize}
+\section{References}
+
+Bivand, R. S., Pebesma, E. J., \& Rubio, V. G. (2008). Applied spatial
+data: analysis with R. Springer.
+
+Harris, R. (2012). A Short Introduction to R.
+\href{http://www.social-statistics.org/}{social-statistics.org}.
+
+Kabacoff, R. (2011). R in Action. Manning Publications Co.
+
+Ramsey, P., \& Dubovsky, D. (2013). Geospatial Software's Open Future.
+GeoInformatics, 16(4).
+
+Torfs and Brauer (2012). A (very) short Introduction to R. The
+Comprehensive R Archive Network.
+
+Wickham, H. (2009). ggplot2: elegant graphics for data analysis.
+Springer.
 
 \end{document}
