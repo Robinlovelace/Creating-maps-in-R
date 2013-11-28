@@ -60,11 +60,11 @@ library(rgdal)
 
 ```
 ## Loading required package: sp
-## rgdal: version: 0.8-10, (SVN revision 478)
+## rgdal: version: 0.8-13, (SVN revision 494)
 ## Geospatial Data Abstraction Library extensions to R successfully loaded
-## Loaded GDAL runtime: GDAL 1.10.0, released 2013/04/24
-## Path to GDAL shared files: /usr/share/gdal/1.10
-## Loaded PROJ.4 runtime: Rel. 4.8.0, 6 March 2012, [PJ_VERSION: 480]
+## Loaded GDAL runtime: GDAL 1.9.0, released 2011/12/29
+## Path to GDAL shared files: /usr/share/gdal/1.9
+## Loaded PROJ.4 runtime: Rel. 4.7.1, 23 September 2009, [PJ_VERSION: 470]
 ## Path to PROJ.4 shared files: (autodetected)
 ```
 
@@ -140,7 +140,7 @@ sport.wgs84 <- spTransform(sport, CRS("+init=epsg:4326"))
 The different epsg codes are a bit of hassle to remember but you can find them all here: 
 http://spatialreference.org/
 
-## ggplot2
+# ggplot2
 
 This next section of the practical introduces a slightly different method of creating plots in R using the ggplot2 
 package. The package is an implementation of Leland Wilkinson's Grammar of Graphics - 
@@ -254,10 +254,8 @@ sport.f <- fortify(sport, region = "ons_label")
 ```
 
 ```
-## Loading required package: rgeos
-## rgeos version: 0.2-19, (SVN revision 394)
-##  GEOS runtime version: 3.3.8-CAPI-1.7.8 
-##  Polygon checking: TRUE
+## Error: maptools package required for this functionality.  Please install
+## and try again.
 ```
 
 
@@ -267,6 +265,10 @@ the output of typing `?merge`.
 
 ```r
 sport.f <- merge(sport.f, sport@data, by.x = "id", by.y = "ons_label")
+```
+
+```
+## Error: error in evaluating the argument 'x' in selecting a method for function 'merge': Error: object 'sport.f' not found
 ```
 
 
@@ -279,13 +281,7 @@ head(sport.f[, 1:8])
 ```
 
 ```
-##     id   long    lat order  hole piece  group           name
-## 1 00AA 531027 181611     1 FALSE     1 00AA.1 City of London
-## 2 00AA 531555 181659     2 FALSE     1 00AA.1 City of London
-## 3 00AA 532136 182198     3 FALSE     1 00AA.1 City of London
-## 4 00AA 532946 181895     4 FALSE     1 00AA.1 City of London
-## 5 00AA 533411 182038     5 FALSE     1 00AA.1 City of London
-## 6 00AA 533843 180794     6 FALSE     1 00AA.1 City of London
+## Error: object 'sport.f' not found
 ```
 
 
@@ -298,6 +294,10 @@ It is now straightforward to produce a map using all the built in tools
 Map <- ggplot(sport.f, aes(long, lat, group = group, fill = Partic_Per)) + geom_polygon() + 
     coord_equal() + labs(x = "Easting (m)", y = "Northing (m)", fill = "% Sport Partic.") + 
     ggtitle("London Sports Participation")
+```
+
+```
+## Error: object 'sport.f' not found
 ```
 
 
@@ -320,7 +320,9 @@ which should produce a map like that shown below:
 Map + scale_fill_gradient(low = "white", high = "black")
 ```
 
-![plot of chunk Greyscale map](figure/Greyscale_map.png) 
+```
+## Error: non-numeric argument to binary operator
+```
 
 
 Saving plot images is also easy. You just need to use `ggsave` after each plot, e.g.
@@ -382,7 +384,19 @@ data (we already did this step to create the sport.f object).
 
 ```r
 sport.wgs84.f <- fortify(sport.wgs84, region = "ons_label")
+```
+
+```
+## Error: maptools package required for this functionality.  Please install
+## and try again.
+```
+
+```r
 sport.wgs84.f <- merge(sport.wgs84.f, sport.wgs84@data, by.x = "id", by.y = "ons_label")
+```
+
+```
+## Error: error in evaluating the argument 'x' in selecting a method for function 'merge': Error: object 'sport.wgs84.f' not found
 ```
 
 
@@ -416,7 +430,9 @@ lnd.b2 + geom_polygon(data = sport.wgs84.f, aes(x = long, y = lat, group = group
     fill = Partic_Per), alpha = 0.5)
 ```
 
-![plot of chunk Basemap 2](figure/Basemap_2.png) 
+```
+## Error: object 'sport.wgs84.f' not found
+```
 
 
 Finally, if we want to increase the detail of the basemap, get_map has a zoom parameter.
@@ -430,7 +446,9 @@ lnd.b3 + geom_polygon(data = sport.wgs84.f, aes(x = long, y = lat, group = group
     fill = Partic_Per), alpha = 0.5)
 ```
 
-![plot of chunk Basemap 3](figure/Basemap_3.png) 
+```
+## Error: object 'sport.wgs84.f' not found
+```
 
 
 ## Joining and clipping
@@ -659,13 +677,48 @@ polygon it interacts with (i.e. the polygon it is in):
 
 ```r
 int <- gIntersects(stations, lnd, byid = T)  # find which stations intersect 
+```
+
+```
+## Error: could not find function "gIntersects"
+```
+
+```r
 class(int)  # it's outputed a matrix
+```
+
+```
+## Error: object 'int' not found
+```
+
+```r
 dim(int)  # with 33 rows (one for each zone) and 2532 cols (the points)
+```
+
+```
+## Error: object 'int' not found
+```
+
+```r
 summary(int[, c(200, 500)])  # not the output of this
+```
+
+```
+## Error: error in evaluating the argument 'object' in selecting a method for function 'summary': Error: object 'int' not found
+```
+
+```r
 plot(lnd)
 points(stations[200, ], col = "red")  # note point id 200 is outside the zones
 points(stations[500, ], col = "green")  # note point 500 is inside
 which(int[, 500] == T)  # this tells us that point 500 intersects with zone 32
+```
+
+```
+## Error: object 'int' not found
+```
+
+```r
 points(coordinates(lnd[32, ]), col = "black")  # test the previous statement
 ```
 
@@ -685,16 +738,51 @@ function `apply`, which is unique to R, comes into play:
 
 ```r
 clipped <- apply(int == F, MARGIN = 2, all)
+```
+
+```
+## Error: object 'int' not found
+```
+
+```r
 plot(stations[which(clipped), ])  # shows all stations we DO NOT want
+```
+
+```
+## Error: error in evaluating the argument 'x' in selecting a method for function 'plot': Error in which(clipped) : object 'clipped' not found
+## Calls: [ -> [ -> which
+```
+
+```r
 stations.cl <- stations[which(!clipped), ]  # use ! to select the invers
+```
+
+```
+## Error: object 'clipped' not found
+```
+
+```r
 points(stations.cl, col = "green")  # check that it's worked
 ```
 
-![plot of chunk unnamed-chunk-29](figure/unnamed-chunk-29.png) 
+```
+## Error: object 'stations.cl' not found
+```
 
 ```r
 stations <- stations.cl
+```
+
+```
+## Error: object 'stations.cl' not found
+```
+
+```r
 rm(stations.cl)  # tidy up: we're only interested in clipped ones
+```
+
+```
+## Warning: object 'stations.cl' not found
 ```
 
 
@@ -717,12 +805,58 @@ join. Again, `apply` is our friend in this instance, meaning we can avoid `for` 
 
 ```r
 int <- gIntersects(stations, lnd, byid = T)  # re-run the intersection query 
+```
+
+```
+## Error: could not find function "gIntersects"
+```
+
+```r
 head(apply(int, MARGIN = 2, FUN = which))
+```
+
+```
+## Error: object 'int' not found
+```
+
+```r
 b.indexes <- which(int, arr.ind = T)
+```
+
+```
+## Error: object 'int' not found
+```
+
+```r
 summary(b.indexes)
+```
+
+```
+## Error: error in evaluating the argument 'object' in selecting a method for function 'summary': Error: object 'b.indexes' not found
+```
+
+```r
 b.names <- lnd$name[b.indexes[, 1]]
+```
+
+```
+## Error: object 'b.indexes' not found
+```
+
+```r
 b.count <- aggregate(b.indexes ~ b.names, FUN = length)
+```
+
+```
+## Error: object 'b.indexes' not found
+```
+
+```r
 head(b.count)
+```
+
+```
+## Error: object 'b.count' not found
 ```
 
 
@@ -755,11 +889,18 @@ names in both data frames, so first we will rename them (type
 
 ```r
 b.count <- rename(b.count, replace = c(b.names = "name"))
+```
+
+```
+## Error: object 'b.count' not found
+```
+
+```r
 b.count.tmp <- join(lnd@data, b.count)
 ```
 
 ```
-## Joining by: name
+## Error: object 'b.count' not found
 ```
 
 ```r
@@ -767,13 +908,15 @@ head(b.count.tmp, 2)
 ```
 
 ```
-##   ons_label                 name Partic_Per Pop_2001 CrimeCount row col
-## 1      00AF              Bromley       21.7   295535      15172  54  54
-## 2      00BD Richmond upon Thames       26.6   172330       9715  22  22
+## Error: object 'b.count.tmp' not found
 ```
 
 ```r
 lnd$station.count <- b.count.tmp[, 7]
+```
+
+```
+## Error: object 'b.count.tmp' not found
 ```
 
 
@@ -969,12 +1112,20 @@ Merge the population data with the London borough geometry contained within our 
 plot.data <- merge(sport.f, london.data.melt, by.x = "id", by.y = "Area.Code")
 ```
 
+```
+## Error: error in evaluating the argument 'x' in selecting a method for function 'merge': Error: object 'sport.f' not found
+```
+
 
 Reorder this data (ordering is important for plots).
 
 
 ```r
 plot.data <- plot.data[order(plot.data$order), ]
+```
+
+```
+## Error: object 'plot.data' not found
 ```
 
 
@@ -987,7 +1138,9 @@ ggplot(data = plot.data, aes(x = long, y = lat, fill = value, group = group)) +
     facet_wrap(~variable)
 ```
 
-![plot of chunk unnamed-chunk-50](figure/unnamed-chunk-50.png) 
+```
+## Error: object 'plot.data' not found
+```
 
 
 Again there is a lot going on here so explore the documentation to make sure you understand it. 

@@ -98,7 +98,7 @@ sport.wgs84 <- spTransform(sport, CRS("+init=epsg:4326"))
 The different epsg codes are a bit of hassle to remember but you can find them all here: 
 http://spatialreference.org/
 
-## ggplot2
+# ggplot2
 
 This next section of the practical introduces a slightly different method of creating plots in R using the ggplot2 
 package. The package is an implementation of Leland Wilkinson's Grammar of Graphics - 
@@ -233,7 +233,7 @@ ggsave("my_large_plot.png", scale = 3, dpi = 400)
 ```
 
 
-## Adding basemaps to ggplot2 with ggmap
+# Adding basemaps to ggplot2 with ggmap
 
 ggmap is a package that uses the ggplot2 syntax as a 
 template to create maps with image tiles from the likes of Google and OpenStreetMap:
@@ -314,7 +314,7 @@ lnd.b3 +
                alpha = 0.5)
 ```
 
-## Joining and clipping
+# Joining and clipping
 
 This section builds on the previous information on plotting and highlights 
 some of R's more advanced spatial functions from the `rgeos` package. 
@@ -333,7 +333,7 @@ lnd <- readOGR(dsn = ".", "london_sport")
 plot(lnd); nrow(lnd)
 ```
 
-### Downloading additional data
+## Downloading additional data
 
 Because we are using borough-level data, and boroughs are official administrative
 zones, there is much data available at this level. We will use the example 
@@ -411,7 +411,7 @@ head(join(lnd@data, crimeAg)) # test it works
 lnd@data <- join(lnd@data, crimeAg)
 ```
 
-### Adding point data for clipping and spatial join
+## Adding point data for clipping and spatial join
 In addition to joing by zone name, it is also possible to do
 [spatial joins](http://help.arcgis.com/en/arcgisdesktop/10.0/help/index.html#//00080000000q000000) in R. There are three main varieties: many-to-one - where
 the values of many intersecting objects contribute to a new variable in 
@@ -561,7 +561,7 @@ lnd$station.count <- b.count.tmp[, 7]
 We have now seen how to join and clip data. Next, for a stronger grounding 
 in how ggplot works, we will look at plotting non-spatial data.
 
-## Using ggplot2 for Descriptive Statistics
+# Using ggplot2 for Descriptive Statistics
 
 For this we will use a new dataset:
 
@@ -663,7 +663,7 @@ p.ass + geom_histogram() +
 
 We need to do a little bit of tweaking to make this plot publishable but we want to demonstrate that it is really easy to produce 30+ plots on a single page! Faceting is an extremely powerful way of visualizing multidimensional datasets and is especially good for showing change over time.
 
-## Advanced Task: Facetting for Maps
+# Advanced Task: Facetting for Maps
 
 ```{r}
 library(reshape2) # this may not be installed. 
