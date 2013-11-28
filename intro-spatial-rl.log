@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2013.10.5)  27 NOV 2013 18:55
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2013.10.5)  28 NOV 2013 16:20
 entering extended mode
  %&-line parsing enabled.
 **intro-spatial-rl.tex
@@ -475,7 +475,7 @@ Package: atbegshi 2008/07/31 v1.9 At begin shipout hook (HO)
 File: hpdftex.def 2009/10/09 v6.79a Hyperref driver for pdfTeX
 \Fld@listcount=\count109
 )
-Package hyperref Info: Option `breaklinks' set `true' on input line 57.
+Package hyperref Info: Option `breaklinks' set `true' on input line 56.
 
 (/usr/share/texmf-texlive/tex/latex/geometry/geometry.sty
 Package: geometry 2008/12/21 v4.2 Page Geometry
@@ -590,103 +590,111 @@ LaTeX Font Info:    Try loading font information for U+msb on input line 79.
 File: umsb.fd 2009/06/22 v3.00 AMS symbols B
 )
 LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <10> not available
-(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 94.
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 102.
  [1
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-Overfull \hbox (50.7612pt too wide) in paragraph at lines 219--219
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2]
+Overfull \hbox (50.7612pt too wide) in paragraph at lines 236--236
 []\OT1/cmtt/m/n/10 ## +proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 +x_0=4000
 00 +y_0=-100000 +ellps=airy +units=m +no_defs[] 
  []
 
-[2] <figure/A_simple_ggplot.png, id=64, 505.89pt x 505.89pt>
+[3] <figure/A_simple_ggplot.png, id=81, 505.89pt x 505.89pt>
 File: figure/A_simple_ggplot.png Graphic file (type png)
 
-<use figure/A_simple_ggplot.png> [3]
-<figure/ggplot_for_text.png, id=69, 505.89pt x 505.89pt>
+<use figure/A_simple_ggplot.png>
+<figure/ggplot_for_text.png, id=82, 505.89pt x 505.89pt>
 File: figure/ggplot_for_text.png Graphic file (type png)
 
-<use figure/ggplot_for_text.png> [4 <./figure/A_simple_ggplot.png (PNG copy)> <
-./figure/ggplot_for_text.png (PNG copy)>] [5]
-<figure/Greyscale_map.png, id=81, 505.89pt x 505.89pt>
+<use figure/ggplot_for_text.png> [4 <./figure/A_simple_ggplot.png (PNG copy)>]
+[5 <./figure/ggplot_for_text.png (PNG copy)>]
+<figure/Greyscale_map.png, id=94, 505.89pt x 505.89pt>
 File: figure/Greyscale_map.png Graphic file (type png)
 
 <use figure/Greyscale_map.png> [6 <./figure/Greyscale_map.png (PNG copy)>]
-<figure/Basemap_2.png, id=88, 505.89pt x 505.89pt>
+<figure/Basemap_2.png, id=101, 505.89pt x 505.89pt>
 File: figure/Basemap_2.png Graphic file (type png)
  <use figure/Basemap_2.png>
-<figure/Basemap_3.png, id=89, 505.89pt x 505.89pt>
+[7 <./figure/Basemap_2.png (PNG copy)>]
+<figure/Basemap_3.png, id=108, 505.89pt x 505.89pt>
 File: figure/Basemap_3.png Graphic file (type png)
  <use figure/Basemap_3.png>
-[7] [8 <./figure/Basemap_2.png (PNG copy)> <./figure/Basemap_3.png (PNG copy)>]
-<figure/Plot_of_London.png, id=101, 505.89pt x 505.89pt>
+<figure/Plot_of_London.png, id=109, 505.89pt x 505.89pt>
 File: figure/Plot_of_London.png Graphic file (type png)
 
-<use figure/Plot_of_London.png>
-
-Package hyperref Warning: Difference (2) between bookmark levels is greater 
-(hyperref)                than one, level fixed on input line 609.
-
+<use figure/Plot_of_London.png> [8 <./figure/Basemap_3.png (PNG copy)>]
 [9 <./figure/Plot_of_London.png>] [10]
-<figure/unnamed-chunk-27.png, id=115, 505.89pt x 505.89pt>
-File: figure/unnamed-chunk-27.png Graphic file (type png)
+<figure/Sampling_and_plotting_stations.png, id=127, 505.89pt x 505.89pt>
+File: figure/Sampling_and_plotting_stations.png Graphic file (type png)
 
-<use figure/unnamed-chunk-27.png> [11 <./figure/unnamed-chunk-27.png>]
-<figure/unnamed-chunk-28.png, id=124, 505.89pt x 505.89pt>
-File: figure/unnamed-chunk-28.png Graphic file (type png)
+<use figure/Sampling_and_plotting_stations.png>
+<figure/Identifying_and_plotting_individual_stations.png, id=130, 505.89pt x 50
+5.89pt>
+File: figure/Identifying_and_plotting_individual_stations.png Graphic file (typ
+e png)
+ <use figure/Identifying_and_plotting_individual_stations.png> [11 <./figure/Sa
+mpling_and_plotting_stations.png>]
+<figure/Clipped_points__within_London_boroughs_.png, id=137, 505.89pt x 505.89p
+t>
+File: figure/Clipped_points__within_London_boroughs_.png Graphic file (type png
+)
+ <use figure/Clipped_points__within_London_boroughs_.png> [12 <./figure/Identif
+ying_and_plotting_individual_stations.png> <./figure/Clipped_points__within_Lon
+don_boroughs_.png>]
+<figure/Train/tube_stations_in_Barking_and_Dagenham.png, id=147, 505.89pt x 505
+.89pt>
+File: figure/Train/tube_stations_in_Barking_and_Dagenham.png Graphic file (type
+ png)
+ <use figure/Train/tube_stations_in_Barking_and_Dagenham.png> [13 <./figure/Tra
+in/tube_stations_in_Barking_and_Dagenham.png>] [14]
+<figure/Histogram_with_density_overlay.png, id=159, 505.89pt x 505.89pt>
+File: figure/Histogram_with_density_overlay.png Graphic file (type png)
 
-<use figure/unnamed-chunk-28.png>
-<figure/unnamed-chunk-29.png, id=125, 505.89pt x 505.89pt>
-File: figure/unnamed-chunk-29.png Graphic file (type png)
+<use figure/Histogram_with_density_overlay.png> [15 <./figure/Histogram_with_de
+nsity_overlay.png (PNG copy)>]
+<figure/Bar_and_whisker_plot.png, id=165, 505.89pt x 505.89pt>
+File: figure/Bar_and_whisker_plot.png Graphic file (type png)
 
-<use figure/unnamed-chunk-29.png> [12 <./figure/unnamed-chunk-28.png>]
-<figure/unnamed-chunk-31.png, id=133, 505.89pt x 505.89pt>
-File: figure/unnamed-chunk-31.png Graphic file (type png)
+<use figure/Bar_and_whisker_plot.png>
+<figure/Faceted_histogram.png, id=166, 505.89pt x 505.89pt>
+File: figure/Faceted_histogram.png Graphic file (type png)
 
-<use figure/unnamed-chunk-31.png> [13 <./figure/unnamed-chunk-29.png>] [14 <./f
-igure/unnamed-chunk-31.png>]
-<figure/unnamed-chunk-38.png, id=147, 505.89pt x 505.89pt>
-File: figure/unnamed-chunk-38.png Graphic file (type png)
+<use figure/Faceted_histogram.png> [16 <./figure/Bar_and_whisker_plot.png (PNG 
+copy)>] <figure/Faceted_map.png, id=173, 505.89pt x 505.89pt>
+File: figure/Faceted_map.png Graphic file (type png)
 
-<use figure/unnamed-chunk-38.png>
-<figure/unnamed-chunk-41.png, id=148, 505.89pt x 505.89pt>
-File: figure/unnamed-chunk-41.png Graphic file (type png)
+<use figure/Faceted_map.png> [17 <./figure/Faceted_histogram.png (PNG copy)>]
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 1166
+.
 
-<use figure/unnamed-chunk-41.png>
-<figure/unnamed-chunk-42.png, id=149, 505.89pt x 505.89pt>
-File: figure/unnamed-chunk-42.png Graphic file (type png)
+(/usr/share/texmf-texlive/tex/latex/base/omscmr.fd
+File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 1166.
 
-<use figure/unnamed-chunk-42.png> [15] [16 <./figure/unnamed-chunk-38.png (PNG 
-copy)> <./figure/unnamed-chunk-41.png (PNG copy)>]
-<figure/unnamed-chunk-43.png, id=161, 505.89pt x 505.89pt>
-File: figure/unnamed-chunk-43.png Graphic file (type png)
-
-<use figure/unnamed-chunk-43.png> [17 <./figure/unnamed-chunk-42.png (PNG copy)
->] <figure/unnamed-chunk-50.png, id=168, 505.89pt x 505.89pt>
-File: figure/unnamed-chunk-50.png Graphic file (type png)
-
-<use figure/unnamed-chunk-50.png> [18 <./figure/unnamed-chunk-43.png (PNG copy)
->] [19 <./figure/unnamed-chunk-50.png (PNG copy)>] (./intro-spatial-rl.aux) ) 
+ [18 <./figure/Faceted_map.png (PNG copy)>] [19] (./intro-spatial-rl.aux) ) 
 Here is how much of TeX's memory you used:
- 7391 strings out of 495061
- 99248 string characters out of 1182621
- 177526 words of memory out of 3000000
- 10408 multiletter control sequences out of 15000+50000
- 10348 words of font info for 40 fonts, out of 3000000 for 9000
+ 7411 strings out of 495061
+ 100016 string characters out of 1182621
+ 175544 words of memory out of 3000000
+ 10423 multiletter control sequences out of 15000+50000
+ 10700 words of font info for 41 fonts, out of 3000000 for 9000
  28 hyphenation exceptions out of 8191
- 38i,6n,36p,359b,455s stack positions out of 5000i,500n,10000p,200000b,50000s
-</
-usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/t
-exmf-texlive/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texmf-texliv
-e/fonts/type1/public/amsfonts/cm/cmitt10.pfb></usr/share/texmf-texlive/fonts/ty
-pe1/public/amsfonts/cm/cmr10.pfb></usr/share/texmf-texlive/fonts/type1/public/a
-msfonts/cm/cmr12.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/c
-mr17.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmti10.pfb></
-usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/share/t
-exmf-texlive/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
-Output written on intro-spatial-rl.pdf (19 pages, 714572 bytes).
+ 38i,6n,36p,371b,457s stack positions out of 5000i,500n,10000p,200000b,50000s
+</us
+r/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/tex
+mf-texlive/fonts/type1/public/amsfonts/cm/cmitt10.pfb></usr/share/texmf-texlive
+/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texmf-texlive/fonts/type1
+/public/amsfonts/cm/cmr12.pfb></usr/share/texmf-texlive/fonts/type1/public/amsf
+onts/cm/cmr17.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsl
+10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsy10.pfb></us
+r/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/share/tex
+mf-texlive/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/share/texmf-texlive/
+fonts/type1/public/amsfonts/cm/cmtt12.pfb>
+Output written on intro-spatial-rl.pdf (19 pages, 717822 bytes).
 PDF statistics:
- 223 PDF objects out of 1000 (max. 8388607)
- 46 named destinations out of 1000 (max. 500000)
- 164 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 241 PDF objects out of 1000 (max. 8388607)
+ 48 named destinations out of 1000 (max. 500000)
+ 183 words of extra memory for PDF output out of 10000 (max. 10000000)
 
