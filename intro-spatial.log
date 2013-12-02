@@ -1,12 +1,11 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012/Debian) (format=pdflatex 2013.6.20)  26 NOV 2013 23:32
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2013.11.28)  2 DEC 2013 22:46
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
 **intro-spatial.tex
 (./intro-spatial.tex
 LaTeX2e <2011/06/27>
-Babel <v3.8m> and hyphenation patterns for english, dumylang, nohyphenation, lo
-aded.
+Babel <3.9f> and hyphenation patterns for 2 languages loaded.
 (/usr/share/texlive/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
 (/usr/share/texlive/texmf-dist/tex/latex/base/size10.clo
@@ -25,18 +24,18 @@ File: size10.clo 2007/10/19 v1.4h Standard LaTeX file (size option)
 \bibindent=\dimen102
 )
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/amssymb.sty
-Package: amssymb 2009/06/22 v3.00
+Package: amssymb 2013/01/14 v3.01 AMS font symbols
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/amsfonts.sty
-Package: amsfonts 2009/06/22 v3.00 Basic AMSFonts support
+Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
 \@emptytoks=\toks14
 \symAMSa=\mathgroup4
 \symAMSb=\mathgroup5
 LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
-(Font)                  U/euf/m/n --> U/euf/b/n on input line 96.
+(Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
 ))
 (/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsmath.sty
-Package: amsmath 2000/07/18 v2.13 AMS math features
+Package: amsmath 2013/01/14 v2.14 AMS math features
 \@mathmargin=\skip43
 
 For additional information on amsmath, use the `?' option.
@@ -56,20 +55,20 @@ Package: amsbsy 1999/11/29 v1.2d
 Package: amsopn 1999/12/14 v2.01 operator names
 )
 \inf@bad=\count87
-LaTeX Info: Redefining \frac on input line 211.
+LaTeX Info: Redefining \frac on input line 210.
 \uproot@=\count88
 \leftroot@=\count89
-LaTeX Info: Redefining \overline on input line 307.
+LaTeX Info: Redefining \overline on input line 306.
 \classnum@=\count90
 \DOTSCASE@=\count91
-LaTeX Info: Redefining \ldots on input line 379.
-LaTeX Info: Redefining \dots on input line 382.
-LaTeX Info: Redefining \cdots on input line 467.
+LaTeX Info: Redefining \ldots on input line 378.
+LaTeX Info: Redefining \dots on input line 381.
+LaTeX Info: Redefining \cdots on input line 466.
 \Mathstrutbox@=\box26
 \strutbox@=\box27
 \big@size=\dimen105
-LaTeX Font Info:    Redeclaring font encoding OML on input line 567.
-LaTeX Font Info:    Redeclaring font encoding OMS on input line 568.
+LaTeX Font Info:    Redeclaring font encoding OML on input line 566.
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 567.
 \macc@depth=\count92
 \c@MaxMatrixCols=\count93
 \dotsspace@=\muskip10
@@ -90,8 +89,8 @@ LaTeX Font Info:    Redeclaring font encoding OMS on input line 568.
 \multlinegap=\skip44
 \multlinetaggap=\skip45
 \mathdisplay@stack=\toks19
-LaTeX Info: Redefining \[ on input line 2666.
-LaTeX Info: Redefining \] on input line 2667.
+LaTeX Info: Redefining \[ on input line 2665.
+LaTeX Info: Redefining \] on input line 2666.
 )
 (/usr/share/texlive/texmf-dist/tex/generic/ifxetex/ifxetex.sty
 Package: ifxetex 2010/09/12 v0.6 Provides ifxetex conditional
@@ -368,7 +367,7 @@ Package graphics Info: Driver file: pdftex.def on input line 91.
 \Gin@req@width=\dimen113
 )
 (/usr/share/texlive/texmf-dist/tex/latex/hyperref/hyperref.sty
-Package: hyperref 2012/05/13 v6.82q Hypertext links for LaTeX
+Package: hyperref 2012/11/06 v6.83m Hypertext links for LaTeX
 
 (/usr/share/texlive/texmf-dist/tex/generic/oberdiek/hobsub-hyperref.sty
 Package: hobsub-hyperref 2012/05/28 v1.13 Bundle oberdiek, subset hyperref (HO)
@@ -414,6 +413,9 @@ Package: atbegshi 2011/10/05 v1.16 At begin shipout hook (HO)
 Package: refcount 2011/10/16 v3.4 Data extraction from label references (HO)
 Package: hycolor 2011/01/30 v1.7 Color options for hyperref/bookmark (HO)
 )
+(/usr/share/texlive/texmf-dist/tex/latex/oberdiek/auxhook.sty
+Package: auxhook 2011/03/04 v1.3 Hooks for auxiliary files (HO)
+)
 (/usr/share/texlive/texmf-dist/tex/latex/oberdiek/kvoptions.sty
 Package: kvoptions 2011/06/30 v3.11 Key value format for package options (HO)
 )
@@ -422,7 +424,7 @@ Package: kvoptions 2011/06/30 v3.11 Key value format for package options (HO)
 \Hy@pagecounter=\count104
 
 (/usr/share/texlive/texmf-dist/tex/latex/hyperref/pd1enc.def
-File: pd1enc.def 2012/05/13 v6.82q Hyperref: PDFDocEncoding definition (HO)
+File: pd1enc.def 2012/11/06 v6.83m Hyperref: PDFDocEncoding definition (HO)
 Now handling font encoding PD1 ...
 ... no UTF-8 mapping file for font encoding PD1
 )
@@ -431,40 +433,41 @@ Now handling font encoding PD1 ...
 (/usr/share/texlive/texmf-dist/tex/latex/latexconfig/hyperref.cfg
 File: hyperref.cfg 2002/06/06 v1.2 hyperref configuration of TeXLive
 )
-Package hyperref Info: Option `unicode' set `true' on input line 3941.
+Package hyperref Info: Option `unicode' set `true' on input line 4319.
 
 (/usr/share/texlive/texmf-dist/tex/latex/hyperref/puenc.def
-File: puenc.def 2012/05/13 v6.82q Hyperref: PDF Unicode definition (HO)
+File: puenc.def 2012/11/06 v6.83m Hyperref: PDF Unicode definition (HO)
 Now handling font encoding PU ...
 ... no UTF-8 mapping file for font encoding PU
 )
-Package hyperref Info: Option `colorlinks' set `true' on input line 3941.
-Package hyperref Info: Hyper figures OFF on input line 4062.
-Package hyperref Info: Link nesting OFF on input line 4067.
-Package hyperref Info: Hyper index ON on input line 4070.
-Package hyperref Info: Plain pages OFF on input line 4077.
-Package hyperref Info: Backreferencing OFF on input line 4082.
+Package hyperref Info: Option `colorlinks' set `true' on input line 4319.
+Package hyperref Info: Hyper figures OFF on input line 4443.
+Package hyperref Info: Link nesting OFF on input line 4448.
+Package hyperref Info: Hyper index ON on input line 4451.
+Package hyperref Info: Plain pages OFF on input line 4458.
+Package hyperref Info: Backreferencing OFF on input line 4463.
 Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
-Package hyperref Info: Bookmarks ON on input line 4300.
+Package hyperref Info: Bookmarks ON on input line 4688.
 \c@Hy@tempcnt=\count106
 
 (/usr/share/texlive/texmf-dist/tex/latex/url/url.sty
 \Urlmuskip=\muskip11
 Package: url 2006/04/12  ver 3.3  Verb mode for urls, etc.
 )
-LaTeX Info: Redefining \url on input line 4653.
+LaTeX Info: Redefining \url on input line 5041.
+\XeTeXLinkMargin=\dimen115
 \Fld@menulength=\count107
-\Field@Width=\dimen115
-\Fld@charsize=\dimen116
-Package hyperref Info: Hyper figures OFF on input line 5773.
-Package hyperref Info: Link nesting OFF on input line 5778.
-Package hyperref Info: Hyper index ON on input line 5781.
-Package hyperref Info: backreferencing OFF on input line 5788.
-Package hyperref Info: Link coloring ON on input line 5791.
-Package hyperref Info: Link coloring with OCG OFF on input line 5798.
-Package hyperref Info: PDF/A mode OFF on input line 5803.
-LaTeX Info: Redefining \ref on input line 5843.
-LaTeX Info: Redefining \pageref on input line 5847.
+\Field@Width=\dimen116
+\Fld@charsize=\dimen117
+Package hyperref Info: Hyper figures OFF on input line 6295.
+Package hyperref Info: Link nesting OFF on input line 6300.
+Package hyperref Info: Hyper index ON on input line 6303.
+Package hyperref Info: backreferencing OFF on input line 6310.
+Package hyperref Info: Link coloring ON on input line 6313.
+Package hyperref Info: Link coloring with OCG OFF on input line 6320.
+Package hyperref Info: PDF/A mode OFF on input line 6325.
+LaTeX Info: Redefining \ref on input line 6365.
+LaTeX Info: Redefining \pageref on input line 6369.
 \Hy@abspage=\count108
 \c@Item=\count109
 \c@Hfootnote=\count110
@@ -473,7 +476,7 @@ LaTeX Info: Redefining \pageref on input line 5847.
 Package hyperref Message: Driver (autodetected): hpdftex.
 
 (/usr/share/texlive/texmf-dist/tex/latex/hyperref/hpdftex.def
-File: hpdftex.def 2012/05/13 v6.82q Hyperref driver for pdfTeX
+File: hpdftex.def 2012/11/06 v6.83m Hyperref driver for pdfTeX
 \Fld@listcount=\count111
 \c@bookmark@seq@number=\count112
 
@@ -484,38 +487,38 @@ Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 )
 \Hy@SectionHShift=\skip46
 )
-Package hyperref Info: Option `breaklinks' set `true' on input line 55.
+Package hyperref Info: Option `breaklinks' set `true' on input line 56.
 
 (./intro-spatial.aux)
 \openout1 = `intro-spatial.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 62.
-LaTeX Font Info:    ... okay on input line 62.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 62.
-LaTeX Font Info:    ... okay on input line 62.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 62.
-LaTeX Font Info:    ... okay on input line 62.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 62.
-LaTeX Font Info:    ... okay on input line 62.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 62.
-LaTeX Font Info:    ... okay on input line 62.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 62.
-LaTeX Font Info:    ... okay on input line 62.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 62.
-LaTeX Font Info:    ... okay on input line 62.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 62.
-LaTeX Font Info:    ... okay on input line 62.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 63.
+LaTeX Font Info:    ... okay on input line 63.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 63.
+LaTeX Font Info:    ... okay on input line 63.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 63.
+LaTeX Font Info:    ... okay on input line 63.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 63.
+LaTeX Font Info:    ... okay on input line 63.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 63.
+LaTeX Font Info:    ... okay on input line 63.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 63.
+LaTeX Font Info:    ... okay on input line 63.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 63.
+LaTeX Font Info:    ... okay on input line 63.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 63.
+LaTeX Font Info:    ... okay on input line 63.
 
 (/usr/share/texlive/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count113
-\scratchdimen=\dimen117
+\scratchdimen=\dimen118
 \scratchbox=\box29
 \nofMPsegments=\count114
 \nofMParguments=\count115
 \everyMPshowfont=\toks23
 \MPscratchCnt=\count116
-\MPscratchDim=\dimen118
+\MPscratchDim=\dimen119
 \MPnumerator=\count117
 \makeMPintoPDFobject=\count118
 \everyMPtoPDFconversion=\toks24
@@ -535,243 +538,245 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
 \AtBeginShipoutBox=\box30
-Package hyperref Info: Link coloring ON on input line 62.
+Package hyperref Info: Link coloring ON on input line 63.
 
 (/usr/share/texlive/texmf-dist/tex/latex/hyperref/nameref.sty
-Package: nameref 2010/04/30 v2.40 Cross-referencing by name of section
+Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
 
 (/usr/share/texlive/texmf-dist/tex/generic/oberdiek/gettitlestring.sty
 Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
 )
 \c@section@level=\count119
 )
-LaTeX Info: Redefining \ref on input line 62.
-LaTeX Info: Redefining \pageref on input line 62.
-LaTeX Info: Redefining \nameref on input line 62.
+LaTeX Info: Redefining \ref on input line 63.
+LaTeX Info: Redefining \pageref on input line 63.
+LaTeX Info: Redefining \nameref on input line 63.
 
 (./intro-spatial.out) (./intro-spatial.out)
 \@outlinefile=\write4
 \openout4 = `intro-spatial.out'.
 
 LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <10> not available
-(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 78.
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 87.
+ [1
 
-Overfull \hbox (32.9967pt too wide) in paragraph at lines 135--135
-[]\OT1/cmtt/m/n/10 ## rgdal: version: 0.8-9, (SVN revision 470) Geospatial Data
- Abstraction[] 
- []
-
-[1
-
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-Overfull \hbox (32.9967pt too wide) in paragraph at lines 135--135
-[]\OT1/cmtt/m/n/10 ## Library extensions to R successfully loaded Loaded GDAL r
-untime: GDAL[] 
- []
-
-
-Overfull \hbox (53.99652pt too wide) in paragraph at lines 135--135
-[]\OT1/cmtt/m/n/10 ## 1.10.0, released 2013/04/24 but rgdal build and GDAL runt
-ime not in sync:[] 
- []
-
-
-Overfull \hbox (32.9967pt too wide) in paragraph at lines 135--135
-[]\OT1/cmtt/m/n/10 ## /usr/share/gdal/1.10 Loaded PROJ.4 runtime: Rel. 4.8.0, 6
- March 2012,[] 
- []
-
-[2]
-Overfull \hbox (38.24666pt too wide) in paragraph at lines 191--191
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2]
+Overfull \hbox (38.24666pt too wide) in paragraph at lines 206--206
 []\OT1/cmtt/m/n/10 [+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 +x_0=400000
  +y_0=-100000[] 
  []
 
 
-Overfull \hbox (17.24684pt too wide) in paragraph at lines 206--206
+Overfull \hbox (17.24684pt too wide) in paragraph at lines 221--221
 []\OT1/cmtt/m/n/10 ## Warning: A new CRS was assigned to an object with an exis
 ting CRS:[] 
  []
 
 
-Overfull \hbox (48.74657pt too wide) in paragraph at lines 206--206
+Overfull \hbox (206.2452pt too wide) in paragraph at lines 221--221
 []\OT1/cmtt/m/n/10 ## +proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 +x_0=4000
-00 +y_0=-100000[] 
+00 +y_0=-100000 +ellps=airy +units=m +no_defs[] 
  []
 
+[3] [4] <figure/A_simple_ggplot.png, id=82, 505.89pt x 505.89pt>
+File: figure/A_simple_ggplot.png Graphic file (type png)
 
-Overfull \hbox (53.99652pt too wide) in paragraph at lines 206--206
-[]\OT1/cmtt/m/n/10 ## +ellps=airy +units=m +no_defs without reprojecting. For r
-eprojection, use[] 
- []
+<use figure/A_simple_ggplot.png>
+Package pdftex.def Info: figure/A_simple_ggplot.png used on input line 305.
+(pdftex.def)             Requested size: 345.0pt x 345.00414pt.
+ [5 <./figure/A_simple_ggplot.png>]
+<figure/ggplot_for_text.png, id=89, 505.89pt x 505.89pt>
+File: figure/ggplot_for_text.png Graphic file (type png)
 
-[3] <figure/unnamed-chunk-10.png, id=46, 505.89pt x 505.89pt>
-File: figure/unnamed-chunk-10.png Graphic file (type png)
+<use figure/ggplot_for_text.png>
+Package pdftex.def Info: figure/ggplot_for_text.png used on input line 333.
+(pdftex.def)             Requested size: 345.0pt x 345.00414pt.
+ [6 <./figure/ggplot_for_text.png (PNG copy)>]
+[7] <figure/Greyscale_map.png, id=100, 505.89pt x 505.89pt>
+File: figure/Greyscale_map.png Graphic file (type png)
 
-<use figure/unnamed-chunk-10.png>
-Package pdftex.def Info: figure/unnamed-chunk-10.png used on input line 290.
-(pdftex.def)             Requested size: 284.53154pt x 284.52756pt.
-
-<figure/unnamed-chunk-11.png, id=47, 505.89pt x 505.89pt>
-File: figure/unnamed-chunk-11.png Graphic file (type png)
-
-<use figure/unnamed-chunk-11.png>
-Package pdftex.def Info: figure/unnamed-chunk-11.png used on input line 309.
-(pdftex.def)             Requested size: 284.53154pt x 284.52756pt.
- [4] [5 <./figure/unnamed-chunk-10.png>]
-[6 <./figure/unnamed-chunk-11.png (PNG copy)>]
-<figure/unnamed-chunk-12.png, id=63, 505.89pt x 505.89pt>
-File: figure/unnamed-chunk-12.png Graphic file (type png)
-
-<use figure/unnamed-chunk-12.png>
-Package pdftex.def Info: figure/unnamed-chunk-12.png used on input line 323.
-(pdftex.def)             Requested size: 284.53154pt x 284.52756pt.
- [7 <./figure/unnamed-chunk-12.png (PNG copy)>]
-Overfull \hbox (1.49698pt too wide) in paragraph at lines 365--365
-[]\OT1/cmtt/m/n/10 ## rgeos version: 0.2-17, (SVN revision 392) GEOS runtime ve
-rsion:[] 
- []
-
-
-Overfull \hbox (43.49661pt too wide) in paragraph at lines 405--405
-[]\OT1/cmtt/m/n/10 ##     id   long    lat order  hole piece  group           n
-ame Partic_Per[] 
- []
-
-
-Overfull \hbox (43.49661pt too wide) in paragraph at lines 405--405
-[]\OT1/cmtt/m/n/10 ## 1 00AA 531027 181611     1 FALSE     1 00AA.1 City of Lon
-don        9.1[] 
- []
-
-
-Overfull \hbox (43.49661pt too wide) in paragraph at lines 405--405
-[]\OT1/cmtt/m/n/10 ## 2 00AA 531555 181659     2 FALSE     1 00AA.1 City of Lon
-don        9.1[] 
- []
-
-
-Overfull \hbox (43.49661pt too wide) in paragraph at lines 405--405
-[]\OT1/cmtt/m/n/10 ## 3 00AA 532136 182198     3 FALSE     1 00AA.1 City of Lon
-don        9.1[] 
- []
-
-
-Overfull \hbox (43.49661pt too wide) in paragraph at lines 405--405
-[]\OT1/cmtt/m/n/10 ## 4 00AA 532946 181895     4 FALSE     1 00AA.1 City of Lon
-don        9.1[] 
- []
-
-
-Overfull \hbox (43.49661pt too wide) in paragraph at lines 405--405
-[]\OT1/cmtt/m/n/10 ## 5 00AA 533411 182038     5 FALSE     1 00AA.1 City of Lon
-don        9.1[] 
- []
-
-
-Overfull \hbox (43.49661pt too wide) in paragraph at lines 405--405
-[]\OT1/cmtt/m/n/10 ## 6 00AA 533843 180794     6 FALSE     1 00AA.1 City of Lon
-don        9.1[] 
- []
-
-[8] <figure/unnamed-chunk-17.png, id=74, 505.89pt x 505.89pt>
-File: figure/unnamed-chunk-17.png Graphic file (type png)
-
-<use figure/unnamed-chunk-17.png>
-Package pdftex.def Info: figure/unnamed-chunk-17.png used on input line 439.
-(pdftex.def)             Requested size: 284.53154pt x 284.52756pt.
- [9] [10 <./figure/unnamed-chunk-17.png>]
-Overfull \hbox (48.74657pt too wide) in paragraph at lines 486--486
+<use figure/Greyscale_map.png>
+Package pdftex.def Info: figure/Greyscale_map.png used on input line 437.
+(pdftex.def)             Requested size: 345.0pt x 345.00414pt.
+ [8] [9 <./figure/Greyscale_map.png>]
+Overfull \hbox (48.74657pt too wide) in paragraph at lines 489--489
 []\OT1/cmtt/m/n/10 ## Warning: bounding box given to google - spatial extent on
 ly approximate.[] 
  []
 
-<figure/unnamed-chunk-25.png, id=85, 505.89pt x 505.89pt>
-File: figure/unnamed-chunk-25.png Graphic file (type png)
+<figure/Basemap_2.png, id=111, 505.89pt x 505.89pt>
+File: figure/Basemap_2.png Graphic file (type png)
+ <use figure/Basemap_2.png>
+Package pdftex.def Info: figure/Basemap_2.png used on input line 532.
+(pdftex.def)             Requested size: 345.0pt x 345.00414pt.
 
-<use figure/unnamed-chunk-25.png>
-Package pdftex.def Info: figure/unnamed-chunk-25.png used on input line 529.
-(pdftex.def)             Requested size: 284.53154pt x 284.52756pt.
+<figure/Basemap_3.png, id=112, 505.89pt x 505.89pt>
+File: figure/Basemap_3.png Graphic file (type png)
+ <use figure/Basemap_3.png>
+Package pdftex.def Info: figure/Basemap_3.png used on input line 550.
+(pdftex.def)             Requested size: 345.0pt x 345.00414pt.
 
-<figure/unnamed-chunk-26.png, id=86, 505.89pt x 505.89pt>
-File: figure/unnamed-chunk-26.png Graphic file (type png)
+[10] [11 <./figure/Basemap_2.png (PNG copy)>] [12 <./figure/Basemap_3.png (PNG 
+copy)>] <figure/Plot_of_London.png, id=127, 505.89pt x 505.89pt>
+File: figure/Plot_of_London.png Graphic file (type png)
 
-<use figure/unnamed-chunk-26.png>
-Package pdftex.def Info: figure/unnamed-chunk-26.png used on input line 547.
-(pdftex.def)             Requested size: 284.53154pt x 284.52756pt.
- [11] [12 <./figure/unnamed-chunk-25.png (PNG copy)>] [13 <./figure/unnamed-chu
-nk-26.png (PNG copy)>]
-Overfull \hbox (0.3337pt too wide) in paragraph at lines 597--602
-\OT1/cmr/m/n/10 The mes-sage that re-sults (\OT1/cmtt/m/n/10 stat[]bin: binwidt
-h defaulted to range/30...\OT1/cmr/m/n/10 )
+<use figure/Plot_of_London.png>
+Package pdftex.def Info: figure/Plot_of_London.png used on input line 584.
+(pdftex.def)             Requested size: 345.0pt x 345.00414pt.
+ [13] [14 <./figure/Plot_of_London.png>]
+Overfull \hbox (38.24666pt too wide) in paragraph at lines 643--643
+[]\OT1/cmtt/m/n/10 ##  [1]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRU
+E  TRUE  TRUE[] 
  []
 
 
-Overfull \hbox (38.24666pt too wide) in paragraph at lines 622--622
+Overfull \hbox (38.24666pt too wide) in paragraph at lines 643--643
+[]\OT1/cmtt/m/n/10 ## [12]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRU
+E  TRUE  TRUE[] 
+ []
+
+
+Overfull \hbox (38.24666pt too wide) in paragraph at lines 643--643
+[]\OT1/cmtt/m/n/10 ## [23]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRU
+E  TRUE FALSE[] 
+ []
+
+
+Overfull \hbox (64.49643pt too wide) in paragraph at lines 652--652
+[]\OT1/cmtt/m/n/10 ## 33 Levels: Barking and Dagenham Barnet Bexley Brent Broml
+ey ... Westminster[] 
+ []
+
+[15] <figure/Sampling_and_plotting_stations.png, id=144, 505.89pt x 505.89pt>
+File: figure/Sampling_and_plotting_stations.png Graphic file (type png)
+
+<use figure/Sampling_and_plotting_stations.png>
+Package pdftex.def Info: figure/Sampling_and_plotting_stations.png used on inpu
+t line 746.
+(pdftex.def)             Requested size: 345.0pt x 345.00414pt.
+ [16] [17 <./figure/Sampling_and_plotting_stations.png>]
+<figure/Identifying_and_plotting_individual_stations.png, id=157, 505.89pt x 50
+5.89pt>
+File: figure/Identifying_and_plotting_individual_stations.png Graphic file (typ
+e png)
+ <use figure/Identifying_and_plotting_individual_stations.png>
+Package pdftex.def Info: figure/Identifying_and_plotting_individual_stations.pn
+g used on input line 787.
+(pdftex.def)             Requested size: 345.0pt x 345.00414pt.
+
+<figure/Clipped_points__within_London_boroughs_.png, id=159, 505.89pt x 505.89p
+t>
+File: figure/Clipped_points__within_London_boroughs_.png Graphic file (type png
+)
+ <use figure/Clipped_points__within_London_boroughs_.png>
+Package pdftex.def Info: figure/Clipped_points__within_London_boroughs_.png use
+d on input line 811.
+(pdftex.def)             Requested size: 345.0pt x 345.00414pt.
+ [18] [19 <./figure/Identifying_and_plotting_individual_stations.png>] [20 <./f
+igure/Clipped_points__within_London_boroughs_.png>]
+<figure/Train/tube_stations_in_Barking_and_Dagenham.png, id=179, 505.89pt x 505
+.89pt>
+File: figure/Train/tube_stations_in_Barking_and_Dagenham.png Graphic file (type
+ png)
+ <use figure/Train/tube_stations_in_Barking_and_Dagenham.png>
+Package pdftex.def Info: figure/Train/tube_stations_in_Barking_and_Dagenham.png
+ used on input line 867.
+(pdftex.def)             Requested size: 345.0pt x 345.00414pt.
+ [21]
+[22 <./figure/Train/tube_stations_in_Barking_and_Dagenham.png>]
+Overfull \hbox (43.49661pt too wide) in paragraph at lines 900--900
+[]\OT1/cmtt/m/n/10 ##   ons_label                 name Partic_Per Pop_2001 Crim
+eCount row col[] 
+ []
+
+
+Overfull \hbox (43.49661pt too wide) in paragraph at lines 900--900
+[]\OT1/cmtt/m/n/10 ## 1      00AF              Bromley       21.7   295535     
+ 15172  54  54[] 
+ []
+
+
+Overfull \hbox (43.49661pt too wide) in paragraph at lines 900--900
+[]\OT1/cmtt/m/n/10 ## 2      00BD Richmond upon Thames       26.6   172330     
+  9715  22  22[] 
+ []
+
+[23]
+Overfull \hbox (69.74638pt too wide) in paragraph at lines 980--980
 []\OT1/cmtt/m/n/10 ## stat_bin: binwidth defaulted to range/30. Use 'binwidth =
- x' to adjust[] 
+ x' to adjust this.[] 
  []
 
-[14] <figure/unnamed-chunk-32.png, id=106, 505.89pt x 505.89pt>
-File: figure/unnamed-chunk-32.png Graphic file (type png)
+<figure/Histogram_with_density_overlay.png, id=194, 505.89pt x 505.89pt>
+File: figure/Histogram_with_density_overlay.png Graphic file (type png)
 
-<use figure/unnamed-chunk-32.png>
-Package pdftex.def Info: figure/unnamed-chunk-32.png used on input line 625.
-(pdftex.def)             Requested size: 284.53154pt x 284.52756pt.
- [15 <./figure/unnamed-chunk-32.png (PNG copy)>] <figure/unnamed-chunk-35.png, 
-id=112, 505.89pt x 505.89pt>
-File: figure/unnamed-chunk-35.png Graphic file (type png)
+<use figure/Histogram_with_density_overlay.png>
+Package pdftex.def Info: figure/Histogram_with_density_overlay.png used on inpu
+t line 983.
+(pdftex.def)             Requested size: 345.0pt x 345.00414pt.
+ [24] [25 <./figure/Histogram_with_density_overlay.png (PNG copy)>]
+<figure/Bar_and_whisker_plot.png, id=205, 505.89pt x 505.89pt>
+File: figure/Bar_and_whisker_plot.png Graphic file (type png)
 
-<use figure/unnamed-chunk-35.png>
-Package pdftex.def Info: figure/unnamed-chunk-35.png used on input line 667.
-(pdftex.def)             Requested size: 284.53154pt x 284.52756pt.
+<use figure/Bar_and_whisker_plot.png>
+Package pdftex.def Info: figure/Bar_and_whisker_plot.png used on input line 103
+1.
+(pdftex.def)             Requested size: 345.0pt x 345.00414pt.
+ [26 <./figure/Bar_and_whisker_plot.png>]
+<figure/Faceted_histogram.png, id=212, 505.89pt x 505.89pt>
+File: figure/Faceted_histogram.png Graphic file (type png)
 
-<figure/unnamed-chunk-36.png, id=113, 505.89pt x 505.89pt>
-File: figure/unnamed-chunk-36.png Graphic file (type png)
+<use figure/Faceted_histogram.png>
+Package pdftex.def Info: figure/Faceted_histogram.png used on input line 1052.
+(pdftex.def)             Requested size: 345.0pt x 345.00414pt.
+ [27 <./figure/Faceted_histogram.png>]
+<figure/Faceted_map.png, id=219, 505.89pt x 505.89pt>
+File: figure/Faceted_map.png Graphic file (type png)
 
-<use figure/unnamed-chunk-36.png>
-Package pdftex.def Info: figure/unnamed-chunk-36.png used on input line 680.
-(pdftex.def)             Requested size: 284.53154pt x 284.52756pt.
- [16 <./figure/unnamed-chunk-35.png>] [17 <./figure/unnamed-chunk-36.png>]
-<figure/unnamed-chunk-37.png, id=126, 505.89pt x 505.89pt>
-File: figure/unnamed-chunk-37.png Graphic file (type png)
+<use figure/Faceted_map.png>
+Package pdftex.def Info: figure/Faceted_map.png used on input line 1119.
+(pdftex.def)             Requested size: 345.0pt x 345.00414pt.
+ [28] [29 <./figure/Faceted_map.png (PNG copy)>]
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 1151
+.
 
-<use figure/unnamed-chunk-37.png>
-Package pdftex.def Info: figure/unnamed-chunk-37.png used on input line 701.
-(pdftex.def)             Requested size: 284.53154pt x 284.52756pt.
- [18 <./figure/unnamed-chunk-37.png>]
-<figure/unnamed-chunk-44.png, id=133, 505.89pt x 505.89pt>
-File: figure/unnamed-chunk-44.png Graphic file (type png)
+(/usr/share/texlive/texmf-dist/tex/latex/base/omscmr.fd
+File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 1151.
 
-<use figure/unnamed-chunk-44.png>
-Package pdftex.def Info: figure/unnamed-chunk-44.png used on input line 768.
-(pdftex.def)             Requested size: 284.53154pt x 284.52756pt.
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 778.
- [19] [20 <./figure/unnamed-chunk-44.png (PNG copy)>]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 778.
- (./intro-spatial.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 778.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 778.
+ [30]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1194.
+ [31]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 1194.
+
+(./intro-spatial.aux)
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1194.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1194.
+
 Package rerunfilecheck Info: File `intro-spatial.out' has not changed.
-(rerunfilecheck)             Checksum: 7AAE5EA46727E14CC006C3C68181F84D;1216.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 778.
+(rerunfilecheck)             Checksum: DA89D2B7B45D436F3A4075C2064D8AD4;2636.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1194.
  ) 
 Here is how much of TeX's memory you used:
- 7788 strings out of 495059
- 106475 string characters out of 3182030
- 189771 words of memory out of 3000000
- 10865 multiletter control sequences out of 15000+200000
- 5186 words of font info for 20 fonts, out of 3000000 for 9000
+ 9998 strings out of 495031
+ 138204 string characters out of 6181530
+ 204250 words of memory out of 5000000
+ 13066 multiletter control sequences out of 15000+600000
+ 5532 words of font info for 21 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 29i,6n,28p,315b,481s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 29i,6n,28p,372b,485s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></us
 r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmitt10.pfb></usr/sha
 re/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texl
-ive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on intro-spatial.pdf (20 pages, 523779 bytes).
+ive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/te
+xmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/share/texlive/texmf-di
+st/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
+Output written on intro-spatial.pdf (31 pages, 656483 bytes).
 PDF statistics:
- 172 PDF objects out of 1000 (max. 8388607)
- 128 compressed objects within 2 object streams
- 38 named destinations out of 1000 (max. 500000)
- 104 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 281 PDF objects out of 1000 (max. 8388607)
+ 216 compressed objects within 3 object streams
+ 60 named destinations out of 1000 (max. 500000)
+ 183 words of extra memory for PDF output out of 10000 (max. 10000000)
 
