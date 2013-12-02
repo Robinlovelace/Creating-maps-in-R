@@ -1,21 +1,24 @@
 Introduction 
 ========================================================
 
-This tutorial is an "Introduction to Spatial Data and ggplot2" and assumes no prior knowledge in spatial data analysis  in R. 
-We do recommend users are already acquainted with the R command line though,
+This tutorial is an "Introduction to Spatial Data and ggplot2" and assumes no prior knowledge of spatial data analysis  in R. 
+We do recommend users are already acquaint themselves with the R command line
+before beginning the practicals though,
 perhaps by following an 'Introduction to R' type tutorial, such as
 "A (very) short introduction to R" (Torfs and Brauer, 2012) or the more 
 geographically inclined "Short introduction to R" (Harris, 2012). 
 
 Building on such background material, 
-the following set of exercises are concerned with specific functions for spatial data and also the use of a package called ggplot2 for data visualisation.
+the following set of exercises is concerned with specific functions for spatial data and also the use of a package called ggplot2 for data visualisation.
+An up-to-date version of this document is maintained at 
+[https://github.com/Robinlovelace/Creating-maps-in-R](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial-rl.pdf). Suggested improvements welcome.
 
 ## Typographic conventions
 
 To ensure reproducibility and allow automatic syntax highlighting, 
 this document has been written in RMarkdown. 
-Be aware of the following typographic conventions: R code (e.g. `plot(x,y)`) is
-written in `monospace` fonts while prose is not. Blocks of code such as, 
+Be aware of the following typographic conventions: R code (e.g. `plot(x, y)`) is
+written in a `monospace` font while prose is not. Blocks of code such as, 
 
 
 ```r
@@ -32,30 +35,37 @@ output from the code below is quite long; we only show the output that is
 useful. A single hash (`#`) is a comment for humans to read that R will ignore.
 All images in this document are small and low-quality to save space; they should 
 display better on your computer screen and can be saved at any resolution.
-The code presented here not the only way to do things: we encourage you to 
-play with it to gain a deeper understanding of R.
+The code presented here is not the only way to do things: we encourage you to 
+play with it and try things out to gain a deeper understanding of R.
+Don't worry, you cannot 'break' anything using R and all the input data 
+can be re-loaded if things do go wrong.
 
-## Spatial Data
+## Prerequisites and packages
 
-R has a huge (and growing) number of spatial data packages. On your own machine these are easily installed with the help of the "ctv" package.
+For this tutorial you need to install R, the latest version of which 
+can be downloaded from [http://cran.r-project.org/](http://cran.r-project.org/).
+A number of R editors such as [RStudio](http://www.rstudio.com/)
+can be used to make R more user friendly, 
+but these are not needed to complete the tutorial.
 
+R has a huge and growing number of spatial data packages. 
+These can be
+installed in one go with the `ctv` package and the command `install.views("Spatial")`.
+We do NOT recommend running this command for this tutorial: partly because
+downloading and compiling all spatial packages takes 
+a long time (hundreds of megabytes)
+and also because we will add new packages when they are needed to see what each does.
+The packages we will be using are `ggplot2`, `rgdal`, `rgeos`, `maptools` and `ggmap`.
+To test whether ggplot2 is installed, for example, enter `library(ggpot2)`. 
+If you get an error message, it needs to be installed: `install.packages("ggplot2")`.
 
-```r
-install.packages("ctv")
-library(ctv)
-# install.views('spatial') # This step will download and install all the
-# spatial packages available in R.  You will not need to do this step today,
-# so it is commented out
-```
-
-
-You will need to download the practical’s data from here: 
+All of the data used for the tutorial can be downloaded from here:
 
 https://www.dropbox.com/sh/0z9a0hrn72poql5/Bx3rgWZ0kN
 
-Save this to a new folder, then in R specify the path of that folder as you working directory.
+Save this to a new folder, then in R specify the path of that folder as you working directory. Use the `setwd` command to do this.
 If your username is "username" and you saved the files into a 
-folder called "rmapping" into your Desktop, for example, 
+folder called "rmapping" on your Desktop, for example, 
 you would type the following:
 
 
@@ -64,8 +74,12 @@ setwd("C:/Users/username/Desktop/rmapping/R")
 ```
 
 
-If you are working in RStudio, it is worth setting up a project that will automatically 
-set your working directory. One of the most important steps in handling spatial data with R 
+If you are working in RStudio, you can create a project that will automatically 
+set your working directory. 
+
+## Loading spatial data
+
+One of the most important steps in handling spatial data with R 
 is the ability to read in shapefiles. There are a number of ways to do this. 
 The most simple is `readShapePoly()` in the `maptools` package:
 
@@ -99,24 +113,26 @@ sport <- readOGR(dsn = ".", "london_sport")
 ```
 
 
-In the code above dsn stands for "data source name" which is often the folder containing the spatial data – this was pre-specified when you set your working directory – and then the text in " " following the comma is the name of the file required. There is no need to add a file extension. The file contains the borough population and the percentage of the population engaging in sporting activities, and was taken from the file "active-people-survey-participation" available from
-[data.london.gov.uk](http://data.london.gov.uk/datastore/package/active-people-survey-participation).
-The boundary data is from the OS Opendata Scheme: http://www.ordnancesurvey.co.uk/oswebsite/opendata/ .
+In the code above `dsn` is an *argument* of the *function* `readOGR`. 
+R functions have a default order of functions, so `dsn = ` does not 
+actually need to be typed: `readOGR(".", "london_sport")` works the same, but
+it is good to remember the meaning of each argument when beginning to use R, so 
+we sometimes include argument names when it is relevant. Here, `dsn`
+stands for "data source name" which is the folder containing the spatial data – this was pre-specified when you set your working directory. The next argument is a 
+*character string*, text identifying the file required. 
+There is no need to add a file extension. 
 
-All shapefiles have an attribute table. This is loaded with `readOGR` and can be treated in a similar way to a `data.frame`. 
+The file contains the borough population and 
+the percentage of the population engaging in sporting activities and was taken from the 
+[active people survey](http://data.london.gov.uk/datastore/package/active-people-survey-kpi-data-borough).
+The boundary data is from the [Ordnance Survey](http://www.ordnancesurvey.co.uk/oswebsite/opendata/).
+
+All shapefiles have an attribute table. This is loaded with `readOGR` and can be treated in a similar way to an R [data frame](http://www.statmethods.net/input/datatypes.html). 
 
 R hides the geometry of spatial data unless you print the object (using the `print()`). 
 Let's take a look at the headings of sport, using the following command: `names(sport)`
 The data contained in spatial data are kept in a 'slot' that can be accessed using 
-the @ symbol:
-
-
-```r
-sport@data
-```
-
-
-This is useful if you do not wish to work with the spatial components of the data at all times. 
+the @ symbol: `sport@data`. This is useful if you do not wish to work with the spatial components of the data at all times. 
 
 Type `summary(sport)` to get some additional information about the data object. Spatial objects in R contain a variety of additional information:
 
@@ -128,8 +144,7 @@ x 503571.2 561941.1
 y 155850.8 200932.5
 Is projected: TRUE 
 proj4string :
-[+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 +x_0=400000 +y_0=-100000
-+ellps=airy +units=m +no_defs]
+[+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 ....]
 ```
 
 In the above code `proj4string` represents the coordinate reference system used in the data. 
@@ -148,7 +163,11 @@ proj4string(sport) <- CRS("+init=epsg:27700")
 ```
 
 
-You will see you get a warning. This is saying that you are simply changing the coordinate reference system and not reprojecting the data. Epsg:27700 is the code for British National Grid. If we wanted to reproject the data into something like WGS84 for latitude and longitude we would use the following code:
+You will see you get a warning. This is simply saying that you are changing 
+the coordinate reference system, not reprojecting the data. 
+Epsg:27700 is the code for British National Grid.
+If we wanted to reproject the data into something 
+like WGS84 for latitude and longitude we would use the following code:
 
 
 ```r
@@ -156,13 +175,13 @@ sport.wgs84 <- spTransform(sport, CRS("+init=epsg:4326"))
 ```
 
 
-The different epsg codes are a bit of hassle to remember but you can find them all here: 
-http://spatialreference.org/
+The different epsg codes are a bit of hassle to remember but you can find them all at 
+[spatialreference.org](http://spatialreference.org/).
 
 # ggplot2
 
 This next section of the practical introduces a slightly different method of creating plots in R using the ggplot2 
-package. The package is an implementation of Leland Wilkinson's Grammar of Graphics - 
+package. The package is an implementation of the Grammar of Graphics (Wilkinson 2005) - 
 a general scheme for data visualization that breaks up graphs into semantic components such as scales and layers. 
 ggplot2 can serve as a replacement for the base graphics in R (the functions you have been plotting with today) and contains a number of default options that match good visualisation practice.
 
@@ -170,19 +189,18 @@ The maps we produce will not be that meaningful -
 the focus here is on sound visualisation with R and not sound analysis 
 (obviously the value of the former diminished in the absence of the latter!)
 Whilst the instructions are step by step you are encouraged to deviate from them 
-(trying different colours for example) to get a better understanding of what we are doing. 
+(trying different colours for example) to get a better understanding 
+of what we are doing. 
 
 `ggplot2` is one of the best documented packages in R. 
 The full documentation for it can be found online and it is recommended you 
-test out the examples on your own machines and play with them:
+test out the examples on your own machines and play with them: 
+http://docs.ggplot2.org/current/ .
 
-http://docs.ggplot2.org/current/
+Good examples of graphs can also be found on the website 
+[cookbook-r.com](http://www.cookbook-r.com/Graphs/).
 
-here is also a cookbook for R with some nice examples:
-
-http://wiki.stdout.org/rcookbook/Graphs/
-
-Load the packages:
+Load the package:
 
 
 ```r
@@ -204,8 +222,11 @@ p <- ggplot(sport@data, aes(Partic_Per, Pop_2001))
 ```
 
 
-What you have just done is set up a ggplot object where you say where you want the input data to come from. `sport@data` is actually a data frame contained within the 
-wider spatial object `sport` (the `@` enables you to access the attribute table of the 
+What you have just done is set up a ggplot object where 
+you say where you want the input data to come from. 
+`sport@data` is actually a data frame contained within the 
+wider spatial object `sport` (the `@` enables you to
+access the attribute table of the 
 sport shapefile).  The characters inside the `aes` argument
 refer to the parts of that data frame you wish to use (the variables `Partic_Per` and `Pop_2001`).
 This has to happen within the brackets of `aes()`, which means, 
@@ -259,8 +280,8 @@ sport.f <- fortify(sport, region = "ons_label")
 
 ```
 ## Loading required package: rgeos
-## rgeos version: 0.2-19, (SVN revision 394)
-##  GEOS runtime version: 3.3.8-CAPI-1.7.8 
+## rgeos version: 0.3-2, (SVN revision 413M)
+##  GEOS runtime version: 3.3.3-CAPI-1.7.4 
 ##  Polygon checking: TRUE
 ```
 
@@ -1017,7 +1038,9 @@ to the growing online R community:
 * R's homepage hosts a wealth of [official](http://cran.r-project.org/manuals.html) and [contributed](http://cran.r-project.org/other-docs.html) guides.
 * Stack Exchange and GIS Stack Exchange groups - try searching for "[R]". If your issue has not been not been addressed yet, you could post a polite question.
 * R's [mailing lists](http://www.r-project.org/mail.html) - the R-sig-geo list may be of particular interest here.
-* Books: despite the strength of R's online community, nothing beats a physical book for concentrated learning. We would particularly recommend the following:
+
+Books: despite the strength of R's online community, nothing beats a physical book for concentrated learning. We would particularly recommend the following:
+
  * ggplot2: elegant graphics for data analysis (Wickham 2009)
  * Bivand et al. (2013) Provide a dense and detailed overview of spatial 
  data analysis in an updated version of the book by the developers of many
@@ -1040,3 +1063,5 @@ GeoInformatics, 16(4).
 Torfs and Brauer (2012). A (very) short Introduction to R. The Comprehensive R Archive Network.
 
 Wickham, H. (2009). ggplot2: elegant graphics for data analysis. Springer.
+
+Wilkinson, L. (2005). The grammar of graphics. Springer.
