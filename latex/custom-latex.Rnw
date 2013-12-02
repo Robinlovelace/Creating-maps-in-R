@@ -1,9 +1,5 @@
 % setup for the final pdf document
 
-
-
-
-
 \usepackage[margin=2cm]{geometry}
 % delete renew command for \includegraphics
 
