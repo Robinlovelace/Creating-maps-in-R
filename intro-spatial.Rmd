@@ -2,9 +2,9 @@ Introduction
 ========================================================
 
 This tutorial is an "Introduction to Spatial Data and ggplot2" and assumes no prior knowledge of spatial data analysis  in R. 
-We do recommend users are already acquaint themselves with the R command line
+We do recommend users are acquainted with the R command line
 before beginning the practicals though,
-perhaps by following an 'Introduction to R' type tutorial, such as
+perhaps via an 'Introduction to R' type tutorial, such as
 "A (very) short introduction to R" (Torfs and Brauer, 2012) or the more 
 geographically inclined "Short introduction to R" (Harris, 2012). 
 
@@ -21,7 +21,7 @@ Be aware of the following typographic conventions: R code (e.g. `plot(x, y)`) is
 written in a `monospace` font while prose is not. Blocks of code such as, 
 
 ```{r}
-c(1:3,5)^2
+c(1:3, 5)^2
 ```
 
 are compiled in-line: the `##` indicates this is output from R. Some of the 
@@ -819,6 +819,6 @@ Wickham, H. (2009). ggplot2: elegant graphics for data analysis. Springer.
 Wilkinson, L. (2005). The grammar of graphics. Springer.
 
 ```{r}
-source("latex/rmd2pdf.R")
+source("latex/rmd2pdf.R") # convert .Rmd to .tex file
 ```
 

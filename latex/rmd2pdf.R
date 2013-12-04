@@ -12,16 +12,16 @@ system(mess) # reduce plot size
 mess <- paste("sed -i -e 's/\\\\section{References}/\\\\newpage \\\\section{References}/g' intro-spatial-rl.tex")
 system(mess) # Put refs on new page
 
-mess <- "sed -i -e '76i\\\\\\maketitle' intro-spatial-rl.tex"
+mess <- "sed -i -e '64i\\\\\\maketitle' intro-spatial-rl.tex"
 system(mess) # make title
 
-mess <- "sed -i -e '74i\\\\\\usepackage[margin=2cm]{geometry}' intro-spatial-rl.tex"
+mess <- "sed -i -e '62i\\\\\\usepackage[margin=2cm]{geometry}' intro-spatial-rl.tex"
 system(mess) # shrink margins
 
-mess <- "sed -i -e '74i\\\\\\markboth{\\\\hfill }{GeoTALISMAN Short Course \\\\hfill}' intro-spatial-rl.tex"
+mess <- "sed -i -e '62i\\\\\\markboth{\\\\hfill }{GeoTALISMAN Short Course \\\\hfill}' intro-spatial-rl.tex"
 system(mess) # add headings
 
-mess <- "sed -i -e '74i\\\\\\pagestyle{myheadings}' intro-spatial-rl.tex"
+mess <- "sed -i -e '62i\\\\\\pagestyle{myheadings}' intro-spatial-rl.tex"
 system(mess) # add headings
 
 
@@ -31,7 +31,7 @@ system(mess) # add headings
 # add bigger blocks of text
 # text will be inserted after the line
 
-idx <- 75
+idx <- 63
 # open the file and read in all the lines 
 conn <- file("intro-spatial-rl.tex")
 text <- readLines(conn)
