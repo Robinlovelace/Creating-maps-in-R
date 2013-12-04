@@ -54,7 +54,11 @@ installed in one go with the `ctv` package and the command `install.views("Spati
 We do NOT recommend running this command for this tutorial: partly because
 downloading and compiling all spatial packages takes 
 a long time (hundreds of megabytes)
-and also because we will add new packages when they are needed to see what each does.
+and also because we will add new packages when they are needed 
+to see what each does. We do recommend taking a quick browse at the range of 
+spatial packages on offer though: 
+[http://cran.r-project.org/web/views/Spatial.html](http://cran.r-project.org/web/views/Spatial.html).
+
 The packages we will be using are `ggplot2`, `rgdal`, `rgeos`, `maptools` and `ggmap`.
 To test whether ggplot2 is installed, for example, enter `library(ggpot2)`. 
 If you get an error message, it needs to be installed: `install.packages("ggplot2")`.
@@ -440,8 +444,6 @@ We can then produce the plot as before.
 lnd.b2 + geom_polygon(data = sport.wgs84.f, aes(x = long, y = lat, group = group, 
     fill = Partic_Per), alpha = 0.5)
 ```
-
-![plot of chunk Basemap 2](figure/Basemap_2.png) 
 
 
 Finally, if we want to increase the detail of the base map, get_map has a zoom parameter.
