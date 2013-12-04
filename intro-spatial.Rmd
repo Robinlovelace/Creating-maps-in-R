@@ -299,7 +299,7 @@ library(ggmap) # you may have to use install.packages to install it first
 ```
 
 The sport object is in British National Grid but the ggmap 
-image tiles are in WGS84. We therefore need to uses the sport.wgs84 
+image tiles are in WGS84. We therefore need to use the sport.wgs84 
 object created in the reprojection operation earlier. 
 
 The first job is to calculate the bounding box (bb for short) of the 
