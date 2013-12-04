@@ -120,11 +120,15 @@ installed in one go with the \texttt{ctv} package and the command
 command for this tutorial: partly because downloading and compiling all
 spatial packages takes a long time (hundreds of megabytes) and also
 because we will add new packages when they are needed to see what each
-does. The packages we will be using are \texttt{ggplot2},
-\texttt{rgdal}, \texttt{rgeos}, \texttt{maptools} and \texttt{ggmap}. To
-test whether ggplot2 is installed, for example, enter
-\texttt{library(ggpot2)}. If you get an error message, it needs to be
-installed: \texttt{install.packages("ggplot2")}.
+does. We do recommend taking a quick browse at the range of spatial
+packages on offer though:
+\href{http://cran.r-project.org/web/views/Spatial.html}{http://cran.r-project.org/web/views/Spatial.html}.
+
+The packages we will be using are \texttt{ggplot2}, \texttt{rgdal},
+\texttt{rgeos}, \texttt{maptools} and \texttt{ggmap}. To test whether
+ggplot2 is installed, for example, enter \texttt{library(ggpot2)}. If
+you get an error message, it needs to be installed:
+\texttt{install.packages("ggplot2")}.
 
 All of the data used for the tutorial can be downloaded from here:
 
@@ -543,12 +547,6 @@ We can then produce the plot as before.
     \DataTypeTok{fill =} \NormalTok{Partic_Per), }\DataTypeTok{alpha =} \FloatTok{0.5}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
-\begin{figure}[htbp]
-\centering
-\includegraphics{figure/Basemap_2.png}
-\caption{plot of chunk Basemap 2}
-\end{figure}
-
 Finally, if we want to increase the detail of the base map, get\_map has
 a zoom parameter.
 
