@@ -2,9 +2,9 @@ Introduction
 ========================================================
 
 This tutorial is an "Introduction to Spatial Data and ggplot2" and assumes no prior knowledge of spatial data analysis  in R. 
-We do recommend users are already acquaint themselves with the R command line
+We do recommend users are acquainted with the R command line
 before beginning the practicals though,
-perhaps by following an 'Introduction to R' type tutorial, such as
+perhaps via an 'Introduction to R' type tutorial, such as
 "A (very) short introduction to R" (Torfs and Brauer, 2012) or the more 
 geographically inclined "Short introduction to R" (Harris, 2012). 
 
@@ -280,8 +280,8 @@ sport.f <- fortify(sport, region = "ons_label")
 
 ```
 ## Loading required package: rgeos
-## rgeos version: 0.3-2, (SVN revision 413M)
-##  GEOS runtime version: 3.3.3-CAPI-1.7.4 
+## rgeos version: 0.2-19, (SVN revision 394)
+##  GEOS runtime version: 3.3.8-CAPI-1.7.8 
 ##  Polygon checking: TRUE
 ```
 
@@ -1065,3 +1065,10 @@ Torfs and Brauer (2012). A (very) short Introduction to R. The Comprehensive R A
 Wickham, H. (2009). ggplot2: elegant graphics for data analysis. Springer.
 
 Wilkinson, L. (2005). The grammar of graphics. Springer.
+
+
+```r
+source("latex/rmd2pdf.R")  # convert .Rmd to .tex file
+```
+
+
