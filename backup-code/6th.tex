@@ -1,0 +1,1230 @@
+\documentclass[]{article}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\ifxetex
+  \usepackage{fontspec,xltxtra,xunicode}
+  \defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
+\else
+  \ifluatex
+    \usepackage{fontspec}
+    \defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
+  \else
+    \usepackage[utf8]{inputenc}
+  \fi
+\fi
+\usepackage{color}
+\usepackage{fancyvrb}
+\DefineShortVerb[commandchars=\\\{\}]{\|}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\newenvironment{Shaded}{}{}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+\newcommand{\RegionMarkerTok}[1]{{#1}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+\newcommand{\NormalTok}[1]{{#1}}
+\usepackage{graphicx}
+% We will generate all images so they have a width \maxwidth. This means
+% that they will get their normal width if they fit onto the page, but
+% are scaled down if they would overflow the margins.
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth
+\else\Gin@nat@width\fi}
+\makeatother
+\let\Oldincludegraphics\includegraphics
+\renewcommand{\includegraphics}[1]{\Oldincludegraphics[width=8cm]{#1}}
+\ifxetex
+  \usepackage[setpagesize=false, % page size defined by xetex
+              unicode=false, % unicode breaks when used with xetex
+              xetex,
+              colorlinks=true,
+              linkcolor=blue]{hyperref}
+\else
+  \usepackage[unicode=true,
+              colorlinks=true,
+              linkcolor=blue]{hyperref}
+\fi
+\hypersetup{breaklinks=true, pdfborder={0 0 0}}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\setcounter{secnumdepth}{0}
+
+\pagestyle{myheadings}
+\markboth{\hfill }{GeoTALISMAN Short Course \hfill}
+\author{
+Cheshire, James\\
+\texttt{james.cheshire@ucl.ac.uk}
+\and
+Lovelace, Robin\\
+\texttt{r.lovelace@leeds.ac.uk}
+}
+\title{Introduction to Spatial Data and ggplot2}
+\usepackage[margin=2cm]{geometry}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+
+This tutorial is an ``Introduction to Spatial Data and ggplot2'' and
+assumes no prior knowledge of spatial data analysis in R. We do
+recommend users are acquainted with the R command line before beginning
+the practicals though, perhaps via an `Introduction to R' type tutorial,
+such as ``A (very) short introduction to R'' (Torfs and Brauer, 2012) or
+the more geographically inclined ``Short introduction to R'' (Harris,
+2012).
+
+Building on such background material, the following set of exercises is
+concerned with specific functions for spatial data and also the use of a
+package called ggplot2 for data visualisation. An up-to-date version of
+this document is maintained at
+\href{https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial-rl.pdf}{https://github.com/Robinlovelace/Creating-maps-in-R}.
+Suggested improvements welcome.
+
+\subsection{Typographic conventions}
+
+To ensure reproducibility and allow automatic syntax highlighting, this
+document has been written in RMarkdown. Be aware of the following
+typographic conventions: R code (e.g. \texttt{plot(x, y)}) is written in
+a \texttt{monospace} font while prose is not. Blocks of code such as,
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{:}\DecValTok{3}\NormalTok{, }\DecValTok{5}\NormalTok{)^}\DecValTok{2}
+\end{Highlighting}
+\end{Shaded}
+\begin{verbatim}
+## [1]  1  4  9 25
+\end{verbatim}
+are compiled in-line: the \texttt{\#\#} indicates this is output from R.
+Some of the output from the code below is quite long; we only show the
+output that is useful. A single hash (\texttt{\#}) is a comment for
+humans to read that R will ignore. All images in this document are small
+and low-quality to save space; they should display better on your
+computer screen and can be saved at any resolution. The code presented
+here is not the only way to do things: we encourage you to play with it
+and try things out to gain a deeper understanding of R. Don't worry, you
+cannot `break' anything using R and all the input data can be re-loaded
+if things do go wrong.
+
+\subsection{Prerequisites and packages}
+
+For this tutorial you need to install R, the latest version of which can
+be downloaded from
+\href{http://cran.r-project.org/}{http://cran.r-project.org/}. A number
+of R editors such as \href{http://www.rstudio.com/}{RStudio} can be used
+to make R more user friendly, but these are not needed to complete the
+tutorial.
+
+R has a huge and growing number of spatial data packages. These can be
+installed in one go with the \texttt{ctv} package and the command
+\texttt{install.views("Spatial")}. We do NOT recommend running this
+command for this tutorial: partly because downloading and compiling all
+spatial packages takes a long time (hundreds of megabytes) and also
+because we will add new packages when they are needed to see what each
+does. We do recommend taking a quick browse at the range of spatial
+packages on offer though:
+\href{http://cran.r-project.org/web/views/Spatial.html}{http://cran.r-project.org/web/views/Spatial.html}.
+
+The packages we will be using are \texttt{ggplot2}, \texttt{rgdal},
+\texttt{rgeos}, \texttt{maptools} and \texttt{ggmap}. To test whether
+ggplot2 is installed, for example, enter \texttt{library(ggpot2)}. If
+you get an error message, it needs to be installed:
+\texttt{install.packages("ggplot2")}.
+
+All of the data used for the tutorial can be downloaded from here:
+
+https://www.dropbox.com/sh/0z9a0hrn72poql5/Bx3rgWZ0kN
+
+Save this to a new folder, then in R specify the path of that folder as
+you working directory. Use the \texttt{setwd} command to do this. If
+your username is ``username'' and you saved the files into a folder
+called ``rmapping'' on your Desktop, for example, you would type the
+following:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{setwd}\NormalTok{(}\StringTok{"C:/Users/username/Desktop/rmapping/R"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+If you are working in RStudio, you can create a project that will
+automatically set your working directory.
+
+\subsection{Loading spatial data}
+
+One of the most important steps in handling spatial data with R is the
+ability to read in shapefiles. There are a number of ways to do this.
+The most simple is \texttt{readShapePoly()} in the \texttt{maptools}
+package:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(maptools)  }\CommentTok{# load the package}
+\NormalTok{sport <- }\KeywordTok{readShapePoly}\NormalTok{(}\StringTok{"london_sport.shp"}\NormalTok{)  }\CommentTok{# read in the shapefile}
+\end{Highlighting}
+\end{Shaded}
+This method works OK, but it is no longer considered best practice since
+it doesn't load in the spatial referencing information etc associated
+with the shapefile. A more powerful way to read in geographical data is
+to use the \texttt{rgdal} function \texttt{readOGR}, which automatically
+extracts this information. This is R's interface to the ``Geospatial
+Abstraction Library (GDAL)'' which is used by other open source GIS
+packages such as QGIS and enables R to handle a broader range of spatial
+data formats.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(rgdal)}
+\NormalTok{sport <- }\KeywordTok{readOGR}\NormalTok{(}\DataTypeTok{dsn =} \StringTok{"."}\NormalTok{, }\StringTok{"london_sport"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+\begin{verbatim}
+## OGR data source with driver: ESRI Shapefile 
+## Source: ".", layer: "london_sport"
+## with 33 features and 4 fields
+## Feature type: wkbPolygon with 2 dimensions
+\end{verbatim}
+In the code above \texttt{dsn} is an \emph{argument} of the
+\emph{function} \texttt{readOGR}. R functions have a default order of
+functions, so \texttt{dsn =} does not actually need to be typed:
+\texttt{readOGR(".", "london\_sport")} works the same, but it is good to
+remember the meaning of each argument when beginning to use R, so we
+sometimes include argument names when it is relevant. Here, \texttt{dsn}
+stands for ``data source name'' which is the folder containing the
+spatial data -- this was pre-specified when you set your working
+directory. The next argument is a \emph{character string}, text
+identifying the file required. There is no need to add a file extension.
+
+The file contains the borough population and the percentage of the
+population engaging in sporting activities and was taken from the
+\href{http://data.london.gov.uk/datastore/package/active-people-survey-kpi-data-borough}{active
+people survey}. The boundary data is from the
+\href{http://www.ordnancesurvey.co.uk/oswebsite/opendata/}{Ordnance
+Survey}.
+
+All shapefiles have an attribute table. This is loaded with
+\texttt{readOGR} and can be treated in a similar way to an R
+\href{http://www.statmethods.net/input/datatypes.html}{data frame}.
+
+R hides the geometry of spatial data unless you print the object (using
+the \texttt{print()}). Let's take a look at the headings of sport, using
+the following command: \texttt{names(sport)} The data contained in
+spatial data are kept in a `slot' that can be accessed using the @
+symbol: \texttt{sport@data}. This is useful if you do not wish to work
+with the spatial components of the data at all times.
+
+Type \texttt{summary(sport)} to get some additional information about
+the data object. Spatial objects in R contain a variety of additional
+information:
+
+\begin{verbatim}
+Object of class SpatialPolygonsDataFrame
+Coordinates:
+       min      max
+x 503571.2 561941.1
+y 155850.8 200932.5
+Is projected: TRUE 
+proj4string :
+[+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 ....]
+\end{verbatim}
+In the above code \texttt{proj4string} represents the coordinate
+reference system used in the data. In this file it has been incorrectly
+specified so we can change it with the following:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{proj4string}\NormalTok{(sport) <- }\KeywordTok{CRS}\NormalTok{(}\StringTok{"+init=epsg:27700"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+\begin{verbatim}
+## Warning: A new CRS was assigned to an object with an existing CRS:
+## +proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 +x_0=400000 +y_0=-100000 +ellps=airy +units=m +no_defs
+## without reprojecting.
+## For reprojection, use function spTransform in package rgdal
+\end{verbatim}
+You will see you get a warning. This is simply saying that you are
+changing the coordinate reference system, not reprojecting the data.
+Epsg:27700 is the code for British National Grid. If we wanted to
+reproject the data into something like WGS84 for latitude and longitude
+we would use the following code:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sport.wgs84 <- }\KeywordTok{spTransform}\NormalTok{(sport, }\KeywordTok{CRS}\NormalTok{(}\StringTok{"+init=epsg:4326"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+The different epsg codes are a bit of hassle to remember but you can
+find them all at
+\href{http://spatialreference.org/}{spatialreference.org}.
+
+\section{ggplot2}
+
+This next section of the practical introduces a slightly different
+method of creating plots in R using the ggplot2 package. The package is
+an implementation of the Grammar of Graphics (Wilkinson 2005) - a
+general scheme for data visualization that breaks up graphs into
+semantic components such as scales and layers. ggplot2 can serve as a
+replacement for the base graphics in R (the functions you have been
+plotting with today) and contains a number of default options that match
+good visualisation practice.
+
+The maps we produce will not be that meaningful - the focus here is on
+sound visualisation with R and not sound analysis (obviously the value
+of the former diminished in the absence of the latter!) Whilst the
+instructions are step by step you are encouraged to deviate from them
+(trying different colours for example) to get a better understanding of
+what we are doing.
+
+\texttt{ggplot2} is one of the best documented packages in R. The full
+documentation for it can be found online and it is recommended you test
+out the examples on your own machines and play with them:
+http://docs.ggplot2.org/current/ .
+
+Good examples of graphs can also be found on the website
+\href{http://www.cookbook-r.com/Graphs/}{cookbook-r.com}.
+
+Load the package:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(ggplot2)}
+\end{Highlighting}
+\end{Shaded}
+It is worth noting that the basic \texttt{plot()} function requires no
+data preparation but additional effort in colour selection/adding the
+map key etc. \texttt{qplot()} and \texttt{ggplot()} (from the ggplot2
+package) require some additional steps to format the spatial data but
+select colours and add keys etc automatically. More on this later.
+
+As a first attempt with ggplot2 we can create a scatter plot with the
+attribute data in the sport object created above. Type:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{p <- }\KeywordTok{ggplot}\NormalTok{(sport@data, }\KeywordTok{aes}\NormalTok{(Partic_Per, Pop_2001))}
+\end{Highlighting}
+\end{Shaded}
+What you have just done is set up a ggplot object where you say where
+you want the input data to come from. \texttt{sport@data} is actually a
+data frame contained within the wider spatial object \texttt{sport} (the
+\texttt{@} enables you to access the attribute table of the sport
+shapefile). The characters inside the \texttt{aes} argument refer to the
+parts of that data frame you wish to use (the variables
+\texttt{Partic\_Per} and \texttt{Pop\_2001}). This has to happen within
+the brackets of \texttt{aes()}, which means, roughly speaking
+`aesthetics that vary'.\\If you just type p and hit enter you get the
+error \texttt{No layers in plot}. This is because you have not told
+ggplot what you want to do with the data. We do this by adding so-called
+``geoms'', in this case \texttt{geom\_point()}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{p + }\KeywordTok{geom_point}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+\begin{figure}[htbp]
+\centering
+\includegraphics{figure/A_simple_ggplot.png}
+\caption{A simple ggplot}
+\end{figure}
+
+Within the brackets you can alter the nature of the points. Try
+something like \texttt{p + geom\_point(colour = "red", size=2)} and
+experiment.
+
+If you want to scale the points by borough population and colour them by
+sports participation this is also fairly easy by adding another
+\texttt{aes()} argument.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{p + }\KeywordTok{geom_point}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{colour =} \NormalTok{Partic_Per, }\DataTypeTok{size =} \NormalTok{Pop_2001))}
+\end{Highlighting}
+\end{Shaded}
+The real power of ggplot2 lies in its ability to add layers to a plot.
+In this case we can add text to the plot.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{p + }\KeywordTok{geom_point}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{colour =} \NormalTok{Partic_Per, }\DataTypeTok{size =} \NormalTok{Pop_2001)) + }\KeywordTok{geom_text}\NormalTok{(}\DataTypeTok{size =} \DecValTok{2}\NormalTok{, }
+    \KeywordTok{aes}\NormalTok{(}\DataTypeTok{label =} \NormalTok{name))}
+\end{Highlighting}
+\end{Shaded}
+\begin{figure}[htbp]
+\centering
+\includegraphics{figure/ggplot_for_text.png}
+\caption{ggplot for text}
+\end{figure}
+
+This idea of layers (or geoms) is quite different from the standard plot
+functions in R, but you will find that each of the functions does a lot
+of clever stuff to make plotting much easier (see the documentation for
+a full list).
+
+The following steps will create a map to show the percentage of the
+population in each London Borough who regularly participate in sports
+activities.
+
+To get the shapefiles into a format that can be plotted we have to use
+the \texttt{fortify()} function. Spatial objects in R have a number of
+slots containing the various items of data (polygon geometry,
+projection, attribute information) associated with a shapefile. Slots
+can be thought of as shelves within the data object that contain the
+different attributes. The ``polygons'' slot contains the geometry of the
+polygons in the form of the XY coordinates used to draw the polygon
+outline. The generic plot function can work out what to do with these,
+ggplot2 cannot. We therefore need to extract them as a data frame. The
+fortify function was written specifically for this purpose. For this to
+work, either \texttt{gpclib} or \texttt{rgeos} packages must be
+installed.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# library(gpclib); gpclibPermit() # uncomment if rgeos not installed}
+\NormalTok{sport.f <- }\KeywordTok{fortify}\NormalTok{(sport, }\DataTypeTok{region =} \StringTok{"ons_label"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+\begin{verbatim}
+## Loading required package: rgeos
+## rgeos version: 0.2-19, (SVN revision 394)
+##  GEOS runtime version: 3.3.8-CAPI-1.7.8 
+##  Polygon checking: TRUE
+\end{verbatim}
+This step has lost the attribute information associated with the sport
+object. We can add it back using the merge function (this performs a
+data join). To find out how this function works look at the output of
+typing \texttt{?merge}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sport.f <- }\KeywordTok{merge}\NormalTok{(sport.f, sport@data, }\DataTypeTok{by.x =} \StringTok{"id"}\NormalTok{, }\DataTypeTok{by.y =} \StringTok{"ons_label"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+Take a look at the \texttt{sport.f} object to see its contents. You
+should see a large data frame containing the latitude and longitude
+(they are actually Easting and Northing as the data are in British
+National Grid format) coordinates alongside the attribute information
+associated with each London Borough. If you type \texttt{print(sport.f)}
+you will just how many coordinate pairs are required! To keep the output
+to a minimum, take a peak at the object just using the \texttt{head}
+command:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{head}\NormalTok{(sport.f[, }\DecValTok{1}\NormalTok{:}\DecValTok{8}\NormalTok{])}
+\end{Highlighting}
+\end{Shaded}
+\begin{verbatim}
+##     id   long    lat order  hole piece  group           name
+## 1 00AA 531027 181611     1 FALSE     1 00AA.1 City of London
+## 2 00AA 531555 181659     2 FALSE     1 00AA.1 City of London
+## 3 00AA 532136 182198     3 FALSE     1 00AA.1 City of London
+## 4 00AA 532946 181895     4 FALSE     1 00AA.1 City of London
+## 5 00AA 533411 182038     5 FALSE     1 00AA.1 City of London
+## 6 00AA 533843 180794     6 FALSE     1 00AA.1 City of London
+\end{verbatim}
+It is now straightforward to produce a map using all the built in tools
+(such as setting the breaks in the data) that ggplot2 has to offer.
+\texttt{coord\_equal()} is the equivalent of asp=T in regular plots with
+R:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Map <- }\KeywordTok{ggplot}\NormalTok{(sport.f, }\KeywordTok{aes}\NormalTok{(long, lat, }\DataTypeTok{group =} \NormalTok{group, }\DataTypeTok{fill =} \NormalTok{Partic_Per)) + }\KeywordTok{geom_polygon}\NormalTok{() + }
+    \KeywordTok{coord_equal}\NormalTok{() + }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{x =} \StringTok{"Easting (m)"}\NormalTok{, }\DataTypeTok{y =} \StringTok{"Northing (m)"}\NormalTok{, }\DataTypeTok{fill =} \StringTok{"% Sport Partic."}\NormalTok{) + }
+    \KeywordTok{ggtitle}\NormalTok{(}\StringTok{"London Sports Participation"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+Now, just typing \texttt{Map} should result in your first ggplot-made
+map of London! There is a lot going on in the code above, so think about
+it line by line: what has each of the elements of code above has been
+designed to do. Also note how the \texttt{aes()} components can be
+combined into one set of brackets after \texttt{ggplot}, that has
+relevance for all layers, rather than being broken into separate parts
+as we did above. The different plot functions still know what to do with
+these. The \texttt{group=group} points ggplot to the group column added
+by \texttt{fortify()} and it identifies the groups of coordinates that
+pertain to individual polygons (in this case London Boroughs).
+
+The default colours are really nice but we may wish to produce the map
+in black and white, which should produce a map like that shown below:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Map + }\KeywordTok{scale_fill_gradient}\NormalTok{(}\DataTypeTok{low =} \StringTok{"white"}\NormalTok{, }\DataTypeTok{high =} \StringTok{"black"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+\begin{figure}[htbp]
+\centering
+\includegraphics{figure/Greyscale_map.png}
+\caption{Greyscale map}
+\end{figure}
+
+Saving plot images is also easy. You just need to use \texttt{ggsave}
+after each plot, e.g. \texttt{ggsave("my\_map.pdf")} will save the map
+as a pdf, with default settings. For a larger map, you could try the
+following:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{ggsave}\NormalTok{(}\StringTok{"my_large_plot.png"}\NormalTok{, }\DataTypeTok{scale =} \DecValTok{3}\NormalTok{, }\DataTypeTok{dpi =} \DecValTok{400}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+\section{Adding base maps to ggplot2 with ggmap}
+
+ggmap is a package that uses the ggplot2 syntax as a template to create
+maps with image tiles from the likes of Google and OpenStreetMap:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(ggmap)  }\CommentTok{# you may have to use install.packages to install it first}
+\end{Highlighting}
+\end{Shaded}
+The sport object is in British National Grid but the ggmap image tiles
+are in WGS84. We therefore need to uses the sport.wgs84 object created
+in the reprojection operation earlier.
+
+The first job is to calculate the bounding box (bb for short) of the
+sport.wgs84 object to identify the geographic extent of the image tiles
+that we need.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{b <- }\KeywordTok{bbox}\NormalTok{(sport.wgs84)}
+\NormalTok{b[}\DecValTok{1}\NormalTok{, ] <- (b[}\DecValTok{1}\NormalTok{, ] - }\KeywordTok{mean}\NormalTok{(b[}\DecValTok{1}\NormalTok{, ])) * }\FloatTok{1.05} \NormalTok{+ }\KeywordTok{mean}\NormalTok{(b[}\DecValTok{1}\NormalTok{, ])}
+\NormalTok{b[}\DecValTok{2}\NormalTok{, ] <- (b[}\DecValTok{2}\NormalTok{, ] - }\KeywordTok{mean}\NormalTok{(b[}\DecValTok{2}\NormalTok{, ])) * }\FloatTok{1.05} \NormalTok{+ }\KeywordTok{mean}\NormalTok{(b[}\DecValTok{2}\NormalTok{, ])}
+\CommentTok{# scale longitude and latitude (increase bb by 5% for plot) replace 1.05}
+\CommentTok{# with 1.xx for an xx% increase in the plot size}
+\end{Highlighting}
+\end{Shaded}
+This is then fed into the \texttt{get\_map} function as the location
+parameter. The syntax below contains 2 functions. \texttt{ggmap} is
+required to produce the plot and provides the base map data.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lnd.b1 <- }\KeywordTok{ggmap}\NormalTok{(}\KeywordTok{get_map}\NormalTok{(}\DataTypeTok{location =} \NormalTok{b))}
+\end{Highlighting}
+\end{Shaded}
+\begin{verbatim}
+## Warning: bounding box given to google - spatial extent only approximate.
+\end{verbatim}
+In much the same way as we did above we can then layer the plot with
+different geoms.
+
+First fortify the sport.wgs84 object and then merge with the required
+attribute data (we already did this step to create the sport.f object).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sport.wgs84.f <- }\KeywordTok{fortify}\NormalTok{(sport.wgs84, }\DataTypeTok{region =} \StringTok{"ons_label"}\NormalTok{)}
+\NormalTok{sport.wgs84.f <- }\KeywordTok{merge}\NormalTok{(sport.wgs84.f, sport.wgs84@data, }\DataTypeTok{by.x =} \StringTok{"id"}\NormalTok{, }\DataTypeTok{by.y =} \StringTok{"ons_label"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+We can now overlay this on our base map.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lnd.b1 + }\KeywordTok{geom_polygon}\NormalTok{(}\DataTypeTok{data =} \NormalTok{sport.wgs84.f, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \NormalTok{long, }\DataTypeTok{y =} \NormalTok{lat, }\DataTypeTok{group =} \NormalTok{group, }
+    \DataTypeTok{fill =} \NormalTok{Partic_Per), }\DataTypeTok{alpha =} \FloatTok{0.5}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+The code above contains a lot of parameters. Use the ggplot2 help pages
+to find out what they are. The resulting map looks okay, but it would be
+improved with a simpler base map in black and white. A design firm
+called stamen provide the tiles we need and they can be brought into the
+plot with the \texttt{get\_map} function:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lnd.b2 <- }\KeywordTok{ggmap}\NormalTok{(}\KeywordTok{get_map}\NormalTok{(}\DataTypeTok{location =} \NormalTok{b, }\DataTypeTok{source =} \StringTok{"stamen"}\NormalTok{, }\DataTypeTok{maptype =} \StringTok{"toner"}\NormalTok{, }
+    \DataTypeTok{crop =} \NormalTok{T))}
+\end{Highlighting}
+\end{Shaded}
+We can then produce the plot as before.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lnd.b2 + }\KeywordTok{geom_polygon}\NormalTok{(}\DataTypeTok{data =} \NormalTok{sport.wgs84.f, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \NormalTok{long, }\DataTypeTok{y =} \NormalTok{lat, }\DataTypeTok{group =} \NormalTok{group, }
+    \DataTypeTok{fill =} \NormalTok{Partic_Per), }\DataTypeTok{alpha =} \FloatTok{0.5}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+Finally, if we want to increase the detail of the base map, get\_map has
+a zoom parameter.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lnd.b3 <- }\KeywordTok{ggmap}\NormalTok{(}\KeywordTok{get_map}\NormalTok{(}\DataTypeTok{location =} \NormalTok{b, }\DataTypeTok{source =} \StringTok{"stamen"}\NormalTok{, }\DataTypeTok{maptype =} \StringTok{"toner"}\NormalTok{, }
+    \DataTypeTok{crop =} \NormalTok{T, }\DataTypeTok{zoom =} \DecValTok{11}\NormalTok{))}
+
+\NormalTok{lnd.b3 + }\KeywordTok{geom_polygon}\NormalTok{(}\DataTypeTok{data =} \NormalTok{sport.wgs84.f, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \NormalTok{long, }\DataTypeTok{y =} \NormalTok{lat, }\DataTypeTok{group =} \NormalTok{group, }
+    \DataTypeTok{fill =} \NormalTok{Partic_Per), }\DataTypeTok{alpha =} \FloatTok{0.5}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+\begin{figure}[htbp]
+\centering
+\includegraphics{figure/Basemap_3.png}
+\caption{Basemap 3}
+\end{figure}
+
+\section{Joining and clipping}
+
+This section builds on the previous information on plotting and
+highlights some of R's more advanced spatial functions from the
+\texttt{rgeos} package. We look at joining new datasets to our data - an
+attribute join - spatial joins, whereby data is added to the target
+layer depending on the location of the origins and clipping.
+
+To reaffirm our starting point, let's re-plot the only spatial dataset
+in our workspace, and count the number of polygons:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(rgdal)}
+\NormalTok{lnd <- }\KeywordTok{readOGR}\NormalTok{(}\DataTypeTok{dsn =} \StringTok{"."}\NormalTok{, }\StringTok{"london_sport"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+\begin{verbatim}
+## OGR data source with driver: ESRI Shapefile 
+## Source: ".", layer: "london_sport"
+## with 33 features and 4 fields
+## Feature type: wkbPolygon with 2 dimensions
+\end{verbatim}
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(lnd)}
+\end{Highlighting}
+\end{Shaded}
+\begin{figure}[htbp]
+\centering
+\includegraphics{figure/Plot_of_London.png}
+\caption{Plot of London}
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{nrow}\NormalTok{(lnd)}
+\end{Highlighting}
+\end{Shaded}
+\begin{verbatim}
+## [1] 33
+\end{verbatim}
+\subsection{Downloading additional data}
+
+Because we are using borough-level data, and boroughs are official
+administrative zones, there is much data available at this level. We
+will use the example of crime data to illustrate this data availability,
+and join this with the current spatial dataset. As before, we can
+download and import the data from within R:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# download.file('http://data.london.gov.uk/datafiles/crime-community-safety/mps-}
+\CommentTok{# recordedcrime-borough.csv', destfile = 'mps-recordedcrime-borough.csv')}
+\CommentTok{# uncomment and join the above code to download the data}
+
+\NormalTok{crimeDat <- }\KeywordTok{read.csv}\NormalTok{(}\StringTok{"mps-recordedcrime-borough.csv"}\NormalTok{)  }\CommentTok{# flags an error}
+\end{Highlighting}
+\end{Shaded}
+Initially, the \texttt{read.csv} command flags an error: open the raw
+.csv file in a text editor such as Notepad, Notepad++ or GVIM, find the
+problem and correct it. Alternatively, you can work out what the file
+encoding is and use the correct argument (this is not recommended -
+simpler just to edit the text file in most cases).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{crimeDat <- }\KeywordTok{read.csv}\NormalTok{(}\StringTok{"mps-recordedcrime-borough.csv"}\NormalTok{, }\DataTypeTok{fileEncoding =} \StringTok{"UCS-2LE"}\NormalTok{)}
+\KeywordTok{head}\NormalTok{(crimeDat)}
+\KeywordTok{summary}\NormalTok{(crimeDat$MajorText)}
+\NormalTok{crimeTheft <- crimeDat[}\KeywordTok{which}\NormalTok{(crimeDat$MajorText == }\StringTok{"Theft & Handling"}\NormalTok{), ]}
+\KeywordTok{head}\NormalTok{(crimeTheft, }\DecValTok{2}\NormalTok{)  }\CommentTok{# change 2 for more rows}
+\NormalTok{crimeAg <- }\KeywordTok{aggregate}\NormalTok{(CrimeCount ~ Spatial_DistrictName, }\DataTypeTok{FUN =} \StringTok{"sum"}\NormalTok{, }\DataTypeTok{data =} \NormalTok{crimeTheft)}
+\KeywordTok{head}\NormalTok{(crimeAg, }\DecValTok{2}\NormalTok{)  }\CommentTok{# show the aggregated crime data}
+\end{Highlighting}
+\end{Shaded}
+Now that we have crime data at the borough level, the challenge is to
+join it by name. This is not always straightforward. Let us see which
+names in the crime data match the spatial data:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lnd$name %in% crimeAg$Spatial_DistrictName}
+\end{Highlighting}
+\end{Shaded}
+\begin{verbatim}
+##  [1]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
+## [12]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
+## [23]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE
+\end{verbatim}
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lnd$name[}\KeywordTok{which}\NormalTok{(!lnd$name %in% crimeAg$Spatial_DistrictName)]}
+\end{Highlighting}
+\end{Shaded}
+\begin{verbatim}
+## [1] City of London
+## 33 Levels: Barking and Dagenham Barnet Bexley Brent Bromley ... Westminster
+\end{verbatim}
+The first line of code above shows that all but one of the borough names
+matches; the second tells us that it is City of London that is named
+differently in the crime data. Look at the results (not shown here) on
+your computer.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{levels}\NormalTok{(crimeAg$Spatial_DistrictName)}
+\KeywordTok{levels}\NormalTok{(crimeAg$Spatial_DistrictName)[}\DecValTok{25}\NormalTok{] <- }\KeywordTok{as.character}\NormalTok{(lnd$name[}\KeywordTok{which}\NormalTok{(!lnd$name %in% }
+    \NormalTok{crimeAg$Spatial_DistrictName)])}
+\NormalTok{lnd$name %in% crimeAg$Spatial_DistrictName  }\CommentTok{# now all columns match}
+\end{Highlighting}
+\end{Shaded}
+The above code block first identified the row with the faulty name and
+then renamed the level to match the \texttt{lnd} dataset. Note that we
+could not rename the variable directly, as it is stored as a factor.
+
+We are now ready to join the datasets. It is recommended to use the
+\texttt{join} function in the \texttt{plyr} package but the
+\texttt{merge} function could equally be used.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{help}\NormalTok{(join)}
+\KeywordTok{library}\NormalTok{(plyr)}
+\KeywordTok{help}\NormalTok{(join)  }\CommentTok{# now help should appear}
+\end{Highlighting}
+\end{Shaded}
+The documentation for join will be displayed if the plyr package is
+loaded (if not, load or install and load it!). It requires all joining
+variables to have the same name, so we will rename the variable to make
+the join work:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{head}\NormalTok{(lnd$name)}
+\KeywordTok{head}\NormalTok{(crimeAg$Spatial_DistrictName)  }\CommentTok{# the variables to join}
+\NormalTok{crimeAg <- }\KeywordTok{rename}\NormalTok{(crimeAg, }\DataTypeTok{replace =} \KeywordTok{c}\NormalTok{(}\DataTypeTok{Spatial_DistrictName =} \StringTok{"name"}\NormalTok{))}
+\KeywordTok{head}\NormalTok{(}\KeywordTok{join}\NormalTok{(lnd@data, crimeAg))  }\CommentTok{# test it works}
+\end{Highlighting}
+\end{Shaded}
+\begin{verbatim}
+## Joining by: name
+\end{verbatim}
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lnd@data <- }\KeywordTok{join}\NormalTok{(lnd@data, crimeAg)}
+\end{Highlighting}
+\end{Shaded}
+\begin{verbatim}
+## Joining by: name
+\end{verbatim}
+\subsection{Adding point data for clipping and spatial join}
+
+In addition to joining by zone name, it is also possible to do
+\href{http://help.arcgis.com/en/arcgisdesktop/10.0/help/index.html\#//00080000000q000000}{spatial
+joins} in R. There are three main varieties: many-to-one - where the
+values of many intersecting objects contribute to a new variable in the
+main table - one-to-many, or one-to-one. Because boroughs in London are
+quite large, we will conduct a many-to-one spatial join. We will be
+using Tube Stations as the spatial data to join, with the aim of finding
+out which and how many stations are found in each London borough.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{download.file}\NormalTok{(}\StringTok{"http://www.personal.leeds.ac.uk/~georl/egs/lnd-stns.zip"}\NormalTok{, }\StringTok{"lnd-stns.zip"}\NormalTok{)}
+\KeywordTok{unzip}\NormalTok{(}\StringTok{"lnd-stns.zip"}\NormalTok{)}
+\KeywordTok{library}\NormalTok{(rgdal)}
+\NormalTok{stations <- }\KeywordTok{readOGR}\NormalTok{(}\DataTypeTok{dsn =} \StringTok{"."}\NormalTok{, }\DataTypeTok{layer =} \StringTok{"lnd-stns"}\NormalTok{, }\DataTypeTok{p4s =} \StringTok{"+init=epsg:27700"}\NormalTok{)}
+\KeywordTok{proj4string}\NormalTok{(stations)  }\CommentTok{# this is the full geographical detail.}
+\KeywordTok{proj4string}\NormalTok{(lnd)}
+\KeywordTok{bbox}\NormalTok{(stations)}
+\KeywordTok{bbox}\NormalTok{(lnd)}
+\end{Highlighting}
+\end{Shaded}
+The above code loads the data correctly, but also shows that there are
+problems with it: the Coordinate Reference System (CRS) differs from
+that of our shapefile. Although OSGB 1936 (or EPSG 27700) is the
+`correct' CRS for the UK, we will convert the stations dataset into
+lat-long coordinates, as this is a more common CRS and enables easy base
+map creation:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{stationsWGS <- }\KeywordTok{spTransform}\NormalTok{(stations, }\DataTypeTok{CRSobj =} \KeywordTok{CRS}\NormalTok{(}\KeywordTok{proj4string}\NormalTok{(lnd)))}
+\NormalTok{stations <- stationsWGS}
+\KeywordTok{rm}\NormalTok{(stationsWGS)}
+\KeywordTok{plot}\NormalTok{(lnd)}
+\KeywordTok{points}\NormalTok{(stations[}\KeywordTok{sample}\NormalTok{(}\DecValTok{1}\NormalTok{:}\KeywordTok{nrow}\NormalTok{(stations), }\DataTypeTok{size =} \DecValTok{500}\NormalTok{), ])}
+\end{Highlighting}
+\end{Shaded}
+\begin{figure}[htbp]
+\centering
+\includegraphics{figure/Sampling_and_plotting_stations.png}
+\caption{Sampling and plotting stations}
+\end{figure}
+
+Now we can clearly see that the stations overlay the boroughs. The
+problem is that the stations dataset is far more extensive than London
+borough dataset; we need
+
+\subsection{Clipping}
+
+There are a number of functions that we can use to clip the points so
+that only those falling within London boroughs are retained:
+\texttt{?overlay ?sp::over library(rgeos) ?rgeos::gIntersects} We can
+write off the first one straight away as it is depreciated by the
+second. It seems that \texttt{gIntersects} can produce the same output
+as \texttt{over}, based on
+\href{http://gis.stackexchange.com/questions/63793/how-to-overlay-a-polygon-over-spatialpointsdataframe-and-preserving-the-spdf-dat}{discussion}
+in the community, so either can be used. (See this
+\href{http://stackoverflow.com/questions/15881455/how-to-clip-worldmap-with-polygon-in-r}{discussion}
+for further alternatives.) In this tutorial we will use
+\texttt{gIntersects}, for clipping although we could equally use
+\texttt{gContains}, \texttt{gWithin} and other \texttt{g...} functions -
+see rgeos help pages by typing \texttt{?gOverlaps} or other functions
+for more. \texttt{gIntersects} will output information for each point,
+telling us which polygon it interacts with (i.e.~the polygon it is in):
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{int <- }\KeywordTok{gIntersects}\NormalTok{(stations, lnd, }\DataTypeTok{byid =} \NormalTok{T)  }\CommentTok{# find which stations intersect }
+\KeywordTok{class}\NormalTok{(int)  }\CommentTok{# it's outputed a matrix}
+\KeywordTok{dim}\NormalTok{(int)  }\CommentTok{# with 33 rows (one for each zone) and 2532 cols (the points)}
+\KeywordTok{summary}\NormalTok{(int[, }\KeywordTok{c}\NormalTok{(}\DecValTok{200}\NormalTok{, }\DecValTok{500}\NormalTok{)])  }\CommentTok{# not the output of this}
+\KeywordTok{plot}\NormalTok{(lnd)}
+\KeywordTok{points}\NormalTok{(stations[}\DecValTok{200}\NormalTok{, ], }\DataTypeTok{col =} \StringTok{"red"}\NormalTok{)  }\CommentTok{# note point id 200 is outside the zones}
+\KeywordTok{points}\NormalTok{(stations[}\DecValTok{500}\NormalTok{, ], }\DataTypeTok{col =} \StringTok{"green"}\NormalTok{)  }\CommentTok{# note point 500 is inside}
+\KeywordTok{which}\NormalTok{(int[, }\DecValTok{500}\NormalTok{] == T)  }\CommentTok{# this tells us that point 500 intersects with zone 32}
+\KeywordTok{points}\NormalTok{(}\KeywordTok{coordinates}\NormalTok{(lnd[}\DecValTok{32}\NormalTok{, ]), }\DataTypeTok{col =} \StringTok{"black"}\NormalTok{)  }\CommentTok{# test the previous statement}
+\end{Highlighting}
+\end{Shaded}
+\begin{figure}[htbp]
+\centering
+\includegraphics{figure/Identifying_and_plotting_individual_stations.png}
+\caption{Identifying and plotting individual stations}
+\end{figure}
+
+In the above code, only the first line actually `does' anything in our
+workspace, by creating the object \texttt{int}. The proceeding lines are
+dedicated to exploring this object and what it means. Note that it is a
+matrix with columns corresponding to the points and rows corresponding
+to boroughs. The borough in which a particular point can be extracted
+from \texttt{int} as we shall see below. For the purposes of clipping,
+we are only interested in whether the point intersects with \emph{any}
+of the boroughs. This is where the function \texttt{apply}, which is
+unique to R, comes into play:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{clipped <- }\KeywordTok{apply}\NormalTok{(int == F, }\DataTypeTok{MARGIN =} \DecValTok{2}\NormalTok{, all)}
+\KeywordTok{plot}\NormalTok{(stations[}\KeywordTok{which}\NormalTok{(clipped), ])  }\CommentTok{# shows all stations we DO NOT want}
+\NormalTok{stations.cl <- stations[}\KeywordTok{which}\NormalTok{(!clipped), ]  }\CommentTok{# use ! to select the invers}
+\KeywordTok{points}\NormalTok{(stations.cl, }\DataTypeTok{col =} \StringTok{"green"}\NormalTok{)  }\CommentTok{# check that it's worked}
+\end{Highlighting}
+\end{Shaded}
+\begin{figure}[htbp]
+\centering
+\includegraphics{figure/Clipped_points__within_London_boroughs_.png}
+\caption{Clipped points (within London boroughs)}
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{stations <- stations.cl}
+\KeywordTok{rm}\NormalTok{(stations.cl)  }\CommentTok{# tidy up: we're only interested in clipped ones}
+\end{Highlighting}
+\end{Shaded}
+The first line instructs R to look at each column (\texttt{MARGIN = 2},
+we would use \texttt{MARGIN = 1} for row-by-row analysis) and report
+back whether \texttt{all} of the values are false. This creates the
+inverse selection that we want, hence the use of \texttt{!} to invert
+it. We test that the function works on a new object (often a good idea,
+to avoid overwriting useful data) with plots and, once content that the
+clip has worked, save the sample of points to our main \texttt{stations}
+object and remove the now duplicated \texttt{stations.cl} object.
+
+\subsection{Aggregating the data to complete the spatial join}
+
+Now that we know how \texttt{gIntersects} works in general terms and for
+clipping, let's use it to allocate a borough to each of our station
+points, which we will then aggregate up. Data from these points
+(e.g.~counts, averages in each area etc.) can then be transferred to the
+main polygons table: the essence of a spatial join. Again,
+\texttt{apply} is our friend in this instance, meaning we can avoid
+\texttt{for} loops:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{int <- }\KeywordTok{gIntersects}\NormalTok{(stations, lnd, }\DataTypeTok{byid =} \NormalTok{T)  }\CommentTok{# re-run the intersection query }
+\KeywordTok{head}\NormalTok{(}\KeywordTok{apply}\NormalTok{(int, }\DataTypeTok{MARGIN =} \DecValTok{2}\NormalTok{, }\DataTypeTok{FUN =} \NormalTok{which))}
+\NormalTok{b.indexes <- }\KeywordTok{which}\NormalTok{(int, }\DataTypeTok{arr.ind =} \NormalTok{T)}
+\KeywordTok{summary}\NormalTok{(b.indexes)}
+\NormalTok{b.names <- lnd$name[b.indexes[, }\DecValTok{1}\NormalTok{]]}
+\NormalTok{b.count <- }\KeywordTok{aggregate}\NormalTok{(b.indexes ~ b.names, }\DataTypeTok{FUN =} \NormalTok{length)}
+\KeywordTok{head}\NormalTok{(b.count)}
+\end{Highlighting}
+\end{Shaded}
+The above code first extracts the index of the row (borough) for which
+the corresponding column is true and then converts this into names. The
+final object created, \texttt{b.count} contains the number of station
+points in each zone. According to this, Barking and Dagenham should
+contain 12 station points. It is important to check the output makes
+sense at every stage with R, so let's check to see this is indeed the
+case with a quick plot:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(lnd[}\KeywordTok{which}\NormalTok{(}\KeywordTok{grepl}\NormalTok{(}\StringTok{"Barking"}\NormalTok{, lnd$name)), ])}
+\KeywordTok{points}\NormalTok{(stations)}
+\end{Highlighting}
+\end{Shaded}
+\begin{figure}[htbp]
+\centering
+\includegraphics{figure/Train/tube_stations_in_Barking_and_Dagenham.png}
+\caption{Train/tube stations in Barking and Dagenham}
+\end{figure}
+
+Now the fun part: count the points in the polygon and report back how
+many there are!
+
+The final stage is to transfer the data on station counts back into the
+polygon data frame. We have used \texttt{merge} to join two datasets
+before. In R there is often more than one way to achieve the same
+result. It's good to experiment with different functions, so we will use
+\texttt{join} from the \texttt{plyr} package. \texttt{join} requires
+identical joining names in both data frames, so first we will rename
+them (type \texttt{?rename} for more details).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{b.count <- }\KeywordTok{rename}\NormalTok{(b.count, }\DataTypeTok{replace =} \KeywordTok{c}\NormalTok{(}\DataTypeTok{b.names =} \StringTok{"name"}\NormalTok{))}
+\NormalTok{b.count.tmp <- }\KeywordTok{join}\NormalTok{(lnd@data, b.count)}
+\end{Highlighting}
+\end{Shaded}
+\begin{verbatim}
+## Joining by: name
+\end{verbatim}
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{head}\NormalTok{(b.count.tmp, }\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+\begin{verbatim}
+##   ons_label                 name Partic_Per Pop_2001 CrimeCount row col
+## 1      00AF              Bromley       21.7   295535      15172  54  54
+## 2      00BD Richmond upon Thames       26.6   172330       9715  22  22
+\end{verbatim}
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lnd$station.count <- b.count.tmp[, }\DecValTok{7}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+We have now seen how to join and clip data. Next, for a stronger
+grounding in how ggplot works, we will look at plotting non-spatial
+data.
+
+\section{Using ggplot2 for Descriptive Statistics}
+
+For this we will use a new dataset:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{input <- }\KeywordTok{read.csv}\NormalTok{(}\StringTok{"ambulance_assault.csv"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+This contains the number of ambulance callouts to assault incidents
+(downloadable from the London DataStore) between 2009 and 2011.
+
+Take a look at the contents of the file:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{head}\NormalTok{(input)}
+\end{Highlighting}
+\end{Shaded}
+\begin{verbatim}
+##   Bor_Code     WardName WardCode assault_09_11
+## 1     00AA   Aldersgate   00AAFA            10
+## 2     00AA      Aldgate   00AAFB             0
+## 3     00AA    Bassishaw   00AAFC             0
+## 4     00AA Billingsgate   00AAFD             0
+## 5     00AA  Bishopsgate   00AAFE           188
+## 6     00AA Bread Street   00AAFF             0
+\end{verbatim}
+We can now plot a histogram to show the distribution of values.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{p.ass <- }\KeywordTok{ggplot}\NormalTok{(input, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \NormalTok{assault_09_11))}
+\end{Highlighting}
+\end{Shaded}
+Remember the \texttt{ggplot(input, aes(x=assault\_09\_11))} section
+means create a generic plot object (called p.ass) from the input object
+using the \texttt{assault\_09\_11} column as the data for the x axis. To
+create the histogram you need to tell R that this is what you want to go
+with
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{p.ass + }\KeywordTok{geom_histogram}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+The resulting message
+(\texttt{stat\_bin: binwidth defaulted to range/30...}) relates to the
+bins - the breaks between histogram blocks. If you want the bins (and
+therefore the bars) to be thinner (i.e.~representing fewer values) you
+need to make the bins smaller by adjusting the binwidth. Try:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{p.ass + }\KeywordTok{geom_histogram}\NormalTok{(}\DataTypeTok{binwidth =} \DecValTok{10}\NormalTok{) + }\KeywordTok{geom_density}\NormalTok{(}\DataTypeTok{fill =} \OtherTok{NA}\NormalTok{, }\DataTypeTok{colour =} \StringTok{"black"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+It is also possible to overlay a density distribution over the top of
+the histogram. For this we need to produce a second plot object with the
+density distribution as the y variable.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{p2.ass <- }\KeywordTok{ggplot}\NormalTok{(input, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \NormalTok{assault_09_11, }\DataTypeTok{y =} \NormalTok{..density..))}
+
+\NormalTok{p2.ass + }\KeywordTok{geom_histogram}\NormalTok{() + }\KeywordTok{geom_density}\NormalTok{(}\DataTypeTok{fill =} \OtherTok{NA}\NormalTok{, }\DataTypeTok{colour =} \StringTok{"red"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+\begin{verbatim}
+## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
+\end{verbatim}
+\begin{figure}[htbp]
+\centering
+\includegraphics{figure/Histogram_with_density_overlay.png}
+\caption{Histogram with density overlay}
+\end{figure}
+
+What kind of distribution is this plot showing? You can see that there
+are a few wards with very high assault incidences (over 750). To find
+out which ones these are we can select them.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{input[}\KeywordTok{which}\NormalTok{(input$assault_09_11 > }\DecValTok{750}\NormalTok{), ]}
+\end{Highlighting}
+\end{Shaded}
+\begin{verbatim}
+##     Bor_Code   WardName WardCode assault_09_11
+## 153     00AH  Fairfield   00AHGM           765
+## 644     00BK St James's   00BKGQ          1582
+## 649     00BK   West End   00BKGW          1305
+\end{verbatim}
+It is perhaps unsurprising that St James's and the West End have the
+highest counts. The plot has provided a good impression of the overall
+distribution, but what are the characteristics of each distribution
+within the Boroughs? Another type of plot that shows the core
+characteristics of the distribution is a box and whisker plot. These too
+can be easily produced in R (you can't do them in Excel!). We can create
+a third plot object (note that the assault field is now y and not x):
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{p3.ass <- }\KeywordTok{ggplot}\NormalTok{(input, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \NormalTok{Bor_Code, }\DataTypeTok{y =} \NormalTok{assault_09_11))}
+\end{Highlighting}
+\end{Shaded}
+and convert it to a boxplot.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{p3.ass + }\KeywordTok{geom_boxplot}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+Perhaps this would look a little better flipped round.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{p3.ass + }\KeywordTok{geom_boxplot}\NormalTok{() + }\KeywordTok{coord_flip}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+\begin{figure}[htbp]
+\centering
+\includegraphics{figure/Bar_and_whisker_plot.png}
+\caption{Bar and whisker plot}
+\end{figure}
+
+Now each of the borough codes can be easily seen. No surprise that the
+Borough of Westminster (00BK) has the two largest outliers. In one line
+of code you have produced an incredibly complex plot rich in
+information. This demonstrates why R is such a useful program for these
+kinds of statistics.
+
+If you want an insight into some of the visualisations you can develop
+with this type of data we can do faceting based on the example of the
+histogram plot above.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{p.ass + }\KeywordTok{geom_histogram}\NormalTok{() + }\KeywordTok{facet_wrap}\NormalTok{(~Bor_Code)}
+\end{Highlighting}
+\end{Shaded}
+\begin{figure}[htbp]
+\centering
+\includegraphics{figure/Faceted_histogram.png}
+\caption{Faceted histogram}
+\end{figure}
+
+We need to do a little bit of tweaking to make this plot publishable but
+we want to demonstrate that it is really easy to produce 30+ plots on a
+single page! Faceting is an extremely powerful way of visualizing
+multidimensional datasets and is especially good for showing change over
+time.
+
+\section{Advanced Task: Faceting for Maps}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(reshape2)  }\CommentTok{# this may not be installed. }
+\CommentTok{# If not install it, or skip the next two steps…}
+\end{Highlighting}
+\end{Shaded}
+Load the data - this shows historic population values between 1801 and
+2001 for London, again from the London data store.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{london.data <- }\KeywordTok{read.csv}\NormalTok{(}\StringTok{"census-historic-population-borough.csv"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+``Melt'' the data so that the columns become rows.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{london.data.melt <- }\KeywordTok{melt}\NormalTok{(london.data, }\DataTypeTok{id =} \KeywordTok{c}\NormalTok{(}\StringTok{"Area.Code"}\NormalTok{, }\StringTok{"Area.Name"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+Only do this step if reshape and melt failed
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{london.data.melt <- }\KeywordTok{read.csv}\NormalTok{(}\StringTok{"london_data_melt.csv"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+Merge the population data with the London borough geometry contained
+within our sport.f object.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{plot.data <- }\KeywordTok{merge}\NormalTok{(sport.f, london.data.melt, }\DataTypeTok{by.x =} \StringTok{"id"}\NormalTok{, }\DataTypeTok{by.y =} \StringTok{"Area.Code"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+Reorder this data (ordering is important for plots).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{plot.data <- plot.data[}\KeywordTok{order}\NormalTok{(plot.data$order), ]}
+\end{Highlighting}
+\end{Shaded}
+We can now use faceting to produce one map per year (this may take a
+little while to appear).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =} \NormalTok{plot.data, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \NormalTok{long, }\DataTypeTok{y =} \NormalTok{lat, }\DataTypeTok{fill =} \NormalTok{value, }\DataTypeTok{group =} \NormalTok{group)) + }
+    \KeywordTok{geom_polygon}\NormalTok{() + }\KeywordTok{geom_path}\NormalTok{(}\DataTypeTok{colour =} \StringTok{"grey"}\NormalTok{, }\DataTypeTok{lwd =} \FloatTok{0.1}\NormalTok{) + }\KeywordTok{coord_equal}\NormalTok{() + }
+    \KeywordTok{facet_wrap}\NormalTok{(~variable)}
+\end{Highlighting}
+\end{Shaded}
+\begin{figure}[htbp]
+\centering
+\includegraphics{figure/Faceted_map.png}
+\caption{Faceted map}
+\end{figure}
+
+Again there is a lot going on here so explore the documentation to make
+sure you understand it. Try out different colour values as well.
+
+Add a title and replace the axes names with ``easting'' and ``northing''
+and save your map as a pdf.
+
+\section{Taking spatial data analysis in R further}
+
+The skills you have learned in this tutorial are applicable to a very
+wide range of datasets, spatial or not. Often experimentation is the
+most rewarding learning method, rather than just searching for the
+`best' way of doing something (Kabakoff, 2011). We recommend you play
+around with your own data.
+
+The supportive online communities surrounding large open source programs
+such as R are one of their greatest assets, so we recommend you become
+an active
+``\href{http://blog.cleverelephant.ca/2013/10/being-open-source-citizen.html}{open
+source citizen}'' rather than a passive consumer (Ramsey \& Dubovsky,
+2013).
+
+This does not necessarily mean writing R source code - it can simply
+mean helping others use R. We therefore conclude the tutorial with a
+list of resources that will help you further sharpen you R skills, find
+help and contribute to the growing online R community:
+
+\begin{itemize}
+\item
+  R's homepage hosts a wealth of
+  \href{http://cran.r-project.org/manuals.html}{official} and
+  \href{http://cran.r-project.org/other-docs.html}{contributed} guides.
+\item
+  Stack Exchange and GIS Stack Exchange groups - try searching for
+  ``{[}R{]}''. If your issue has not been not been addressed yet, you
+  could post a polite question.
+\item
+  R's \href{http://www.r-project.org/mail.html}{mailing lists} - the
+  R-sig-geo list may be of particular interest here.
+\end{itemize}
+Books: despite the strength of R's online community, nothing beats a
+physical book for concentrated learning. We would particularly recommend
+the following:
+
+\begin{itemize}
+\item
+  ggplot2: elegant graphics for data analysis (Wickham 2009)
+\item
+  Bivand et al. (2013) Provide a dense and detailed overview of spatial
+  data analysis in an updated version of the book by the developers of
+  many of R's spatial functions.
+\item
+  Kabacoff (2011) is a more general R book; it has many fun worked
+  examples.
+\end{itemize}
+\newpage \section{References}
+
+Bivand, R. S., Pebesma, E. J., \& Rubio, V. G. (2008). Applied spatial
+data: analysis with R. Springer.
+
+Harris, R. (2012). A Short Introduction to R.
+\href{http://www.social-statistics.org/}{social-statistics.org}.
+
+Kabacoff, R. (2011). R in Action. Manning Publications Co.
+
+Ramsey, P., \& Dubovsky, D. (2013). Geospatial Software's Open Future.
+GeoInformatics, 16(4).
+
+Torfs and Brauer (2012). A (very) short Introduction to R. The
+Comprehensive R Archive Network.
+
+Wickham, H. (2009). ggplot2: elegant graphics for data analysis.
+Springer.
+
+Wilkinson, L. (2005). The grammar of graphics. Springer.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{source}\NormalTok{(}\StringTok{"latex/rmd2pdf.R"}\NormalTok{)  }\CommentTok{# convert .Rmd to .tex file}
+\end{Highlighting}
+\end{Shaded}
+
+\end{document}
