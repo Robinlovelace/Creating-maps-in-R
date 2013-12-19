@@ -1,22 +1,32 @@
 Introduction 
 ========================================================
 
-This tutorial is an "Introduction to Spatial Data and ggplot2" and assumes no prior knowledge of spatial data analysis  in R. 
-We do recommend users are acquainted with the R command line
+This tutorial is an "Introduction to Spatial Data and ggplot2" 
+and assumes no prior knowledge of spatial data analysis  in R. 
+We recommend users are acquainted with the R command line
 before beginning the practicals though,
 perhaps via an 'Introduction to R' type tutorial, such as
-"A (very) short introduction to R" (Torfs and Brauer, 2012) or the more 
-geographically inclined "Short introduction to R" (Harris, 2012). 
+"A (very) short introduction to R" 
+([Torfs and Brauer, 2012](http://cran.r-project.org/doc/contrib/Torfs+Brauer-Short-R-Intro.pdf)) 
+or the more geographically inclined "Short introduction to R" 
+([Harris, 2012](http://www.social-statistics.org/wp-content/uploads/2012/12/intro_to_R1.pdf)). 
 
 Building on such background material, 
 the following set of exercises is concerned with specific functions for spatial data and also the use of a package called ggplot2 for data visualisation.
 An up-to-date version of this document is maintained at 
-[https://github.com/Robinlovelace/Creating-maps-in-R](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial-rl.pdf). Suggested improvements welcome.
+[https://github.com/Robinlovelace/Creating-maps-in-R](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial-rl.pdf). Suggested improvements welcome - please fork, improve and push this document 
+to its original home to ensure its longevity.
 
 ## Typographic conventions
 
 To ensure reproducibility and allow automatic syntax highlighting, 
 this document has been written in RMarkdown. 
+We try to follow best practice in terms of style, roughly following 
+Google's style guide and the excellent
+"Rchaeological Commentary" 
+([Johnson 2013](http://cran.r-project.org/web/packages/rockchalk/vignettes/Rstyle.pdf)).
+
+
 Be aware of the following typographic conventions: R code (e.g. `plot(x, y)`) is
 written in a `monospace` font while prose is not. Blocks of code such as, 
 
@@ -64,10 +74,10 @@ To test whether ggplot2 is installed, for example, enter `library(ggpot2)`.
 If you get an error message, it needs to be installed: `install.packages("ggplot2")`.
 
 All of the data used for the tutorial can be downloaded from here:
+[http://spatial.ly/wp-content/uploads/2013/12/spatialggplot.zip](http://spatial.ly/wp-content/uploads/2013/12/spatialggplot.zip)
 
-https://www.dropbox.com/sh/0z9a0hrn72poql5/Bx3rgWZ0kN
-
-Save this to a new folder, then in R specify the path of that folder as you working directory. Use the `setwd` command to do this.
+Save this to a new folder, then in R specify the path of 
+that folder as you working directory. Use the `setwd` command to do this.
 If your username is "username" and you saved the files into a 
 folder called "rmapping" on your Desktop, for example, 
 you would type the following:
@@ -122,16 +132,21 @@ R functions have a default order of functions, so `dsn = ` does not
 actually need to be typed: `readOGR(".", "london_sport")` works the same, but
 it is good to remember the meaning of each argument when beginning to use R, so 
 we sometimes include argument names when it is relevant. Here, `dsn`
-stands for "data source name" which is the folder containing the spatial data – this was pre-specified when you set your working directory. The next argument is a 
-*character string*, text identifying the file required. 
-There is no need to add a file extension. 
+stands for "data source name" which is the folder containing the spatial data – this was pre-specified when you set your working directory. You would type `dsn = data/` if the files were stored in the 
+"data" folder of the current directory. 
 
-The file contains the borough population and 
+The next argument is a *character string*. This is simply the name the file required. 
+There is no need to add a file extension (e.g. `.shp) for this command. 
+The files beginning `london_sport` from the 
+[example dataset](http://spatial.ly/wp-content/uploads/2013/12/spatialggplot.zip)
+contain the borough population and 
 the percentage of the population engaging in sporting activities and was taken from the 
 [active people survey](http://data.london.gov.uk/datastore/package/active-people-survey-kpi-data-borough).
 The boundary data is from the [Ordnance Survey](http://www.ordnancesurvey.co.uk/oswebsite/opendata/).
 
-All shapefiles have an attribute table. This is loaded with `readOGR` and can be treated in a similar way to an R [data frame](http://www.statmethods.net/input/datatypes.html). 
+All shapefiles have an attribute table. This is automatically loaded with 
+`readOGR` and can be treated in a similar way to an R 
+[data frame](http://www.statmethods.net/input/datatypes.html). 
 
 R hides the geometry of spatial data unless you print the object (using the `print()`). 
 Let's take a look at the headings of sport, using the following command: `names(sport)`
@@ -184,7 +199,8 @@ The different epsg codes are a bit of hassle to remember but you can find them a
 
 # ggplot2
 
-This next section of the practical introduces a slightly different method of creating plots in R using the ggplot2 
+This next section of the practical introduces a slightly 
+different method of creating plots in R using the ggplot2 
 package. The package is an implementation of the Grammar of Graphics (Wilkinson 2005) - 
 a general scheme for data visualization that breaks up graphs into semantic components such as scales and layers. 
 ggplot2 can serve as a replacement for the base graphics in R (the functions you have been plotting with today) and contains a number of default options that match good visualisation practice.
@@ -1056,6 +1072,8 @@ Bivand, R. S., Pebesma, E. J., & Rubio, V. G. (2008). Applied spatial data: anal
 
 Harris, R. (2012). A Short Introduction to R. 
 [social-statistics.org](http://www.social-statistics.org/).
+
+Johnson, P. E. (2013). R Style. An Rchaeological Commentary. The Comprehensive R Archive Network.
 
 Kabacoff, R. (2011). R in Action. Manning Publications Co.
 
