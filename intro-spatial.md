@@ -1,20 +1,26 @@
 Introduction 
 ========================================================
 
-This tutorial is an "Introduction to Spatial Data and ggplot2" 
-and assumes no prior knowledge of spatial data analysis  in R. 
-We recommend users are acquainted with the R command line
-before beginning the practicals though,
-perhaps via an 'Introduction to R' type tutorial, such as
+This tutorial is an introduction to spatial data in R and visualisation with 
+the popular graphics package `ggplot2`. 
+It assumes no prior knowledge of spatial data analysis but 
+we do expect some prior understanding of R command line. 
+For people new to R, we recommend working through an
+'Introduction to R' type tutorial, such as
 "A (very) short introduction to R" 
 ([Torfs and Brauer, 2012](http://cran.r-project.org/doc/contrib/Torfs+Brauer-Short-R-Intro.pdf)) 
 or the more geographically inclined "Short introduction to R" 
-([Harris, 2012](http://www.social-statistics.org/wp-content/uploads/2012/12/intro_to_R1.pdf)). 
+([Harris, 2012](http://www.social-statistics.org/wp-content/uploads/2012/12/intro_to_R1.pdf)).
 
 Building on such background material, 
-the following set of exercises is concerned with specific functions for spatial data and also the use of a package called ggplot2 for data visualisation.
-An up-to-date version of this document is maintained at 
-[https://github.com/Robinlovelace/Creating-maps-in-R](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial-rl.pdf). Suggested improvements welcome - please fork, improve and push this document 
+the following set of exercises is concerned with specific functions for spatial data 
+and visualisation.
+An up-to-date version of this tutorial is maintained at
+[https://github.com/Robinlovelace/Creating-maps-in-R](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial-rl.pdf) and the entire tutorial, including
+the input data can be downloaded as a zip file from 
+[here](https://github.com/Robinlovelace/Creating-maps-in-R/archive/master.zip). 
+Suggested improvements welcome - please 
+[fork](https://help.github.com/articles/fork-a-repo), improve and push this document 
 to its original home to ensure its longevity.
 
 ## Typographic conventions
@@ -100,7 +106,7 @@ The most simple is `readShapePoly()` in the `maptools` package:
 
 ```r
 library(maptools)  # load the package
-sport <- readShapePoly("london_sport.shp")  # read in the shapefile
+sport <- readShapePoly("data/london_sport.shp")  # read in the shapefile
 ```
 
 
@@ -116,33 +122,34 @@ R to handle a broader range of spatial data formats.
 
 ```r
 library(rgdal)
-sport <- readOGR(dsn = ".", "london_sport")
+sport <- readOGR(dsn = "data/", "london_sport")
 ```
 
 ```
 ## OGR data source with driver: ESRI Shapefile 
-## Source: ".", layer: "london_sport"
+## Source: "data/", layer: "london_sport"
 ## with 33 features and 4 fields
 ## Feature type: wkbPolygon with 2 dimensions
 ```
 
 
-In the code above `dsn` is an *argument* of the *function* `readOGR`. 
+In the code above `dsn` stands for "data source name" and is an *argument* of the *function* `readOGR`
+that, in this case, specifies the directory in which the dataset is stored. 
 R functions have a default order of functions, so `dsn = ` does not 
-actually need to be typed: `readOGR(".", "london_sport")` works the same, but
-it is good to remember the meaning of each argument when beginning to use R, so 
-we sometimes include argument names when it is relevant. Here, `dsn`
-stands for "data source name" which is the folder containing the spatial data – this was pre-specified when you set your working directory. You would type `dsn = data/` if the files were stored in the 
-"data" folder of the current directory. 
+actually need to be typed. If there data were stored in the 
+current working directory, one could use `readOGR(".", "london_sport")`.
+For clarity, it is good practice to include argument names when learning new functions. 
 
 The next argument is a *character string*. This is simply the name the file required. 
-There is no need to add a file extension (e.g. `.shp) for this command. 
+There is no need to add a file extension (e.g. `.shp`) for this command. 
 The files beginning `london_sport` from the 
 [example dataset](http://spatial.ly/wp-content/uploads/2013/12/spatialggplot.zip)
 contain the borough population and 
 the percentage of the population engaging in sporting activities and was taken from the 
 [active people survey](http://data.london.gov.uk/datastore/package/active-people-survey-kpi-data-borough).
 The boundary data is from the [Ordnance Survey](http://www.ordnancesurvey.co.uk/oswebsite/opendata/).
+
+## Attribute data
 
 All shapefiles have an attribute table. This is automatically loaded with 
 `readOGR` and can be treated in a similar way to an R 
@@ -165,6 +172,8 @@ Is projected: TRUE
 proj4string :
 [+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 ....]
 ```
+
+## Changing projection
 
 In the above code `proj4string` represents the coordinate reference system used in the data. 
 In this file it has been incorrectly specified so we can change it with the following:
@@ -200,9 +209,11 @@ The different epsg codes are a bit of hassle to remember but you can find them a
 # ggplot2
 
 This next section of the practical introduces a slightly 
-different method of creating plots in R using the ggplot2 
-package. The package is an implementation of the Grammar of Graphics (Wilkinson 2005) - 
-a general scheme for data visualization that breaks up graphs into semantic components such as scales and layers. 
+different method of creating plots in R using the 
+[ggplot2 package](http://ggplot2.org/). 
+The package is an implementation of the Grammar of Graphics (Wilkinson 2005) - 
+a general scheme for data visualization that breaks up graphs 
+into semantic components such as scales and layers. 
 ggplot2 can serve as a replacement for the base graphics in R (the functions you have been plotting with today) and contains a number of default options that match good visualisation practice.
 
 The maps we produce will not be that meaningful - 
@@ -289,6 +300,8 @@ This idea of layers (or geoms) is quite different from the standard plot functio
  
 The following steps will create a map to show the percentage of the population in each London Borough who regularly participate in sports activities. 
 
+## "Fortifying" spatial objects for ggplot
+
 To get the shapefiles into a format that can be plotted we have to use the `fortify()` function. Spatial objects in R have a number of slots containing the various items of data (polygon geometry, projection, attribute information) associated with a shapefile. Slots can be thought of as shelves within the data object that contain the different attributes. The "polygons" slot contains the geometry of the polygons in the form of the XY coordinates used to draw the polygon outline. The generic plot function can work out what to do with these, ggplot2 cannot. We therefore need to extract them as a data frame. The fortify function was written specifically for this purpose.
 For this to work, either `gpclib` or `rgeos` packages must be installed.
 
@@ -334,6 +347,8 @@ head(sport.f[, 1:8])
 ```
 
 
+## Maps in ggplot2
+
 It is now straightforward to produce a map using all the built in tools 
 (such as setting the breaks in the data) that ggplot2 has to offer. 
 `coord_equal()` is the equivalent of asp=T in regular plots with R:
@@ -358,7 +373,7 @@ The `group=group` points ggplot to the group column added by
 to individual polygons (in this case London Boroughs). 
 
 The default colours are really nice but we may wish to produce the map in black and white, 
-which should produce a map like that shown below:
+which should produce a map like that shown below (and try changing the colors):
 
 
 ```r
@@ -381,8 +396,11 @@ ggsave("my_large_plot.png", scale = 3, dpi = 400)
 
 # Adding base maps to ggplot2 with ggmap
 
-ggmap is a package that uses the ggplot2 syntax as a 
-template to create maps with image tiles from the likes of Google and OpenStreetMap:
+[ggmap](http://journal.r-project.org/archive/2013-1/kahle-wickham.pdf) 
+is a package that uses the ggplot2 syntax as a 
+template to create maps with image tiles taken from map servers 
+such as Google and 
+[OpenStreetMap](http://www.openstreetmap.org/):
 
 
 ```r
@@ -390,7 +408,7 @@ library(ggmap)  # you may have to use install.packages to install it first
 ```
 
 
-The sport object is in British National Grid but the ggmap 
+The `sport` object loaded previously is in British National Grid but the ggmap 
 image tiles are in WGS84. We therefore need to use the sport.wgs84 
 object created in the reprojection operation earlier. 
 
@@ -429,7 +447,6 @@ data (we already did this step to create the sport.f object).
 sport.wgs84.f <- fortify(sport.wgs84, region = "ons_label")
 sport.wgs84.f <- merge(sport.wgs84.f, sport.wgs84@data, by.x = "id", by.y = "ons_label")
 ```
-
 
 
 We can now overlay this on our base map.
@@ -478,12 +495,14 @@ lnd.b3 + geom_polygon(data = sport.wgs84.f, aes(x = long, y = lat, group = group
 
 # Joining and clipping
 
-This section builds on the previous information on plotting and highlights 
-some of R's more advanced spatial functions from the `rgeos` package. 
-We look at joining new 
-datasets to our data - an attribute join - spatial joins, whereby 
+While the previous section was focussed on *visualisation*, here
+the focus shifts towards manipulation of spatial data - 
+[using R as a GIS](https://github.com/Pakillo/R-GIS-tutorial).
+Some of R's more advanced spatial functions will be 
+showcased, from the `rgeos` and `sp` packages. We will look at joining new 
+datasets to our data via an attribute join. Spatial joins, whereby 
 data is added to the target layer depending on the location of the 
-origins and clipping. 
+origins is also covered. 
 
 To reaffirm our starting point, let's re-plot the only 
 spatial dataset in our workspace, and count the number
@@ -492,12 +511,12 @@ of polygons:
 
 ```r
 library(rgdal)
-lnd <- readOGR(dsn = ".", "london_sport")
+lnd <- readOGR(dsn = "data/", "london_sport")
 ```
 
 ```
 ## OGR data source with driver: ESRI Shapefile 
-## Source: ".", layer: "london_sport"
+## Source: "data/", layer: "london_sport"
 ## with 33 features and 4 fields
 ## Feature type: wkbPolygon with 2 dimensions
 ```
@@ -529,20 +548,21 @@ spatial dataset. As before, we can download and import the data from within R:
 # download.file('http://data.london.gov.uk/datafiles/crime-community-safety/mps-
 # recordedcrime-borough.csv', destfile = 'mps-recordedcrime-borough.csv')
 # uncomment and join the above code to download the data
-
-crimeDat <- read.csv("mps-recordedcrime-borough.csv")  # flags an error
+crimeDat <- read.csv("data/mps-recordedcrime-borough.csv")
+head(crimeDat)
 ```
 
 
-Initially, the `read.csv` command flags an error: open the raw .csv file in a 
-text editor such as Notepad, Notepad++ or GVIM, find the problem and correct it.
-Alternatively, you can work out what the file encoding is and use the correct 
-argument (this is not recommended - simpler just to edit the text file
-in most cases).
+Initially, the `read.csv` may an error. If not the `head` command should show 
+that the dataset has not loaded correctly. This was due to an unusual 
+encoding used in the text file: hopefully you will not 
+encounter this problem in your research, but it highlights the importance
+of checking the input data. To overcome this issue we
+can set the encoding manually, and continue.
 
 
 ```r
-crimeDat <- read.csv("mps-recordedcrime-borough.csv", fileEncoding = "UCS-2LE")
+crimeDat <- read.csv("data/mps-recordedcrime-borough.csv", fileEncoding = "UCS-2LE")
 head(crimeDat)
 summary(crimeDat$MajorText)
 crimeTheft <- crimeDat[which(crimeDat$MajorText == "Theft & Handling"), ]
@@ -631,41 +651,47 @@ lnd@data <- join(lnd@data, crimeAg)
 ```
 
 
+Take a look at the `lnd@data` object. You should 
+see new variables added, meaning the attribute join 
+was successful. 
+
 ## Adding point data for clipping and spatial join
+
 In addition to joining by zone name, it is also possible to do
-[spatial joins](http://help.arcgis.com/en/arcgisdesktop/10.0/help/index.html#//00080000000q000000) in R. There are three main varieties: many-to-one - where
+[spatial joins](http://help.arcgis.com/en/arcgisdesktop/10.0/help/index.html#//00080000000q000000) 
+in R. There are three main varieties: many-to-one, where
 the values of many intersecting objects contribute to a new variable in 
-the main table - one-to-many, or one-to-one. Because boroughs in London 
+the main table, one-to-many, or one-to-one. Because boroughs in London 
 are quite large, we will conduct a many-to-one spatial join.
 We will be using Tube Stations as the spatial data to join, 
 with the aim of finding out which and how many stations
 are found in each London borough.
 
+
 ```r
-download.file("http://www.personal.leeds.ac.uk/~georl/egs/lnd-stns.zip", "lnd-stns.zip")
-unzip("lnd-stns.zip")
 library(rgdal)
-stations <- readOGR(dsn = ".", layer = "lnd-stns", p4s = "+init=epsg:27700")
+stations <- readOGR(dsn = "data/", layer = "lnd-stns")
 proj4string(stations)  # this is the full geographical detail.
 proj4string(lnd)
 bbox(stations)
 bbox(lnd)
 ```
 
+
 The above code loads the data correctly, but also shows that 
 there are problems with it: the Coordinate Reference System (CRS)
-differs from that of our shapefile. 
-Although OSGB 1936 (or EPSG 27700) is the 'correct' CRS for the UK, 
-we will convert the stations dataset into lat-long coordinates, 
-as this is a more common CRS and enables easy base map creation:
+of the stations differs from that of our `lnd` object. 
+OSGB 1936 (or [EPSG 27700](http://spatialreference.org/ref/epsg/27700/)) 
+is the official CRS for the UK, so
+we will convert the stations dataset to this:
  
 
 ```r
-stationsWGS <- spTransform(stations, CRSobj = CRS(proj4string(lnd)))
-stations <- stationsWGS
-rm(stationsWGS)
+stations27700 <- spTransform(stations, CRSobj = CRS(proj4string(lnd)))
+stations <- stations27700
+rm(stations27700)  # cleaning up
 plot(lnd)
-points(stations[sample(1:nrow(stations), size = 500), ])
+points(stations)
 ```
 
 ![plot of chunk Sampling and plotting stations](figure/Sampling_and_plotting_stations.png) 
@@ -673,29 +699,67 @@ points(stations[sample(1:nrow(stations), size = 500), ])
 
 Now we can clearly see that the stations overlay the boroughs.
 The problem is that the stations dataset is far more extensive than
-London borough dataset; we need 
+London borough dataset; we take a spatially determined subset of the 
+former so that they all fit within the latter. This is *clipping*. 
 
 
 ## Clipping
+
 There are a number of functions that we can use to clip the points
-so that only those falling within London boroughs are retained:
+so that only those falling within London boroughs are retained. 
+These include `overlay`, `sp::over`, and `rgeos::gIntersects`
+(word preceding the `::` symbol refers to the package the function is from).
+Use `?` followed by the function to get help on each and find which is 
+most appropriate.
+
+`gIntersects` can produce the same output as `over` for basic joins 
+[see here](http://gis.stackexchange.com/questions/63793/how-to-overlay-a-polygon-over-spatialpointsdataframe-and-preserving-the-spdf-dat).
+
+In this tutorial we will use the `over` function as it is easiest to use. 
+`gIntersects` can acheive the same result, but with more lines of code. 
+It may seem confusing that two different functions 
+can be used to generate the same result. However, 
+this is a common issue in programming; the question
+is finding the most appropriate solution.
+
+## Clipping with sp::over
+
+`over` takes two main input arguments: the target layer to be altered and the 
+layer by which it is to be clipped. The output is a data frame of the same 
+dimensions as the original dataset, except that the values corresponding to 
+areas outside the zone of interest are set to `NA` ("no answer").
+We can use this to take a subset of the orginal polygons, 
+remembering the square bracket notation.
+
+
+```r
+sel <- over(stations, lnd)
+stations <- stations[!is.na(sel[, 1]), ]
 ```
-?overlay
-?sp::over
-library(rgeos)
-?rgeos::gIntersects
+
+
+Because this is a common procedure it is actually possible 
+to perform it with a single line of code: 
+
+
+```r
+stations <- stations[lnd, ]
 ```
-We can write off the first one straight away as it is depreciated by the second. 
-It seems that `gIntersects` can produce the same output as `over`, based 
-on [discussion](http://gis.stackexchange.com/questions/63793/how-to-overlay-a-polygon-over-spatialpointsdataframe-and-preserving-the-spdf-dat) 
-in the community,  so either 
-can be used. (See this 
-[discussion](http://stackoverflow.com/questions/15881455/how-to-clip-worldmap-with-polygon-in-r)
-for further alternatives.) 
-In this tutorial we will use `gIntersects`,
-for clipping although we could equally use 
-`gContains`, `gWithin` and other `g...` functions -
-see rgeos help pages by typing `?gOverlaps` or other functions for more.
+
+
+In fact there is actually a *third* way to acheive the 
+same result using the `rgeos` package. This next section 
+goes into detail about how spatial subsets work; 
+if you are not interested in this, please feel free to the section 
+on aggregation.
+
+## Clipping with gIntersects
+
+An alternative to `over` for spatial subsetting is `gIntersects`,
+although we could equally use 
+`gContains`, `gWithin` and other `g...` functions. 
+The power of these commands can be seen by accessing the 
+rgeos help pages, e.g. `?gOverlaps`.
 `gIntersects` will output information for each point, telling us which 
 polygon it interacts with (i.e. the polygon it is in):
 
@@ -729,13 +793,17 @@ function `apply`, which is unique to R, comes into play:
 ```r
 clipped <- apply(int == F, MARGIN = 2, all)
 plot(stations[which(clipped), ])  # shows all stations we DO NOT want
-stations.cl <- stations[which(!clipped), ]  # use ! to select the invers
-points(stations.cl, col = "green")  # check that it's worked
+```
+
+```
+## Error: need finite 'xlim' values
 ```
 
 ![plot of chunk Clipped points (within London boroughs)](figure/Clipped_points__within_London_boroughs_.png) 
 
 ```r
+stations.cl <- stations[which(!clipped), ]  # use ! to select the invers
+points(stations.cl, col = "green")  # check that it's worked
 stations <- stations.cl
 rm(stations.cl)  # tidy up: we're only interested in clipped ones
 ```
@@ -812,7 +880,7 @@ head(b.count.tmp, 2)
 
 ```
 ##   ons_label                 name Partic_Per Pop_2001 CrimeCount row col
-## 1      00AF              Bromley       21.7   295535      15172  54  54
+## 1      00AF              Bromley       21.7   295535      15172  48  48
 ## 2      00BD Richmond upon Thames       26.6   172330       9715  22  22
 ```
 
@@ -830,7 +898,7 @@ For this we will use a new dataset:
 
 
 ```r
-input <- read.csv("ambulance_assault.csv")
+input <- read.csv("data/ambulance_assault.csv")
 ```
 
 
@@ -858,7 +926,7 @@ We can now plot a histogram to show the distribution of values.
 
 
 ```r
-p.ass <- ggplot(input, aes(x = assault_09_11))
+p <- ggplot(input, aes(x = assault_09_11))
 ```
 
 
@@ -866,7 +934,7 @@ Remember the `ggplot(input, aes(x=assault_09_11))` section means create a generi
 
 
 ```r
-p.ass + geom_histogram()
+p + geom_histogram()
 ```
 
 
@@ -878,7 +946,7 @@ smaller by adjusting the binwidth. Try:
 
 
 ```r
-p.ass + geom_histogram(binwidth = 10) + geom_density(fill = NA, colour = "black")
+p + geom_histogram(binwidth = 10) + geom_density(fill = NA, colour = "black")
 
 ```
 
@@ -888,9 +956,9 @@ For this we need to produce a second plot object with the density distribution a
 
 
 ```r
-p2.ass <- ggplot(input, aes(x = assault_09_11, y = ..density..))
+p2 <- ggplot(input, aes(x = assault_09_11, y = ..density..))
 
-p2.ass + geom_histogram() + geom_density(fill = NA, colour = "red")
+p2 + geom_histogram() + geom_density(fill = NA, colour = "red")
 ```
 
 ```
@@ -927,7 +995,7 @@ is a box and whisker plot. These too can be easily produced in R
 
 
 ```r
-p3.ass <- ggplot(input, aes(x = Bor_Code, y = assault_09_11))
+p3 <- ggplot(input, aes(x = Bor_Code, y = assault_09_11))
 ```
 
 
@@ -935,7 +1003,7 @@ and convert it to a boxplot.
 
 
 ```r
-p3.ass + geom_boxplot()
+p3 + geom_boxplot()
 ```
 
 
@@ -943,7 +1011,7 @@ Perhaps this would look a little better flipped round.
 
 
 ```r
-p3.ass + geom_boxplot() + coord_flip()
+p3 + geom_boxplot() + coord_flip()
 ```
 
 ![plot of chunk Bar and whisker plot](figure/Bar_and_whisker_plot.png) 
@@ -959,7 +1027,7 @@ If you want an insight into some of the visualisations you can develop with this
 
 
 ```r
-p.ass + geom_histogram() + facet_wrap(~Bor_Code)
+p + geom_histogram() + facet_wrap(~Bor_Code)
 ```
 
 ![plot of chunk Faceted histogram](figure/Faceted_histogram.png) 
@@ -980,7 +1048,7 @@ Load the data - this shows historic population values between 1801 and 2001 for 
 
 
 ```r
-london.data <- read.csv("census-historic-population-borough.csv")
+london.data <- read.csv("data/census-historic-population-borough.csv")
 ```
 
 
@@ -999,7 +1067,6 @@ Only do this step if reshape and melt failed
 ```r
 london.data.melt <- read.csv("london_data_melt.csv")
 ```
-
 
 
 Merge the population data with the London borough geometry contained within our sport.f object.
