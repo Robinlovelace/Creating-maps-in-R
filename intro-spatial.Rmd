@@ -1,10 +1,10 @@
 Introduction 
 ========================================================
 
-This tutorial is an introduction to spatial data in R and visualisation with 
+This tutorial is an introduction to spatial data in R and map making with 
 the popular graphics package `ggplot2`. 
 It assumes no prior knowledge of spatial data analysis but 
-we do expect some prior understanding of R command line. 
+prior understanding of R command line would be beneficial. 
 For people new to R, we recommend working through an
 'Introduction to R' type tutorial, such as
 "A (very) short introduction to R" 
@@ -74,10 +74,9 @@ To test whether ggplot2 is installed, for example, enter `library(ggpot2)`.
 If you get an error message, it needs to be installed: `install.packages("ggplot2")`.
 
 All of the data used for the tutorial can be downloaded from here:
-[http://spatial.ly/wp-content/uploads/2013/12/spatialggplot.zip](http://spatial.ly/wp-content/uploads/2013/12/spatialggplot.zip)
-
-Save this to a new folder, then in R specify the path of 
-that folder as you working directory. Use the `setwd` command to do this.
+[https://github.com/Robinlovelace/Creating-maps-in-R](https://github.com/Robinlovelace/Creating-maps-in-R).
+Click on the "Download ZIP" button on the right and unzip this to a new folder.
+Use the `setwd` command to set the working directory.
 If your username is "username" and you saved the files into a 
 folder called "rmapping" on your Desktop, for example, 
 you would type the following:
