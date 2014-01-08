@@ -42,7 +42,7 @@ Cheshire, James\\\\
 Lovelace, Robin\\\\
 \\texttt{r.lovelace@leeds.ac.uk}
 }
-\\title{Introduction to Spatial Data and ggplot2}"
+\\title{Introduction to visualising spatial data in R}"
 text_block <- unlist(strsplit(block, split='\n'))
 # concatenate the old file with the new text
 mytext <- c(text[1:idx],text_block,text[(idx+1):length(text)]) 

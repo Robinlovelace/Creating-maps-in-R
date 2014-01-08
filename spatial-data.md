@@ -1,4 +1,4 @@
-An introduction to R for spatial data visualisation
+An introduction to R for visualising spatial data
 ========================================================
 author: Robin Lovelace
 date: 24th January 2014
@@ -8,13 +8,15 @@ Introduction
 
 During this course we will cover these topics
 
-- Visualising data with ggplot2
-- How R 'sees' spatial data
-- Making maps in R
-               
+- An introduction to R
+- Loading and interrogating spatial data
+- Manipulating spatial objects
+
+- Making maps in R and ggplot2               
 - Basemaps
-- Joining and clipping
-- Further functionalities
+- More advanced visuals
+
+- Taking it further
 
 A bit about R
 ========================================================

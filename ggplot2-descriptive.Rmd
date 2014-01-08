@@ -1,0 +1,99 @@
+# Using ggplot2 for Descriptive Statistics
+
+For this we will use a new dataset:
+
+```{r}
+input <- read.csv("data/ambulance_assault.csv")
+```
+
+This contains the number of ambulance callouts to assault incidents (downloadable from the London DataStore) between 2009 and 2011. 
+
+Take a look at the contents of the file:
+
+```{r}
+head(input)
+```
+
+We can now plot a histogram to show the distribution of values. 
+
+```{r}
+p <- ggplot(input, aes(x = assault_09_11))
+```
+
+Remember the `ggplot(input, aes(x=assault_09_11))` section means create a generic plot object (called p.ass) from the input object using the `assault_09_11` column as the data for the x axis. To create the histogram you need to tell R that this is what you want to go with
+
+```{r, eval=FALSE}
+p + geom_histogram()
+```
+
+The resulting message (`stat_bin: binwidth defaulted to range/30...`)
+relates to the bins - the breaks between histogram blocks.
+If you want the bins (and therefore the bars) to be thinner 
+(i.e. representing fewer values) you need to make the bins 
+smaller by adjusting the binwidth. Try:
+
+```{r, eval=FALSE}
+p + 
+  geom_histogram(binwidth = 10) + 
+  geom_density(fill = NA, colour = "black") 
+
+```
+
+It is also possible to overlay a density distribution over the top of the histogram. 
+For this we need to produce a second plot object with the density distribution as the y variable.
+
+```{r Histogram with density overlay}
+p2 <- ggplot(input, aes(x = assault_09_11, y = ..density..))
+
+p2 + 
+  geom_histogram() +
+  geom_density(fill = NA, colour = "red")
+```
+
+What kind of distribution is this plot showing? You can see that there are
+a few wards with very high assault incidences (over 750). 
+To find out which ones these are we can select them.
+
+```{r}
+input[which(input$assault_09_11>750),]
+```
+
+It is perhaps unsurprising that St James's and the West End have the highest counts.
+The plot has provided a good impression of the overall distribution,
+but what are the characteristics of each distribution within the Boroughs?
+Another type of plot that shows the core characteristics of the distribution
+is a box and whisker plot. These too can be easily produced in R 
+(you can't do them in Excel!). We can create a third plot object 
+(note that the assault field is now y and not x):
+
+```{r}
+p3 <- ggplot(input, aes(x = Bor_Code, y = assault_09_11))
+```
+
+and convert it to a boxplot.
+
+```{r, eval=FALSE}
+p3 + geom_boxplot()
+```
+
+Perhaps this would look a little better flipped round.
+
+```{r Bar and whisker plot}
+p3 + geom_boxplot() +
+  coord_flip()
+```
+
+Now each of the borough codes can be easily seen. 
+No surprise that the Borough of Westminster (00BK) 
+has the two largest outliers. In one line of code you 
+have produced an incredibly complex plot rich in information. 
+This demonstrates why R is such a useful program for these kinds of statistics. 
+
+If you want an insight into some of the visualisations you can develop with this type of data we can do faceting based on the example of the histogram plot above. 
+
+```{r Faceted histogram, message=FALSE}
+p + geom_histogram() +
+  facet_wrap( ~ Bor_Code)
+```
+
+We need to do a little bit of tweaking to make this plot publishable but we want to demonstrate that it is really easy to produce 30+ plots on a single page! Faceting is an extremely powerful way of visualizing multidimensional datasets and is especially good for showing change over time.

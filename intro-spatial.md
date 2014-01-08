@@ -1,10 +1,10 @@
 Introduction 
 ========================================================
 
-This tutorial is an introduction to spatial data in R and visualisation with 
+This tutorial is an introduction to spatial data in R and map making with 
 the popular graphics package `ggplot2`. 
 It assumes no prior knowledge of spatial data analysis but 
-we do expect some prior understanding of R command line. 
+prior understanding of R command line would be beneficial. 
 For people new to R, we recommend working through an
 'Introduction to R' type tutorial, such as
 "A (very) short introduction to R" 
@@ -80,10 +80,9 @@ To test whether ggplot2 is installed, for example, enter `library(ggpot2)`.
 If you get an error message, it needs to be installed: `install.packages("ggplot2")`.
 
 All of the data used for the tutorial can be downloaded from here:
-[http://spatial.ly/wp-content/uploads/2013/12/spatialggplot.zip](http://spatial.ly/wp-content/uploads/2013/12/spatialggplot.zip)
-
-Save this to a new folder, then in R specify the path of 
-that folder as you working directory. Use the `setwd` command to do this.
+[https://github.com/Robinlovelace/Creating-maps-in-R](https://github.com/Robinlovelace/Creating-maps-in-R).
+Click on the "Download ZIP" button on the right and unzip this to a new folder.
+Use the `setwd` command to set the working directory.
 If your username is "username" and you saved the files into a 
 folder called "rmapping" on your Desktop, for example, 
 you would type the following:
@@ -97,7 +96,7 @@ setwd("C:/Users/username/Desktop/rmapping/R")
 If you are working in RStudio, you can create a project that will automatically 
 set your working directory. 
 
-## Loading spatial data
+# Loading and interogating spatial data
 
 One of the most important steps in handling spatial data with R 
 is the ability to read in shapefiles. There are a number of ways to do this. 
@@ -173,9 +172,28 @@ proj4string :
 [+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 ....]
 ```
 
+# Manipulating spatial data in R
+
+It is all very well being able to load and interogate spatial data
+in R, but to compete with modern GIS packages it must also be able 
+to modify these spatial objects before they are visualised
+(see '[using R as a GIS](https://github.com/Pakillo/R-GIS-tutorial)'). 
+R has
+a wide range of very powerful 
+functions for this, many of which are in additional packages alluded 
+to in the introduction.
+
+This course is introductory so only the most commonly required 
+data manipulaiton tasks, *reprojecting* and *joining/clipping* are covered here.
+We will look at joining aspatial
+datasets to our spatial object via an attribute join. Spatial joins, whereby 
+data is added to the target layer depending on the location of the 
+origins is also covered. 
+
 ## Changing projection
 
-In the above code `proj4string` represents the coordinate reference system used in the data. 
+You may have noticed the word `proj4string` in the 
+summary of `sport`. This represents the coordinate reference system used in the data. 
 In this file it has been incorrectly specified so we can change it with the following:
 
 
@@ -191,7 +209,7 @@ proj4string(sport) <- CRS("+init=epsg:27700")
 ```
 
 
-You will see you get a warning. This is simply saying that you are changing 
+You will see a warning. This is simply saying that you are changing 
 the coordinate reference system, not reprojecting the data. 
 Epsg:27700 is the code for British National Grid.
 If we wanted to reproject the data into something 
@@ -205,6 +223,326 @@ sport.wgs84 <- spTransform(sport, CRS("+init=epsg:4326"))
 
 The different epsg codes are a bit of hassle to remember but you can find them all at 
 [spatialreference.org](http://spatialreference.org/).
+
+## Joining and clipping
+
+To reaffirm our starting point, let's re-plot the only 
+spatial dataset in our workspace, and count the number
+of polygons:
+
+
+```r
+library(rgdal)
+lnd <- readOGR(dsn = "data/", "london_sport")
+```
+
+```
+## OGR data source with driver: ESRI Shapefile 
+## Source: "data/", layer: "london_sport"
+## with 33 features and 4 fields
+## Feature type: wkbPolygon with 2 dimensions
+```
+
+```r
+plot(lnd)
+```
+
+![plot of chunk Plot of London](figure/Plot_of_London.png) 
+
+```r
+nrow(lnd)
+```
+
+```
+## [1] 33
+```
+
+
+
+
+
+
+
+The dataset we will join to the London object is...
+
+
+```r
+crimeDat <- read.csv("data/mps-recordedcrime-borough.csv", fileEncoding = "UCS-2LE")
+head(crimeDat)
+summary(crimeDat$MajorText)
+crimeTheft <- crimeDat[which(crimeDat$MajorText == "Theft & Handling"), ]
+head(crimeTheft, 2)  # change 2 for more rows
+crimeAg <- aggregate(CrimeCount ~ Spatial_DistrictName, FUN = "sum", data = crimeTheft)
+head(crimeAg, 2)  # show the aggregated crime data
+```
+
+
+Now that we have crime data at the borough level, the challenge is to join it
+by name. This is not always straightforward. Let us see which names in the 
+crime data match the spatial data:
+
+
+```r
+lnd$name %in% crimeAg$Spatial_DistrictName
+```
+
+```
+##  [1]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
+## [12]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
+## [23]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE
+```
+
+```r
+lnd$name[which(!lnd$name %in% crimeAg$Spatial_DistrictName)]
+```
+
+```
+## [1] City of London
+## 33 Levels: Barking and Dagenham Barnet Bexley Brent Bromley ... Westminster
+```
+
+
+The first line of code above shows that all but one of the borough names matches;
+the second tells us that it is City of London that is named differently in the 
+crime data. Look at the results (not shown here) on your computer.
+
+
+```r
+levels(crimeAg$Spatial_DistrictName)
+levels(crimeAg$Spatial_DistrictName)[25] <- as.character(lnd$name[which(!lnd$name %in% 
+    crimeAg$Spatial_DistrictName)])
+lnd$name %in% crimeAg$Spatial_DistrictName  # now all columns match
+```
+
+
+The above code block first identified the row with the faulty name and 
+then renamed the level to match the `lnd` dataset. Note that we could not
+rename the variable directly, as it is stored as a factor.
+
+We are now ready to join the datasets. It is recommended to use 
+the `join` function in the `plyr` package but the `merge` function 
+could equally be used.
+
+
+```r
+help(join)
+library(plyr)
+help(join)  # now help should appear
+```
+
+
+The documentation for join will be displayed if the plyr package is loaded (if not,
+load or install and load it!). It requires all joining variables to have the 
+same name, so we will rename the variable to make the join work:
+
+
+```r
+head(lnd$name)
+head(crimeAg$Spatial_DistrictName)  # the variables to join
+crimeAg <- rename(crimeAg, replace = c(Spatial_DistrictName = "name"))
+head(join(lnd@data, crimeAg))  # test it works
+```
+
+```
+## Joining by: name
+```
+
+```r
+lnd@data <- join(lnd@data, crimeAg)
+```
+
+```
+## Joining by: name
+```
+
+
+Take a look at the `lnd@data` object. You should 
+see new variables added, meaning the attribute join 
+was successful. 
+
+## Spatial joins
+
+In addition to joining by zone name, it is also possible to do
+[spatial joins](http://help.arcgis.com/en/arcgisdesktop/10.0/help/index.html#//00080000000q000000) 
+in R. There are three main varieties: many-to-one, where
+the values of many intersecting objects contribute to a new variable in 
+the main table, one-to-many, or one-to-one. Because boroughs in London 
+are quite large, we will conduct a many-to-one spatial join.
+We will be using Tube Stations as the spatial data to join, 
+with the aim of finding out which and how many stations
+are found in each London borough.
+
+
+```r
+library(rgdal)
+stations <- readOGR(dsn = "data/", layer = "lnd-stns")
+proj4string(stations)  # this is the full geographical detail.
+proj4string(lnd)
+bbox(stations)
+bbox(lnd)
+```
+
+
+The above code loads the data correctly, but also shows that 
+there are problems with it: the Coordinate Reference System (CRS)
+of the stations differs from that of our `lnd` object. 
+OSGB 1936 (or [EPSG 27700](http://spatialreference.org/ref/epsg/27700/)) 
+is the official CRS for the UK, so
+we will convert the stations dataset to this:
+ 
+
+```r
+stations27700 <- spTransform(stations, CRSobj = CRS(proj4string(lnd)))
+stations <- stations27700
+rm(stations27700)  # cleaning up
+plot(lnd)
+points(stations)
+```
+
+![plot of chunk Sampling and plotting stations](figure/Sampling_and_plotting_stations.png) 
+
+
+Now we can clearly see that the stations overlay the boroughs.
+The problem is that the stations dataset is far more extensive than
+London borough dataset; we take a spatially determined subset of the 
+former so that they all fit within the latter. This is *clipping*. 
+
+
+### Clipping
+
+There are a number of functions that we can use to clip the points
+so that only those falling within London boroughs are retained. 
+These include `overlay`, `sp::over`, and `rgeos::gIntersects`
+(word preceding the `::` symbol refers to the package the function is from).
+Use `?` followed by the function to get help on each and find which is 
+most appropriate.
+
+`gIntersects` can produce the same output as `over` for basic joins 
+[see here](http://gis.stackexchange.com/questions/63793/how-to-overlay-a-polygon-over-spatialpointsdataframe-and-preserving-the-spdf-dat).
+
+In this tutorial we will use the `over` function as it is easiest to use. 
+`gIntersects` can acheive the same result, but with more lines of code. 
+It may seem confusing that two different functions 
+can be used to generate the same result. However, 
+this is a common issue in programming; the question
+is finding the most appropriate solution.
+
+## Clipping with sp::over
+
+`over` takes two main input arguments: the target layer to be altered and the 
+layer by which it is to be clipped. The output is a data frame of the same 
+dimensions as the original dataset, except that the values corresponding to 
+areas outside the zone of interest are set to `NA` ("no answer").
+We can use this to take a subset of the orginal polygons, 
+remembering the square bracket notation.
+
+
+```r
+sel <- over(stations, lnd)
+stations <- stations[!is.na(sel[, 1]), ]
+```
+
+
+Because this is a common procedure it is actually possible 
+to perform it with a single line of code: 
+
+
+```r
+stations <- stations[lnd, ]
+```
+
+
+In fact there is actually a *third* way to acheive the 
+same result using the `rgeos` package. This next section 
+goes into detail about how spatial subsets work; 
+if you are not interested in this, please feel free to the section 
+on aggregation.
+
+### Spatial aggregation
+
+Now that we know how `gIntersects` works in general terms and for clipping, 
+let's use it to 
+allocate a borough to each of our station points, which we will then 
+aggregate up. Data from these points (e.g. counts, averages in each area etc.)
+can then be transferred to the main polygons table: the essence of a spatial 
+join. Again, `apply` is our friend in this instance, meaning we can avoid `for` loops:
+
+
+```r
+library(rgeos)
+```
+
+```
+## rgeos version: 0.3-2, (SVN revision 413M)
+##  GEOS runtime version: 3.3.8-CAPI-1.7.8 
+##  Polygon checking: TRUE
+```
+
+```r
+int <- gIntersects(stations, lnd, byid = T)  # re-run the intersection query 
+head(apply(int, MARGIN = 2, FUN = which))
+b.indexes <- which(int, arr.ind = T)
+summary(b.indexes)
+b.names <- lnd$name[b.indexes[, 1]]
+b.count <- aggregate(b.indexes ~ b.names, FUN = length)
+head(b.count)
+```
+
+
+The above code first extracts the index of the row (borough) for 
+which the corresponding column is true and then converts this into 
+names. The final object created, `b.count` contains the number of station 
+points in each zone. According to this, Barking and Dagenham should contain
+12 station points. It is important to check the output makes sense at 
+every stage with R, so let's check to see this is indeed the case with 
+a quick plot:
+
+
+```r
+plot(lnd[which(grepl("Barking", lnd$name)), ])
+points(stations)
+```
+
+![plot of chunk Train/tube stations in Barking and Dagenham](figure/Train/tube_stations_in_Barking_and_Dagenham.png) 
+
+
+Now the fun part: count the points in the polygon and report back how many there are!
+
+The final stage is to transfer the data on station counts back into the 
+polygon data frame. We have used `merge` to join two datasets before.
+In R there is often more than one way to achieve the same result.
+It's good to experiment with different functions, so we will use
+`join` from the `plyr` package. `join` requires identical joining 
+names in both data frames, so first we will rename them (type 
+`?rename` for more details).
+
+
+```r
+b.count <- rename(b.count, replace = c(b.names = "name"))
+b.count.tmp <- join(lnd@data, b.count)
+```
+
+```
+## Joining by: name
+```
+
+```r
+head(b.count.tmp, 2)
+```
+
+```
+##   ons_label                 name Partic_Per Pop_2001 CrimeCount row col
+## 1      00AF              Bromley       21.7   295535      15172  48  48
+## 2      00BD Richmond upon Thames       26.6   172330       9715  22  22
+```
+
+```r
+lnd$station.count <- b.count.tmp[, 7]
+```
+
+
+We have now seen how to join and clip data. Next, for a stronger grounding 
+in how ggplot works, we will look at plotting non-spatial data.
 
 # ggplot2
 
@@ -309,13 +647,6 @@ For this to work, either `gpclib` or `rgeos` packages must be installed.
 ```r
 # library(gpclib); gpclibPermit() # uncomment if rgeos not installed
 sport.f <- fortify(sport, region = "ons_label")
-```
-
-```
-## Loading required package: rgeos
-## rgeos version: 0.2-19, (SVN revision 394)
-##  GEOS runtime version: 3.3.8-CAPI-1.7.8 
-##  Polygon checking: TRUE
 ```
 
 
@@ -492,548 +823,6 @@ lnd.b3 + geom_polygon(data = sport.wgs84.f, aes(x = long, y = lat, group = group
 
 ![plot of chunk Basemap 3](figure/Basemap_3.png) 
 
-
-# Joining and clipping
-
-While the previous section was focussed on *visualisation*, here
-the focus shifts towards manipulation of spatial data - 
-[using R as a GIS](https://github.com/Pakillo/R-GIS-tutorial).
-Some of R's more advanced spatial functions will be 
-showcased, from the `rgeos` and `sp` packages. We will look at joining new 
-datasets to our data via an attribute join. Spatial joins, whereby 
-data is added to the target layer depending on the location of the 
-origins is also covered. 
-
-To reaffirm our starting point, let's re-plot the only 
-spatial dataset in our workspace, and count the number
-of polygons:
-
-
-```r
-library(rgdal)
-lnd <- readOGR(dsn = "data/", "london_sport")
-```
-
-```
-## OGR data source with driver: ESRI Shapefile 
-## Source: "data/", layer: "london_sport"
-## with 33 features and 4 fields
-## Feature type: wkbPolygon with 2 dimensions
-```
-
-```r
-plot(lnd)
-```
-
-![plot of chunk Plot of London](figure/Plot_of_London.png) 
-
-```r
-nrow(lnd)
-```
-
-```
-## [1] 33
-```
-
-
-## Downloading additional data
-
-Because we are using borough-level data, and boroughs are official administrative
-zones, there is much data available at this level. We will use the example 
-of crime data to illustrate this data availability, and join this with the current 
-spatial dataset. As before, we can download and import the data from within R:
-
-
-```r
-# download.file('http://data.london.gov.uk/datafiles/crime-community-safety/mps-
-# recordedcrime-borough.csv', destfile = 'mps-recordedcrime-borough.csv')
-# uncomment and join the above code to download the data
-crimeDat <- read.csv("data/mps-recordedcrime-borough.csv")
-head(crimeDat)
-```
-
-
-Initially, the `read.csv` may an error. If not the `head` command should show 
-that the dataset has not loaded correctly. This was due to an unusual 
-encoding used in the text file: hopefully you will not 
-encounter this problem in your research, but it highlights the importance
-of checking the input data. To overcome this issue we
-can set the encoding manually, and continue.
-
-
-```r
-crimeDat <- read.csv("data/mps-recordedcrime-borough.csv", fileEncoding = "UCS-2LE")
-head(crimeDat)
-summary(crimeDat$MajorText)
-crimeTheft <- crimeDat[which(crimeDat$MajorText == "Theft & Handling"), ]
-head(crimeTheft, 2)  # change 2 for more rows
-crimeAg <- aggregate(CrimeCount ~ Spatial_DistrictName, FUN = "sum", data = crimeTheft)
-head(crimeAg, 2)  # show the aggregated crime data
-```
-
-
-Now that we have crime data at the borough level, the challenge is to join it
-by name. This is not always straightforward. Let us see which names in the 
-crime data match the spatial data:
-
-
-```r
-lnd$name %in% crimeAg$Spatial_DistrictName
-```
-
-```
-##  [1]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
-## [12]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
-## [23]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE
-```
-
-```r
-lnd$name[which(!lnd$name %in% crimeAg$Spatial_DistrictName)]
-```
-
-```
-## [1] City of London
-## 33 Levels: Barking and Dagenham Barnet Bexley Brent Bromley ... Westminster
-```
-
-
-The first line of code above shows that all but one of the borough names matches;
-the second tells us that it is City of London that is named differently in the 
-crime data. Look at the results (not shown here) on your computer.
-
-
-```r
-levels(crimeAg$Spatial_DistrictName)
-levels(crimeAg$Spatial_DistrictName)[25] <- as.character(lnd$name[which(!lnd$name %in% 
-    crimeAg$Spatial_DistrictName)])
-lnd$name %in% crimeAg$Spatial_DistrictName  # now all columns match
-```
-
-
-The above code block first identified the row with the faulty name and 
-then renamed the level to match the `lnd` dataset. Note that we could not
-rename the variable directly, as it is stored as a factor.
-
-We are now ready to join the datasets. It is recommended to use 
-the `join` function in the `plyr` package but the `merge` function 
-could equally be used.
-
-
-```r
-help(join)
-library(plyr)
-help(join)  # now help should appear
-```
-
-
-The documentation for join will be displayed if the plyr package is loaded (if not,
-load or install and load it!). It requires all joining variables to have the 
-same name, so we will rename the variable to make the join work:
-
-
-```r
-head(lnd$name)
-head(crimeAg$Spatial_DistrictName)  # the variables to join
-crimeAg <- rename(crimeAg, replace = c(Spatial_DistrictName = "name"))
-head(join(lnd@data, crimeAg))  # test it works
-```
-
-```
-## Joining by: name
-```
-
-```r
-lnd@data <- join(lnd@data, crimeAg)
-```
-
-```
-## Joining by: name
-```
-
-
-Take a look at the `lnd@data` object. You should 
-see new variables added, meaning the attribute join 
-was successful. 
-
-## Adding point data for clipping and spatial join
-
-In addition to joining by zone name, it is also possible to do
-[spatial joins](http://help.arcgis.com/en/arcgisdesktop/10.0/help/index.html#//00080000000q000000) 
-in R. There are three main varieties: many-to-one, where
-the values of many intersecting objects contribute to a new variable in 
-the main table, one-to-many, or one-to-one. Because boroughs in London 
-are quite large, we will conduct a many-to-one spatial join.
-We will be using Tube Stations as the spatial data to join, 
-with the aim of finding out which and how many stations
-are found in each London borough.
-
-
-```r
-library(rgdal)
-stations <- readOGR(dsn = "data/", layer = "lnd-stns")
-proj4string(stations)  # this is the full geographical detail.
-proj4string(lnd)
-bbox(stations)
-bbox(lnd)
-```
-
-
-The above code loads the data correctly, but also shows that 
-there are problems with it: the Coordinate Reference System (CRS)
-of the stations differs from that of our `lnd` object. 
-OSGB 1936 (or [EPSG 27700](http://spatialreference.org/ref/epsg/27700/)) 
-is the official CRS for the UK, so
-we will convert the stations dataset to this:
- 
-
-```r
-stations27700 <- spTransform(stations, CRSobj = CRS(proj4string(lnd)))
-stations <- stations27700
-rm(stations27700)  # cleaning up
-plot(lnd)
-points(stations)
-```
-
-![plot of chunk Sampling and plotting stations](figure/Sampling_and_plotting_stations.png) 
-
-
-Now we can clearly see that the stations overlay the boroughs.
-The problem is that the stations dataset is far more extensive than
-London borough dataset; we take a spatially determined subset of the 
-former so that they all fit within the latter. This is *clipping*. 
-
-
-## Clipping
-
-There are a number of functions that we can use to clip the points
-so that only those falling within London boroughs are retained. 
-These include `overlay`, `sp::over`, and `rgeos::gIntersects`
-(word preceding the `::` symbol refers to the package the function is from).
-Use `?` followed by the function to get help on each and find which is 
-most appropriate.
-
-`gIntersects` can produce the same output as `over` for basic joins 
-[see here](http://gis.stackexchange.com/questions/63793/how-to-overlay-a-polygon-over-spatialpointsdataframe-and-preserving-the-spdf-dat).
-
-In this tutorial we will use the `over` function as it is easiest to use. 
-`gIntersects` can acheive the same result, but with more lines of code. 
-It may seem confusing that two different functions 
-can be used to generate the same result. However, 
-this is a common issue in programming; the question
-is finding the most appropriate solution.
-
-## Clipping with sp::over
-
-`over` takes two main input arguments: the target layer to be altered and the 
-layer by which it is to be clipped. The output is a data frame of the same 
-dimensions as the original dataset, except that the values corresponding to 
-areas outside the zone of interest are set to `NA` ("no answer").
-We can use this to take a subset of the orginal polygons, 
-remembering the square bracket notation.
-
-
-```r
-sel <- over(stations, lnd)
-stations <- stations[!is.na(sel[, 1]), ]
-```
-
-
-Because this is a common procedure it is actually possible 
-to perform it with a single line of code: 
-
-
-```r
-stations <- stations[lnd, ]
-```
-
-
-In fact there is actually a *third* way to acheive the 
-same result using the `rgeos` package. This next section 
-goes into detail about how spatial subsets work; 
-if you are not interested in this, please feel free to the section 
-on aggregation.
-
-## Clipping with gIntersects
-
-An alternative to `over` for spatial subsetting is `gIntersects`,
-although we could equally use 
-`gContains`, `gWithin` and other `g...` functions. 
-The power of these commands can be seen by accessing the 
-rgeos help pages, e.g. `?gOverlaps`.
-`gIntersects` will output information for each point, telling us which 
-polygon it interacts with (i.e. the polygon it is in):
-
-
-```r
-int <- gIntersects(stations, lnd, byid = T)  # find which stations intersect 
-class(int)  # it's outputed a matrix
-dim(int)  # with 33 rows (one for each zone) and 2532 cols (the points)
-summary(int[, c(200, 500)])  # not the output of this
-plot(lnd)
-points(stations[200, ], col = "red")  # note point id 200 is outside the zones
-points(stations[500, ], col = "green")  # note point 500 is inside
-which(int[, 500] == T)  # this tells us that point 500 intersects with zone 32
-points(coordinates(lnd[32, ]), col = "black")  # test the previous statement
-```
-
-![plot of chunk Identifying and plotting individual stations](figure/Identifying_and_plotting_individual_stations.png) 
-
-
-In the above code, only the first line actually 'does' anything
-in our workspace, by creating the object `int`. The proceeding 
-lines are dedicated to exploring this object and what it means. 
-Note that it is a matrix with columns corresponding to the points and 
-rows corresponding to boroughs. The borough in which a particular 
-point can be extracted from `int` as we shall see below.
-For the purposes of clipping, we are only interested in whether
-the point intersects with _any_ of the boroughs. This is where the 
-function `apply`, which is unique to R, comes into play:
-
-
-```r
-clipped <- apply(int == F, MARGIN = 2, all)
-plot(stations[which(clipped), ])  # shows all stations we DO NOT want
-```
-
-```
-## Error: need finite 'xlim' values
-```
-
-![plot of chunk Clipped points (within London boroughs)](figure/Clipped_points__within_London_boroughs_.png) 
-
-```r
-stations.cl <- stations[which(!clipped), ]  # use ! to select the invers
-points(stations.cl, col = "green")  # check that it's worked
-stations <- stations.cl
-rm(stations.cl)  # tidy up: we're only interested in clipped ones
-```
-
-
-The first line instructs R to look at each column (`MARGIN = 2`, we would use
-`MARGIN = 1` for row-by-row analysis) and report back whether `all` of the values are
-false. This creates the inverse selection that we want, hence the use of `!` to invert it.
-We test that the function works on a new object (often a good idea, to avoid overwriting 
-useful data) with plots and, once content that the clip has worked, save the sample of 
-points to our main `stations` object and remove the now duplicated `stations.cl` object.
-
-## Aggregating the data to complete the spatial join
-
-Now that we know how `gIntersects` works in general terms and for clipping, 
-let's use it to 
-allocate a borough to each of our station points, which we will then 
-aggregate up. Data from these points (e.g. counts, averages in each area etc.)
-can then be transferred to the main polygons table: the essence of a spatial 
-join. Again, `apply` is our friend in this instance, meaning we can avoid `for` loops:
-
-
-```r
-int <- gIntersects(stations, lnd, byid = T)  # re-run the intersection query 
-head(apply(int, MARGIN = 2, FUN = which))
-b.indexes <- which(int, arr.ind = T)
-summary(b.indexes)
-b.names <- lnd$name[b.indexes[, 1]]
-b.count <- aggregate(b.indexes ~ b.names, FUN = length)
-head(b.count)
-```
-
-
-The above code first extracts the index of the row (borough) for 
-which the corresponding column is true and then converts this into 
-names. The final object created, `b.count` contains the number of station 
-points in each zone. According to this, Barking and Dagenham should contain
-12 station points. It is important to check the output makes sense at 
-every stage with R, so let's check to see this is indeed the case with 
-a quick plot:
-
-
-```r
-plot(lnd[which(grepl("Barking", lnd$name)), ])
-points(stations)
-```
-
-![plot of chunk Train/tube stations in Barking and Dagenham](figure/Train/tube_stations_in_Barking_and_Dagenham.png) 
-
-
-Now the fun part: count the points in the polygon and report back how many there are!
-
-The final stage is to transfer the data on station counts back into the 
-polygon data frame. We have used `merge` to join two datasets before.
-In R there is often more than one way to achieve the same result.
-It's good to experiment with different functions, so we will use
-`join` from the `plyr` package. `join` requires identical joining 
-names in both data frames, so first we will rename them (type 
-`?rename` for more details).
-
-
-```r
-b.count <- rename(b.count, replace = c(b.names = "name"))
-b.count.tmp <- join(lnd@data, b.count)
-```
-
-```
-## Joining by: name
-```
-
-```r
-head(b.count.tmp, 2)
-```
-
-```
-##   ons_label                 name Partic_Per Pop_2001 CrimeCount row col
-## 1      00AF              Bromley       21.7   295535      15172  48  48
-## 2      00BD Richmond upon Thames       26.6   172330       9715  22  22
-```
-
-```r
-lnd$station.count <- b.count.tmp[, 7]
-```
-
-
-We have now seen how to join and clip data. Next, for a stronger grounding 
-in how ggplot works, we will look at plotting non-spatial data.
-
-# Using ggplot2 for Descriptive Statistics
-
-For this we will use a new dataset:
-
-
-```r
-input <- read.csv("data/ambulance_assault.csv")
-```
-
-
-This contains the number of ambulance callouts to assault incidents (downloadable from the London DataStore) between 2009 and 2011. 
-
-Take a look at the contents of the file:
-
-
-```r
-head(input)
-```
-
-```
-##   Bor_Code     WardName WardCode assault_09_11
-## 1     00AA   Aldersgate   00AAFA            10
-## 2     00AA      Aldgate   00AAFB             0
-## 3     00AA    Bassishaw   00AAFC             0
-## 4     00AA Billingsgate   00AAFD             0
-## 5     00AA  Bishopsgate   00AAFE           188
-## 6     00AA Bread Street   00AAFF             0
-```
-
-
-We can now plot a histogram to show the distribution of values. 
-
-
-```r
-p <- ggplot(input, aes(x = assault_09_11))
-```
-
-
-Remember the `ggplot(input, aes(x=assault_09_11))` section means create a generic plot object (called p.ass) from the input object using the `assault_09_11` column as the data for the x axis. To create the histogram you need to tell R that this is what you want to go with
-
-
-```r
-p + geom_histogram()
-```
-
-
-The resulting message (`stat_bin: binwidth defaulted to range/30...`)
-relates to the bins - the breaks between histogram blocks.
-If you want the bins (and therefore the bars) to be thinner 
-(i.e. representing fewer values) you need to make the bins 
-smaller by adjusting the binwidth. Try:
-
-
-```r
-p + geom_histogram(binwidth = 10) + geom_density(fill = NA, colour = "black")
-
-```
-
-
-It is also possible to overlay a density distribution over the top of the histogram. 
-For this we need to produce a second plot object with the density distribution as the y variable.
-
-
-```r
-p2 <- ggplot(input, aes(x = assault_09_11, y = ..density..))
-
-p2 + geom_histogram() + geom_density(fill = NA, colour = "red")
-```
-
-```
-## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
-```
-
-![plot of chunk Histogram with density overlay](figure/Histogram_with_density_overlay.png) 
-
-
-What kind of distribution is this plot showing? You can see that there are
-a few wards with very high assault incidences (over 750). 
-To find out which ones these are we can select them.
-
-
-```r
-input[which(input$assault_09_11 > 750), ]
-```
-
-```
-##     Bor_Code   WardName WardCode assault_09_11
-## 153     00AH  Fairfield   00AHGM           765
-## 644     00BK St James's   00BKGQ          1582
-## 649     00BK   West End   00BKGW          1305
-```
-
-
-It is perhaps unsurprising that St James's and the West End have the highest counts.
-The plot has provided a good impression of the overall distribution,
-but what are the characteristics of each distribution within the Boroughs?
-Another type of plot that shows the core characteristics of the distribution
-is a box and whisker plot. These too can be easily produced in R 
-(you can't do them in Excel!). We can create a third plot object 
-(note that the assault field is now y and not x):
-
-
-```r
-p3 <- ggplot(input, aes(x = Bor_Code, y = assault_09_11))
-```
-
-
-and convert it to a boxplot.
-
-
-```r
-p3 + geom_boxplot()
-```
-
-
-Perhaps this would look a little better flipped round.
-
-
-```r
-p3 + geom_boxplot() + coord_flip()
-```
-
-![plot of chunk Bar and whisker plot](figure/Bar_and_whisker_plot.png) 
-
-
-Now each of the borough codes can be easily seen. 
-No surprise that the Borough of Westminster (00BK) 
-has the two largest outliers. In one line of code you 
-have produced an incredibly complex plot rich in information. 
-This demonstrates why R is such a useful program for these kinds of statistics. 
-
-If you want an insight into some of the visualisations you can develop with this type of data we can do faceting based on the example of the histogram plot above. 
-
-
-```r
-p + geom_histogram() + facet_wrap(~Bor_Code)
-```
-
-![plot of chunk Faceted histogram](figure/Faceted_histogram.png) 
-
-
-We need to do a little bit of tweaking to make this plot publishable but we want to demonstrate that it is really easy to produce 30+ plots on a single page! Faceting is an extremely powerful way of visualizing multidimensional datasets and is especially good for showing change over time.
 
 # Advanced Task: Faceting for Maps
 
