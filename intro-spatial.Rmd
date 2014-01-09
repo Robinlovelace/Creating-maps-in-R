@@ -32,7 +32,6 @@ Google's style guide and the excellent
 "Rchaeological Commentary" 
 ([Johnson 2013](http://cran.r-project.org/web/packages/rockchalk/vignettes/Rstyle.pdf)).
 
-
 Be aware of the following typographic conventions: R code (e.g. `plot(x, y)`) is
 written in a `monospace` font while prose is not. Blocks of code such as, 
 
@@ -73,16 +72,18 @@ The packages we will be using are `ggplot2`, `rgdal`, `rgeos`, `maptools` and `g
 To test whether ggplot2 is installed, for example, enter `library(ggpot2)`. 
 If you get an error message, it needs to be installed: `install.packages("ggplot2")`.
 
-All of the data used for the tutorial can be downloaded from here:
+## Downloading the data for the tutorial
+
+The data used for the tutorial can be downloaded from
 [https://github.com/Robinlovelace/Creating-maps-in-R](https://github.com/Robinlovelace/Creating-maps-in-R).
 Click on the "Download ZIP" button on the right and unzip this to a new folder.
 Use the `setwd` command to set the working directory.
 If your username is "username" and you saved the files into a 
-folder called "rmapping" on your Desktop, for example, 
+folder called "Creating-maps-in-R-master" on your Desktop, for example, 
 you would type the following:
 
 ```{r, eval= F}
-setwd("C:/Users/username/Desktop/rmapping/R")
+setwd("C:/Users/username/Desktop/Creating-maps-in-R-master/")
 ```
 
 If you are working in RStudio, you can create a project that will automatically 
@@ -101,8 +102,10 @@ sport <- readShapePoly("data/london_sport.shp") # read in the shapefile
 
 This method works OK, but it is no longer considered best 
 practice since it doesn’t load in the spatial referencing information 
-etc associated with the shapefile.
-A more powerful way to read in geographical data is to use the `rgdal` function 
+etc associated with the shapefile. There are often a number of ways to do things 
+in R - it is worth being aware of the alternatives.
+
+A more powerful (and widely used) way to read in geographical data is to use the `rgdal` function 
 `readOGR`, which automatically extracts this information.
 This is R’s interface to the "Geospatial Abstraction Library (GDAL)"
 which is used by other open source GIS packages such as QGIS and enables 
@@ -113,15 +116,15 @@ library(rgdal)
 sport <- readOGR(dsn = "data/", "london_sport")
 ```
 
-In the code above `dsn` stands for "data source name" and is an *argument* of the *function* `readOGR`
-that, in this case, specifies the directory in which the dataset is stored. 
-R functions have a default order of functions, so `dsn = ` does not 
+In the code above `dsn` stands for "data source name" and is an *argument* of the *function* `readOGR`.
+The `dsn` argument this case, specifies the directory in which the dataset is stored. 
+R functions have a default order of arguments, so `dsn = ` does not 
 actually need to be typed. If there data were stored in the 
 current working directory, one could use `readOGR(".", "london_sport")`.
-For clarity, it is good practice to include argument names when learning new functions. 
+For clarity, it is good practice to include argument names, such as `dsn` when learning new functions. 
 
 The next argument is a *character string*. This is simply the name the file required. 
-There is no need to add a file extension (e.g. `.shp`) for this command. 
+There is no need to add a file extension (e.g. `.shp`) in this case. 
 The files beginning `london_sport` from the 
 [example dataset](http://spatial.ly/wp-content/uploads/2013/12/spatialggplot.zip)
 contain the borough population and 
@@ -129,13 +132,29 @@ the percentage of the population engaging in sporting activities and was taken f
 [active people survey](http://data.london.gov.uk/datastore/package/active-people-survey-kpi-data-borough).
 The boundary data is from the [Ordnance Survey](http://www.ordnancesurvey.co.uk/oswebsite/opendata/).
 
+Now that we have a spatial object loaded into R's workspace, we can try
+analysing it with some basic commands:
+
+```{r}
+plot(sport)
+head(sport@data)
+plot(sport[sport$Partic_Per > 25,], col = "blue", add = TRUE)
+```
+
+Congratualations! You have just interogated and visualised a 
+spatial dataset: what kind of places have high levels of sports
+participation? The map tells us. Do not worry for now about 
+how this was acheived: we will cover this in subsequent sections.
+
+
 ## Attribute data
 
-All shapefiles have an attribute table. This is automatically loaded with 
-`readOGR` and can be treated in a similar way to an R 
+All shapefiles have both attribute table and geometry data. These are automatically loaded with 
+`readOGR`. The loaded attribute data can be treated in a similar way to an R 
 [data frame](http://www.statmethods.net/input/datatypes.html). 
 
-R hides the geometry of spatial data unless you print the object (using the `print()`). 
+R delibrately hides the geometry of spatial data unless you print 
+the entire object (try typing `print(sport)`). 
 Let's take a look at the headings of sport, using the following command: `names(sport)`
 The data contained in spatial data are kept in a 'slot' that can be accessed using 
 the @ symbol: `sport@data`. This is useful if you do not wish to work with the spatial components of the data at all times. 
@@ -372,22 +391,62 @@ to perform it with a single line of code:
 
 ```{r}
 stations <- stations[lnd, ]
+plot(stations)
+```
+
+```{r, echo=F,eval=FALSE}
+save(lnd, file="data/lnd.RData")
+save(stations, file="data/stations.RData")
 ```
 
 In fact there is actually a *third* way to acheive the 
-same result using the `rgeos` package. This next section 
-goes into detail about how spatial subsets work; 
-if you are not interested in this, please feel free to the section 
-on aggregation.
+same result using the `rgeos` package (see vignette of this on [RPubs.com/Robinlovelace](http://rpubs.com/RobinLovelace/11796)). The next section demonstrates
+spatial aggregation, a more advanced version of spatial subsetting.
 
 ### Spatial aggregation
 
-Now that we know how `gIntersects` works in general terms and for clipping, 
-let's use it to 
-allocate a borough to each of our station points, which we will then 
-aggregate up. Data from these points (e.g. counts, averages in each area etc.)
-can then be transferred to the main polygons table: the essence of a spatial 
-join. Again, `apply` is our friend in this instance, meaning we can avoid `for` loops:
+As with R's very terse code for spatial subsetting, the base function 
+`aggregate` (which provides summaries of variables based on some grouping variable)
+also behaves differently when the inputs are spatial objects. 
+
+```{r}
+stations.c <- aggregate(stations, lnd, length)
+stations.c@data[, 1]
+```
+
+The above code performs a number of steps in just one line:
+
+- `aggregate` identifies which `lnd` polygon (borrough) each `station` is located in and groups them accordingly
+- it counts the number of stations in each borrough
+- a new spatial object is created and assigned the name `stations.c`, the count of stations
+
+As shown below, the spatial implementation of `aggregate` can provide summary statistics of variables.
+In this case we take the variable `NUMBER` and find its mean value for the stations in each ward.
+
+```{r}
+stations.m <- aggregate(stations[c("NUMBER")] , by = lnd, FUN = mean)
+```
+
+For an optional advanced task, let us analyse and plot the result:
+
+```{r}
+q <- cut(stations.m$NUMBER,  breaks= c(quantile(stations.m$NUMBER)), include.lowest=T)
+summary(q)
+clr <- as.character(factor(q, labels = paste0("grey", seq(20, 80, 20))))
+plot(stations.m, col = clr)
+legend(legend = paste0("q", 1:4), fill = paste0("grey", seq(20, 80, 20)),  "topright")
+areas <- sapply(stations.m@polygons, function(x) x@area)
+plot(stations.m$NUMBER, areas)
+```
+
+## Optional advanced task: aggregation with gIntersects
+
+As with clipping, we can also do spatial aggregation with 
+the rgeos package. In some ways, this method makes explicit 
+the steps taken in `aggregate` 'under the hood'. 
+The code is quite involved and intimidating, so feel free to
+skip this stage. Working through and thinking about it this alternative method may, however, 
+yield dividends if you intend to perform more sophisticated spatial analysis in R.
 
 ```{r, results='hide'}
 library(rgeos)
@@ -415,27 +474,13 @@ points(stations)
 
 Now the fun part: count the points in the polygon and report back how many there are!
 
-The final stage is to transfer the data on station counts back into the 
-polygon data frame. We have used `merge` to join two datasets before.
-In R there is often more than one way to achieve the same result.
-It's good to experiment with different functions, so we will use
-`join` from the `plyr` package. `join` requires identical joining 
-names in both data frames, so first we will rename them (type 
-`?rename` for more details).
-
-```{r}
-b.count <- rename(b.count, replace = c("b.names" = "name"))
-b.count.tmp <- join(lnd@data, b.count)
-head(b.count.tmp, 2)
-lnd$station.count <- b.count.tmp[, 7] 
-```
-
-We have now seen how to join and clip data. Next, for a stronger grounding 
-in how ggplot works, we will look at plotting non-spatial data.
+We have now seen how to load, join and clip data. The second half of this tutorial 
+is concerned with *visualisation* of the results. For this, we will use
+ggplot2 and begin by looking at how it handles non-spatial data.
 
 # ggplot2
 
-This next section of the practical introduces a slightly 
+This next section introduces a slightly 
 different method of creating plots in R using the 
 [ggplot2 package](http://ggplot2.org/). 
 The package is an implementation of the Grammar of Graphics (Wilkinson 2005) - 
@@ -722,6 +767,15 @@ most rewarding learning method, rather than just searching for the
 'best' way of doing something (Kabakoff, 2011). We recommend you play around
 with your own data.
 
+If you would like to learn more about R's spatial functionalities, 
+including more excercises on loading, saving and manipulating data, 
+we recommend a slightly longer and more advanced tutorial (Cheshire and Lovelace, 2014).
+An up-to-date repository of this project, including example dataset and all the code used 
+to compile the tutorial, can be found on its GitHup page: https://github.com/geocomPP/sdvwR . 
+Such lengthy tutorials are worth doing to think about spatial data in R systematically, 
+rather than seeing R as a discrete collection of functions. In R the whole is greater than 
+the sum of its parts.
+
 The supportive online communities surrounding large open source programs such as R
 are one of their greatest assets, so we recommend you become an active 
 "[open source citizen](http://blog.cleverelephant.ca/2013/10/being-open-source-citizen.html)" rather than a passive consumer (Ramsey & Dubovsky, 2013). 
@@ -747,6 +801,8 @@ Books: despite the strength of R's online community, nothing beats a physical bo
 # References
 
 Bivand, R. S., Pebesma, E. J., & Rubio, V. G. (2008). Applied spatial data: analysis with R. Springer.
+
+Cheshire, J. & Lovelace, R. (2014). Manipulating and visualizing spatial data with R. Book chapter in Press.
 
 Harris, R. (2012). A Short Introduction to R. 
 [social-statistics.org](http://www.social-statistics.org/).
