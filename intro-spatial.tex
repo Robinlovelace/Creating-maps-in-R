@@ -144,17 +144,19 @@ ggplot2 is installed, for example, enter \texttt{library(ggpot2)}. If
 you get an error message, it needs to be installed:
 \texttt{install.packages("ggplot2")}.
 
-All of the data used for the tutorial can be downloaded from here:
+\subsection{Downloading the data for the tutorial}
+
+The data used for the tutorial can be downloaded from
 \href{https://github.com/Robinlovelace/Creating-maps-in-R}{https://github.com/Robinlovelace/Creating-maps-in-R}.
 Click on the ``Download ZIP'' button on the right and unzip this to a
 new folder. Use the \texttt{setwd} command to set the working directory.
 If your username is ``username'' and you saved the files into a folder
-called ``rmapping'' on your Desktop, for example, you would type the
-following:
+called ``Creating-maps-in-R-master'' on your Desktop, for example, you
+would type the following:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{setwd}\NormalTok{(}\StringTok{"C:/Users/username/Desktop/rmapping/R"}\NormalTok{)}
+\KeywordTok{setwd}\NormalTok{(}\StringTok{"C:/Users/username/Desktop/Creating-maps-in-R-master/"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 If you are working in RStudio, you can create a project that will
@@ -175,8 +177,11 @@ package:
 \end{Shaded}
 This method works OK, but it is no longer considered best practice since
 it doesn't load in the spatial referencing information etc associated
-with the shapefile. A more powerful way to read in geographical data is
-to use the \texttt{rgdal} function \texttt{readOGR}, which automatically
+with the shapefile. There are often a number of ways to do things in R -
+it is worth being aware of the alternatives.
+
+A more powerful (and widely used) way to read in geographical data is to
+use the \texttt{rgdal} function \texttt{readOGR}, which automatically
 extracts this information. This is R's interface to the ``Geospatial
 Abstraction Library (GDAL)'' which is used by other open source GIS
 packages such as QGIS and enables R to handle a broader range of spatial
@@ -195,18 +200,19 @@ data formats.
 ## Feature type: wkbPolygon with 2 dimensions
 \end{verbatim}
 In the code above \texttt{dsn} stands for ``data source name'' and is an
-\emph{argument} of the \emph{function} \texttt{readOGR} that, in this
-case, specifies the directory in which the dataset is stored. R
-functions have a default order of functions, so \texttt{dsn =} does not
-actually need to be typed. If there data were stored in the current
-working directory, one could use \texttt{readOGR(".", "london\_sport")}.
-For clarity, it is good practice to include argument names when learning
-new functions.
+\emph{argument} of the \emph{function} \texttt{readOGR}. The
+\texttt{dsn} argument this case, specifies the directory in which the
+dataset is stored. R functions have a default order of arguments, so
+\texttt{dsn =} does not actually need to be typed. If there data were
+stored in the current working directory, one could use
+\texttt{readOGR(".", "london\_sport")}. For clarity, it is good practice
+to include argument names, such as \texttt{dsn} when learning new
+functions.
 
 The next argument is a \emph{character string}. This is simply the name
 the file required. There is no need to add a file extension (e.g.
-\texttt{.shp}) for this command. The files beginning
-\texttt{london\_sport} from the
+\texttt{.shp}) in this case. The files beginning \texttt{london\_sport}
+from the
 \href{http://spatial.ly/wp-content/uploads/2013/12/spatialggplot.zip}{example
 dataset} contain the borough population and the percentage of the
 population engaging in sporting activities and was taken from the
@@ -215,18 +221,54 @@ people survey}. The boundary data is from the
 \href{http://www.ordnancesurvey.co.uk/oswebsite/opendata/}{Ordnance
 Survey}.
 
+Now that we have a spatial object loaded into R's workspace, we can try
+analysing it with some basic commands:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(sport)}
+\KeywordTok{head}\NormalTok{(sport@data)}
+\end{Highlighting}
+\end{Shaded}
+\begin{verbatim}
+##   ons_label                 name Partic_Per Pop_2001
+## 0      00AF              Bromley       21.7   295535
+## 1      00BD Richmond upon Thames       26.6   172330
+## 2      00AS           Hillingdon       21.5   243006
+## 3      00AR             Havering       17.9   224262
+## 4      00AX Kingston upon Thames       24.4   147271
+## 5      00BF               Sutton       19.3   179767
+\end{verbatim}
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(sport[sport$Partic_Per > }\DecValTok{25}\NormalTok{, ], }\DataTypeTok{col =} \StringTok{"blue"}\NormalTok{, }\DataTypeTok{add =} \OtherTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+\begin{figure}[htbp]
+\centering
+\includegraphics{figure/unnamed-chunk-5.png}
+\caption{plot of chunk unnamed-chunk-5}
+\end{figure}
+
+Congratualations! You have just interogated and visualised a spatial
+dataset: what kind of places have high levels of sports participation?
+The map tells us. Do not worry for now about how this was acheived: we
+will cover this in subsequent sections.
+
 \subsection{Attribute data}
 
-All shapefiles have an attribute table. This is automatically loaded
-with \texttt{readOGR} and can be treated in a similar way to an R
+All shapefiles have both attribute table and geometry data. These are
+automatically loaded with \texttt{readOGR}. The loaded attribute data
+can be treated in a similar way to an R
 \href{http://www.statmethods.net/input/datatypes.html}{data frame}.
 
-R hides the geometry of spatial data unless you print the object (using
-the \texttt{print()}). Let's take a look at the headings of sport, using
-the following command: \texttt{names(sport)} The data contained in
-spatial data are kept in a `slot' that can be accessed using the @
-symbol: \texttt{sport@data}. This is useful if you do not wish to work
-with the spatial components of the data at all times.
+R delibrately hides the geometry of spatial data unless you print the
+entire object (try typing \texttt{print(sport)}). Let's take a look at
+the headings of sport, using the following command:
+\texttt{names(sport)} The data contained in spatial data are kept in a
+`slot' that can be accessed using the @ symbol: \texttt{sport@data}.
+This is useful if you do not wish to work with the spatial components of
+the data at all times.
 
 Type \texttt{summary(sport)} to get some additional information about
 the data object. Spatial objects in R contain a variety of additional
@@ -507,22 +549,107 @@ with a single line of code:
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{stations <- stations[lnd, ]}
+\KeywordTok{plot}\NormalTok{(stations)}
 \end{Highlighting}
 \end{Shaded}
+\begin{figure}[htbp]
+\centering
+\includegraphics{figure/unnamed-chunk-16.png}
+\caption{plot of chunk unnamed-chunk-16}
+\end{figure}
+
 In fact there is actually a \emph{third} way to acheive the same result
-using the \texttt{rgeos} package. This next section goes into detail
-about how spatial subsets work; if you are not interested in this,
-please feel free to the section on aggregation.
+using the \texttt{rgeos} package (see vignette of this on
+\href{http://rpubs.com/RobinLovelace/11796}{RPubs.com/Robinlovelace}).
+The next section demonstrates spatial aggregation, a more advanced
+version of spatial subsetting.
 
 \subsubsection{Spatial aggregation}
 
-Now that we know how \texttt{gIntersects} works in general terms and for
-clipping, let's use it to allocate a borough to each of our station
-points, which we will then aggregate up. Data from these points
-(e.g.~counts, averages in each area etc.) can then be transferred to the
-main polygons table: the essence of a spatial join. Again,
-\texttt{apply} is our friend in this instance, meaning we can avoid
-\texttt{for} loops:
+As with R's very terse code for spatial subsetting, the base function
+\texttt{aggregate} (which provides summaries of variables based on some
+grouping variable) also behaves differently when the inputs are spatial
+objects.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{stations.c <- }\KeywordTok{aggregate}\NormalTok{(stations, lnd, length)}
+\NormalTok{stations.c@data[, }\DecValTok{1}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+\begin{verbatim}
+##  [1] 48 22 43 18 12 13 25 24 12 46 18 20 28 32 38 19 30 25 31  7 10 38 12
+## [24] 16 28 17 16 28  4  6 14 26  5
+\end{verbatim}
+The above code performs a number of steps in just one line:
+
+\begin{itemize}
+\item
+  \texttt{aggregate} identifies which \texttt{lnd} polygon (borrough)
+  each \texttt{station} is located in and groups them accordingly
+\item
+  it counts the number of stations in each borrough
+\item
+  a new spatial object is created and assigned the name
+  \texttt{stations.c}, the count of stations
+\end{itemize}
+As shown below, the spatial implementation of \texttt{aggregate} can
+provide summary statistics of variables. In this case we take the
+variable \texttt{NUMBER} and find its mean value for the stations in
+each ward.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{stations.m <- }\KeywordTok{aggregate}\NormalTok{(stations[}\KeywordTok{c}\NormalTok{(}\StringTok{"NUMBER"}\NormalTok{)], }\DataTypeTok{by =} \NormalTok{lnd, }\DataTypeTok{FUN =} \NormalTok{mean)}
+\end{Highlighting}
+\end{Shaded}
+For an optional advanced task, let us analyse and plot the result:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{q <- }\KeywordTok{cut}\NormalTok{(stations.m$NUMBER, }\DataTypeTok{breaks =} \KeywordTok{c}\NormalTok{(}\KeywordTok{quantile}\NormalTok{(stations.m$NUMBER)), }\DataTypeTok{include.lowest =} \NormalTok{T)}
+\KeywordTok{summary}\NormalTok{(q)}
+\end{Highlighting}
+\end{Shaded}
+\begin{verbatim}
+## [1.82e+04,1.94e+04] (1.94e+04,1.99e+04] (1.99e+04,2.05e+04] 
+##                   9                   8                   8 
+##  (2.05e+04,2.1e+04] 
+##                   8
+\end{verbatim}
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{clr <- }\KeywordTok{as.character}\NormalTok{(}\KeywordTok{factor}\NormalTok{(q, }\DataTypeTok{labels =} \KeywordTok{paste0}\NormalTok{(}\StringTok{"grey"}\NormalTok{, }\KeywordTok{seq}\NormalTok{(}\DecValTok{20}\NormalTok{, }\DecValTok{80}\NormalTok{, }\DecValTok{20}\NormalTok{))))}
+\KeywordTok{plot}\NormalTok{(stations.m, }\DataTypeTok{col =} \NormalTok{clr)}
+\KeywordTok{legend}\NormalTok{(}\DataTypeTok{legend =} \KeywordTok{paste0}\NormalTok{(}\StringTok{"q"}\NormalTok{, }\DecValTok{1}\NormalTok{:}\DecValTok{4}\NormalTok{), }\DataTypeTok{fill =} \KeywordTok{paste0}\NormalTok{(}\StringTok{"grey"}\NormalTok{, }\KeywordTok{seq}\NormalTok{(}\DecValTok{20}\NormalTok{, }\DecValTok{80}\NormalTok{, }\DecValTok{20}\NormalTok{)), }\StringTok{"topright"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+\begin{figure}[htbp]
+\centering
+\includegraphics{figure/unnamed-chunk-201.png}
+\caption{plot of chunk unnamed-chunk-20}
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{areas <- }\KeywordTok{sapply}\NormalTok{(stations.m@polygons, function(x) x@area)}
+\KeywordTok{plot}\NormalTok{(stations.m$NUMBER, areas)}
+\end{Highlighting}
+\end{Shaded}
+\begin{figure}[htbp]
+\centering
+\includegraphics{figure/unnamed-chunk-202.png}
+\caption{plot of chunk unnamed-chunk-20}
+\end{figure}
+
+\subsection{Optional advanced task: aggregation with gIntersects}
+
+As with clipping, we can also do spatial aggregation with the rgeos
+package. In some ways, this method makes explicit the steps taken in
+\texttt{aggregate} `under the hood'. The code is quite involved and
+intimidating, so feel free to skip this stage. Working through and
+thinking about it this alternative method may, however, yield dividends
+if you intend to perform more sophisticated spatial analysis in R.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -530,7 +657,7 @@ main polygons table: the essence of a spatial join. Again,
 \end{Highlighting}
 \end{Shaded}
 \begin{verbatim}
-## rgeos version: 0.3-2, (SVN revision 413M)
+## rgeos version: 0.2-19, (SVN revision 394)
 ##  GEOS runtime version: 3.3.8-CAPI-1.7.8 
 ##  Polygon checking: TRUE
 \end{verbatim}
@@ -568,53 +695,21 @@ case with a quick plot:
 Now the fun part: count the points in the polygon and report back how
 many there are!
 
-The final stage is to transfer the data on station counts back into the
-polygon data frame. We have used \texttt{merge} to join two datasets
-before. In R there is often more than one way to achieve the same
-result. It's good to experiment with different functions, so we will use
-\texttt{join} from the \texttt{plyr} package. \texttt{join} requires
-identical joining names in both data frames, so first we will rename
-them (type \texttt{?rename} for more details).
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{b.count <- }\KeywordTok{rename}\NormalTok{(b.count, }\DataTypeTok{replace =} \KeywordTok{c}\NormalTok{(}\DataTypeTok{b.names =} \StringTok{"name"}\NormalTok{))}
-\NormalTok{b.count.tmp <- }\KeywordTok{join}\NormalTok{(lnd@data, b.count)}
-\end{Highlighting}
-\end{Shaded}
-\begin{verbatim}
-## Joining by: name
-\end{verbatim}
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{head}\NormalTok{(b.count.tmp, }\DecValTok{2}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-\begin{verbatim}
-##   ons_label                 name Partic_Per Pop_2001 CrimeCount row col
-## 1      00AF              Bromley       21.7   295535      15172  48  48
-## 2      00BD Richmond upon Thames       26.6   172330       9715  22  22
-\end{verbatim}
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{lnd$station.count <- b.count.tmp[, }\DecValTok{7}\NormalTok{]}
-\end{Highlighting}
-\end{Shaded}
-We have now seen how to join and clip data. Next, for a stronger
-grounding in how ggplot works, we will look at plotting non-spatial
-data.
+We have now seen how to load, join and clip data. The second half of
+this tutorial is concerned with \emph{visualisation} of the results. For
+this, we will use ggplot2 and begin by looking at how it handles
+non-spatial data.
 
 \section{ggplot2}
 
-This next section of the practical introduces a slightly different
-method of creating plots in R using the
-\href{http://ggplot2.org/}{ggplot2 package}. The package is an
-implementation of the Grammar of Graphics (Wilkinson 2005) - a general
-scheme for data visualization that breaks up graphs into semantic
-components such as scales and layers. ggplot2 can serve as a replacement
-for the base graphics in R (the functions you have been plotting with
-today) and contains a number of default options that match good
-visualisation practice.
+This next section introduces a slightly different method of creating
+plots in R using the \href{http://ggplot2.org/}{ggplot2 package}. The
+package is an implementation of the Grammar of Graphics (Wilkinson 2005)
+- a general scheme for data visualization that breaks up graphs into
+semantic components such as scales and layers. ggplot2 can serve as a
+replacement for the base graphics in R (the functions you have been
+plotting with today) and contains a number of default options that match
+good visualisation practice.
 
 The maps we produce will not be that meaningful - the focus here is on
 sound visualisation with R and not sound analysis (obviously the value
@@ -991,6 +1086,16 @@ most rewarding learning method, rather than just searching for the
 `best' way of doing something (Kabakoff, 2011). We recommend you play
 around with your own data.
 
+If you would like to learn more about R's spatial functionalities,
+including more excercises on loading, saving and manipulating data, we
+recommend a slightly longer and more advanced tutorial (Cheshire and
+Lovelace, 2014). An up-to-date repository of this project, including
+example dataset and all the code used to compile the tutorial, can be
+found on its GitHup page: https://github.com/geocomPP/sdvwR . Such
+lengthy tutorials are worth doing to think about spatial data in R
+systematically, rather than seeing R as a discrete collection of
+functions. In R the whole is greater than the sum of its parts.
+
 The supportive online communities surrounding large open source programs
 such as R are one of their greatest assets, so we recommend you become
 an active
@@ -1035,6 +1140,9 @@ the following:
 
 Bivand, R. S., Pebesma, E. J., \& Rubio, V. G. (2008). Applied spatial
 data: analysis with R. Springer.
+
+Cheshire, J. \& Lovelace, R. (2014). Manipulating and visualizing
+spatial data with R. Book chapter in Press.
 
 Harris, R. (2012). A Short Introduction to R.
 \href{http://www.social-statistics.org/}{social-statistics.org}.
