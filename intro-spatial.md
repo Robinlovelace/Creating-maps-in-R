@@ -174,7 +174,7 @@ head(sport@data)
 plot(sport[sport$Partic_Per > 25, ], col = "blue", add = TRUE)
 ```
 
-![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5.png) 
+![plot of chunk Preliminary plot of London. Areas with high sports participation are blue](figure/Preliminary_plot_of_London__Areas_with_high_sports_participation_are_blue.png) 
 
 
 Congratualations! You have just interogated and visualised a 
@@ -260,7 +260,7 @@ sport.wgs84 <- spTransform(sport, CRS("+init=epsg:4326"))
 The different epsg codes are a bit of hassle to remember but you can find them all at 
 [spatialreference.org](http://spatialreference.org/).
 
-## Joining and clipping
+## Attribute joins
 
 To reaffirm our starting point, let's re-plot the only 
 spatial dataset in our workspace, and count the number
@@ -297,9 +297,11 @@ nrow(lnd)
 
 
 
-
-
-The dataset we will join to the London object is...
+The dataset we will join to the London object is a
+dataset on recorded crimes, with one row per crime.
+We will use the non-spatial implementation of `aggregate` 
+to pre-process this dataset ready to join to our spatial 
+`lnd` dataset.
 
 
 ```r
@@ -444,12 +446,12 @@ London borough dataset; we take a spatially determined subset of the
 former so that they all fit within the latter. This is *clipping*. 
 
 
-### Clipping
+## Clipping
 
 There are a number of functions that we can use to clip the points
 so that only those falling within London boroughs are retained. 
 These include `overlay`, `sp::over`, and `rgeos::gIntersects`
-(word preceding the `::` symbol refers to the package the function is from).
+(the word preceding the `::` symbol refers to the package the function is from).
 Use `?` followed by the function to get help on each and find which is 
 most appropriate.
 
@@ -462,8 +464,6 @@ It may seem confusing that two different functions
 can be used to generate the same result. However, 
 this is a common issue in programming; the question
 is finding the most appropriate solution.
-
-## Clipping with sp::over
 
 `over` takes two main input arguments: the target layer to be altered and the 
 layer by which it is to be clipped. The output is a data frame of the same 
@@ -488,17 +488,23 @@ stations <- stations[lnd, ]
 plot(stations)
 ```
 
-![plot of chunk unnamed-chunk-16](figure/unnamed-chunk-16.png) 
+![plot of chunk The clipped stations dataset](figure/The_clipped_stations_dataset.png) 
 
 
 
 
 
-In fact there is actually a *third* way to acheive the 
-same result using the `rgeos` package (see vignette of this on [RPubs.com/Robinlovelace](http://rpubs.com/RobinLovelace/11796)). The next section demonstrates
+As the figure shows, only stations within the London borroughs are now shown.
+
+The *third* way to acheive the 
+same result uses the `rgeos` package. 
+This is more complex and not included in this tutorial
+(interested readers can see a vignette of this, to accomany the tutorial 
+on [RPubs.com/Robinlovelace](http://rpubs.com/RobinLovelace/11796)). 
+The next section demonstrates
 spatial aggregation, a more advanced version of spatial subsetting.
 
-### Spatial aggregation
+## Spatial aggregation
 
 As with R's very terse code for spatial subsetting, the base function 
 `aggregate` (which provides summaries of variables based on some grouping variable)
@@ -531,7 +537,7 @@ stations.m <- aggregate(stations[c("NUMBER")], by = lnd, FUN = mean)
 ```
 
 
-For an optional advanced task, let us analyse and plot the result:
+For an optional advanced task, let us analyse and plot the result.
 
 
 ```r
@@ -552,15 +558,16 @@ plot(stations.m, col = clr)
 legend(legend = paste0("q", 1:4), fill = paste0("grey", seq(20, 80, 20)), "topright")
 ```
 
-![plot of chunk unnamed-chunk-20](figure/unnamed-chunk-201.png) 
+![plot of chunk Choropleth map of mean values of stations in each borrough](figure/Choropleth_map_of_mean_values_of_stations_in_each_borrough.png) 
 
 ```r
 areas <- sapply(stations.m@polygons, function(x) x@area)
-plot(stations.m$NUMBER, areas)
 ```
 
-![plot of chunk unnamed-chunk-20](figure/unnamed-chunk-202.png) 
 
+This results in a simple choropleth map and a new vector containing the area of each
+borrough. As an additional step, try comparing the mean area of each borrough with the 
+mean value of stations within it: `plot(stations.m$NUMBER, areas)`.
 
 ## Optional advanced task: aggregation with gIntersects
 

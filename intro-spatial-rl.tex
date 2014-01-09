@@ -50,6 +50,7 @@
               linkcolor=blue]{hyperref}
 \else
   \usepackage[unicode=true,
+urlcolor=blue,
               colorlinks=true,
               linkcolor=blue]{hyperref}
 \fi
@@ -60,15 +61,14 @@
 \setcounter{secnumdepth}{0}
 
 \pagestyle{myheadings}
-\markboth{\hfill }{GeoTALISMAN Short Course \hfill}
-\author{
+\author{Lovelace, Robin\\
+\texttt{r.lovelace@leeds.ac.uk}
+\and
 Cheshire, James\\
 \texttt{james.cheshire@ucl.ac.uk}
-\and
-Lovelace, Robin\\
-\texttt{r.lovelace@leeds.ac.uk}
 }
 \title{Introduction to visualising spatial data in R}
+\markboth{\hfill }{GeoTALISMAN Short Course \hfill}
 \usepackage[margin=2cm]{geometry}
 
 \begin{document}
@@ -258,8 +258,9 @@ analysing it with some basic commands:
 \end{Shaded}
 \begin{figure}[htbp]
 \centering
-\includegraphics{figure/unnamed-chunk-5.png}
-\caption{unnamed-chunk-5}
+\includegraphics{figure/Preliminary_plot_of_London__Areas_with_high_sports_participation_are_blue.png}
+\caption{Preliminary plot of London. Areas with high
+sports participation are blue}
 \end{figure}
 
 Congratualations! You have just interogated and visualised a spatial
@@ -345,7 +346,7 @@ The different epsg codes are a bit of hassle to remember but you can
 find them all at
 \href{http://spatialreference.org/}{spatialreference.org}.
 
-\subsection{Joining and clipping}
+\subsection{Attribute joins}
 
 To reaffirm our starting point, let's re-plot the only spatial dataset
 in our workspace, and count the number of polygons:
@@ -381,7 +382,10 @@ in our workspace, and count the number of polygons:
 \begin{verbatim}
 ## [1] 33
 \end{verbatim}
-The dataset we will join to the London object is\ldots{}
+The dataset we will join to the London object is a dataset on recorded
+crimes, with one row per crime. We will use the non-spatial
+implementation of \texttt{aggregate} to pre-process this dataset ready
+to join to our spatial \texttt{lnd} dataset.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -520,12 +524,12 @@ problem is that the stations dataset is far more extensive than London
 borough dataset; we take a spatially determined subset of the former so
 that they all fit within the latter. This is \emph{clipping}.
 
-\subsubsection{Clipping}
+\subsection{Clipping}
 
 There are a number of functions that we can use to clip the points so
 that only those falling within London boroughs are retained. These
 include \texttt{overlay}, \texttt{sp::over}, and
-\texttt{rgeos::gIntersects} (word preceding the \texttt{::} symbol
+\texttt{rgeos::gIntersects} (the word preceding the \texttt{::} symbol
 refers to the package the function is from). Use \texttt{?} followed by
 the function to get help on each and find which is most appropriate.
 
@@ -539,8 +543,6 @@ to use. \texttt{gIntersects} can acheive the same result, but with more
 lines of code. It may seem confusing that two different functions can be
 used to generate the same result. However, this is a common issue in
 programming; the question is finding the most appropriate solution.
-
-\subsection{Clipping with sp::over}
 
 \texttt{over} takes two main input arguments: the target layer to be
 altered and the layer by which it is to be clipped. The output is a data
@@ -566,17 +568,22 @@ with a single line of code:
 \end{Shaded}
 \begin{figure}[htbp]
 \centering
-\includegraphics{figure/unnamed-chunk-16.png}
-\caption{unnamed-chunk-16}
+\includegraphics{figure/The_clipped_stations_dataset.png}
+\caption{The clipped stations dataset}
 \end{figure}
 
-In fact there is actually a \emph{third} way to acheive the same result
-using the \texttt{rgeos} package (see vignette of this on
+As the figure shows, only stations within the London borroughs are now
+shown.
+
+The \emph{third} way to acheive the same result uses the \texttt{rgeos}
+package. This is more complex and not included in this tutorial
+(interested readers can see a vignette of this, to accomany the tutorial
+on
 \href{http://rpubs.com/RobinLovelace/11796}{RPubs.com/Robinlovelace}).
 The next section demonstrates spatial aggregation, a more advanced
 version of spatial subsetting.
 
-\subsubsection{Spatial aggregation}
+\subsection{Spatial aggregation}
 
 As with R's very terse code for spatial subsetting, the base function
 \texttt{aggregate} (which provides summaries of variables based on some
@@ -615,7 +622,7 @@ each ward.
 \NormalTok{stations.m <- }\KeywordTok{aggregate}\NormalTok{(stations[}\KeywordTok{c}\NormalTok{(}\StringTok{"NUMBER"}\NormalTok{)], }\DataTypeTok{by =} \NormalTok{lnd, }\DataTypeTok{FUN =} \NormalTok{mean)}
 \end{Highlighting}
 \end{Shaded}
-For an optional advanced task, let us analyse and plot the result:
+For an optional advanced task, let us analyse and plot the result.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -638,21 +645,20 @@ For an optional advanced task, let us analyse and plot the result:
 \end{Shaded}
 \begin{figure}[htbp]
 \centering
-\includegraphics{figure/unnamed-chunk-201.png}
-\caption{unnamed-chunk-20}
+\includegraphics{figure/Choropleth_map_of_mean_values_of_stations_in_each_borrough.png}
+\caption{Choropleth map of mean values of stations in each
+borrough}
 \end{figure}
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{areas <- }\KeywordTok{sapply}\NormalTok{(stations.m@polygons, function(x) x@area)}
-\KeywordTok{plot}\NormalTok{(stations.m$NUMBER, areas)}
 \end{Highlighting}
 \end{Shaded}
-\begin{figure}[htbp]
-\centering
-\includegraphics{figure/unnamed-chunk-202.png}
-\caption{unnamed-chunk-20}
-\end{figure}
+This results in a simple choropleth map and a new vector containing the
+area of each borrough. As an additional step, try comparing the mean
+area of each borrough with the mean value of stations within it:
+\texttt{plot(stations.m\$NUMBER, areas)}.
 
 \subsection{Optional advanced task: aggregation with gIntersects}
 
