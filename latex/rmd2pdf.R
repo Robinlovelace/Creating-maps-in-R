@@ -24,6 +24,9 @@ system(mess) # add headings
 mess <- "sed -i -e '62i\\\\\\pagestyle{myheadings}' intro-spatial-rl.tex"
 system(mess) # add headings
 
+mess <- "sed -i -e '53i\\urlcolor=blue,' intro-spatial-rl.tex"
+system(mess) # make title
+
 
 
 
@@ -35,12 +38,11 @@ idx <- 63
 # open the file and read in all the lines 
 conn <- file("intro-spatial-rl.tex")
 text <- readLines(conn)
-block <- "\\author{
+block <- "\\author{Lovelace, Robin\\\\
+\\texttt{r.lovelace@leeds.ac.uk}
+\\and
 Cheshire, James\\\\
 \\texttt{james.cheshire@ucl.ac.uk}
-\\and
-Lovelace, Robin\\\\
-\\texttt{r.lovelace@leeds.ac.uk}
 }
 \\title{Introduction to visualising spatial data in R}"
 text_block <- unlist(strsplit(block, split='\n'))
