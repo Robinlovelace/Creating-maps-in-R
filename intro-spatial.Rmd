@@ -17,8 +17,9 @@ the following set of exercises is concerned with specific functions for spatial 
 and visualisation.
 An up-to-date version of this tutorial is maintained at
 [https://github.com/Robinlovelace/Creating-maps-in-R](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial-rl.pdf) and the entire tutorial, including
-the input data can be downloaded as a zip file from 
-[here](https://github.com/Robinlovelace/Creating-maps-in-R/archive/master.zip). 
+the input data can be downloaded as a
+[zip file](https://github.com/Robinlovelace/Creating-maps-in-R/archive/master.zip), 
+as described below. 
 Suggested improvements welcome - please 
 [fork](https://help.github.com/articles/fork-a-repo), improve and push this document 
 to its original home to ensure its longevity.
@@ -115,7 +116,7 @@ R to handle a broader range of spatial data formats.
 
 ```{r, message=FALSE}
 library(rgdal)
-sport <- readOGR(dsn = "data/", "london_sport")
+sport <- readOGR(dsn = "data", "london_sport")
 ```
 
 In the code above `dsn` stands for "data source name" and is an *argument* of the *function* `readOGR`.
@@ -148,6 +149,11 @@ spatial dataset: what kind of places have high levels of sports
 participation? The map tells us. Do not worry for now about 
 how this was acheived: we will cover this in subsequent sections.
 
+While we are on the topic of loading data, it is worth pointing out
+that R can save and load data efficiently into its own data format (`.RData`).
+Try `save(sport, file = "sport.RData")` and see what happens. 
+If you type `rm(sport)` (which removes the object) and then `load("sport.RData")`
+you should see how this works. `sport` will disappear from the workspace and then reappear.
 
 ## Attribute data
 
@@ -223,7 +229,7 @@ of polygons:
 
 ```{r Plot of London}
 library(rgdal)
-lnd <- readOGR(dsn = "data/", "london_sport")
+lnd <- readOGR(dsn = "data", "london_sport")
 plot(lnd); nrow(lnd)
 ```
 
@@ -330,7 +336,7 @@ are found in each London borough.
 
 ```{r, results='hide'}
 library(rgdal)
-stations <- readOGR(dsn = "data/", layer = "lnd-stns")
+stations <- readOGR(dsn = "data", layer = "lnd-stns")
 proj4string(stations) # this is the full geographical detail.
 proj4string(lnd)
 bbox(stations)

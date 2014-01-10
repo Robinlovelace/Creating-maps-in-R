@@ -17,8 +17,9 @@ the following set of exercises is concerned with specific functions for spatial 
 and visualisation.
 An up-to-date version of this tutorial is maintained at
 [https://github.com/Robinlovelace/Creating-maps-in-R](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial-rl.pdf) and the entire tutorial, including
-the input data can be downloaded as a zip file from 
-[here](https://github.com/Robinlovelace/Creating-maps-in-R/archive/master.zip). 
+the input data can be downloaded as a
+[zip file](https://github.com/Robinlovelace/Creating-maps-in-R/archive/master.zip), 
+as described below. 
 Suggested improvements welcome - please 
 [fork](https://help.github.com/articles/fork-a-repo), improve and push this document 
 to its original home to ensure its longevity.
@@ -75,8 +76,10 @@ spatial packages on offer though:
 [http://cran.r-project.org/web/views/Spatial.html](http://cran.r-project.org/web/views/Spatial.html).
 
 The packages we will be using are `ggplot2`, `rgdal`, `rgeos`, `maptools` and `ggmap`.
-To test whether ggplot2 is installed, for example, enter `library(ggpot2)`. 
+To test whether ggplot2 is installed, for example, enter `library(ggplot2)`. 
 If you get an error message, it needs to be installed: `install.packages("ggplot2")`.
+These will be downloaded from CRAN (the Comprehensive R Archive Network); if you are prompted 
+to select a 'mirror', select one that is close to your city.
 
 ## Downloading the data for the tutorial
 
@@ -124,12 +127,12 @@ R to handle a broader range of spatial data formats.
 
 ```r
 library(rgdal)
-sport <- readOGR(dsn = "data/", "london_sport")
+sport <- readOGR(dsn = "data", "london_sport")
 ```
 
 ```
 ## OGR data source with driver: ESRI Shapefile 
-## Source: "data/", layer: "london_sport"
+## Source: "data", layer: "london_sport"
 ## with 33 features and 4 fields
 ## Feature type: wkbPolygon with 2 dimensions
 ```
@@ -182,6 +185,11 @@ spatial dataset: what kind of places have high levels of sports
 participation? The map tells us. Do not worry for now about 
 how this was acheived: we will cover this in subsequent sections.
 
+While we are on the topic of loading data, it is worth pointing out
+that R can save and load data efficiently into its own data format (`.RData`).
+Try `save(sport, file = "sport.RData")` and see what happens. 
+If you type `rm(sport)` (which removes the object) and then `load("sport.RData")`
+you should see how this works. `sport` will disappear from the workspace and then reappear.
 
 ## Attribute data
 
@@ -269,12 +277,12 @@ of polygons:
 
 ```r
 library(rgdal)
-lnd <- readOGR(dsn = "data/", "london_sport")
+lnd <- readOGR(dsn = "data", "london_sport")
 ```
 
 ```
 ## OGR data source with driver: ESRI Shapefile 
-## Source: "data/", layer: "london_sport"
+## Source: "data", layer: "london_sport"
 ## with 33 features and 4 fields
 ## Feature type: wkbPolygon with 2 dimensions
 ```
@@ -413,7 +421,7 @@ are found in each London borough.
 
 ```r
 library(rgdal)
-stations <- readOGR(dsn = "data/", layer = "lnd-stns")
+stations <- readOGR(dsn = "data", layer = "lnd-stns")
 proj4string(stations)  # this is the full geographical detail.
 proj4string(lnd)
 bbox(stations)
