@@ -275,21 +275,11 @@ set your working directory. </p>
 <h1>Loading and interogating spatial data</h1>
 
 <p>One of the most important steps in handling spatial data with R 
-is the ability to read in shapefiles. There are a number of ways to do this. 
-The most simple is <code>readShapePoly()</code> in the <code>maptools</code> package:</p>
-
-<pre><code class="r">library(maptools)  # load the package
-sport &lt;- readShapePoly(&quot;data/london_sport.shp&quot;)  # read in the shapefile
-</code></pre>
-
-<p>This method works OK, but it is no longer considered best 
-practice since it doesn’t load in the spatial referencing information 
-etc associated with the shapefile. There are often a number of ways to do things 
-in R - it is worth being aware of the alternatives.</p>
-
-<p>A more powerful (and widely used) way to read in geographical data is to use the <code>rgdal</code> function 
-<code>readOGR</code>, which automatically extracts this information.
-This is R’s interface to the &ldquo;Geospatial Abstraction Library (GDAL)&rdquo;
+is the ability to read in shapefiles. There are a number of ways to do this, 
+the most commonly used and versatile of which is <code>readOGR</code>.
+This function, from the <code>rgdal</code> package, automatically extracts information
+about the projection and the attributes of data.
+<code>rgdal</code> is R’s interface to the &ldquo;Geospatial Abstraction Library (GDAL)&rdquo;
 which is used by other open source GIS packages such as QGIS and enables 
 R to handle a broader range of spatial data formats.</p>
 
