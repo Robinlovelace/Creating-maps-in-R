@@ -178,27 +178,13 @@ automatically set your working directory.
 \section{Loading and interogating spatial data}
 
 One of the most important steps in handling spatial data with R is the
-ability to read in shapefiles. There are a number of ways to do this.
-The most simple is \texttt{readShapePoly()} in the \texttt{maptools}
-package:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(maptools)  }\CommentTok{# load the package}
-\NormalTok{sport <- }\KeywordTok{readShapePoly}\NormalTok{(}\StringTok{"data/london_sport.shp"}\NormalTok{)  }\CommentTok{# read in the shapefile}
-\end{Highlighting}
-\end{Shaded}
-This method works OK, but it is no longer considered best practice since
-it doesn't load in the spatial referencing information etc associated
-with the shapefile. There are often a number of ways to do things in R -
-it is worth being aware of the alternatives.
-
-A more powerful (and widely used) way to read in geographical data is to
-use the \texttt{rgdal} function \texttt{readOGR}, which automatically
-extracts this information. This is R's interface to the ``Geospatial
-Abstraction Library (GDAL)'' which is used by other open source GIS
-packages such as QGIS and enables R to handle a broader range of spatial
-data formats.
+ability to read in shapefiles. There are a number of ways to do this,
+the most commonly used and versatile of which is \texttt{readOGR}. This
+function, from the \texttt{rgdal} package, automatically extracts
+information about the projection and the attributes of data.
+\texttt{rgdal} is R's interface to the ``Geospatial Abstraction Library
+(GDAL)'' which is used by other open source GIS packages such as QGIS
+and enables R to handle a broader range of spatial data formats.
 
 \begin{Shaded}
 \begin{Highlighting}[]
