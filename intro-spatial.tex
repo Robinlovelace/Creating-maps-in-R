@@ -81,9 +81,8 @@ concerned with specific functions for spatial data and visualisation. An
 up-to-date version of this tutorial is maintained at
 \href{https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial-rl.pdf}{https://github.com/Robinlovelace/Creating-maps-in-R}
 and the entire tutorial, including the input data can be downloaded as a
-zip file from
-\href{https://github.com/Robinlovelace/Creating-maps-in-R/archive/master.zip}{here}.
-Suggested improvements welcome - please
+\href{https://github.com/Robinlovelace/Creating-maps-in-R/archive/master.zip}{zip
+file}, as described below. Suggested improvements welcome - please
 \href{https://help.github.com/articles/fork-a-repo}{fork}, improve and
 push this document to its original home to ensure its longevity.
 
@@ -140,9 +139,11 @@ packages on offer though:
 
 The packages we will be using are \texttt{ggplot2}, \texttt{rgdal},
 \texttt{rgeos}, \texttt{maptools} and \texttt{ggmap}. To test whether
-ggplot2 is installed, for example, enter \texttt{library(ggpot2)}. If
+ggplot2 is installed, for example, enter \texttt{library(ggplot2)}. If
 you get an error message, it needs to be installed:
-\texttt{install.packages("ggplot2")}.
+\texttt{install.packages("ggplot2")}. These will be downloaded from CRAN
+(the Comprehensive R Archive Network); if you are prompted to select a
+`mirror', select one that is close to your city.
 
 \subsection{Downloading the data for the tutorial}
 
@@ -190,12 +191,12 @@ data formats.
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{library}\NormalTok{(rgdal)}
-\NormalTok{sport <- }\KeywordTok{readOGR}\NormalTok{(}\DataTypeTok{dsn =} \StringTok{"data/"}\NormalTok{, }\StringTok{"london_sport"}\NormalTok{)}
+\NormalTok{sport <- }\KeywordTok{readOGR}\NormalTok{(}\DataTypeTok{dsn =} \StringTok{"data"}\NormalTok{, }\StringTok{"london_sport"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 \begin{verbatim}
 ## OGR data source with driver: ESRI Shapefile 
-## Source: "data/", layer: "london_sport"
+## Source: "data", layer: "london_sport"
 ## with 33 features and 4 fields
 ## Feature type: wkbPolygon with 2 dimensions
 \end{verbatim}
@@ -255,6 +256,14 @@ Congratualations! You have just interogated and visualised a spatial
 dataset: what kind of places have high levels of sports participation?
 The map tells us. Do not worry for now about how this was acheived: we
 will cover this in subsequent sections.
+
+While we are on the topic of loading data, it is worth pointing out that
+R can save and load data efficiently into its own data format
+(\texttt{.RData}). Try \texttt{save(sport, file = "sport.RData")} and
+see what happens. If you type \texttt{rm(sport)} (which removes the
+object) and then \texttt{load("sport.RData")} you should see how this
+works. \texttt{sport} will disappear from the workspace and then
+reappear.
 
 \subsection{Attribute data}
 
@@ -342,12 +351,12 @@ in our workspace, and count the number of polygons:
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{library}\NormalTok{(rgdal)}
-\NormalTok{lnd <- }\KeywordTok{readOGR}\NormalTok{(}\DataTypeTok{dsn =} \StringTok{"data/"}\NormalTok{, }\StringTok{"london_sport"}\NormalTok{)}
+\NormalTok{lnd <- }\KeywordTok{readOGR}\NormalTok{(}\DataTypeTok{dsn =} \StringTok{"data"}\NormalTok{, }\StringTok{"london_sport"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 \begin{verbatim}
 ## OGR data source with driver: ESRI Shapefile 
-## Source: "data/", layer: "london_sport"
+## Source: "data", layer: "london_sport"
 ## with 33 features and 4 fields
 ## Feature type: wkbPolygon with 2 dimensions
 \end{verbatim}
@@ -478,7 +487,7 @@ out which and how many stations are found in each London borough.
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{library}\NormalTok{(rgdal)}
-\NormalTok{stations <- }\KeywordTok{readOGR}\NormalTok{(}\DataTypeTok{dsn =} \StringTok{"data/"}\NormalTok{, }\DataTypeTok{layer =} \StringTok{"lnd-stns"}\NormalTok{)}
+\NormalTok{stations <- }\KeywordTok{readOGR}\NormalTok{(}\DataTypeTok{dsn =} \StringTok{"data"}\NormalTok{, }\DataTypeTok{layer =} \StringTok{"lnd-stns"}\NormalTok{)}
 \KeywordTok{proj4string}\NormalTok{(stations)  }\CommentTok{# this is the full geographical detail.}
 \KeywordTok{proj4string}\NormalTok{(lnd)}
 \KeywordTok{bbox}\NormalTok{(stations)}
