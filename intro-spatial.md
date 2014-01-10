@@ -978,7 +978,8 @@ If you would like to learn more about R's spatial functionalities,
 including more excercises on loading, saving and manipulating data, 
 we recommend a slightly longer and more advanced tutorial (Cheshire and Lovelace, 2014).
 An up-to-date repository of this project, including example dataset and all the code used 
-to compile the tutorial, can be found on its GitHup page: https://github.com/geocomPP/sdvwR . 
+to compile the tutorial, can be found on its GitHub page: 
+[github.com/geocomPP/sdvwR](https://github.com/geocomPP/sdvwR) . 
 Such lengthy tutorials are worth doing to think about spatial data in R systematically, 
 rather than seeing R as a discrete collection of functions. In R the whole is greater than 
 the sum of its parts.
