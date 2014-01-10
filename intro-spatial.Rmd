@@ -69,8 +69,10 @@ spatial packages on offer though:
 [http://cran.r-project.org/web/views/Spatial.html](http://cran.r-project.org/web/views/Spatial.html).
 
 The packages we will be using are `ggplot2`, `rgdal`, `rgeos`, `maptools` and `ggmap`.
-To test whether ggplot2 is installed, for example, enter `library(ggpot2)`. 
+To test whether ggplot2 is installed, for example, enter `library(ggplot2)`. 
 If you get an error message, it needs to be installed: `install.packages("ggplot2")`.
+These will be downloaded from CRAN (the Comprehensive R Archive Network); if you are prompted 
+to select a 'mirror', select one that is close to your city.
 
 ## Downloading the data for the tutorial
 
