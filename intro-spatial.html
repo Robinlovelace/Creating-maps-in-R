@@ -196,8 +196,9 @@ the following set of exercises is concerned with specific functions for spatial 
 and visualisation.
 An up-to-date version of this tutorial is maintained at
 <a href="https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial-rl.pdf">https://github.com/Robinlovelace/Creating-maps-in-R</a> and the entire tutorial, including
-the input data can be downloaded as a zip file from 
-<a href="https://github.com/Robinlovelace/Creating-maps-in-R/archive/master.zip">here</a>. 
+the input data can be downloaded as a
+<a href="https://github.com/Robinlovelace/Creating-maps-in-R/archive/master.zip">zip file</a>, 
+as described below. 
 Suggested improvements welcome - please 
 <a href="https://help.github.com/articles/fork-a-repo">fork</a>, improve and push this document 
 to its original home to ensure its longevity.</p>
@@ -250,8 +251,10 @@ spatial packages on offer though:
 <a href="http://cran.r-project.org/web/views/Spatial.html">http://cran.r-project.org/web/views/Spatial.html</a>.</p>
 
 <p>The packages we will be using are <code>ggplot2</code>, <code>rgdal</code>, <code>rgeos</code>, <code>maptools</code> and <code>ggmap</code>.
-To test whether ggplot2 is installed, for example, enter <code>library(ggpot2)</code>. 
-If you get an error message, it needs to be installed: <code>install.packages(&quot;ggplot2&quot;)</code>.</p>
+To test whether ggplot2 is installed, for example, enter <code>library(ggplot2)</code>. 
+If you get an error message, it needs to be installed: <code>install.packages(&quot;ggplot2&quot;)</code>.
+These will be downloaded from CRAN (the Comprehensive R Archive Network); if you are prompted 
+to select a &#39;mirror&#39;, select one that is close to your city.</p>
 
 <h2>Downloading the data for the tutorial</h2>
 
@@ -291,11 +294,11 @@ which is used by other open source GIS packages such as QGIS and enables
 R to handle a broader range of spatial data formats.</p>
 
 <pre><code class="r">library(rgdal)
-sport &lt;- readOGR(dsn = &quot;data/&quot;, &quot;london_sport&quot;)
+sport &lt;- readOGR(dsn = &quot;data&quot;, &quot;london_sport&quot;)
 </code></pre>
 
 <pre><code>## OGR data source with driver: ESRI Shapefile 
-## Source: &quot;data/&quot;, layer: &quot;london_sport&quot;
+## Source: &quot;data&quot;, layer: &quot;london_sport&quot;
 ## with 33 features and 4 fields
 ## Feature type: wkbPolygon with 2 dimensions
 </code></pre>
@@ -341,6 +344,12 @@ head(sport@data)
 spatial dataset: what kind of places have high levels of sports
 participation? The map tells us. Do not worry for now about 
 how this was acheived: we will cover this in subsequent sections.</p>
+
+<p>While we are on the topic of loading data, it is worth pointing out
+that R can save and load data efficiently into its own data format (<code>.RData</code>).
+Try <code>save(sport, file = &quot;sport.RData&quot;)</code> and see what happens. 
+If you type <code>rm(sport)</code> (which removes the object) and then <code>load(&quot;sport.RData&quot;)</code>
+you should see how this works. <code>sport</code> will disappear from the workspace and then reappear.</p>
 
 <h2>Attribute data</h2>
 
@@ -418,11 +427,11 @@ spatial dataset in our workspace, and count the number
 of polygons:</p>
 
 <pre><code class="r">library(rgdal)
-lnd &lt;- readOGR(dsn = &quot;data/&quot;, &quot;london_sport&quot;)
+lnd &lt;- readOGR(dsn = &quot;data&quot;, &quot;london_sport&quot;)
 </code></pre>
 
 <pre><code>## OGR data source with driver: ESRI Shapefile 
-## Source: &quot;data/&quot;, layer: &quot;london_sport&quot;
+## Source: &quot;data&quot;, layer: &quot;london_sport&quot;
 ## with 33 features and 4 fields
 ## Feature type: wkbPolygon with 2 dimensions
 </code></pre>
@@ -531,7 +540,7 @@ with the aim of finding out which and how many stations
 are found in each London borough.</p>
 
 <pre><code class="r">library(rgdal)
-stations &lt;- readOGR(dsn = &quot;data/&quot;, layer = &quot;lnd-stns&quot;)
+stations &lt;- readOGR(dsn = &quot;data&quot;, layer = &quot;lnd-stns&quot;)
 proj4string(stations)  # this is the full geographical detail.
 proj4string(lnd)
 bbox(stations)
