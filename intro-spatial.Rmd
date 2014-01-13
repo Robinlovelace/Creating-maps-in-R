@@ -32,6 +32,17 @@ We try to follow best practice in terms of style, roughly following
 Google's style guide and the excellent
 "Rchaeological Commentary" 
 ([Johnson 2013](http://cran.r-project.org/web/packages/rockchalk/vignettes/Rstyle.pdf)).
+It is a good idea to get into the habit of consistent and clear writing in 
+any language, and R is no exception. Adding comments to your code is also 
+good practice, so you remember at a later date what you've done, aiding the 
+learning process. There are two main ways of commenting code using the `#` symbol:
+above a line of code or directly following it, as illustrated below.
+
+```{r, eval=FALSE}
+# Generate data
+c <- ggplot(mtcars, aes(factor(cyl)))
+c + geom_bar() # plot the result
+```
 
 Be aware of the following typographic conventions: R code (e.g. `plot(x, y)`) is
 written in a `monospace` font while prose is not. Blocks of code such as, 
@@ -42,8 +53,7 @@ c(1:3, 5)^2
 
 are compiled in-line: the `##` indicates this is output from R. Some of the 
 output from the code below is quite long; we only show the output that is 
-useful. A single hash (`#`) is a comment for humans to read that R will ignore.
-All images in this document are small and low-quality to save space; they should 
+useful. All images in this document are small and low-quality to save space; they should 
 display better on your computer screen and can be saved at any resolution.
 The code presented here is not the only way to do things: we encourage you to 
 play with it and try things out to gain a deeper understanding of R.
