@@ -62,7 +62,17 @@ Visualisation
 information in R, and (possibly) overall
 - Thus there are different camps with different preferences when it comes to maps in R
 
-Maps 'base graphics' way
+Why focus on visualisation?
+===============
+
+If you cannot visualise your data, it is very difficult to understand your data. 
+Conversely, visualisation will greatly aid in communicating your results.
+
+> Human beings are remarkably adept at discerning relationships from visual
+> representations. A well-crafted graph can help you make meaningful comparisons among thousands of pieces of information, extracting patterns not easily found through other methods. ... Data analysts need to look at their data, and this is one area where R shines.
+(Kabacoff, 2009, p. 45).
+
+Maps, the 'base graphics' way
 ==========
 
 
