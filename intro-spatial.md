@@ -32,6 +32,19 @@ We try to follow best practice in terms of style, roughly following
 Google's style guide and the excellent
 "Rchaeological Commentary" 
 ([Johnson 2013](http://cran.r-project.org/web/packages/rockchalk/vignettes/Rstyle.pdf)).
+It is a good idea to get into the habit of consistent and clear writing in 
+any language, and R is no exception. Adding comments to your code is also 
+good practice, so you remember at a later date what you've done, aiding the 
+learning process. There are two main ways of commenting code using the `#` symbol:
+above a line of code or directly following it, as illustrated below.
+
+
+```r
+# Generate data
+c <- ggplot(mtcars, aes(factor(cyl)))
+c + geom_bar()  # plot the result
+```
+
 
 Be aware of the following typographic conventions: R code (e.g. `plot(x, y)`) is
 written in a `monospace` font while prose is not. Blocks of code such as, 
@@ -48,8 +61,7 @@ c(1:3, 5)^2
 
 are compiled in-line: the `##` indicates this is output from R. Some of the 
 output from the code below is quite long; we only show the output that is 
-useful. A single hash (`#`) is a comment for humans to read that R will ignore.
-All images in this document are small and low-quality to save space; they should 
+useful. All images in this document are small and low-quality to save space; they should 
 display better on your computer screen and can be saved at any resolution.
 The code presented here is not the only way to do things: we encourage you to 
 play with it and try things out to gain a deeper understanding of R.
@@ -100,7 +112,7 @@ setwd("C:/Users/username/Desktop/Creating-maps-in-R-master/")
 If you are working in RStudio, you can create a project that will automatically 
 set your working directory. 
 
-# Loading and interogating spatial data
+# Loading and interrogating spatial data
 
 One of the most important steps in handling spatial data with R 
 is the ability to read in shapefiles. There are a number of ways to do this, 
@@ -167,10 +179,10 @@ plot(sport[sport$Partic_Per > 25, ], col = "blue", add = TRUE)
 ![plot of chunk Preliminary plot of London. Areas with high sports participation are blue](figure/Preliminary_plot_of_London__Areas_with_high_sports_participation_are_blue.png) 
 
 
-Congratualations! You have just interogated and visualised a 
+Congratulations! You have just interrogated and visualised a 
 spatial dataset: what kind of places have high levels of sports
 participation? The map tells us. Do not worry for now about 
-how this was acheived: we will cover this in subsequent sections.
+how this was achieved: we will cover this in subsequent sections.
 
 While we are on the topic of loading data, it is worth pointing out
 that R can save and load data efficiently into its own data format (`.RData`).
@@ -205,7 +217,7 @@ proj4string :
 
 # Manipulating spatial data in R
 
-It is all very well being able to load and interogate spatial data
+It is all very well being able to load and interrogate spatial data
 in R, but to compete with modern GIS packages it must also be able 
 to modify these spatial objects before they are visualised
 (see '[using R as a GIS](https://github.com/Pakillo/R-GIS-tutorial)'). 
@@ -215,7 +227,7 @@ functions for this, many of which are in additional packages alluded
 to in the introduction.
 
 This course is introductory so only the most commonly required 
-data manipulaiton tasks, *reprojecting* and *joining/clipping* are covered here.
+data manipulation tasks, *reprojecting* and *joining/clipping* are covered here.
 We will look at joining aspatial
 datasets to our spatial object via an attribute join. Spatial joins, whereby 
 data is added to the target layer depending on the location of the 
@@ -450,11 +462,10 @@ These include `overlay`, `sp::over`, and `rgeos::gIntersects`
 Use `?` followed by the function to get help on each and find which is 
 most appropriate.
 
-`gIntersects` can produce the same output as `over` for basic joins 
-[see here](http://gis.stackexchange.com/questions/63793/how-to-overlay-a-polygon-over-spatialpointsdataframe-and-preserving-the-spdf-dat).
+`gIntersects` can produce the same output as `over` for basic joins see here : http://gis.stackexchange.com/questions/63793/how-to-overlay-a-polygon-over-spatialpointsdataframe-and-preserving-the-spdf-dat.
 
 In this tutorial we will use the `over` function as it is easiest to use. 
-`gIntersects` can acheive the same result, but with more lines of code. 
+`gIntersects` can achieve the same result, but with more lines of code. 
 It may seem confusing that two different functions 
 can be used to generate the same result. However, 
 this is a common issue in programming; the question
@@ -464,7 +475,7 @@ is finding the most appropriate solution.
 layer by which it is to be clipped. The output is a data frame of the same 
 dimensions as the original dataset, except that the values corresponding to 
 areas outside the zone of interest are set to `NA` ("no answer").
-We can use this to take a subset of the orginal polygons, 
+We can use this to take a subset of the original polygons, 
 remembering the square bracket notation.
 
 
@@ -489,12 +500,12 @@ plot(stations)
 
 
 
-As the figure shows, only stations within the London borroughs are now shown.
+As the figure shows, only stations within the London boroughs are now shown.
 
-The *third* way to acheive the 
+The *third* way to achieve the 
 same result uses the `rgeos` package. 
 This is more complex and not included in this tutorial
-(interested readers can see a vignette of this, to accomany the tutorial 
+(interested readers can see a vignette of this, to accompany the tutorial 
 on [RPubs.com/Robinlovelace](http://rpubs.com/RobinLovelace/11796)). 
 The next section demonstrates
 spatial aggregation, a more advanced version of spatial subsetting.
@@ -519,8 +530,8 @@ stations.c@data[, 1]
 
 The above code performs a number of steps in just one line:
 
-- `aggregate` identifies which `lnd` polygon (borrough) each `station` is located in and groups them accordingly
-- it counts the number of stations in each borrough
+- `aggregate` identifies which `lnd` polygon (borough) each `station` is located in and groups them accordingly
+- it counts the number of stations in each borough
 - a new spatial object is created and assigned the name `stations.c`, the count of stations
 
 As shown below, the spatial implementation of `aggregate` can provide summary statistics of variables.
@@ -553,7 +564,7 @@ plot(stations.m, col = clr)
 legend(legend = paste0("q", 1:4), fill = paste0("grey", seq(20, 80, 20)), "topright")
 ```
 
-![plot of chunk Choropleth map of mean values of stations in each borrough](figure/Choropleth_map_of_mean_values_of_stations_in_each_borrough.png) 
+![plot of chunk Choropleth map of mean values of stations in each borough](figure/Choropleth_map_of_mean_values_of_stations_in_each_borough.png) 
 
 ```r
 areas <- sapply(stations.m@polygons, function(x) x@area)
@@ -561,7 +572,7 @@ areas <- sapply(stations.m@polygons, function(x) x@area)
 
 
 This results in a simple choropleth map and a new vector containing the area of each
-borrough. As an additional step, try comparing the mean area of each borrough with the 
+borough. As an additional step, try comparing the mean area of each borough with the 
 mean value of stations within it: `plot(stations.m$NUMBER, areas)`.
 
 ## Optional advanced task: aggregation with gIntersects
@@ -655,9 +666,9 @@ It is worth noting that the basic `plot()` function requires no
 data preparation but additional effort in colour selection/adding the map key etc. 
 `qplot()` and `ggplot()` (from the ggplot2 package) 
 require some additional steps to format the spatial data but select 
-colours and add keys etc automatically. More on this later.
+colours and add keys etc. automatically. More on this later.
 
-As a first attempt with ggplot2 we can create a scatter plot with the attribute data in the sport object created above. Type:
+As a first attempt with ggplot2 we can create a scatter plot with the attribute data in the 'sport' object created above. Type:
 
 
 ```r
@@ -733,8 +744,8 @@ sport.f <- merge(sport.f, sport@data, by.x = "id", by.y = "ons_label")
 ```
 
 
-Take a look at the `sport.f` object to see its contents.  You should see a large data frame containing the latitude and longitude (they are actually Easting and Northing as the data are in British National Grid format) coordinates alongside the attribute information associated with each London Borough. If you type `print(sport.f)` you will just how many coordinate pairs are required!
-To keep the output to a minimum, take a peak at the object just using the `head` command:
+Take a look at the `sport.f` object to see its contents.  You should see a large data frame containing the latitude and longitude (they are actually Easting and Northing as the data are in British National Grid format) coordinates alongside the attribute information associated with each London Borough. If you type `print(sport.f)` you will see just how many coordinate pairs are required!
+To keep the output to a minimum, take a peek at the object using just the `head` command:
 
 
 ```r
@@ -768,7 +779,7 @@ Map <- ggplot(sport.f, aes(long, lat, group = group, fill = Partic_Per)) + geom_
 
 Now, just typing `Map` should result in your first ggplot-made map of London!
 There is a lot going on in the code above, so think about it line by line:
-what has each of the elements of code above has been designed to do. 
+what have each of the elements of code above been designed to do? 
 Also note how the `aes()` components can be combined into one set of brackets 
 after `ggplot`, that has relevance for all layers, rather than being
 broken into separate parts as we did above. 
@@ -975,7 +986,7 @@ most rewarding learning method, rather than just searching for the
 with your own data.
 
 If you would like to learn more about R's spatial functionalities, 
-including more excercises on loading, saving and manipulating data, 
+including more exercises on loading, saving and manipulating data, 
 we recommend a slightly longer and more advanced tutorial (Cheshire and Lovelace, 2014).
 An up-to-date repository of this project, including example dataset and all the code used 
 to compile the tutorial, can be found on its GitHub page: 
