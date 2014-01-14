@@ -24,7 +24,7 @@ Suggested improvements welcome - please
 [fork](https://help.github.com/articles/fork-a-repo), improve and push this document 
 to its original home to ensure its longevity.
 
-## Typographic conventions
+## Typographic conventions and getting help
 
 To ensure reproducibility and allow automatic syntax highlighting, 
 this document has been written in RMarkdown. 
@@ -40,9 +40,18 @@ above a line of code or directly following it, as illustrated below.
 
 ```{r, eval=FALSE}
 # Generate data
-c <- ggplot(mtcars, aes(factor(cyl)))
-c + geom_bar() # plot the result
+x <- 1:400
+y <- sin(x / 10) * exp(x * -0.01)
+
+plot(x, y) # plot the result
 ```
+
+In the above code we first created a new *object* that we have called `x`. 
+Any name could have been used, like `xBumkin`, but `x` works just fine here, 
+although it is good practice to give your objects meaningful names.
+Note the use of the `<-` "arrow" symbol, which tells R to create a new object.
+We will be using this symbol a lot in the tutorial. Each time it is used, a new
+object is created (or an old one is overwritten).
 
 Be aware of the following typographic conventions: R code (e.g. `plot(x, y)`) is
 written in a `monospace` font while prose is not. Blocks of code such as, 
@@ -52,13 +61,24 @@ c(1:3, 5)^2
 ```
 
 are compiled in-line: the `##` indicates this is output from R. Some of the 
-output from the code below is quite long; we only show the output that is 
-useful. All images in this document are small and low-quality to save space; they should 
+output from the code below is quite long so we only show the output that is 
+useful - it should also be clear when we have decided to omit an image from this document 
+to save space. All images in this document are small and low-quality to save space;
+they should 
 display better on your computer screen and can be saved at any resolution.
 The code presented here is not the only way to do things: we encourage you to 
 play with it and try things out to gain a deeper understanding of R.
 Don't worry, you cannot 'break' anything using R and all the input data 
 can be re-loaded if things do go wrong.
+
+If you require help on any function, use the `help` function, 
+e.g. `help(plot)`. Because R users love being concise, 
+this can also be written as `?plot`. We will suggest 
+when looking at this help may be useful in the tutorial, 
+but feel free to use it at any point you'd like more detail
+(although R's help files are famously cryptic for the un-initiated).
+For the most part, *learning by doing* is a good motto, so let's crack
+on and download some packages and then some data.
 
 ## Prerequisites and packages
 
@@ -137,16 +157,76 @@ The boundary data is from the [Ordnance Survey](http://www.ordnancesurvey.co.uk/
 Now that we have a spatial object loaded into R's workspace, we can try
 analysing it with some basic commands:
 
+```{r}
+head(sport@data, n = 2)
+mean(sport$Partic_Per)
+```
+
+There are two important symbols at work in the above block of code: the `@` symbol is used to 
+refer to the attribute *slot* of the dataset; the `$` symbol refers to a specific variable, identified
+from the result of running the first line. If you are using RStudio, test out the autocompletion functionality
+by hitting `tab` before completing the command - this can save you a lot of time in the long run. 
+
+The `head` function in first line of the code above means "show the first few lines of data".
+It's default is to output the first 6 lines (try simply `head(sport@data)`), 
+but this is a bit much so we have specified the number of lines *argument* with `n = 2`.
+The second line of code calculates the mean value of the variable `Partic_Per` (sports participation per
+100 people) for each of the zones in the spatial dataset. To test another function, 
+try typing `nrow(sport)` and record how many zones the dataset contains.
+
+Now we have seen something of the *attributes* of the spatial dataset, 
+let us take a plot its *geometry* data, which describes where the polygons are located 
+in space:
+
+
+```{r, echo=FALSE}
+plot(sport)
+```
+
+`plot` is one of the most useful functions in R, as it is *polymorphic* meaning its behaviour changes 
+depending on the input data. Inputing another dataset (e.g. `plot(sport@data))` will generate 
+an entirely different type of plot altogether. Thus R is intelligent at guessing what you want to 
+do with the data you provide it with. 
+
+R has powerful subsetting capabilities that can be accessed very concisely using square brackets, 
+as shown in the following example:
+
+```{r}
+sport@data[sport$Partic_Per < 15, ]
+```
+
+The above line of code asked R to select only those rows with very low sports participation, 
+in this case Harrow, Newham and the city centre. The square brackets work as follows:
+anything before the comma refers to the rows that will be selected, anything after 
+the comma refers to the columns. Try experimenting with this square brackets notation
+(e.g. guess the result of `sport@data[1:2, 1:3]` and test it): 
+it will be useful.
+
+In the previous code example we have been interrogating only the attribute 
+data (hence `@data`) of the `sport` object, but the square brackets can 
+also be used to subset spatial datasets. Using the same logic as before try 
+to plot a subset of zones with high sports participation.
+
+```{r}
+plot(sport[sport$Partic_Per > 25, ]) # not shown in tutorial
+```
+
+This is useful, but it would be great to see these sporty areas in context. 
+To do this, simply use the `add = TRUE` argument after the initial plot. 
+(`add = T` would also work, but we like to spell things out in this tutorial for clarity).
+What does the `col` argument refer to in the below block - it should be obvious!
+
 ```{r Preliminary plot of London. Areas with high sports participation are blue}
 plot(sport)
-head(sport@data)
 plot(sport[sport$Partic_Per > 25,], col = "blue", add = TRUE)
 ```
 
 Congratulations! You have just interrogated and visualised a 
 spatial dataset: what kind of places have high levels of sports
 participation? The map tells us. Do not worry for now about 
-how this was achieved: we will cover this in subsequent sections.
+the intricacies of 
+how this was achieved: you have learned vital basics of how R works as a language; 
+we will cover details this subsequent sections.
 
 While we are on the topic of loading data, it is worth pointing out
 that R can save and load data efficiently into its own data format (`.RData`).
@@ -222,9 +302,9 @@ The different epsg codes are a bit of hassle to remember but you can find them a
 
 ## Attribute joins
 
-To reaffirm our starting point, let's re-plot the only 
-spatial dataset in our workspace, and count the number
-of polygons:
+To reaffirm our starting point, let's re-load the 
+spatial data and plot it. We will call this new object 
+`lnd`, short for London:
 
 ```{r Plot of London}
 library(rgdal)
@@ -281,7 +361,7 @@ lnd$name[which(!lnd$name %in% crimeAg$Spatial_DistrictName)]
 ```
 
 The first line of code above shows that all but one of the borough names matches;
-the second tells us that it is City of London that is named differently in the 
+the second tells us that it is City of London, row 25, that is named differently in the 
 crime data. Look at the results (not shown here) on your computer.
 
 ```{r, results='hide'}
@@ -369,9 +449,8 @@ so that only those falling within London boroughs are retained.
 These include `overlay`, `sp::over`, and `rgeos::gIntersects`
 (the word preceding the `::` symbol refers to the package the function is from).
 Use `?` followed by the function to get help on each and find which is 
-most appropriate.
-
-`gIntersects` can produce the same output as `over` for basic joins see here : http://gis.stackexchange.com/questions/63793/how-to-overlay-a-polygon-over-spatialpointsdataframe-and-preserving-the-spdf-dat.
+most appropriate. `gIntersects` can produce the same output as 
+`over` for basic joins (Bivand et al. 2013).
 
 In this tutorial we will use the `over` function as it is easiest to use. 
 `gIntersects` can achieve the same result, but with more lines of code. 
@@ -384,14 +463,19 @@ is finding the most appropriate solution.
 layer by which it is to be clipped. The output is a data frame of the same 
 dimensions as the original dataset, except that the values corresponding to 
 areas outside the zone of interest are set to `NA` ("no answer").
-We can use this to take a subset of the original polygons, 
-remembering the square bracket notation.
+We can use this to make a subset of the original polygons, 
+remembering the square bracket notation described in the first section.
+We create a new object, `sel` (short for "selection"),
+containing the indices of all relevant polygons:
 
 ```{r, eval=FALSE}
 sel <- over(stations, lnd)
 stations <- stations[!is.na(sel[,1]),]
 ```
 
+Typing `summary(sel)` should provide insight into how this 
+worked: it is a dataframe with 1801 NA values, representing 
+zones outside of the London polygon.
 Because this is a common procedure it is actually possible 
 to perform it with a single line of code: 
 
@@ -465,9 +549,9 @@ yield dividends if you intend to perform more sophisticated spatial analysis in 
 
 ```{r, results='hide'}
 library(rgeos)
-int <- gIntersects(stations, lnd, byid = T) # re-run the intersection query 
+int <- gIntersects(stations, lnd, byid = TRUE) # re-run the intersection query 
 head(apply(int, MARGIN = 2, FUN = which))
-b.indexes <- which(int, arr.ind = T)
+b.indexes <- which(int, arr.ind = TRUE)
 summary(b.indexes)
 b.names <- lnd$name[b.indexes[, 1]]
 b.count <- aggregate(b.indexes ~ b.names, FUN = length) 
@@ -499,7 +583,7 @@ This next section introduces a slightly
 different method of creating plots in R using the 
 [ggplot2 package](http://ggplot2.org/). 
 The package is an implementation of the Grammar of Graphics (Wilkinson 2005) - 
-a general scheme for data visualization that breaks up graphs 
+a general scheme for data visualisation that breaks up graphs 
 into semantic components such as scales and layers. 
 ggplot2 can serve as a replacement for the base graphics in R (the functions you have been plotting with today) and contains a number of default options that match good visualisation practice.
 
@@ -697,7 +781,7 @@ plot with the `get_map` function:
 
 ```{r}
 lnd.b2 <- ggmap(get_map(location = b, source = "stamen", 
-                        maptype = "toner", crop = T))
+                        maptype = "toner", crop = TRUE))
 ```
 
 We can then produce the plot as before.
@@ -712,7 +796,7 @@ lnd.b2 +
 Finally, if we want to increase the detail of the base map, get_map has a zoom parameter.
 
 ```{r Basemap 3}
-lnd.b3 <- ggmap(get_map(location = b, source = "stamen", maptype = "toner", crop = T, zoom = 11))
+lnd.b3 <- ggmap(get_map(location = b, source = "stamen", maptype = "toner", crop = TRUE, zoom = 11))
 
 lnd.b3 + 
   geom_polygon(data = sport.wgs84.f, 
