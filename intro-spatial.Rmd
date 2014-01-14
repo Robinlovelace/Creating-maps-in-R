@@ -143,7 +143,7 @@ head(sport@data)
 plot(sport[sport$Partic_Per > 25,], col = "blue", add = TRUE)
 ```
 
-Congratualations! You have just interogated and visualised a 
+Congratulations! You have just interrogated and visualised a 
 spatial dataset: what kind of places have high levels of sports
 participation? The map tells us. Do not worry for now about 
 how this was achieved: we will cover this in subsequent sections.
@@ -384,7 +384,7 @@ is finding the most appropriate solution.
 layer by which it is to be clipped. The output is a data frame of the same 
 dimensions as the original dataset, except that the values corresponding to 
 areas outside the zone of interest are set to `NA` ("no answer").
-We can use this to take a subset of the orginal polygons, 
+We can use this to take a subset of the original polygons, 
 remembering the square bracket notation.
 
 ```{r, eval=FALSE}
