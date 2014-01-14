@@ -105,8 +105,20 @@ document has been written in RMarkdown. We try to follow best practice
 in terms of style, roughly following Google's style guide and the
 excellent ``Rchaeological Commentary''
 (\href{http://cran.r-project.org/web/packages/rockchalk/vignettes/Rstyle.pdf}{Johnson
-2013}).
+2013}). It is a good idea to get into the habit of consistent and clear
+writing in any language, and R is no exception. Adding comments to your
+code is also good practice, so you remember at a later date what you've
+done, aiding the learning process. There are two main ways of commenting
+code using the \texttt{\#} symbol: above a line of code or directly
+following it, as illustrated below.
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Generate data}
+\NormalTok{c <- }\KeywordTok{ggplot}\NormalTok{(mtcars, }\KeywordTok{aes}\NormalTok{(}\KeywordTok{factor}\NormalTok{(cyl)))}
+\NormalTok{c + }\KeywordTok{geom_bar}\NormalTok{()  }\CommentTok{# plot the result}
+\end{Highlighting}
+\end{Shaded}
 Be aware of the following typographic conventions: R code (e.g.
 \texttt{plot(x, y)}) is written in a \texttt{monospace} font while prose
 is not. Blocks of code such as,
@@ -121,14 +133,13 @@ is not. Blocks of code such as,
 \end{verbatim}
 are compiled in-line: the \texttt{\#\#} indicates this is output from R.
 Some of the output from the code below is quite long; we only show the
-output that is useful. A single hash (\texttt{\#}) is a comment for
-humans to read that R will ignore. All images in this document are small
-and low-quality to save space; they should display better on your
-computer screen and can be saved at any resolution. The code presented
-here is not the only way to do things: we encourage you to play with it
-and try things out to gain a deeper understanding of R. Don't worry, you
-cannot `break' anything using R and all the input data can be re-loaded
-if things do go wrong.
+output that is useful. All images in this document are small and
+low-quality to save space; they should display better on your computer
+screen and can be saved at any resolution. The code presented here is
+not the only way to do things: we encourage you to play with it and try
+things out to gain a deeper understanding of R. Don't worry, you cannot
+`break' anything using R and all the input data can be re-loaded if
+things do go wrong.
 
 \subsection{Prerequisites and packages}
 
@@ -175,7 +186,7 @@ would type the following:
 If you are working in RStudio, you can create a project that will
 automatically set your working directory.
 
-\section{Loading and interogating spatial data}
+\section{Loading and interrogating spatial data}
 
 One of the most important steps in handling spatial data with R is the
 ability to read in shapefiles. There are a number of ways to do this,
@@ -250,9 +261,9 @@ analysing it with some basic commands:
 sports participation are blue}
 \end{figure}
 
-Congratualations! You have just interogated and visualised a spatial
+Congratulations! You have just interrogated and visualised a spatial
 dataset: what kind of places have high levels of sports participation?
-The map tells us. Do not worry for now about how this was acheived: we
+The map tells us. Do not worry for now about how this was achieved: we
 will cover this in subsequent sections.
 
 While we are on the topic of loading data, it is worth pointing out that
@@ -294,15 +305,15 @@ proj4string :
 \end{verbatim}
 \section{Manipulating spatial data in R}
 
-It is all very well being able to load and interogate spatial data in R,
-but to compete with modern GIS packages it must also be able to modify
-these spatial objects before they are visualised (see
+It is all very well being able to load and interrogate spatial data in
+R, but to compete with modern GIS packages it must also be able to
+modify these spatial objects before they are visualised (see
 `\href{https://github.com/Pakillo/R-GIS-tutorial}{using R as a GIS}'). R
 has a wide range of very powerful functions for this, many of which are
 in additional packages alluded to in the introduction.
 
 This course is introductory so only the most commonly required data
-manipulaiton tasks, \emph{reprojecting} and \emph{joining/clipping} are
+manipulation tasks, \emph{reprojecting} and \emph{joining/clipping} are
 covered here. We will look at joining aspatial datasets to our spatial
 object via an attribute join. Spatial joins, whereby data is added to
 the target layer depending on the location of the origins is also
@@ -529,12 +540,11 @@ refers to the package the function is from). Use \texttt{?} followed by
 the function to get help on each and find which is most appropriate.
 
 \texttt{gIntersects} can produce the same output as \texttt{over} for
-basic joins
-\href{http://gis.stackexchange.com/questions/63793/how-to-overlay-a-polygon-over-spatialpointsdataframe-and-preserving-the-spdf-dat}{see
-here}.
+basic joins see here :
+http://gis.stackexchange.com/questions/63793/how-to-overlay-a-polygon-over-spatialpointsdataframe-and-preserving-the-spdf-dat.
 
 In this tutorial we will use the \texttt{over} function as it is easiest
-to use. \texttt{gIntersects} can acheive the same result, but with more
+to use. \texttt{gIntersects} can achieve the same result, but with more
 lines of code. It may seem confusing that two different functions can be
 used to generate the same result. However, this is a common issue in
 programming; the question is finding the most appropriate solution.
@@ -544,7 +554,7 @@ altered and the layer by which it is to be clipped. The output is a data
 frame of the same dimensions as the original dataset, except that the
 values corresponding to areas outside the zone of interest are set to
 \texttt{NA} (``no answer''). We can use this to take a subset of the
-orginal polygons, remembering the square bracket notation.
+original polygons, remembering the square bracket notation.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -567,13 +577,13 @@ with a single line of code:
 \caption{The clipped stations dataset}
 \end{figure}
 
-As the figure shows, only stations within the London borroughs are now
+As the figure shows, only stations within the London boroughs are now
 shown.
 
-The \emph{third} way to acheive the same result uses the \texttt{rgeos}
+The \emph{third} way to achieve the same result uses the \texttt{rgeos}
 package. This is more complex and not included in this tutorial
-(interested readers can see a vignette of this, to accomany the tutorial
-on
+(interested readers can see a vignette of this, to accompany the
+tutorial on
 \href{http://rpubs.com/RobinLovelace/11796}{RPubs.com/Robinlovelace}).
 The next section demonstrates spatial aggregation, a more advanced
 version of spatial subsetting.
@@ -599,10 +609,10 @@ The above code performs a number of steps in just one line:
 
 \begin{itemize}
 \item
-  \texttt{aggregate} identifies which \texttt{lnd} polygon (borrough)
+  \texttt{aggregate} identifies which \texttt{lnd} polygon (borough)
   each \texttt{station} is located in and groups them accordingly
 \item
-  it counts the number of stations in each borrough
+  it counts the number of stations in each borough
 \item
   a new spatial object is created and assigned the name
   \texttt{stations.c}, the count of stations
@@ -640,9 +650,9 @@ For an optional advanced task, let us analyse and plot the result.
 \end{Shaded}
 \begin{figure}[htbp]
 \centering
-\includegraphics{figure/Choropleth_map_of_mean_values_of_stations_in_each_borrough.png}
+\includegraphics{figure/Choropleth_map_of_mean_values_of_stations_in_each_borough.png}
 \caption{Choropleth map of mean values of stations in each
-borrough}
+borough}
 \end{figure}
 
 \begin{Shaded}
@@ -651,8 +661,8 @@ borrough}
 \end{Highlighting}
 \end{Shaded}
 This results in a simple choropleth map and a new vector containing the
-area of each borrough. As an additional step, try comparing the mean
-area of each borrough with the mean value of stations within it:
+area of each borough. As an additional step, try comparing the mean area
+of each borough with the mean value of stations within it:
 \texttt{plot(stations.m\$NUMBER, areas)}.
 
 \subsection{Optional advanced task: aggregation with gIntersects}
@@ -750,10 +760,10 @@ It is worth noting that the basic \texttt{plot()} function requires no
 data preparation but additional effort in colour selection/adding the
 map key etc. \texttt{qplot()} and \texttt{ggplot()} (from the ggplot2
 package) require some additional steps to format the spatial data but
-select colours and add keys etc automatically. More on this later.
+select colours and add keys etc. automatically. More on this later.
 
 As a first attempt with ggplot2 we can create a scatter plot with the
-attribute data in the sport object created above. Type:
+attribute data in the `sport' object created above. Type:
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -857,9 +867,9 @@ should see a large data frame containing the latitude and longitude
 (they are actually Easting and Northing as the data are in British
 National Grid format) coordinates alongside the attribute information
 associated with each London Borough. If you type \texttt{print(sport.f)}
-you will just how many coordinate pairs are required! To keep the output
-to a minimum, take a peak at the object just using the \texttt{head}
-command:
+you will see just how many coordinate pairs are required! To keep the
+output to a minimum, take a peek at the object using just the
+\texttt{head} command:
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -891,8 +901,8 @@ R:
 \end{Shaded}
 Now, just typing \texttt{Map} should result in your first ggplot-made
 map of London! There is a lot going on in the code above, so think about
-it line by line: what has each of the elements of code above has been
-designed to do. Also note how the \texttt{aes()} components can be
+it line by line: what have each of the elements of code above been
+designed to do? Also note how the \texttt{aes()} components can be
 combined into one set of brackets after \texttt{ggplot}, that has
 relevance for all layers, rather than being broken into separate parts
 as we did above. The different plot functions still know what to do with
@@ -1100,12 +1110,13 @@ most rewarding learning method, rather than just searching for the
 around with your own data.
 
 If you would like to learn more about R's spatial functionalities,
-including more excercises on loading, saving and manipulating data, we
+including more exercises on loading, saving and manipulating data, we
 recommend a slightly longer and more advanced tutorial (Cheshire and
 Lovelace, 2014). An up-to-date repository of this project, including
 example dataset and all the code used to compile the tutorial, can be
-found on its GitHup page: https://github.com/geocomPP/sdvwR . Such
-lengthy tutorials are worth doing to think about spatial data in R
+found on its GitHub page:
+\href{https://github.com/geocomPP/sdvwR}{github.com/geocomPP/sdvwR} .
+Such lengthy tutorials are worth doing to think about spatial data in R
 systematically, rather than seeing R as a discrete collection of
 functions. In R the whole is greater than the sum of its parts.
 
