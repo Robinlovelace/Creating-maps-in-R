@@ -213,7 +213,10 @@ let us take a plot its *geometry* data, which describes where the polygons are l
 in space:
 
 
-![plot of chunk unnamed-chunk-6](figure/unnamed-chunk-6.png) 
+
+```r
+plot(sport)
+```
 
 
 `plot` is one of the most useful functions in R, as it is *polymorphic* meaning its behaviour changes 
@@ -253,8 +256,6 @@ to plot a subset of zones with high sports participation.
 ```r
 plot(sport[sport$Partic_Per > 25, ])  # not shown in tutorial
 ```
-
-![plot of chunk unnamed-chunk-8](figure/unnamed-chunk-8.png) 
 
 
 This is useful, but it would be great to see these sporty areas in context. 
