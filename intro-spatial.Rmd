@@ -629,6 +629,7 @@ sport shapefile).  The characters inside the `aes` argument
 refer to the parts of that data frame you wish to use (the variables `Partic_Per` and `Pop_2001`).
 This has to happen within the brackets of `aes()`, which means, 
 roughly speaking 'aesthetics that vary'.  
+
 If you just type p and hit enter you get the error `No layers in plot`. 
 This is because you have not told ggplot what you want 
 to do with the data. We do this by adding so-called "geoms", 
