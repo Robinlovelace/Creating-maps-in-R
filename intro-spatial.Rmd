@@ -179,7 +179,7 @@ let us take a plot its *geometry* data, which describes where the polygons are l
 in space:
 
 
-```{r, echo=FALSE}
+```{r, eval=FALSE}
 plot(sport)
 ```
 
@@ -207,7 +207,7 @@ data (hence `@data`) of the `sport` object, but the square brackets can
 also be used to subset spatial datasets. Using the same logic as before try 
 to plot a subset of zones with high sports participation.
 
-```{r}
+```{r, eval=FALSE}
 plot(sport[sport$Partic_Per > 25, ]) # not shown in tutorial
 ```
 
