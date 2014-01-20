@@ -281,12 +281,11 @@ Now we have seen something of the \emph{attributes} of the spatial
 dataset, let us take a plot its \emph{geometry} data, which describes
 where the polygons are located in space:
 
-\begin{figure}[htbp]
-\centering
-\includegraphics{figure/unnamed-chunk-6.png}
-\caption{plot of chunk unnamed-chunk-6}
-\end{figure}
-
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(sport)}
+\end{Highlighting}
+\end{Shaded}
 \texttt{plot} is one of the most useful functions in R, as it is
 \emph{polymorphic} meaning its behaviour changes depending on the input
 data. Inputing another dataset (e.g. \texttt{plot(sport@data))} will
@@ -327,12 +326,6 @@ participation.
 \KeywordTok{plot}\NormalTok{(sport[sport$Partic_Per > }\DecValTok{25}\NormalTok{, ])  }\CommentTok{# not shown in tutorial}
 \end{Highlighting}
 \end{Shaded}
-\begin{figure}[htbp]
-\centering
-\includegraphics{figure/unnamed-chunk-8.png}
-\caption{plot of chunk unnamed-chunk-8}
-\end{figure}
-
 This is useful, but it would be great to see these sporty areas in
 context. To do this, simply use the \texttt{add = TRUE} argument after
 the initial plot. (\texttt{add = T} would also work, but we like to
