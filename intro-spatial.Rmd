@@ -346,7 +346,7 @@ head(crimeDat)
 summary(crimeDat$MajorText)
 crimeTheft <- crimeDat[which(crimeDat$MajorText == "Theft & Handling"), ]
 head(crimeTheft, 2) # change 2 for more rows
-crimeAg <- aggregate(CrimeCount ~ Spatial_DistrictName, FUN = "sum", 
+crimeAg <- aggregate(CrimeCount ~ Spatial_DistrictName, FUN = sum, 
                      data = crimeTheft)
 head(crimeAg, 2) # show the aggregated crime data
 ```
