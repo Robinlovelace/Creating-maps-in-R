@@ -1,10 +1,10 @@
-Introduction 
+Part I: Introduction 
 ========================================================
 
 This tutorial is an introduction to spatial data in R and map making with 
-the popular graphics package `ggplot2`. 
+R's 'base' graphics and the popular graphics package `ggplot2`. 
 It assumes no prior knowledge of spatial data analysis but 
-prior understanding of R command line would be beneficial. 
+prior understanding of the R command line would be beneficial. 
 For people new to R, we recommend working through an
 'Introduction to R' type tutorial, such as
 "A (very) short introduction to R" 
@@ -14,7 +14,13 @@ or the more geographically inclined "Short introduction to R"
 
 Building on such background material, 
 the following set of exercises is concerned with specific functions for spatial data 
-and visualisation.
+and visualisation. It is divided into four parts: 
+
+- Introduction, which provides a guide to R's syntax and preparing for the tutorial
+- Spatial data in R, which describes basic spatial functions in R
+- Map making with `ggplot2`, a recent graphics package for producing beautiful maps quickly
+- Taking spatial analysis in R further, a compilation of resources for furthering your skills
+
 An up-to-date version of this tutorial is maintained at
 [https://github.com/Robinlovelace/Creating-maps-in-R](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial-rl.pdf) and the entire tutorial, including
 the input data can be downloaded as a
@@ -111,9 +117,22 @@ The packages we will be using are `ggplot2`, `rgdal`, `rgeos`, `maptools` and `g
 To test whether ggplot2 is installed, for example, enter `library(ggplot2)`. 
 If you get an error message, it needs to be installed: `install.packages("ggplot2")`.
 These will be downloaded from CRAN (the Comprehensive R Archive Network); if you are prompted 
-to select a 'mirror', select one that is close to your city.
+to select a 'mirror', select one that is close to your home. 
+If there is no output from R, this is good news: it means that the library
+has already been installed on your computer.
 
-## Downloading the data for the tutorial
+# Part II: Spatial data in R
+
+## Starting the tutorial
+
+Now that we have taken a look at R's syntax and installed the necessary packages, 
+we can start looking at some real spatial data. This second part introduces some
+spatial datasets that we will download from the internet. Plotting these datasets
+and interrogating the attribute data form the foundation of spatial data 
+analysis in R, so we will focus on these elements in this part of the tutorial, 
+before focussing on creating attractive maps in Part III.
+
+## Downloading the data
 
 The data used for the tutorial can be downloaded from
 [https://github.com/Robinlovelace/Creating-maps-in-R](https://github.com/Robinlovelace/Creating-maps-in-R).
@@ -132,16 +151,19 @@ setwd("C:/Users/username/Desktop/Creating-maps-in-R-master/")
 If you are working in RStudio, you can create a project that will automatically 
 set your working directory. 
 
-# Loading and interrogating spatial data
+## Loading the spatial data
 
 One of the most important steps in handling spatial data with R 
-is the ability to read in shapefiles. There are a number of ways to do this, 
+is the ability to read in spatial data, such as 
+[shapefiles](http://en.wikipedia.org/wiki/Shapefile) 
+(a common geographical file format). There are a number of ways to do this, 
 the most commonly used and versatile of which is `readOGR`.
 This function, from the `rgdal` package, automatically extracts information
 about the projection and the attributes of data.
 `rgdal` is R’s interface to the "Geospatial Abstraction Library (GDAL)"
 which is used by other open source GIS packages such as QGIS and enables 
-R to handle a broader range of spatial data formats.
+R to handle a broader range of spatial data formats. If you've not already
+*installed* and loaded the package (as described above for ggplot2) do so now:
 
 
 ```r
@@ -172,6 +194,13 @@ contain the borough population and
 the percentage of the population engaging in sporting activities and was taken from the 
 [active people survey](http://data.london.gov.uk/datastore/package/active-people-survey-kpi-data-borough).
 The boundary data is from the [Ordnance Survey](http://www.ordnancesurvey.co.uk/oswebsite/opendata/).
+
+For information about how to load different types of spatial data, 
+the help documentation for `readOGR` is a good place to start. This can be accessed from 
+within R by typing `?readOGR`. For another worked example, in which a GPS trace is loaded, 
+please see Cheshire and Lovelace (2014). 
+
+## Basic plotting 
 
 Now that we have a spatial object loaded into R's workspace, we can try
 analysing it with some basic commands:
@@ -412,7 +441,7 @@ head(crimeDat)
 summary(crimeDat$MajorText)
 crimeTheft <- crimeDat[which(crimeDat$MajorText == "Theft & Handling"), ]
 head(crimeTheft, 2)  # change 2 for more rows
-crimeAg <- aggregate(CrimeCount ~ Spatial_DistrictName, FUN = "sum", data = crimeTheft)
+crimeAg <- aggregate(CrimeCount ~ Spatial_DistrictName, FUN = sum, data = crimeTheft)
 head(crimeAg, 2)  # show the aggregated crime data
 ```
 
@@ -728,11 +757,11 @@ We have now seen how to load, join and clip data. The second half of this tutori
 is concerned with *visualisation* of the results. For this, we will use
 ggplot2 and begin by looking at how it handles non-spatial data.
 
-# ggplot2
+# Part III map making with ggplot2
 
-This next section introduces a slightly 
+This third part introduces a slightly 
 different method of creating plots in R using the 
-[ggplot2 package](http://ggplot2.org/). 
+[ggplot2 package](http://ggplot2.org/), and explains how it can make maps. 
 The package is an implementation of the Grammar of Graphics (Wilkinson 2005) - 
 a general scheme for data visualisation that breaks up graphs 
 into semantic components such as scales and layers. 
@@ -826,11 +855,10 @@ The following steps will create a map to show the percentage of the population i
 ## "Fortifying" spatial objects for ggplot
 
 To get the shapefiles into a format that can be plotted we have to use the `fortify()` function. Spatial objects in R have a number of slots containing the various items of data (polygon geometry, projection, attribute information) associated with a shapefile. Slots can be thought of as shelves within the data object that contain the different attributes. The "polygons" slot contains the geometry of the polygons in the form of the XY coordinates used to draw the polygon outline. The generic plot function can work out what to do with these, ggplot2 cannot. We therefore need to extract them as a data frame. The fortify function was written specifically for this purpose.
-For this to work, either `gpclib` or `rgeos` packages must be installed.
+For this to work, either `maptools` or `rgeos` packages must be installed.
 
 
 ```r
-# library(gpclib); gpclibPermit() # uncomment if rgeos not installed
 sport.f <- fortify(sport, region = "ons_label")
 ```
 
@@ -910,7 +938,7 @@ ggsave("my_large_plot.png", scale = 3, dpi = 400)
 
 
 
-# Adding base maps to ggplot2 with ggmap
+## Adding base maps to ggplot2 with ggmap
 
 [ggmap](http://journal.r-project.org/archive/2013-1/kahle-wickham.pdf) 
 is a package that uses the ggplot2 syntax as a 
@@ -1077,7 +1105,7 @@ Try out different colour values as well.
 Add a title and replace the axes names with "easting" and 
 "northing" and save your map as a pdf.
 
-# Taking spatial data analysis in R further
+# Part IV: Taking spatial data analysis in R further
 
 The skills you have learned in this tutorial are applicable to a very wide 
 range of datasets, spatial or not. Often experimentation is the 
@@ -1090,10 +1118,13 @@ including more exercises on loading, saving and manipulating data,
 we recommend a slightly longer and more advanced tutorial (Cheshire and Lovelace, 2014).
 An up-to-date repository of this project, including example dataset and all the code used 
 to compile the tutorial, can be found on its GitHub page: 
-[github.com/geocomPP/sdvwR](https://github.com/geocomPP/sdvwR) . 
+[github.com/geocomPP/sdvwR](https://github.com/geocomPP/sdvwR). 
+Another advanced tutorial is "Using spatial data", which has example 
+code and data that can be downloaded from the 
+[useR 2013 conference page](http://www.edii.uclm.es/~useR-2013//Tutorials/Bivand.html).
 Such lengthy tutorials are worth doing to think about spatial data in R systematically, 
 rather than seeing R as a discrete collection of functions. In R the whole is greater than 
-the sum of its parts.
+the sum of its parts. 
 
 The supportive online communities surrounding large open source programs such as R
 are one of their greatest assets, so we recommend you become an active 
