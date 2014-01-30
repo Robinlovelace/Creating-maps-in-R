@@ -14,7 +14,13 @@ or the more geographically inclined "Short introduction to R"
 
 Building on such background material, 
 the following set of exercises is concerned with specific functions for spatial data 
-and visualisation.
+and visualisation. It is divided into four parts: 
+
+- Introduction, which provides a guide to R's syntax and preparing for the tutorial
+- Spatial data in R, which describes basic spatial functions in R
+- Map making with `ggplot2`, a recent graphics package for producing beautiful maps quickly
+- Taking spatial analysis in R further, a compilation of resources for furthering your skills
+
 An up-to-date version of this tutorial is maintained at
 [https://github.com/Robinlovelace/Creating-maps-in-R](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial-rl.pdf) and the entire tutorial, including
 the input data can be downloaded as a
@@ -107,7 +113,7 @@ to select a 'mirror', select one that is close to your home.
 If there is no output from R, this is good news: it means that the library
 has already been installed on your computer.
 
-# Part II: Handling spatial data in R
+# Part II: Spatial data in R
 
 ## Starting the tutorial
 
@@ -600,11 +606,11 @@ We have now seen how to load, join and clip data. The second half of this tutori
 is concerned with *visualisation* of the results. For this, we will use
 ggplot2 and begin by looking at how it handles non-spatial data.
 
-# ggplot2
+# Part III map making with ggplot2
 
-This next section introduces a slightly 
+This third part introduces a slightly 
 different method of creating plots in R using the 
-[ggplot2 package](http://ggplot2.org/). 
+[ggplot2 package](http://ggplot2.org/), and explains how it can make maps. 
 The package is an implementation of the Grammar of Graphics (Wilkinson 2005) - 
 a general scheme for data visualisation that breaks up graphs 
 into semantic components such as scales and layers. 
@@ -744,7 +750,7 @@ ggsave("my_large_plot.png", scale = 3, dpi = 400)
 ```
 
 
-# Adding base maps to ggplot2 with ggmap
+## Adding base maps to ggplot2 with ggmap
 
 [ggmap](http://journal.r-project.org/archive/2013-1/kahle-wickham.pdf) 
 is a package that uses the ggplot2 syntax as a 
@@ -881,7 +887,7 @@ Try out different colour values as well.
 Add a title and replace the axes names with "easting" and 
 "northing" and save your map as a pdf.
 
-# Taking spatial data analysis in R further
+# Part IV: Taking spatial data analysis in R further
 
 The skills you have learned in this tutorial are applicable to a very wide 
 range of datasets, spatial or not. Often experimentation is the 
