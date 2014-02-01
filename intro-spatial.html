@@ -207,10 +207,14 @@ and visualisation. It is divided into four parts: </p>
 <a href="https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial-rl.pdf">https://github.com/Robinlovelace/Creating-maps-in-R</a> and the entire tutorial, including
 the input data can be downloaded as a
 <a href="https://github.com/Robinlovelace/Creating-maps-in-R/archive/master.zip">zip file</a>, 
-as described below. 
-Suggested improvements welcome - please 
+as described below. The entire tutorial was written in RMarkdown, which 
+allows R code to run as the document compiles. Thus all the examples are entirely reproducible.</p>
+
+<p>Suggested improvements welcome - please 
 <a href="https://help.github.com/articles/fork-a-repo">fork</a>, improve and push this document 
-to its original home to ensure its longevity.</p>
+to its original home to ensure its longevity. The tutorial was developed for 
+a series of Short Courses put on by the National Centre for Research Methods (NCRM), 
+via the TALISMAN node (see <a href="http://www.geotalisman.org/">geotalisman.org</a>). </p>
 
 <h2>Typographic conventions and getting help</h2>
 
@@ -315,7 +319,18 @@ you would type the following:</p>
 </code></pre>
 
 <p>If you are working in RStudio, you can create a project that will automatically 
-set your working directory.To do this click &ldquo;Session&rdquo; from the top toolbar and select &ldquo;Set working directory &gt; choose directory&rdquo;. </p>
+set your working directory.To do this click &ldquo;Session&rdquo; from the top
+toolbar and select &ldquo;Set working directory &gt; choose directory&rdquo;. </p>
+
+<p>It is also worth taking a look at the input data in your file browser 
+before opening them in R, to get a feel for them. You could try opening the 
+file &ldquo;london_sport.shp&rdquo;, within the &ldquo;data&rdquo; folder of the project, in a GIS program such as 
+QGIS (which can be freely downloaded from the internet), 
+for example, to get a feel for it before loading it into R. 
+Also note that .shp files are composed of several files for each object:
+you should be able to open &ldquo;london_sport.dbf&rdquo; in a spreadsheet program such as 
+LibreOffice Calc. Once you&#39;ve understood something of this input data
+and where it lives, it&#39;s time to open it in R.</p>
 
 <h2>Loading the spatial data</h2>
 
@@ -1212,6 +1227,16 @@ of R&#39;s spatial functions.</li>
 <p><code>proj4string(df)</code>: set coordinate reference system of <code>df</code> object</p>
 
 <p><code>spTransform(df, CRS(&quot;+init=epsg:4326&quot;)</code>: reproject <code>df</code> object to WGS84 </p>
+
+<h1>Aknowledgements</h1>
+
+<p>Many thanks to Rachel Oldroyed and Alistair Leak who helped demonstrate 
+these materials to participants on the NCRM short corses for which 
+this tutorial was developed. Amy O&#39;Neill helped organise the course 
+and helped channel feedback from participants. 
+The final thanks is to the participants themselves
+who trialed earlier versions of this tutorial and provided very useful 
+feedback. </p>
 
 <h1>References</h1>
 

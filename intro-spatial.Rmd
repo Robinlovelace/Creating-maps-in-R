@@ -25,10 +25,14 @@ An up-to-date version of this tutorial is maintained at
 [https://github.com/Robinlovelace/Creating-maps-in-R](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial-rl.pdf) and the entire tutorial, including
 the input data can be downloaded as a
 [zip file](https://github.com/Robinlovelace/Creating-maps-in-R/archive/master.zip), 
-as described below. 
+as described below. The entire tutorial was written in RMarkdown, which 
+allows R code to run as the document compiles. Thus all the examples are entirely reproducible.
+
 Suggested improvements welcome - please 
 [fork](https://help.github.com/articles/fork-a-repo), improve and push this document 
-to its original home to ensure its longevity.
+to its original home to ensure its longevity. The tutorial was developed for 
+a series of Short Courses put on by the National Centre for Research Methods (NCRM), 
+via the TALISMAN node (see [geotalisman.org](http://www.geotalisman.org/)). 
 
 ## Typographic conventions and getting help
 
@@ -133,7 +137,18 @@ setwd("C:/Users/username/Desktop/Creating-maps-in-R-master/")
 ```
 
 If you are working in RStudio, you can create a project that will automatically 
-set your working directory.To do this click "Session" from the top toolbar and select "Set working directory > choose directory". 
+set your working directory.To do this click "Session" from the top
+toolbar and select "Set working directory > choose directory". 
+
+It is also worth taking a look at the input data in your file browser 
+before opening them in R, to get a feel for them. You could try opening the 
+file "london_sport.shp", within the "data" folder of the project, in a GIS program such as 
+QGIS (which can be freely downloaded from the internet), 
+for example, to get a feel for it before loading it into R. 
+Also note that .shp files are composed of several files for each object:
+you should be able to open "london_sport.dbf" in a spreadsheet program such as 
+LibreOffice Calc. Once you've understood something of this input data
+and where it lives, it's time to open it in R.
 
 ## Loading the spatial data
 
@@ -956,6 +971,15 @@ Books: despite the strength of R's online community, nothing beats a physical bo
 
 `spTransform(df, CRS("+init=epsg:4326")`: reproject `df` object to WGS84 
 
+# Aknowledgements
+
+Many thanks to Rachel Oldroyed and Alistair Leak who helped demonstrate 
+these materials to participants on the NCRM short corses for which 
+this tutorial was developed. Amy O'Neill helped organise the course 
+and helped channel feedback from participants. 
+The final thanks is to the participants themselves
+who trialed earlier versions of this tutorial and provided very useful 
+feedback. 
 
 # References
 
