@@ -1,0 +1,22 @@
+\contentsline {section}{Part I: Introduction}{2}{section*.2}
+\contentsline {subsection}{Typographic conventions and getting help}{2}{section*.3}
+\contentsline {subsection}{Prerequisites and packages}{3}{section*.4}
+\contentsline {section}{Part II: Spatial data in R}{3}{section*.5}
+\contentsline {subsection}{Starting the tutorial}{3}{section*.6}
+\contentsline {subsection}{Downloading the data}{3}{section*.7}
+\contentsline {subsection}{Loading the spatial data}{3}{section*.8}
+\contentsline {subsection}{Basic plotting}{4}{section*.9}
+\contentsline {subsection}{Attribute data}{5}{section*.10}
+\contentsline {section}{Manipulating spatial data in R}{6}{section*.11}
+\contentsline {subsection}{Changing projection}{6}{section*.12}
+\contentsline {subsection}{Attribute joins}{7}{section*.13}
+\contentsline {subsection}{Clipping and spatial joins}{9}{section*.14}
+\contentsline {subsection}{Spatial aggregation}{11}{section*.15}
+\contentsline {subsection}{Optional advanced task: aggregation with gIntersects}{12}{section*.16}
+\contentsline {section}{Part III map making with ggplot2}{14}{section*.17}
+\contentsline {subsection}{``Fortifying'' spatial objects for ggplot2 maps}{15}{section*.18}
+\contentsline {subsection}{Adding base maps to ggplot2 with ggmap}{17}{section*.19}
+\contentsline {section}{Advanced Task: Faceting for Maps}{18}{section*.20}
+\contentsline {section}{Part IV: Taking spatial data analysis in R further}{19}{section*.21}
+\contentsline {section}{R quick reference}{21}{section*.22}
+\contentsline {section}{References}{22}{section*.23}
