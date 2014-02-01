@@ -49,7 +49,7 @@ above a line of code or directly following it, as illustrated below.
 x <- 1:400
 y <- sin(x / 10) * exp(x * -0.01)
 
-plot(x, y) # plot the result
+plot(x, y) # plot the result (not shown in tutorial)
 ```
 
 In the above code we first created a new *object* that we have called `x`. 
@@ -108,17 +108,6 @@ has already been installed on your computer.
 Install these packages now. 
 
 # Part II: Spatial data in R
-
-## Starting the tutorial
-
-Now that we have taken a look at R's syntax and installed the necessary packages, 
-we can start looking at some real spatial data. This second part introduces some
-spatial datasets that we will download from the internet. Plotting these datasets
-and interrogating the attribute data form the foundation of spatial data 
-analysis in R, so we will focus on these elements in this part of the tutorial, 
-before focussing on creating attractive maps in Part III.
-
-## Downloading the data
 
 ## Starting the tutorial
 
@@ -242,66 +231,7 @@ plot(sport[sport$Partic_Per > 25, ]) # output not shown in tutorial
 This is useful, but it would be great to see these sporty areas in context. 
 To do this, simply use the `add = TRUE` argument after the initial plot. 
 (`add = T` would also work, but we like to spell things out in this tutorial for clarity).
-What does the `col` argument refer to in the below block - it should be obvious!
-
-```{r}
-head(sport@data, n = 2)
-mean(sport$Partic_Per)
-```
-
-There are two important symbols at work in the above block of code: the `@` symbol is used to 
-refer to the attribute *slot* of the dataset; the `$` symbol refers to a specific variable, identified
-from the result of running the first line. If you are using RStudio, test out the autocompletion functionality
-by hitting `tab` before completing the command - this can save you a lot of time in the long run. 
-
-The `head` function in first line of the code above means "show the first few lines of data".
-It's default is to output the first 6 lines (try simply `head(sport@data)`), 
-but this is a bit much so we have specified the number of lines *argument* with `n = 2`.
-The second line of code calculates the mean value of the variable `Partic_Per` (sports participation per
-100 people) for each of the zones in the spatial dataset. To test another function, 
-try typing `nrow(sport)` and record how many zones the dataset contains.
-
-Now we have seen something of the *attributes* of the spatial dataset, 
-let us take a plot its *geometry* data, which describes where the polygons are located 
-in space:
-
-
-```{r, eval=FALSE}
-plot(sport)
-```
-
-`plot` is one of the most useful functions in R, as it is *polymorphic* meaning its behaviour changes 
-depending on the input data. Inputing another dataset (e.g. `plot(sport@data))` will generate 
-an entirely different type of plot altogether. Thus R is intelligent at guessing what you want to 
-do with the data you provide it with. 
-
-R has powerful subsetting capabilities that can be accessed very concisely using square brackets, 
-as shown in the following example:
-
-```{r}
-sport@data[sport$Partic_Per < 15, ]
-```
-
-The above line of code asked R to select only those rows with very low sports participation, 
-in this case Harrow, Newham and the city centre. The square brackets work as follows:
-anything before the comma refers to the rows that will be selected, anything after 
-the comma refers to the columns. Try experimenting with this square brackets notation
-(e.g. guess the result of `sport@data[1:2, 1:3]` and test it): 
-it will be useful.
-
-In the previous code example we have been interrogating only the attribute 
-data (hence `@data`) of the `sport` object, but the square brackets can 
-also be used to subset spatial datasets. Using the same logic as before try 
-to plot a subset of zones with high sports participation.
-
-```{r, eval=FALSE}
-plot(sport[sport$Partic_Per > 25, ]) # not shown in tutorial
-```
-
-This is useful, but it would be great to see these sporty areas in context. 
-To do this, simply use the `add = TRUE` argument after the initial plot. 
-(`add = T` would also work, but we like to spell things out in this tutorial for clarity).
-What does the `col` argument refer to in the below block - it should be obvious!
+What does the `col` argument refer to in the below block - it should be obvious.
 
 ```{r Preliminary plot of London. Areas with high sports participation are blue}
 plot(sport)
@@ -496,7 +426,7 @@ Take a look at the `lnd@data` object. You should
 see new variables added, meaning the attribute join 
 was successful. 
 
-## Spatial joins
+## Clipping and spatial joins
 
 In addition to joining by zone name, it is also possible to do
 [spatial joins](http://help.arcgis.com/en/arcgisdesktop/10.0/help/index.html#//00080000000q000000) 
@@ -541,9 +471,6 @@ The problem is that the stations dataset is far more extensive than the
 London borough dataset; so we will take a spatially determined subset of the 
 stations object so that they all fit within the lnd extent. This is *clipping*. 
 
-
-## Clipping
-
 There are a number of functions that we can use to clip the stations dataset
 so that only those falling within London boroughs are retained. 
 These include `overlay`, `sp::over`, and `rgeos::gIntersects`
@@ -565,7 +492,6 @@ dimensions as the original dataset (in this case `stations`), except that the po
 We can use this to make a subset of the original polygons, 
 remembering the square bracket notation described in the first section.
 We create a new object, `sel` (short for "selection"),
-containing the indices of all relevant polygons:
 containing the indices of all relevant polygons:
 
 ```{r, eval=FALSE}
@@ -757,7 +683,7 @@ This idea of layers (or geoms) is quite different from the standard plot functio
  
 The following steps will create a map to show the percentage of the population in each London Borough who regularly participate in sports activities. 
 
-## "Fortifying" spatial objects for ggplot
+## "Fortifying" spatial objects for ggplot2 maps
 
 To get the shapefiles into a format that can be plotted we have to use the `fortify()` function. Spatial objects in R have a number of slots containing the various items of data (polygon geometry, projection, attribute information) associated with a shapefile. Slots can be thought of as shelves within the data object that contain the different attributes. The "polygons" slot contains the geometry of the polygons in the form of the XY coordinates used to draw the polygon outline. The generic plot function can work out what to do with these, ggplot2 cannot. We therefore need to extract them as a data frame. The fortify function was written specifically for this purpose.
 For this to work, either `maptools` or `rgeos` packages must be installed.
@@ -779,8 +705,6 @@ To keep the output to a minimum, take a peek at the object using just the `head`
 ```{r}
 head(sport.f[, 1:8])
 ```
-
-## Maps in ggplot2
 
 It is now straightforward to produce a map using all the built in tools 
 (such as setting the breaks in the data) that ggplot2 has to offer. 
@@ -908,7 +832,7 @@ lnd.b3 +
 
 ```{r}
 library(reshape2) # this may not be installed. 
-# If not install it, or skip the next two stepsâ¦
+# If not install it, or skip the next two steps
 ```
 
 Load the data - this shows historic population values between 1801 and 2001 for London, again from the London data store.
@@ -1001,8 +925,6 @@ Books: despite the strength of R's online community, nothing beats a physical bo
  * Kabacoff (2011) is a more general R book; it has many fun worked examples.
  
 # R quick reference
-
-## Common commands 
 
 `#`: comments all text until line end
 

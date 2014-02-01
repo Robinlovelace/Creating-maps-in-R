@@ -12,6 +12,9 @@ system(mess) # reduce plot size
 mess <- paste("sed -i -e 's/\\\\section{References}/\\\\newpage \\\\section{References}/g' intro-spatial-rl.tex")
 system(mess) # Put refs on new page
 
+mess <- "sed -i -e '65i\\\\\\tableofcontents' intro-spatial-rl.tex"
+system(mess) # make title
+
 mess <- "sed -i -e '64i\\\\\\maketitle' intro-spatial-rl.tex"
 system(mess) # make title
 

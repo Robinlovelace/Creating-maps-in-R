@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2013.10.5)  30 JAN 2014 16:19
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2013.10.5)  1 FEB 2014 16:19
 entering extended mode
  %&-line parsing enabled.
 **intro-spatial-rl.tex
@@ -588,115 +588,140 @@ LaTeX Font Info:    Try loading font information for U+msb on input line 76.
 
 (/usr/share/texmf-texlive/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2009/06/22 v3.00 AMS symbols B
-)
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 97.
+) (./intro-spatial-rl.toc)
+\tf@toc=\write5
+\openout5 = `intro-spatial-rl.toc'.
+
+
+[1
+
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 98.
 
 (/usr/share/texmf-texlive/tex/latex/base/omscmr.fd
 File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 97.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 98.
 LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <10> not available
-(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 134.
-LaTeX Font Info:    Try loading font information for OML+cmtt on input line 143
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 135.
+LaTeX Font Info:    Try loading font information for OML+cmtt on input line 144
 .
-LaTeX Font Info:    No file OMLcmtt.fd. on input line 143.
+LaTeX Font Info:    No file OMLcmtt.fd. on input line 144.
 
 
 LaTeX Font Warning: Font shape `OML/cmtt/m/n' undefined
 (Font)              using `OML/cmm/m/it' instead
-(Font)              for symbol `textless' on input line 143.
+(Font)              for symbol `textless' on input line 144.
 
-[1
+[2]
+LaTeX Font Info:    Try loading font information for OML+cmr on input line 232.
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2] [3]
+ (/usr/share/texmf-texlive/tex/latex/base/omlcmr.fd
+File: omlcmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OML/cmr/m/n' in size <10> not available
+(Font)              Font shape `OML/cmm/m/it' tried instead on input line 232.
+ [3] [4]
 <figure/Preliminary_plot_of_London__Areas_with_high_sports_participation_are_bl
-ue.png, id=133, 505.89pt x 505.89pt>
+ue.png, id=158, 505.89pt x 505.89pt>
 File: figure/Preliminary_plot_of_London__Areas_with_high_sports_participation_a
 re_blue.png Graphic file (type png)
 
 <use figure/Preliminary_plot_of_London__Areas_with_high_sports_participation_ar
-e_blue.png> [4]
-Overfull \hbox (50.7612pt too wide) in paragraph at lines 478--478
+e_blue.png> [5] [6 <./figure/Preliminary_plot_of_London__Areas_with_high_sports
+_participation_are_blue.png>]
+Overfull \hbox (50.7612pt too wide) in paragraph at lines 492--492
 []\OT1/cmtt/m/n/10 ## +proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 +x_0=4000
 00 +y_0=-100000 +ellps=airy +units=m +no_defs[] 
  []
 
-[5 <./figure/Preliminary_plot_of_London__Areas_with_high_sports_participation_a
-re_blue.png>] <figure/Plot_of_London.png, id=148, 505.89pt x 505.89pt>
+<figure/Plot_of_London.png, id=173, 505.89pt x 505.89pt>
 File: figure/Plot_of_London.png Graphic file (type png)
 
-<use figure/Plot_of_London.png> [6 <./figure/Plot_of_London.png>] [7]
-<figure/Sampling_and_plotting_stations.png, id=162, 505.89pt x 505.89pt>
+<use figure/Plot_of_London.png> [7] [8 <./figure/Plot_of_London.png>] [9]
+<figure/Sampling_and_plotting_stations.png, id=191, 505.89pt x 505.89pt>
 File: figure/Sampling_and_plotting_stations.png Graphic file (type png)
 
-<use figure/Sampling_and_plotting_stations.png> [8 <./figure/Sampling_and_plott
-ing_stations.png>]
-<figure/The_clipped_stations_dataset.png, id=169, 505.89pt x 505.89pt>
+<use figure/Sampling_and_plotting_stations.png> [10 <./figure/Sampling_and_plot
+ting_stations.png>]
+<figure/The_clipped_stations_dataset.png, id=198, 505.89pt x 505.89pt>
 File: figure/The_clipped_stations_dataset.png Graphic file (type png)
 
-<use figure/The_clipped_stations_dataset.png> [9 <./figure/The_clipped_stations
-_dataset.png>]
-<figure/Choropleth_map_of_mean_values_of_stations_in_each_borough.png, id=177, 
+<use figure/The_clipped_stations_dataset.png>
+Overfull \hbox (218.75974pt too wide) in paragraph at lines 792--792
+[]\OT1/cmtt/m/n/10 ## Error: error in evaluating the argument 'y' in selecting 
+a method for function 'over': Error: argument "x" is missing, with no default[]
+ 
+ []
+
+[11 <./figure/The_clipped_stations_dataset.png>]
+<figure/Choropleth_map_of_mean_values_of_stations_in_each_borough.png, id=206, 
 505.89pt x 505.89pt>
 File: figure/Choropleth_map_of_mean_values_of_stations_in_each_borough.png Grap
 hic file (type png)
 
 <use figure/Choropleth_map_of_mean_values_of_stations_in_each_borough.png>
-[10]
-<figure/Train/tube_stations_in_Barking_and_Dagenham.png, id=182, 505.89pt x 505
+[12 <./figure/Choropleth_map_of_mean_values_of_stations_in_each_borough.png>]
+Overfull \hbox (197.75992pt too wide) in paragraph at lines 911--911
+[]\OT1/cmtt/m/n/10 ## Error: error in evaluating the argument 'object' in selec
+ting a method for function 'summary': Error: object 'b.indexes' not found[] 
+ []
+
+
+<figure/Train/tube_stations_in_Barking_and_Dagenham.png, id=213, 505.89pt x 505
 .89pt>
 File: figure/Train/tube_stations_in_Barking_and_Dagenham.png Graphic file (type
  png)
- <use figure/Train/tube_stations_in_Barking_and_Dagenham.png> [11 <./figure/Cho
-ropleth_map_of_mean_values_of_stations_in_each_borough.png>]
-<figure/A_simple_ggplot.png, id=191, 505.89pt x 505.89pt>
+ <use figure/Train/tube_stations_in_Barking_and_Dagenham.png> [13]
+[14 <./figure/Train/tube_stations_in_Barking_and_Dagenham.png>]
+<figure/A_simple_ggplot.png, id=227, 505.89pt x 505.89pt>
 File: figure/A_simple_ggplot.png Graphic file (type png)
 
-<use figure/A_simple_ggplot.png> [12 <./figure/Train/tube_stations_in_Barking_a
-nd_Dagenham.png>] <figure/ggplot_for_text.png, id=198, 505.89pt x 505.89pt>
+<use figure/A_simple_ggplot.png>
+<figure/ggplot_for_text.png, id=228, 505.89pt x 505.89pt>
 File: figure/ggplot_for_text.png Graphic file (type png)
 
-<use figure/ggplot_for_text.png> [13 <./figure/A_simple_ggplot.png (PNG copy)> 
-<./figure/ggplot_for_text.png (PNG copy)>]
-<figure/Greyscale_map.png, id=207, 505.89pt x 505.89pt>
+<use figure/ggplot_for_text.png> [15 <./figure/A_simple_ggplot.png (PNG copy)>]
+[16 <./figure/ggplot_for_text.png (PNG copy)>]
+<figure/Greyscale_map.png, id=240, 505.89pt x 505.89pt>
 File: figure/Greyscale_map.png Graphic file (type png)
 
-<use figure/Greyscale_map.png> [14] [15 <./figure/Greyscale_map.png (PNG copy)>
-] <figure/Basemap_3.png, id=220, 505.89pt x 505.89pt>
+<use figure/Greyscale_map.png> [17 <./figure/Greyscale_map.png (PNG copy)>]
+<figure/Basemap_3.png, id=249, 505.89pt x 505.89pt>
 File: figure/Basemap_3.png Graphic file (type png)
-
-<use figure/Basemap_3.png> [16 <./figure/Basemap_3.png (PNG copy)>]
-<figure/Faceted_map.png, id=226, 505.89pt x 505.89pt>
+ <use figure/Basemap_3.png>
+[18] <figure/Faceted_map.png, id=254, 505.89pt x 505.89pt>
 File: figure/Faceted_map.png Graphic file (type png)
 
-<use figure/Faceted_map.png> [17 <./figure/Faceted_map.png (PNG copy)>]
-[18] [19] (./intro-spatial-rl.aux)
+<use figure/Faceted_map.png> [19 <./figure/Basemap_3.png (PNG copy)>] [20 <./fi
+gure/Faceted_map.png (PNG copy)>] [21] [22] (./intro-spatial-rl.aux)
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
  ) 
 Here is how much of TeX's memory you used:
- 7418 strings out of 495061
- 100073 string characters out of 1182621
- 177729 words of memory out of 3000000
- 10425 multiletter control sequences out of 15000+50000
- 10700 words of font info for 41 fonts, out of 3000000 for 9000
+ 7450 strings out of 495061
+ 100506 string characters out of 1182621
+ 175729 words of memory out of 3000000
+ 10445 multiletter control sequences out of 15000+50000
+ 12707 words of font info for 50 fonts, out of 3000000 for 9000
  28 hyphenation exceptions out of 8191
- 38i,6n,36p,445b,457s stack positions out of 5000i,500n,10000p,200000b,50000s
-</usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/sha
-re/texmf-texlive/fonts/type1/public/amsfonts/cm/cmitt10.pfb></usr/share/texmf-t
-exlive/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texmf-texlive/font
-s/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texmf-texlive/fonts/type1/publ
-ic/amsfonts/cm/cmr12.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/
-cm/cmr17.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsl10.pf
-b></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/sha
-re/texmf-texlive/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/share/texmf-te
-xlive/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/share/texmf-texlive/fonts
-/type1/public/amsfonts/cm/cmtt12.pfb>
-Output written on intro-spatial-rl.pdf (19 pages, 620963 bytes).
+ 38i,6n,36p,445b,459s stack positions out of 5000i,500n,10000p,200000b,50000s
+</usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/sha
+re/texmf-texlive/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texmf-te
+xlive/fonts/type1/public/amsfonts/cm/cmitt10.pfb></usr/share/texmf-texlive/font
+s/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texmf-texlive/fonts/type1/pub
+lic/amsfonts/cm/cmr10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts
+/cm/cmr12.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr17.pf
+b></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsl10.pfb></usr/sha
+re/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf-te
+xlive/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/share/texmf-texlive/fonts
+/type1/public/amsfonts/cm/cmtt10.pfb></usr/share/texmf-texlive/fonts/type1/publ
+ic/amsfonts/cm/cmtt12.pfb>
+Output written on intro-spatial-rl.pdf (22 pages, 653070 bytes).
 PDF statistics:
- 297 PDF objects out of 1000 (max. 8388607)
- 54 named destinations out of 1000 (max. 500000)
- 240 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 334 PDF objects out of 1000 (max. 8388607)
+ 57 named destinations out of 1000 (max. 500000)
+ 232 words of extra memory for PDF output out of 10000 (max. 10000000)
 
