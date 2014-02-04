@@ -7,17 +7,17 @@
 \contentsline {subsection}{Loading the spatial data}{4}{section*.8}
 \contentsline {subsection}{Basic plotting}{4}{section*.9}
 \contentsline {subsection}{Attribute data}{6}{section*.10}
-\contentsline {section}{Manipulating spatial data in R}{6}{section*.11}
+\contentsline {section}{Part III: Manipulating spatial data}{6}{section*.11}
 \contentsline {subsection}{Changing projection}{7}{section*.12}
 \contentsline {subsection}{Attribute joins}{7}{section*.13}
 \contentsline {subsection}{Clipping and spatial joins}{9}{section*.14}
 \contentsline {subsection}{Spatial aggregation}{11}{section*.15}
-\contentsline {subsection}{Optional advanced task: aggregation with gIntersects}{13}{section*.16}
-\contentsline {section}{Part III map making with ggplot2}{14}{section*.17}
+\contentsline {subsection}{Optional advanced task: aggregation with gIntersects}{12}{section*.16}
+\contentsline {section}{Part IV map making with ggplot2}{13}{section*.17}
 \contentsline {subsection}{``Fortifying'' spatial objects for ggplot2 maps}{15}{section*.18}
-\contentsline {subsection}{Adding base maps to ggplot2 with ggmap}{17}{section*.19}
-\contentsline {section}{Advanced Task: Faceting for Maps}{18}{section*.20}
-\contentsline {section}{Part IV: Taking spatial data analysis in R further}{19}{section*.21}
-\contentsline {section}{R quick reference}{21}{section*.22}
-\contentsline {section}{Aknowledgements}{21}{section*.23}
-\contentsline {section}{References}{22}{section*.24}
+\contentsline {subsection}{Adding base maps to ggplot2 with ggmap}{16}{section*.19}
+\contentsline {subsection}{Advanced Task: Faceting for Maps}{18}{section*.20}
+\contentsline {section}{Part V: Taking spatial data analysis in R further}{19}{section*.21}
+\contentsline {section}{R quick reference}{20}{section*.22}
+\contentsline {section}{Aknowledgements}{20}{section*.23}
+\contentsline {section}{References}{21}{section*.24}

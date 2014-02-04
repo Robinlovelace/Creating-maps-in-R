@@ -14,10 +14,11 @@ or the more geographically inclined "Short introduction to R"
 
 Building on such background material, 
 the following set of exercises is concerned with specific functions for spatial data 
-and visualisation. It is divided into four parts: 
+and visualisation. It is divided into five parts: 
 
 - Introduction, which provides a guide to R's syntax and preparing for the tutorial
 - Spatial data in R, which describes basic spatial functions in R
+- Manipulating spatial data, which includes changing projection, clipping and spatial joins
 - Map making with `ggplot2`, a recent graphics package for producing beautiful maps quickly
 - Taking spatial analysis in R further, a compilation of resources for furthering your skills
 
@@ -344,7 +345,7 @@ proj4string :
 [+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 ....]
 ```
 
-# Manipulating spatial data in R
+# Part III: Manipulating spatial data
 
 It is all very well being able to load and interrogate spatial data
 in R, but to compete with modern GIS packages, R must also be able 
@@ -663,19 +664,13 @@ also behaves differently when the inputs are spatial objects.
 
 
 ```r
-stations.c <- aggregate(data = stations, by = lnd, FUN = length)
-```
-
-```
-## Error: error in evaluating the argument 'y' in selecting a method for function 'over': Error: argument "x" is missing, with no default
-```
-
-```r
+stations.c <- aggregate(x = stations, by = lnd, FUN = length)
 stations.c@data[, 1]
 ```
 
 ```
-## Error: object 'stations.c' not found
+##  [1] 48 22 43 18 12 13 25 24 12 46 18 20 28 32 38 19 30 25 31  7 10 38 12
+## [24] 16 28 17 16 28  4  6 14 26  5
 ```
 
 
@@ -747,59 +742,13 @@ library(rgeos)
 ```
 
 ```r
-int <- gIntersects(data = stations, by = lnd, byid = TRUE)  # re-run the intersection query 
-```
-
-```
-## Error: unused arguments (data = stations, by = lnd)
-```
-
-```r
+int <- gIntersects(stations, lnd, byid = TRUE)  # re-run the intersection query 
 head(apply(int, MARGIN = 2, FUN = which))
-```
-
-```
-## Error: object 'int' not found
-```
-
-```r
 b.indexes <- which(int, arr.ind = TRUE)
-```
-
-```
-## Error: object 'int' not found
-```
-
-```r
 summary(b.indexes)
-```
-
-```
-## Error: error in evaluating the argument 'object' in selecting a method for function 'summary': Error: object 'b.indexes' not found
-```
-
-```r
 b.names <- lnd$name[b.indexes[, 1]]
-```
-
-```
-## Error: object 'b.indexes' not found
-```
-
-```r
 b.count <- aggregate(b.indexes ~ b.names, FUN = length)
-```
-
-```
-## Error: object 'b.indexes' not found
-```
-
-```r
 head(b.count)
-```
-
-```
-## Error: object 'b.count' not found
 ```
 
 
@@ -826,7 +775,7 @@ We have now seen how to load, join and clip data. The second half of this tutori
 is concerned with *visualisation* of the results. For this, we will use
 ggplot2 and begin by looking at how it handles non-spatial data.
 
-# Part III map making with ggplot2
+# Part IV map making with ggplot2
 
 This third part introduces a slightly 
 different method of creating plots in R using the 
@@ -1104,7 +1053,7 @@ lnd.b3 + geom_polygon(data = sport.wgs84.f, aes(x = long, y = lat, group = group
 ![plot of chunk Basemap 3](figure/Basemap_3.png) 
 
 
-# Advanced Task: Faceting for Maps
+## Advanced Task: Faceting for Maps
 
 
 ```r
@@ -1172,7 +1121,7 @@ Try out different colour values as well.
 Add a title and replace the axes names with "easting" and 
 "northing" and save your map as a pdf.
 
-# Part IV: Taking spatial data analysis in R further
+# Part V: Taking spatial data analysis in R further
 
 The skills you have learned in this tutorial are applicable to a very wide 
 range of datasets, spatial or not. Often experimentation is the 
