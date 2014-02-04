@@ -78,7 +78,7 @@ introduction to R''
 
 Building on such background material, the following set of exercises is
 concerned with specific functions for spatial data and visualisation. It
-is divided into four parts:
+is divided into five parts:
 
 \begin{itemize}
 \item
@@ -86,6 +86,9 @@ is divided into four parts:
   the tutorial
 \item
   Spatial data in R, which describes basic spatial functions in R
+\item
+  Manipulating spatial data, which includes changing projection,
+  clipping and spatial joins
 \item
   Map making with \texttt{ggplot2}, a recent graphics package for
   producing beautiful maps quickly
@@ -460,7 +463,7 @@ Is projected: TRUE
 proj4string :
 [+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 ....]
 \end{verbatim}
-\section{Manipulating spatial data in R}
+\section{Part III: Manipulating spatial data}
 
 It is all very well being able to load and interrogate spatial data in
 R, but to compete with modern GIS packages, R must also be able to
@@ -789,19 +792,13 @@ objects.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{stations.c <- }\KeywordTok{aggregate}\NormalTok{(}\DataTypeTok{data =} \NormalTok{stations, }\DataTypeTok{by =} \NormalTok{lnd, }\DataTypeTok{FUN =} \NormalTok{length)}
-\end{Highlighting}
-\end{Shaded}
-\begin{verbatim}
-## Error: error in evaluating the argument 'y' in selecting a method for function 'over': Error: argument "x" is missing, with no default
-\end{verbatim}
-\begin{Shaded}
-\begin{Highlighting}[]
+\NormalTok{stations.c <- }\KeywordTok{aggregate}\NormalTok{(}\DataTypeTok{x =} \NormalTok{stations, }\DataTypeTok{by =} \NormalTok{lnd, }\DataTypeTok{FUN =} \NormalTok{length)}
 \NormalTok{stations.c@data[, }\DecValTok{1}\NormalTok{]}
 \end{Highlighting}
 \end{Shaded}
 \begin{verbatim}
-## Error: object 'stations.c' not found
+##  [1] 48 22 43 18 12 13 25 24 12 46 18 20 28 32 38 19 30 25 31  7 10 38 12
+## [24] 16 28 17 16 28  4  6 14 26  5
 \end{verbatim}
 The above code performs a number of steps in just one line:
 
@@ -884,60 +881,15 @@ if you intend to perform more sophisticated spatial analysis in R.
 \end{verbatim}
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{int <- }\KeywordTok{gIntersects}\NormalTok{(}\DataTypeTok{data =} \NormalTok{stations, }\DataTypeTok{by =} \NormalTok{lnd, }\DataTypeTok{byid =} \OtherTok{TRUE}\NormalTok{)  }\CommentTok{# re-run the intersection query }
-\end{Highlighting}
-\end{Shaded}
-\begin{verbatim}
-## Error: unused arguments (data = stations, by = lnd)
-\end{verbatim}
-\begin{Shaded}
-\begin{Highlighting}[]
+\NormalTok{int <- }\KeywordTok{gIntersects}\NormalTok{(stations, lnd, }\DataTypeTok{byid =} \OtherTok{TRUE}\NormalTok{)  }\CommentTok{# re-run the intersection query }
 \KeywordTok{head}\NormalTok{(}\KeywordTok{apply}\NormalTok{(int, }\DataTypeTok{MARGIN =} \DecValTok{2}\NormalTok{, }\DataTypeTok{FUN =} \NormalTok{which))}
-\end{Highlighting}
-\end{Shaded}
-\begin{verbatim}
-## Error: object 'int' not found
-\end{verbatim}
-\begin{Shaded}
-\begin{Highlighting}[]
 \NormalTok{b.indexes <- }\KeywordTok{which}\NormalTok{(int, }\DataTypeTok{arr.ind =} \OtherTok{TRUE}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-\begin{verbatim}
-## Error: object 'int' not found
-\end{verbatim}
-\begin{Shaded}
-\begin{Highlighting}[]
 \KeywordTok{summary}\NormalTok{(b.indexes)}
-\end{Highlighting}
-\end{Shaded}
-\begin{verbatim}
-## Error: error in evaluating the argument 'object' in selecting a method for function 'summary': Error: object 'b.indexes' not found
-\end{verbatim}
-\begin{Shaded}
-\begin{Highlighting}[]
 \NormalTok{b.names <- lnd$name[b.indexes[, }\DecValTok{1}\NormalTok{]]}
-\end{Highlighting}
-\end{Shaded}
-\begin{verbatim}
-## Error: object 'b.indexes' not found
-\end{verbatim}
-\begin{Shaded}
-\begin{Highlighting}[]
 \NormalTok{b.count <- }\KeywordTok{aggregate}\NormalTok{(b.indexes ~ b.names, }\DataTypeTok{FUN =} \NormalTok{length)}
-\end{Highlighting}
-\end{Shaded}
-\begin{verbatim}
-## Error: object 'b.indexes' not found
-\end{verbatim}
-\begin{Shaded}
-\begin{Highlighting}[]
 \KeywordTok{head}\NormalTok{(b.count)}
 \end{Highlighting}
 \end{Shaded}
-\begin{verbatim}
-## Error: object 'b.count' not found
-\end{verbatim}
 The above code first extracts the index of the row (borough) for which
 the corresponding column is true and then converts this into names. The
 final object created, \texttt{b.count} contains the number of station
@@ -966,7 +918,7 @@ this tutorial is concerned with \emph{visualisation} of the results. For
 this, we will use ggplot2 and begin by looking at how it handles
 non-spatial data.
 
-\section{Part III map making with ggplot2}
+\section{Part IV map making with ggplot2}
 
 This third part introduces a slightly different method of creating plots
 in R using the \href{http://ggplot2.org/}{ggplot2 package}, and explains
@@ -1276,7 +1228,7 @@ a zoom parameter.
 \caption{plot of chunk Basemap 3}
 \end{figure}
 
-\section{Advanced Task: Faceting for Maps}
+\subsection{Advanced Task: Faceting for Maps}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1343,7 +1295,7 @@ sure you understand it. Try out different colour values as well.
 Add a title and replace the axes names with ``easting'' and ``northing''
 and save your map as a pdf.
 
-\section{Part IV: Taking spatial data analysis in R further}
+\section{Part V: Taking spatial data analysis in R further}
 
 The skills you have learned in this tutorial are applicable to a very
 wide range of datasets, spatial or not. Often experimentation is the
