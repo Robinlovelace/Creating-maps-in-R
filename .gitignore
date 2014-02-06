@@ -1,6 +1,10 @@
 .Rproj.user
 .Rhistory
 .RData
-.log
-.synctex.gz
+*.log
+*.synctex.gz
+*.html
+*.backup
+intro-spatial.tex
+ggmapTemp.png
 
