@@ -115,10 +115,10 @@ National Centre for Research Methods (NCRM), via the TALISMAN node (see
 
 To ensure reproducibility and allow automatic syntax highlighting, this
 document has been written in RMarkdown. We try to follow best practice
-in terms of style, roughly following Google's style guide and the
-excellent ``Rchaeological Commentary''
-(\href{http://cran.r-project.org/web/packages/rockchalk/vignettes/Rstyle.pdf}{Johnson
-2013}). It is a good idea to get into the habit of consistent and clear
+in terms of style, roughly following Google's style guide and an
+in-depth guide written by
+\href{http://cran.r-project.org/web/packages/rockchalk/vignettes/Rstyle.pdf}{Johnson
+(2013)}. It is a good idea to get into the habit of consistent and clear
 writing in any language, and R is no exception. Adding comments to your
 code is also good practice, so you remember at a later date what you've
 done, aiding the learning process. There are two main ways of commenting
@@ -131,20 +131,28 @@ following it, as illustrated below.
 \NormalTok{x <- }\DecValTok{1}\NormalTok{:}\DecValTok{400}
 \NormalTok{y <- }\KeywordTok{sin}\NormalTok{(x/}\DecValTok{10}\NormalTok{) * }\KeywordTok{exp}\NormalTok{(x * -}\FloatTok{0.01}\NormalTok{)}
 
-\KeywordTok{plot}\NormalTok{(x, y)  }\CommentTok{# plot the result (not shown in tutorial)}
+\KeywordTok{plot}\NormalTok{(x, y)  }\CommentTok{# plot the result}
 \end{Highlighting}
 \end{Shaded}
+\begin{figure}[htbp]
+\centering
+\includegraphics{figure/Basic_plot_of_x_and_y.png}
+\caption{plot of chunk Basic plot of x and y}
+\end{figure}
+
 In the above code we first created a new \emph{object} that we have
 called \texttt{x}. Any name could have been used, like \texttt{xBumkin},
 but \texttt{x} works just fine here, although it is good practice to
 give your objects meaningful names. Note the use of the
 \texttt{\textless{}-} ``arrow'' symbol, which tells R to create a new
-object. We will be using this symbol a lot in the tutorial. Each time it
-is used, a new object is created (or an old one is overwritten).
+object. We will be using this symbol a lot in the tutorial (tip: typing
+\texttt{Alt -} on the keyboard will create it in RStudio.). Each time it
+is used, a new object is created (or an old one is overwritten) with a
+name of your choosing.
 
 To distinguish between prose and code, please be aware of the following
 typographic conventions: R code (e.g. \texttt{plot(x, y)}) is written in
-a \texttt{monospace} font while prose is not. Blocks of code such as,
+a \texttt{monospace} font while prose is not. Blocks of code such as:
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -167,11 +175,13 @@ can be re-loaded if things do go wrong.
 
 If you require help on any function, use the \texttt{help} function,
 e.g. \texttt{help(plot)}. Because R users love being concise, this can
-also be written as \texttt{?plot}. We will suggest when looking at this
-help may be useful in the tutorial, but feel free to use it at any point
-you'd like more detail (although R's help files are famously cryptic for
-the un-initiated). For the most part, \emph{learning by doing} is a good
-motto, so let's crack on and download some packages and then some data.
+also be written as \texttt{?plot}. Feel free to use it at any point
+you'd like more detail on a specific function (although R's help files
+are famously cryptic for the un-initiated). Help on more general terms
+can be found using the \texttt{??} symbol. To test this, try typing
+\texttt{??regression}. For the most part, \emph{learning by doing} is a
+good motto, so let's crack on and download some packages and then some
+data.
 
 \subsection{Prerequisites and packages}
 
@@ -205,8 +215,8 @@ packages, we can start looking at some real spatial data. This second
 part introduces some spatial datasets that we will download from the
 internet. Plotting these datasets and interrogating the attribute data
 form the foundation of spatial data analysis in R, so we will focus on
-these elements in this part of the tutorial, before focussing on
-creating attractive maps in Part III.
+these elements in the next two parts of the tutorial, before focussing
+on creating attractive maps in Part IV.
 
 \subsection{Downloading the data}
 
@@ -268,14 +278,14 @@ described above for ggplot2) do so now:
 ## Feature type: wkbPolygon with 2 dimensions
 \end{verbatim}
 In the code above \texttt{dsn} stands for ``data source name'' and is an
-\emph{argument} of the \emph{function} \texttt{readOGR}. The
-\texttt{dsn} argument in this case, specifies the directory in which the
-dataset is stored. R functions have a default order of arguments, so
-\texttt{dsn =} does not actually need to be typed. If there data were
-stored in the current working directory, one could use
-\texttt{readOGR(".", "london\_sport")}. For clarity, it is good practice
-to include argument names, such as \texttt{dsn} when learning new
-functions.
+\emph{argument} of the \emph{function} \texttt{readOGR}. Note that each
+new argument is separated by a comma. The \texttt{dsn} argument in this
+case, specifies the directory in which the dataset is stored. R
+functions have a default order of arguments, so \texttt{dsn =} does not
+actually need to be typed. If there data were stored in the current
+working directory, one could use \texttt{readOGR(".", "london\_sport")}.
+For clarity, it is good practice to include argument names, such as
+\texttt{dsn} when learning new functions.
 
 The next argument is a \emph{character string}. This is simply the name
 of the file required. There is no need to add a file extension (e.g.
@@ -336,13 +346,13 @@ the command - this can save you a lot of time in the long run.
 The \texttt{head} function in the first line of the code above simply
 means ``show the first few lines of data'', i.e.~the head. It's default
 is to output the first 6 rows of the dataset (try simply
-\texttt{head(sport@data)}), but sometimes this is a bit much, so we can
-specify the number of lines with \texttt{n = 2} after the comma. The
-second line of the code above calculates the mean value of the variable
-\texttt{Partic\_Per} (sports participation per 100 people) for each of
-the zones in the sport object. To explore the sport object further, try
-typing \texttt{nrow(sport)} and record how many zones the dataset
-contains.You can also try \texttt{ncol(sport)}.
+\texttt{head(sport@data)}), but we can specify the number of lines with
+\texttt{n = 2} after the comma. The second line of the code above
+calculates the mean value of the variable \texttt{Partic\_Per} (sports
+participation per 100 people) for each of the zones in the sport object.
+To explore the sport object further, try typing \texttt{nrow(sport)} and
+record how many zones the dataset contains.You can also try
+\texttt{ncol(sport)}.
 
 Now we have seen something of the attribute \emph{slot} of the spatial
 dataset, let us look at sport's \emph{geometry} data, which describes
@@ -350,14 +360,15 @@ where the polygons are located in space:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{plot}\NormalTok{(sport)}
+\KeywordTok{plot}\NormalTok{(sport)  }\CommentTok{# not shown in tutorial - try it on your computer}
 \end{Highlighting}
 \end{Shaded}
 \texttt{plot} is one of the most useful functions in R, as it changes
-its behaviour depending on the input data. Inputing another dataset
-(e.g. \texttt{plot(sport@data))} will generate an entirely different
-type of plot altogether. Thus R is intelligent at guessing what you want
-to do with the data you provide it with.
+its behaviour depending on the input data (this is called
+\emph{polymorphism} by computer scientists). Inputing another dataset
+such as \texttt{plot(sport@data)} will generate an entirely different
+type of plot. Thus R is intelligent at guessing what you want to do with
+the data you provide it with.
 
 R has powerful subsetting capabilities that can be accessed very
 concisely using square brackets, as shown in the following example:
@@ -415,9 +426,9 @@ obvious.
 \end{Shaded}
 \begin{figure}[htbp]
 \centering
-\includegraphics{figure/Preliminary_plot_of_London__Areas_with_high_sports_participation_are_blue.png}
-\caption{plot of chunk Preliminary plot of London. Areas with high
-sports participation are blue}
+\includegraphics{figure/Preliminary_plot_of_London_with_areas_of_high_sports_participation_highlighted_in_blue.png}
+\caption{plot of chunk Preliminary plot of London with areas of high
+sports participation highlighted in blue}
 \end{figure}
 
 Congratulations! You have just interrogated and visualised a spatial
@@ -445,24 +456,37 @@ R delibrately hides the geometry of spatial data unless you print the
 entire object (try typing \texttt{print(sport)}). Let's take a look at
 the headings of sport, using the following command:
 \texttt{names(sport)} Remember, the attribute data contained in spatial
-objects are kept in a `slot' that can be accessed using the @ symbol:
-\texttt{sport@data}. This is useful if you do not wish to work with the
-spatial components of the data at all times.
+objects are kept in a `slot' that can be accessed using the \texttt{@}
+symbol: \texttt{sport@data}. This is useful if you do not wish to work
+with the spatial components of the data at all times.
 
 Type \texttt{summary(sport)} to get some additional information about
-the sport data object. Spatial objects in R contain a variety of
-additional information:
+the sport data object. Spatial objects in R contain much additional
+information:
 
 \begin{verbatim}
-Object of class SpatialPolygonsDataFrame
-Coordinates:
-       min      max
-x 503571.2 561941.1
-y 155850.8 200932.5
-Is projected: TRUE 
-proj4string :
-[+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 ....]
+summary(sport)
+
+## Object of class SpatialPolygonsDataFrame
+## Coordinates:
+##       min      max
+## x 503571.2 561941.1
+## y 155850.8 200932.5
+## Is projected: TRUE 
+## proj4string :
+## [+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 ....]
 \end{verbatim}
+The above output tells us that \texttt{sport} is a special spatial
+class, in this case a \texttt{SpatialPolygonsDataFrame}, meaning it is
+composed of various polygons, each of which has attributes. This is the
+typical class of data found in administrative zones. The coordinates
+tell us what the maximum and minimum x and y values are, for plotting.
+Finally, we are told something of the coordinate reference system with
+the \texttt{Is projected} and \texttt{proj4string} lines. In this case,
+we have a projected system, which means it is a cartesian reference
+system, relative to some point on the surface of the Earth. We will
+cover reprojecting data in the next part of the tutorial.
+
 \section{Part III: Manipulating spatial data}
 
 It is all very well being able to load and interrogate spatial data in
@@ -500,7 +524,7 @@ the following:
 \end{verbatim}
 You will see a warning. This simply states that you are changing the
 coordinate reference system, not reprojecting the data. R uses epsg
-codes to refer to different coordinate reference systems.Epsg:27700 is
+codes to refer to different coordinate reference systems. Epsg:27700 is
 the code for British National Grid. If we wanted to reproject the data
 into something like WGS84 for latitude and longitude we would use the
 following code:
@@ -510,20 +534,31 @@ following code:
 \NormalTok{sport.wgs84 <- }\KeywordTok{spTransform}\NormalTok{(sport, }\KeywordTok{CRS}\NormalTok{(}\StringTok{"+init=epsg:4326"}\NormalTok{))}
 \end{Highlighting}
 \end{Shaded}
-The different epsg codes are a bit of hassle to remember but you can
-find them all at
-\href{http://spatialreference.org/}{spatialreference.org}.
+The above line of code uses the function \texttt{spTransform}, from the
+\texttt{sp} package, to convert the \texttt{sport} object into a new
+form, with the Coordinate Reference System (CRS) specified as WGS84. The
+different epsg codes are a bit of hassle to remember but you can search
+for them at \href{http://spatialreference.org/}{spatialreference.org}.
 
 \subsection{Attribute joins}
 
+Attribute joins are used to link additional pieces of information to our
+polygons. in the \texttt{sport} object, for example, we have 5 attribute
+variables - that can be found by typing \texttt{names(sport)}. But what
+happens when we want to add an additional variable from an external data
+table? We will use the example of recorded crimes by borough to
+demonstrate this.
+
 To reaffirm our starting point, let's re-load the ``london\_sport''
-shapefile as a new object and plot it. We will call this new object
-\texttt{lnd}, short for London:
+shapefile as a new object and plot it. This is identical to the
+\texttt{sport} object in the first instance, but we will give it a new
+name, in case we ever need to re-use \texttt{sport}. We will call this
+new object \texttt{lnd}, short for London:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(rgdal)}
-\CommentTok{#create new object called "lnd" from "london_sport" shapefile}
+\KeywordTok{library}\NormalTok{(rgdal)  }\CommentTok{# ensure rgdal is loaded}
+\CommentTok{# Create new object called 'lnd' from 'london_sport' shapefile}
 \NormalTok{lnd <- }\KeywordTok{readOGR}\NormalTok{(}\DataTypeTok{dsn =} \StringTok{"data"}\NormalTok{, }\StringTok{"london_sport"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -536,7 +571,7 @@ shapefile as a new object and plot it. We will call this new object
 \begin{Shaded}
 \begin{Highlighting}[]
 
-\KeywordTok{plot}\NormalTok{(lnd);}\CommentTok{#plot the lnd object }
+\KeywordTok{plot}\NormalTok{(lnd)  }\CommentTok{# plot the lnd object }
 \end{Highlighting}
 \end{Shaded}
 \begin{figure}[htbp]
@@ -547,40 +582,48 @@ shapefile as a new object and plot it. We will call this new object
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{nrow}\NormalTok{(lnd)}\CommentTok{#return the number of rows}
+\KeywordTok{nrow}\NormalTok{(lnd)  }\CommentTok{# return the number of rows}
 \end{Highlighting}
 \end{Shaded}
 \begin{verbatim}
 ## [1] 33
 \end{verbatim}
 The aspatial dataset we are going to join to the \texttt{lnd} object is
-a dataset on recorded crimes, this dataset currently resides in a CSV
-file called ``mps-recordedcrime-borough'' with each row representing on
-crime. We are going to use the non-spatial implementation of a function
-called \texttt{aggregate} to pre-process this dataset ready to join to
-our spatial \texttt{lnd} dataset. First we will create a new object
-called \texttt{crimeDat} to store this data.
+a dataset on recorded crimes, this dataset currently resides in a comma
+delimited (\texttt{.csv}) file called ``mps-recordedcrime-borough'' with
+each row representing a single reported crime. We are going to use a
+function called \texttt{aggregate} to pre-process this dataset ready to
+join to our spatial \texttt{lnd} dataset. First we will create a new
+object called \texttt{crimeDat} to store this data.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# create new crimeDat object from crime data}
+\CommentTok{# Create new crimeDat object from crime data It has an unusual encoding,}
+\CommentTok{# hence the fileEncoding argument, usually unnecessary}
 \NormalTok{crimeDat <- }\KeywordTok{read.csv}\NormalTok{(}\StringTok{"data/mps-recordedcrime-borough.csv"}\NormalTok{, }\DataTypeTok{fileEncoding =} \StringTok{"UCS-2LE"}\NormalTok{)}
-\CommentTok{# display first 6 lines of the crimeDat object}
-\KeywordTok{head}\NormalTok{(crimeDat)}
-\CommentTok{# summarise the column 'MajorText' for the crimeDat object}
-\KeywordTok{summary}\NormalTok{(crimeDat$MajorText)}
-\CommentTok{# Extract 'Theft & Handling' crimes from crimeDat object and save these as a}
-\CommentTok{# new object named 'crimeTheft'}
+
+\KeywordTok{head}\NormalTok{(crimeDat)  }\CommentTok{# display first 6 lines of the crimeDat object (not shown)}
+\KeywordTok{summary}\NormalTok{(crimeDat$MajorText)  }\CommentTok{# summarise the column 'MajorText' for the crimeDat object}
+
+\CommentTok{# Extract 'Theft & Handling' crimes from crimeDat object and save these as}
+\CommentTok{# crimeTheft}
 \NormalTok{crimeTheft <- crimeDat[}\KeywordTok{which}\NormalTok{(crimeDat$MajorText == }\StringTok{"Theft & Handling"}\NormalTok{), ]}
-\CommentTok{# change 2 for more rows}
-\KeywordTok{head}\NormalTok{(crimeTheft, }\DecValTok{2}\NormalTok{)}
-\CommentTok{# Calculate the sum of the crime count for each district. Aggregate the data}
-\CommentTok{# and place in new object called crimeAg.}
+\KeywordTok{head}\NormalTok{(crimeTheft, }\DecValTok{2}\NormalTok{)  }\CommentTok{# take a look at the result (replace 2 with 10 to see more rows)}
+
+\CommentTok{# Calculate the sum of the crime count for each district and save result as}
+\CommentTok{# a new object}
 \NormalTok{crimeAg <- }\KeywordTok{aggregate}\NormalTok{(CrimeCount ~ Spatial_DistrictName, }\DataTypeTok{FUN =} \NormalTok{sum, }\DataTypeTok{data =} \NormalTok{crimeTheft)}
-\CommentTok{# show the first two rows of the aggregated crime data}
+\CommentTok{# Show the first two rows of the aggregated crime data}
 \KeywordTok{head}\NormalTok{(crimeAg, }\DecValTok{2}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
+There is a lot going on in the above block of code and you should not
+expect to understand all of it upon first try: simply typing the
+commands and thinking briefly about the outputs is all that is needed at
+this stage to improve your intuitive understanding of R. It is worth
+pointing out, however, that the \texttt{\ensuremath{\sim}} symbol means
+``by'': we aggregated the CrimeCount variable by the district name.
+
 Now that we have crime data at the borough level
 (\texttt{Spatial\_DistrictName}), the challenge is to join it to the
 \texttt{lnd} object. We will base our join on the
@@ -592,7 +635,7 @@ match the spatial data object, \texttt{lnd}:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# compare the name column in lnd to Spatial_DistrictName column in crimeAg}
+\CommentTok{# Compare the name column in lnd to Spatial_DistrictName column in crimeAg}
 \CommentTok{# to see which rows match.}
 \NormalTok{lnd$name %in% crimeAg$Spatial_DistrictName}
 \end{Highlighting}
@@ -604,7 +647,7 @@ match the spatial data object, \texttt{lnd}:
 \end{verbatim}
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# return rows which do not match}
+\CommentTok{# Return rows which do not match}
 \NormalTok{lnd$name[}\KeywordTok{which}\NormalTok{(!lnd$name %in% crimeAg$Spatial_DistrictName)]}
 \end{Highlighting}
 \end{Shaded}
@@ -612,33 +655,68 @@ match the spatial data object, \texttt{lnd}:
 ## [1] City of London
 ## 33 Levels: Barking and Dagenham Barnet Bexley Brent Bromley ... Westminster
 \end{verbatim}
-The first line of code above shows that all but one of the borough names
-matches; the second tells us that it is City of London, row 25, that is
-named differently in the crime data. Look at the results (not shown
-here) on your computer.
+The first line of code above uses the \texttt{\%in\%} command to
+identify which values in \texttt{lnd\$name} are also contained in the
+names of the crime data. The results indicate that all but one of the
+borough names matches. The second line of code tells us that it is City
+of London, row 25, that is named differently in the crime data. Look at
+the results (not shown here) on your computer.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# rename row 25 in crimeAg to match row 25 in lnd.}
-\KeywordTok{levels}\NormalTok{(crimeAg$Spatial_DistrictName)}
+\CommentTok{# Discover the names of the names}
+\KeywordTok{levels}\NormalTok{(crimeAg$Spatial_DistrictNam)  }\CommentTok{# not shown n tutorial}
+\end{Highlighting}
+\end{Shaded}
+\begin{verbatim}
+##  [1] "Barking and Dagenham"   "Barnet"                
+##  [3] "Bexley"                 "Brent"                 
+##  [5] "Bromley"                "Camden"                
+##  [7] "Croydon"                "Ealing"                
+##  [9] "Enfield"                "Greenwich"             
+## [11] "Hackney"                "Hammersmith and Fulham"
+## [13] "Haringey"               "Harrow"                
+## [15] "Havering"               "Hillingdon"            
+## [17] "Hounslow"               "Islington"             
+## [19] "Kensington and Chelsea" "Kingston upon Thames"  
+## [21] "Lambeth"                "Lewisham"              
+## [23] "Merton"                 "Newham"                
+## [25] "NULL"                   "Redbridge"             
+## [27] "Richmond upon Thames"   "Southwark"             
+## [29] "Sutton"                 "Tower Hamlets"         
+## [31] "Waltham Forest"         "Wandsworth"            
+## [33] "Westminster"
+\end{verbatim}
+\begin{Shaded}
+\begin{Highlighting}[]
+
+\CommentTok{# Rename row 25 in crimeAg to match row 25 in lnd, as suggested results form}
+\CommentTok{# above}
 \KeywordTok{levels}\NormalTok{(crimeAg$Spatial_DistrictName)[}\DecValTok{25}\NormalTok{] <- }\KeywordTok{as.character}\NormalTok{(lnd$name[}\KeywordTok{which}\NormalTok{(!lnd$name %in% }
     \NormalTok{crimeAg$Spatial_DistrictName)])}
 \NormalTok{lnd$name %in% crimeAg$Spatial_DistrictName  }\CommentTok{# now all columns match}
 \end{Highlighting}
 \end{Shaded}
+\begin{verbatim}
+##  [1] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
+## [15] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
+## [29] TRUE TRUE TRUE TRUE TRUE
+\end{verbatim}
 The above code block first identified the row with the faulty name and
 then renamed the level to match the \texttt{lnd} dataset. Note that we
 could not rename the variable directly, as it is stored as a factor.
 
 We are now ready to join the datasets. It is recommended to use the
 \texttt{join} function in the \texttt{plyr} package but the
-\texttt{merge} function could equally be used.
+\texttt{merge} function could equally be used. Note that when we ask for
+help for a function that is not loaded, nothing happens, indicating we
+need to load it:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{help}\NormalTok{(join)}
+\StringTok{`}\DataTypeTok{?}\StringTok{`}\NormalTok{(join)}
 \KeywordTok{library}\NormalTok{(plyr)}
-\KeywordTok{help}\NormalTok{(join)  }\CommentTok{# now help should appear}
+\StringTok{`}\DataTypeTok{?}\StringTok{`}\NormalTok{(join)}
 \end{Highlighting}
 \end{Shaded}
 The documentation for join will be displayed if the plyr package is
@@ -875,7 +953,7 @@ if you intend to perform more sophisticated spatial analysis in R.
 \end{Highlighting}
 \end{Shaded}
 \begin{verbatim}
-## rgeos version: 0.2-19, (SVN revision 394)
+## rgeos version: 0.3-2, (SVN revision 413M)
 ##  GEOS runtime version: 3.3.8-CAPI-1.7.8 
 ##  Polygon checking: TRUE
 \end{verbatim}
@@ -918,7 +996,7 @@ this tutorial is concerned with \emph{visualisation} of the results. For
 this, we will use ggplot2 and begin by looking at how it handles
 non-spatial data.
 
-\section{Part IV map making with ggplot2}
+\section{Part IV: Map making with ggplot2}
 
 This third part introduces a slightly different method of creating plots
 in R using the \href{http://ggplot2.org/}{ggplot2 package}, and explains

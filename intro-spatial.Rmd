@@ -40,32 +40,33 @@ via the TALISMAN node (see [geotalisman.org](http://www.geotalisman.org/)).
 To ensure reproducibility and allow automatic syntax highlighting, 
 this document has been written in RMarkdown. 
 We try to follow best practice in terms of style, roughly following 
-Google's style guide and the excellent
-"Rchaeological Commentary" 
-([Johnson 2013](http://cran.r-project.org/web/packages/rockchalk/vignettes/Rstyle.pdf)).
+Google's style guide and an in-depth guide written by 
+[Johnson (2013)](http://cran.r-project.org/web/packages/rockchalk/vignettes/Rstyle.pdf).
 It is a good idea to get into the habit of consistent and clear writing in 
 any language, and R is no exception. Adding comments to your code is also 
 good practice, so you remember at a later date what you've done, aiding the 
 learning process. There are two main ways of commenting code using the `#` symbol:
 above a line of code or directly following it, as illustrated below.
 
-```{r, eval=FALSE}
+```{r Basic plot of x and y}
 # Generate data
 x <- 1:400
-y <- sin(x / 10) * exp(x * -0.01)
+y <- sin(x / 10) * exp(x * -0.01) 
 
-plot(x, y) # plot the result (not shown in tutorial)
+plot(x, y) # plot the result
 ```
 
 In the above code we first created a new *object* that we have called `x`. 
 Any name could have been used, like `xBumkin`, but `x` works just fine here, 
 although it is good practice to give your objects meaningful names.
 Note the use of the `<-` "arrow" symbol, which tells R to create a new object.
-We will be using this symbol a lot in the tutorial. Each time it is used, a new
-object is created (or an old one is overwritten).
+We will be using this symbol a lot in the tutorial 
+(tip: typing `Alt -` on the keyboard will create it in RStudio.). 
+Each time it is used, a new
+object is created (or an old one is overwritten) with a name of your choosing.
 
 To distinguish between prose and code, please be aware of the following typographic conventions: R code (e.g. `plot(x, y)`) is
-written in a `monospace` font while prose is not. Blocks of code such as, 
+written in a `monospace` font while prose is not. Blocks of code such as:
 
 ```{r}
 c(1:3, 5)^2
@@ -84,10 +85,11 @@ can be re-loaded if things do go wrong.
 
 If you require help on any function, use the `help` function, 
 e.g. `help(plot)`. Because R users love being concise, 
-this can also be written as `?plot`. We will suggest 
-when looking at this help may be useful in the tutorial, 
-but feel free to use it at any point you'd like more detail
+this can also be written as `?plot`. Feel free to use it 
+at any point you'd like more detail on a specific function
 (although R's help files are famously cryptic for the un-initiated).
+Help on more general terms can be found using the `??` symbol. To test this, 
+try typing `??regression`.
 For the most part, *learning by doing* is a good motto, so let's crack
 on and download some packages and then some data.
 
@@ -120,8 +122,8 @@ Now that we have taken a look at R's syntax and installed the necessary packages
 we can start looking at some real spatial data. This second part introduces some
 spatial datasets that we will download from the internet. Plotting these datasets
 and interrogating the attribute data form the foundation of spatial data 
-analysis in R, so we will focus on these elements in this part of the tutorial, 
-before focussing on creating attractive maps in Part III.
+analysis in R, so we will focus on these elements in the next two parts of the tutorial, 
+before focussing on creating attractive maps in Part IV.
 
 ## Downloading the data
 
@@ -170,7 +172,7 @@ library(rgdal)
 sport <- readOGR(dsn = "data", "london_sport")
 ```
 
-In the code above `dsn` stands for "data source name" and is an *argument* of the *function* `readOGR`.
+In the code above `dsn` stands for "data source name" and is an *argument* of the *function* `readOGR`. Note that each new argument is separated by a comma.
 The `dsn` argument in this case, specifies the directory in which the dataset is stored. 
 R functions have a default order of arguments, so `dsn = ` does not 
 actually need to be typed. If there data were stored in the 
@@ -204,7 +206,7 @@ Take a look at this output and notice the table format of the data and the colum
 by hitting `tab` before completing the command - this can save you a lot of time in the long run. 
 
 The `head` function in the first line of the code above simply means "show the first few lines of data", i.e. the head. It's default is to output the first 6 rows of the dataset (try simply `head(sport@data)`), 
-but sometimes this is a bit much, so we can specify the number of lines with `n = 2` after the comma. 
+but we can specify the number of lines with `n = 2` after the comma. 
 The second line of the code above calculates the mean value of the variable `Partic_Per` (sports participation per 100 people) for each of the zones in the sport object. 
 To explore the sport object further, try typing `nrow(sport)` and record how many zones the dataset contains.You can also try `ncol(sport)`. 
 
@@ -214,12 +216,13 @@ in space:
 
 
 ```{r, eval=FALSE}
-plot(sport)
+plot(sport) # not shown in tutorial - try it on your computer
 ```
 
 `plot` is one of the most useful functions in R, as it changes its behaviour 
-depending on the input data. Inputing another dataset (e.g. `plot(sport@data))` will generate 
-an entirely different type of plot altogether. Thus R is intelligent at guessing what you want to 
+depending on the input data (this is called *polymorphism* by computer scientists). 
+Inputing another dataset such as `plot(sport@data)` will generate 
+an entirely different type of plot. Thus R is intelligent at guessing what you want to 
 do with the data you provide it with. 
 
 R has powerful subsetting capabilities that can be accessed very concisely using square brackets, 
@@ -249,7 +252,7 @@ To do this, simply use the `add = TRUE` argument after the initial plot.
 (`add = T` would also work, but we like to spell things out in this tutorial for clarity).
 What does the `col` argument refer to in the below block - it should be obvious.
 
-```{r Preliminary plot of London. Areas with high sports participation are blue}
+```{r Preliminary plot of London with areas of high sports participation highlighted in blue}
 plot(sport)
 plot(sport[sport$Partic_Per > 25,], col = "blue", add = TRUE)
 ```
@@ -276,21 +279,35 @@ All shapefiles have both attribute table and geometry data. These are automatica
 R delibrately hides the geometry of spatial data unless you print 
 the entire object (try typing `print(sport)`). 
 Let's take a look at the headings of sport, using the following command: `names(sport)`
-Remember, the attribute data contained in spatial objects are kept in a 'slot' that can be accessed using 
-the @ symbol: `sport@data`. This is useful if you do not wish to work with the spatial components of the data at all times. 
+Remember, the attribute data contained in spatial objects are kept in a 'slot' that can be accessed using the `@` symbol: `sport@data`. This is useful if you do not wish to work with the spatial components of the data at all times. 
 
-Type `summary(sport)` to get some additional information about the sport data object. Spatial objects in R contain a variety of additional information:
+Type `summary(sport)` to get some additional information about the 
+sport data object. Spatial objects in R contain 
+much additional information:
 
 ```
-Object of class SpatialPolygonsDataFrame
-Coordinates:
-       min      max
-x 503571.2 561941.1
-y 155850.8 200932.5
-Is projected: TRUE 
-proj4string :
-[+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 ....]
+summary(sport)
+
+## Object of class SpatialPolygonsDataFrame
+## Coordinates:
+##       min      max
+## x 503571.2 561941.1
+## y 155850.8 200932.5
+## Is projected: TRUE 
+## proj4string :
+## [+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 ....]
 ```
+
+The above output tells us that `sport` is a special spatial class, 
+in this case a `SpatialPolygonsDataFrame`, meaning it is composed of 
+various polygons, each of which has attributes. This is the typical 
+class of data found in administrative zones. The coordinates tell 
+us what the maximum and minimum x and y values are, for plotting.
+Finally, we are told something of the coordinate reference system
+with the `Is projected` and `proj4string` lines. 
+In this case, we have a projected system, which means it is a 
+cartesian reference system, relative to some point on the surface of the Earth.
+We will cover reprojecting data in the next part of the tutorial. 
 
 # Part III: Manipulating spatial data
 
@@ -319,7 +336,7 @@ proj4string(sport) <- CRS("+init=epsg:27700")
 ```
 
 You will see a warning. This simply states that you are changing 
-the coordinate reference system, not reprojecting the data. R uses epsg codes to refer to different coordinate reference systems.Epsg:27700 is the code for British National Grid.
+the coordinate reference system, not reprojecting the data. R uses epsg codes to refer to different coordinate reference systems. Epsg:27700 is the code for British National Grid.
 If we wanted to reproject the data into something 
 like WGS84 for latitude and longitude we would use the following code:
 
@@ -327,22 +344,34 @@ like WGS84 for latitude and longitude we would use the following code:
 sport.wgs84 <- spTransform(sport, CRS("+init=epsg:4326"))
 ```
 
-The different epsg codes are a bit of hassle to remember but you can find them all at 
+The above line of code uses the function `spTransform`, from the `sp` package, 
+to convert the `sport` object into a new form, with the Coordinate Reference System (CRS)
+specified as WGS84. 
+The different epsg codes are a bit of hassle to remember but you can search for them at 
 [spatialreference.org](http://spatialreference.org/).
 
 ## Attribute joins
 
+Attribute joins are used to link additional pieces of information to our polygons. 
+in the `sport` object, for example, we have 5 attribute variables - that can be
+found by typing `names(sport)`. But what happens when  we want to add an additional 
+variable from an external data table? We will use the example of recorded crimes by 
+borough to demonstrate this. 
+
 To reaffirm our starting point, let's re-load the 
-"london_sport" shapefile as a new object and plot it. We will call this new object 
+"london_sport" shapefile as a new object and plot it. This is identical to 
+the `sport` object in the first instance, but we will give it a new name, 
+in case we ever need to re-use `sport`.
+We will call this new object 
 `lnd`, short for London:
 
 ```{r Plot of London}
-library(rgdal)
-#create new object called "lnd" from "london_sport" shapefile
+library(rgdal) # ensure rgdal is loaded
+# Create new object called "lnd" from "london_sport" shapefile
 lnd <- readOGR(dsn = "data", "london_sport")
 
-plot(lnd);#plot the lnd object 
-nrow(lnd)#return the number of rows
+plot(lnd) # plot the lnd object 
+nrow(lnd) # return the number of rows
 ```
 
 ```{r, eval=FALSE, echo=FALSE}
@@ -368,45 +397,58 @@ head(crimeDat)
 ```
 
 The aspatial dataset we are going to join to the `lnd` object is a
-dataset on recorded crimes, this dataset currently resides in a CSV file called "mps-recordedcrime-borough" with each row representing on crime.
-We are going to use the non-spatial implementation of a function called `aggregate` 
+dataset on recorded crimes, this dataset currently resides in a comma delimited (`.csv`) 
+file called "mps-recordedcrime-borough" with each row representing a single reported crime.
+We are going to use a function called `aggregate` 
 to pre-process this dataset ready to join to our spatial 
 `lnd` dataset. First we will create a new object called `crimeDat` to store this data. 
 
 ```{r, results='hide'}
-#create new crimeDat object from crime data
+# Create new crimeDat object from crime data 
+# It has an unusual encoding, hence the fileEncoding argument, usually unnecessary
 crimeDat <- read.csv("data/mps-recordedcrime-borough.csv", fileEncoding = "UCS-2LE") 
-#display first 6 lines of the crimeDat object
-head(crimeDat) 
-#summarise the column "MajorText" for the crimeDat object
-summary(crimeDat$MajorText)
-#Extract "Theft & Handling" crimes from crimeDat object and save these as a new object named "crimeTheft"
+
+head(crimeDat) # display first 6 lines of the crimeDat object (not shown)
+summary(crimeDat$MajorText) # summarise the column "MajorText" for the crimeDat object
+
+# Extract "Theft & Handling" crimes from crimeDat object and save these as crimeTheft
 crimeTheft <- crimeDat[which(crimeDat$MajorText == "Theft & Handling"), ] 
-# change 2 for more rows
-head(crimeTheft, 2) 
-#Calculate the sum of the crime count for each district. Aggregate the data and place in new object called crimeAg.  
+head(crimeTheft, 2) # take a look at the result (replace 2 with 10 to see more rows)
+
+# Calculate the sum of the crime count for each district and save result as a new object
 crimeAg <- aggregate(CrimeCount ~ Spatial_DistrictName, FUN = sum, 
                      data = crimeTheft)
-# show the first two rows of the aggregated crime data
+# Show the first two rows of the aggregated crime data
 head(crimeAg, 2) 
 ```
+
+There is a lot going on in the above block of code and you should not expect
+to understand all of it upon first try: simply typing the commands and thinking 
+briefly about the outputs is all that is needed at this stage to improve your 
+intuitive understanding of R. It is worth pointing out, however, that the 
+`~` symbol means "by": we aggregated the CrimeCount variable by the district name.
 
 Now that we have crime data at the borough level (`Spatial_DistrictName`), the challenge is to join it to the `lnd` object. We will base our join on the `Spatial_DistrictName` variable from the `crimeAg` object and the `name` variable from the `lnd` object. It is not always straight forward to join objects based on names as the names do not always match. Let us see which names in the `crimeAg` object match the spatial data object, `lnd`:
 
 ```{r}
-#compare the name column in lnd to Spatial_DistrictName column in crimeAg to see which rows match.
+# Compare the name column in lnd to Spatial_DistrictName column in crimeAg to see which rows match.
 lnd$name %in% crimeAg$Spatial_DistrictName 
-#return rows which do not match
+# Return rows which do not match
 lnd$name[which(!lnd$name %in% crimeAg$Spatial_DistrictName)]
 ```
 
-The first line of code above shows that all but one of the borough names matches;
-the second tells us that it is City of London, row 25, that is named differently in the 
+The first line of code above uses the `%in%` command to 
+identify which values in `lnd$name` are also contained in the names of the 
+crime data. The results indicate that all but one of the borough names matches.
+The second line of code tells us that it is City of London, row 25, 
+that is named differently in the 
 crime data. Look at the results (not shown here) on your computer.
 
-```{r, results='hide'}
-#rename row 25 in crimeAg to match row 25 in lnd. 
-levels(crimeAg$Spatial_DistrictName)
+```{r}
+# Discover the names of the names 
+levels(crimeAg$Spatial_DistrictNam) # not shown n tutorial
+
+# Rename row 25 in crimeAg to match row 25 in lnd, as suggested results form above
 levels(crimeAg$Spatial_DistrictName)[25] <- 
   as.character(lnd$name[which(!lnd$name %in% crimeAg$Spatial_DistrictName)])
 lnd$name %in% crimeAg$Spatial_DistrictName # now all columns match
@@ -418,12 +460,13 @@ rename the variable directly, as it is stored as a factor.
 
 We are now ready to join the datasets. It is recommended to use 
 the `join` function in the `plyr` package but the `merge` function 
-could equally be used.
+could equally be used. Note that when we ask for help for a function 
+that is not loaded, nothing happens, indicating we need to load it:
 
 ```{r, results='hide'}
-help(join)
+?join
 library(plyr)
-help(join) # now help should appear
+?join
 ```
 
 The documentation for join will be displayed if the plyr package is loaded (if not,
@@ -619,7 +662,7 @@ We have now seen how to load, join and clip data. The second half of this tutori
 is concerned with *visualisation* of the results. For this, we will use
 ggplot2 and begin by looking at how it handles non-spatial data.
 
-# Part IV map making with ggplot2
+# Part IV: Map making with ggplot2
 
 This third part introduces a slightly 
 different method of creating plots in R using the 
