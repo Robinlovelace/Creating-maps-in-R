@@ -46,7 +46,9 @@ It is a good idea to get into the habit of consistent and clear writing in
 any language, and R is no exception. Adding comments to your code is also 
 good practice, so you remember at a later date what you've done, aiding the 
 learning process. There are two main ways of commenting code using the `#` symbol:
-above a line of code or directly following it, as illustrated below.
+above a line of code or directly following it, as illustrated in the block of 
+code presented below, which should create figure 1 
+if typed correctly into the R command line.
 
 
 ```r
@@ -301,7 +303,7 @@ plot(sport[sport$Partic_Per > 25, ])  # output not shown in tutorial
 This is useful, but it would be great to see these sporty areas in context. 
 To do this, simply use the `add = TRUE` argument after the initial plot. 
 (`add = T` would also work, but we like to spell things out in this tutorial for clarity).
-What does the `col` argument refer to in the below block - it should be obvious.
+What does the `col` argument refer to in the below block - it should be obvious (see figure 2).
 
 
 ```r
@@ -473,8 +475,7 @@ to pre-process this dataset ready to join to our spatial
 
 
 ```r
-# Create new crimeDat object from crime data It has an unusual encoding,
-# hence the fileEncoding argument, usually unnecessary
+# Create new crimeDat object from crime data and gain an understanding of it
 crimeDat <- read.csv("data/mps-recordedcrime-borough.csv", fileEncoding = "UCS-2LE")
 
 head(crimeDat)  # display first 6 lines of the crimeDat object (not shown)
@@ -496,7 +497,15 @@ head(crimeAg, 2)
 There is a lot going on in the above block of code and you should not expect
 to understand all of it upon first try: simply typing the commands and thinking 
 briefly about the outputs is all that is needed at this stage to improve your 
-intuitive understanding of R. It is worth pointing out, however, that the 
+intuitive understanding of R. It is worth pointing out a few things 
+that you may not have seen before that will likely be useful in the future:
+
+- in the first line of code the `fileEncoding` argument is used. 
+This is rarely necessary, but in this case the file comes in a strange file format. 
+9 times out of ten you can omit this argument but it's worth knowing about.
+- the `which` function is used to select only those observations that 
+meet a specific condition, in this case all crimes involving "Theft and Handling".
+- the 
 `~` symbol means "by": we aggregated the CrimeCount variable by the district name.
 
 Now that we have crime data at the borough level (`Spatial_DistrictName`), the challenge is to join it to the `lnd` object. We will base our join on the `Spatial_DistrictName` variable from the `crimeAg` object and the `name` variable from the `lnd` object. It is not always straight forward to join objects based on names as the names do not always match. Let us see which names in the `crimeAg` object match the spatial data object, `lnd`:
@@ -655,14 +664,13 @@ we will convert the stations dataset to this:
  
 
 ```r
-# create new stations27700 object which the stations object reprojected into
+# Create new stations27700 object which the stations object reprojected into
 # OSGB36
 stations27700 <- spTransform(stations, CRSobj = CRS(proj4string(lnd)))
-# overwrite the stations object with stations27700
-stations <- stations27700
+stations <- stations27700  # overwrite the stations object with stations27700
 rm(stations27700)  # remove the stations27700 object to clear up
-plot(lnd)
-points(stations)
+plot(lnd)  # plot London for context (see figure 4 below) 
+points(stations)  # overlay the station points on the previous plot (shown in figure 4)
 ```
 
 ![plot of chunk Sampling and plotting stations](figure/Sampling_and_plotting_stations.png) 
@@ -712,7 +720,7 @@ to perform it with a single line of code:
 
 ```r
 stations <- stations[lnd, ]
-plot(stations)
+plot(stations)  # test the clip succeeded (see figure 5)
 ```
 
 ![plot of chunk The clipped stations dataset](figure/The_clipped_stations_dataset.png) 
@@ -793,7 +801,7 @@ areas <- sapply(stations.m@polygons, function(x) x@area)
 
 
 This results in a simple choropleth map and a new vector containing the area of each
-borough. As an additional step, try comparing the mean area of each borough with the 
+borough (figure 6). As an additional step, try comparing the mean area of each borough with the 
 mean value of stations within it: `plot(stations.m$NUMBER, areas)`.
 
 ## Optional advanced task: aggregation with gIntersects
@@ -811,7 +819,7 @@ library(rgeos)
 ```
 
 ```
-## rgeos version: 0.3-2, (SVN revision 413M)
+## rgeos version: 0.2-19, (SVN revision 394)
 ##  GEOS runtime version: 3.3.8-CAPI-1.7.8 
 ##  Polygon checking: TRUE
 ```
@@ -1178,7 +1186,8 @@ plot.data <- plot.data[order(plot.data$order), ]
 ```
 
 
-We can now use faceting to produce one map per year (this may take a little while to appear). 
+We can now use faceting to produce one map per year (this may take a little while to appear as displayed
+in figure 12). 
 
 
 ```r
