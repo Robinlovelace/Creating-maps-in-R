@@ -123,7 +123,8 @@ writing in any language, and R is no exception. Adding comments to your
 code is also good practice, so you remember at a later date what you've
 done, aiding the learning process. There are two main ways of commenting
 code using the \texttt{\#} symbol: above a line of code or directly
-following it, as illustrated below.
+following it, as illustrated in the block of code presented below, which
+should create figure 1 if typed correctly into the R command line.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -415,8 +416,8 @@ This is useful, but it would be great to see these sporty areas in
 context. To do this, simply use the \texttt{add = TRUE} argument after
 the initial plot. (\texttt{add = T} would also work, but we like to
 spell things out in this tutorial for clarity). What does the
-\texttt{col} argument refer to in the below block - it should be
-obvious.
+\texttt{col} argument refer to in the below block - it should be obvious
+(see figure 2).
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -598,8 +599,7 @@ object called \texttt{crimeDat} to store this data.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# Create new crimeDat object from crime data It has an unusual encoding,}
-\CommentTok{# hence the fileEncoding argument, usually unnecessary}
+\CommentTok{# Create new crimeDat object from crime data and gain an understanding of it}
 \NormalTok{crimeDat <- }\KeywordTok{read.csv}\NormalTok{(}\StringTok{"data/mps-recordedcrime-borough.csv"}\NormalTok{, }\DataTypeTok{fileEncoding =} \StringTok{"UCS-2LE"}\NormalTok{)}
 
 \KeywordTok{head}\NormalTok{(crimeDat)  }\CommentTok{# display first 6 lines of the crimeDat object (not shown)}
@@ -621,9 +621,23 @@ There is a lot going on in the above block of code and you should not
 expect to understand all of it upon first try: simply typing the
 commands and thinking briefly about the outputs is all that is needed at
 this stage to improve your intuitive understanding of R. It is worth
-pointing out, however, that the \texttt{\ensuremath{\sim}} symbol means
-``by'': we aggregated the CrimeCount variable by the district name.
+pointing out a few things that you may not have seen before that will
+likely be useful in the future:
 
+\begin{itemize}
+\item
+  in the first line of code the \texttt{fileEncoding} argument is used.
+  This is rarely necessary, but in this case the file comes in a strange
+  file format. 9 times out of ten you can omit this argument but it's
+  worth knowing about.
+\item
+  the \texttt{which} function is used to select only those observations
+  that meet a specific condition, in this case all crimes involving
+  ``Theft and Handling''.
+\item
+  the \texttt{\ensuremath{\sim}} symbol means ``by'': we aggregated the
+  CrimeCount variable by the district name.
+\end{itemize}
 Now that we have crime data at the borough level
 (\texttt{Spatial\_DistrictName}), the challenge is to join it to the
 \texttt{lnd} object. We will base our join on the
@@ -779,14 +793,13 @@ this:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# create new stations27700 object which the stations object reprojected into}
+\CommentTok{# Create new stations27700 object which the stations object reprojected into}
 \CommentTok{# OSGB36}
 \NormalTok{stations27700 <- }\KeywordTok{spTransform}\NormalTok{(stations, }\DataTypeTok{CRSobj =} \KeywordTok{CRS}\NormalTok{(}\KeywordTok{proj4string}\NormalTok{(lnd)))}
-\CommentTok{# overwrite the stations object with stations27700}
-\NormalTok{stations <- stations27700}
+\NormalTok{stations <- stations27700  }\CommentTok{# overwrite the stations object with stations27700}
 \KeywordTok{rm}\NormalTok{(stations27700)  }\CommentTok{# remove the stations27700 object to clear up}
-\KeywordTok{plot}\NormalTok{(lnd)}
-\KeywordTok{points}\NormalTok{(stations)}
+\KeywordTok{plot}\NormalTok{(lnd)  }\CommentTok{# plot London for context (see figure 4 below) }
+\KeywordTok{points}\NormalTok{(stations)  }\CommentTok{# overlay the station points on the previous plot (shown in figure 4)}
 \end{Highlighting}
 \end{Shaded}
 \begin{figure}[htbp]
@@ -841,7 +854,7 @@ actually possible to perform it with a single line of code:
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{stations <- stations[lnd, ]}
-\KeywordTok{plot}\NormalTok{(stations)}
+\KeywordTok{plot}\NormalTok{(stations)  }\CommentTok{# test the clip succeeded (see figure 5)}
 \end{Highlighting}
 \end{Shaded}
 \begin{figure}[htbp]
@@ -934,8 +947,8 @@ borough}
 \end{Highlighting}
 \end{Shaded}
 This results in a simple choropleth map and a new vector containing the
-area of each borough. As an additional step, try comparing the mean area
-of each borough with the mean value of stations within it:
+area of each borough (figure 6). As an additional step, try comparing
+the mean area of each borough with the mean value of stations within it:
 \texttt{plot(stations.m\$NUMBER, areas)}.
 
 \subsection{Optional advanced task: aggregation with gIntersects}
@@ -953,7 +966,7 @@ if you intend to perform more sophisticated spatial analysis in R.
 \end{Highlighting}
 \end{Shaded}
 \begin{verbatim}
-## rgeos version: 0.3-2, (SVN revision 413M)
+## rgeos version: 0.2-19, (SVN revision 394)
 ##  GEOS runtime version: 3.3.8-CAPI-1.7.8 
 ##  Polygon checking: TRUE
 \end{verbatim}
@@ -1352,7 +1365,7 @@ Reorder this data (ordering is important for plots).
 \end{Highlighting}
 \end{Shaded}
 We can now use faceting to produce one map per year (this may take a
-little while to appear).
+little while to appear as displayed in figure 12).
 
 \begin{Shaded}
 \begin{Highlighting}[]
