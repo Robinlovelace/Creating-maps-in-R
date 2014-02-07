@@ -11,7 +11,7 @@
 \contentsline {subsection}{Changing projection}{7}{section*.12}
 \contentsline {subsection}{Attribute joins}{8}{section*.13}
 \contentsline {subsection}{Clipping and spatial joins}{11}{section*.14}
-\contentsline {subsection}{Spatial aggregation}{13}{section*.15}
+\contentsline {subsection}{Spatial aggregation}{12}{section*.15}
 \contentsline {subsection}{Optional advanced task: aggregation with gIntersects}{14}{section*.16}
 \contentsline {section}{Part IV: Map making with ggplot2}{15}{section*.17}
 \contentsline {subsection}{``Fortifying'' spatial objects for ggplot2 maps}{16}{section*.18}
