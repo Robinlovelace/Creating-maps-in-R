@@ -456,7 +456,7 @@ crime data. Look at the results (not shown here) on your computer.
 
 ```{r}
 # Discover the names of the names 
-levels(crimeAg$Spatial_DistrictNam) # not shown n tutorial
+levels(crimeAg$Spatial_DistrictNam) 
 
 # Rename row 25 in crimeAg to match row 25 in lnd, as suggested results form above
 levels(crimeAg$Spatial_DistrictName)[25] <- 
