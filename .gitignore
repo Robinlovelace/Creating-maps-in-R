@@ -3,8 +3,12 @@
 .RData
 *.log
 *.synctex.gz
+*.aux
+*.out
 *.html
 *.backup
 intro-spatial.tex
 ggmapTemp.png
+*Girona*
+exclude/
 

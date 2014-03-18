@@ -503,8 +503,9 @@ in R. There are three main varieties: many-to-one, where
 the values of many intersecting objects contribute to a new variable in 
 the main table, one-to-many, or one-to-one. Because boroughs in London 
 are quite large, we will conduct a many-to-one spatial join.
-We will be using Tube Stations as the spatial data to join, 
-with the aim of finding out which and how many stations
+We will be using transport infrastructure points such as 
+tube stations and roundabouts as the spatial data to join, 
+with the aim of finding out which and how many
 are found in each London borough.
 
 ```{r, results='hide'}
@@ -521,10 +522,10 @@ bbox(lnd)
 
 The above code loads the data correctly, but also shows that 
 there are problems with it: the Coordinate Reference System (CRS)
-of the stations differs from that of our `lnd` object. 
+of `stations` differs from that of our `lnd` object. 
 OSGB 1936 (or [EPSG 27700](http://spatialreference.org/ref/epsg/27700/)) 
 is the official CRS for the UK, so
-we will convert the stations dataset to this:
+we will convert the dataset to this:
  
 ```{r Sampling and plotting stations}
 # Create new stations27700 object which the stations object reprojected into OSGB36
@@ -535,7 +536,7 @@ plot(lnd) # plot London for context (see figure 4 below)
 points(stations) # overlay the station points on the previous plot (shown in figure 4)
 ```
 
-Now we can clearly see that the stations overlay the boroughs.
+Now we can clearly see that the `stations` points overlay the boroughs.
 The problem is that the stations dataset is far more extensive than the
 London borough dataset; so we will take a spatially determined subset of the 
 stations object so that they all fit within the lnd extent. This is *clipping*. 
@@ -601,18 +602,31 @@ As with R's very terse code for spatial subsetting, the base function
 also behaves differently when the inputs are spatial objects. 
 
 ```{r}
-stations.c <- aggregate(x = stations, by = lnd, FUN = length)
-stations.c@data[, 1]
+stations.c <- aggregate(x = stations["CODE"], by = lnd, FUN = length)
+head(stations.c@data)
 ```
 
 The above code performs a number of steps in just one line:
 
-- `aggregate` identifies which `lnd` polygon (borough) each `station` is located in and groups them accordingly
-- it counts the number of stations in each borough
-- a new spatial object is created and assigned the name `stations.c`, the count of stations
+- `aggregate` identifies which `lnd` polygon (borough) each `station` is located in and groups them accordingly. The use of the syntax `stations["CODE"]` tells R that we are 
+interested in the spatial data from `stations` and its `CODE` variable (any variable 
+could have been used here as we are merely counting how many points exist).
+- It counts the number of `stations` points in each borough, using the function `length`.
+- A new spatial object is created, with the same geometry as `lnd`, and assigned the name `stations.c`, the count of stations.
 
-As shown below, the spatial implementation of `aggregate` can provide summary statistics of variables.
-In this case we take the variable `NUMBER` and find its mean value for the stations in each ward.
+It may seem confusing that the result of the aggregated function is a new shape, 
+not a list of numbers - this is because values are assigned to the elements within 
+the `lnd` object. To extract the raw count data, one could enter `stations.c$CODE`.
+This variable could be added to the original `lnd` object as a new field, as follows:
+
+```{r}
+lnd$NPoints <- stations.c$CODE
+```
+
+As shown below, the spatial implementation of 
+`aggregate` can provide summary statistics of variables, as well as simple counts.
+In this case we take the variable `NUMBER` 
+and find its mean value for the stations in each ward.
 
 ```{r}
 stations.m <- aggregate(stations[c("NUMBER")] , by = lnd, FUN = mean)
@@ -630,8 +644,46 @@ areas <- sapply(stations.m@polygons, function(x) x@area)
 ```
 
 This results in a simple choropleth map and a new vector containing the area of each
-borough (figure 6). As an additional step, try comparing the mean area of each borough with the 
-mean value of stations within it: `plot(stations.m$NUMBER, areas)`.
+borough (figure 6). As an additional step, try comparing the mean 
+area of each borough with the 
+mean value of `stations` points within it: `plot(stations.m$NUMBER, areas)`.
+
+## Adding different symbols for tube stations and train stations
+
+Imagine that we want to now display all tube and train stations
+on top of the previously created choropleth map. How would we do this?
+The shape of points in R is determined by the `pch` argument, as demonstrated by the 
+result of entering the following code: `plot(1:10, pch=1:10)`.
+To apply this knowledge to our map, we could add the following
+code to the chunk added above:
+
+```{r, eval=F}
+levels(stations$LEGEND)
+sel <- which(grepl("Rapid|C'", stations$LEGEND ))
+sym <- as.integer(stations$LEGEND[sel])
+points(stations[sel,], pch = sym)
+legend(legend = c("Tube", "Dual c."), "bottomright", pch = unique(sym))
+```
+
+```{r echo=FALSE}
+q <- cut(stations.m$NUMBER,  breaks= c(quantile(stations.m$NUMBER)), include.lowest=T)
+summary(q)
+clr <- as.character(factor(q, labels = paste0("grey", seq(20, 80, 20))))
+plot(stations.m, col = clr)
+legend(legend = paste0("q", 1:4), fill = paste0("grey", seq(20, 80, 20)),  "topright")
+levels(stations$LEGEND)
+sel <- which(grepl("Rapid|C'", stations$LEGEND ))
+sym <- as.integer(stations$LEGEND[sel])
+points(stations[sel,], pch = sym)
+legend(legend = c("Tube", "Dual c."), "bottomright", pch = unique(sym))
+```
+
+This may seem a frustrating and unintuitive way of altering 
+map graphics compared with something like QGIS. That's because it is!
+It may not worth pulling too 
+much hair out over R's base graphics because there is another 
+option. Please skip to Section IV if you're itching to see this
+more intuitive alternative.
 
 ## Optional advanced task: aggregation with gIntersects
 
@@ -661,7 +713,7 @@ points in each zone. According to this, Barking and Dagenham should contain
 every stage with R, so let's check to see this is indeed the case with 
 a quick plot:
 
-```{r Train/tube stations in Barking and Dagenham}
+```{r Transport points in Barking and Dagenham}
 plot(lnd[which(grepl("Barking", lnd$name)),])
 points(stations)
 ```
@@ -877,18 +929,19 @@ lnd.b2 <- ggmap(get_map(location = b, source = "stamen",
                         maptype = "toner", crop = TRUE))
 ```
 
-We can then produce the plot as before.
+We can then produce the plot as before:
 
-```{r, Basemap 2, eval=FALSE}
+```{r, Basemap 2}
 lnd.b2 + 
   geom_polygon(data = sport.wgs84.f, 
                aes(x = long, y = lat, group = group, fill = Partic_Per),
                alpha = 0.5)
 ```
 
-Finally, if we want to increase the detail of the base map, get_map has a zoom parameter.
+Finally, to increase the detail of the base map, we can use `get_map`'s `zoom` argument
+(result not shown)
 
-```{r Basemap 3}
+```{r Basemap 3, eval=FALSE}
 lnd.b3 <- ggmap(get_map(location = b, source = "stamen", maptype = "toner", crop = TRUE, zoom = 11))
 
 lnd.b3 + 
