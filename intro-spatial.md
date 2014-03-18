@@ -544,7 +544,7 @@ crime data. Look at the results (not shown here) on your computer.
 
 ```r
 # Discover the names of the names
-levels(crimeAg$Spatial_DistrictNam)  # not shown n tutorial
+levels(crimeAg$Spatial_DistrictNam)
 ```
 
 ```
@@ -637,8 +637,9 @@ in R. There are three main varieties: many-to-one, where
 the values of many intersecting objects contribute to a new variable in 
 the main table, one-to-many, or one-to-one. Because boroughs in London 
 are quite large, we will conduct a many-to-one spatial join.
-We will be using Tube Stations as the spatial data to join, 
-with the aim of finding out which and how many stations
+We will be using transport infrastructure points such as 
+tube stations and roundabouts as the spatial data to join, 
+with the aim of finding out which and how many
 are found in each London borough.
 
 
@@ -657,10 +658,10 @@ bbox(lnd)
 
 The above code loads the data correctly, but also shows that 
 there are problems with it: the Coordinate Reference System (CRS)
-of the stations differs from that of our `lnd` object. 
+of `stations` differs from that of our `lnd` object. 
 OSGB 1936 (or [EPSG 27700](http://spatialreference.org/ref/epsg/27700/)) 
 is the official CRS for the UK, so
-we will convert the stations dataset to this:
+we will convert the dataset to this:
  
 
 ```r
@@ -676,7 +677,7 @@ points(stations)  # overlay the station points on the previous plot (shown in fi
 ![plot of chunk Sampling and plotting stations](figure/Sampling_and_plotting_stations.png) 
 
 
-Now we can clearly see that the stations overlay the boroughs.
+Now we can clearly see that the `stations` points overlay the boroughs.
 The problem is that the stations dataset is far more extensive than the
 London borough dataset; so we will take a spatially determined subset of the 
 stations object so that they all fit within the lnd extent. This is *clipping*. 
@@ -747,24 +748,44 @@ also behaves differently when the inputs are spatial objects.
 
 
 ```r
-stations.c <- aggregate(x = stations, by = lnd, FUN = length)
-stations.c@data[, 1]
+stations.c <- aggregate(x = stations["CODE"], by = lnd, FUN = length)
+head(stations.c@data)
 ```
 
 ```
-##  [1] 48 22 43 18 12 13 25 24 12 46 18 20 28 32 38 19 30 25 31  7 10 38 12
-## [24] 16 28 17 16 28  4  6 14 26  5
+##   CODE
+## 0   48
+## 1   22
+## 2   43
+## 3   18
+## 4   12
+## 5   13
 ```
 
 
 The above code performs a number of steps in just one line:
 
-- `aggregate` identifies which `lnd` polygon (borough) each `station` is located in and groups them accordingly
-- it counts the number of stations in each borough
-- a new spatial object is created and assigned the name `stations.c`, the count of stations
+- `aggregate` identifies which `lnd` polygon (borough) each `station` is located in and groups them accordingly. The use of the syntax `stations["CODE"]` tells R that we are 
+interested in the spatial data from `stations` and its `CODE` variable (any variable 
+could have been used here as we are merely counting how many points exist).
+- It counts the number of `stations` points in each borough, using the function `length`.
+- A new spatial object is created, with the same geometry as `lnd`, and assigned the name `stations.c`, the count of stations.
 
-As shown below, the spatial implementation of `aggregate` can provide summary statistics of variables.
-In this case we take the variable `NUMBER` and find its mean value for the stations in each ward.
+It may seem confusing that the result of the aggregated function is a new shape, 
+not a list of numbers - this is because values are assigned to the elements within 
+the `lnd` object. To extract the raw count data, one could enter `stations.c$CODE`.
+This variable could be added to the original `lnd` object as a new field, as follows:
+
+
+```r
+lnd$NPoints <- stations.c$CODE
+```
+
+
+As shown below, the spatial implementation of 
+`aggregate` can provide summary statistics of variables, as well as simple counts.
+In this case we take the variable `NUMBER` 
+and find its mean value for the stations in each ward.
 
 
 ```r
@@ -801,8 +822,58 @@ areas <- sapply(stations.m@polygons, function(x) x@area)
 
 
 This results in a simple choropleth map and a new vector containing the area of each
-borough (figure 6). As an additional step, try comparing the mean area of each borough with the 
-mean value of stations within it: `plot(stations.m$NUMBER, areas)`.
+borough (figure 6). As an additional step, try comparing the mean 
+area of each borough with the 
+mean value of `stations` points within it: `plot(stations.m$NUMBER, areas)`.
+
+## Adding different symbols for tube stations and train stations
+
+Imagine that we want to now display all tube and train stations
+on top of the previously created choropleth map. How would we do this?
+The shape of points in R is determined by the `pch` argument, as demonstrated by the 
+result of entering the following code: `plot(1:10, pch=1:10)`.
+To apply this knowledge to our map, we could add the following
+code to the chunk added above:
+
+
+```r
+levels(stations$LEGEND)
+sel <- which(grepl("Rapid|C'", stations$LEGEND))
+sym <- as.integer(stations$LEGEND[sel])
+points(stations[sel, ], pch = sym)
+legend(legend = c("Tube", "Dual c."), "bottomright", pch = unique(sym))
+```
+
+
+
+```
+## [1.82e+04,1.94e+04] (1.94e+04,1.99e+04] (1.99e+04,2.05e+04] 
+##                   9                   8                   8 
+##  (2.05e+04,2.1e+04] 
+##                   8
+```
+
+```
+## [1] "Railway Station"                           
+## [2] "Rapid Transit Station"                     
+## [3] "Roundabout, A Road Dual Carriageway"       
+## [4] "Roundabout, A Road Single Carriageway"     
+## [5] "Roundabout, B Road Dual Carriageway"       
+## [6] "Roundabout, B Road Single Carriageway"     
+## [7] "Roundabout, Minor Road over 4 metres wide" 
+## [8] "Roundabout, Primary Route Dual Carriageway"
+## [9] "Roundabout, Primary Route Single C'way"
+```
+
+![plot of chunk unnamed-chunk-23](figure/unnamed-chunk-23.png) 
+
+
+This may seem a frustrating and unintuitive way of altering 
+map graphics compared with something like QGIS. That's because it is!
+It may not worth pulling too 
+much hair out over R's base graphics because there is another 
+option. Please skip to Section IV if you're itching to see this
+more intuitive alternative.
 
 ## Optional advanced task: aggregation with gIntersects
 
@@ -849,7 +920,7 @@ plot(lnd[which(grepl("Barking", lnd$name)), ])
 points(stations)
 ```
 
-![plot of chunk Train/tube stations in Barking and Dagenham](figure/Train/tube_stations_in_Barking_and_Dagenham.png) 
+![plot of chunk Transport points in Barking and Dagenham](figure/Transport_points_in_Barking_and_Dagenham.png) 
 
 
 Now the fun part: count the points in the polygon and report back how many there are!
@@ -1113,7 +1184,7 @@ lnd.b2 <- ggmap(get_map(location = b, source = "stamen", maptype = "toner",
 ```
 
 
-We can then produce the plot as before.
+We can then produce the plot as before:
 
 
 ```r
@@ -1121,8 +1192,11 @@ lnd.b2 + geom_polygon(data = sport.wgs84.f, aes(x = long, y = lat, group = group
     fill = Partic_Per), alpha = 0.5)
 ```
 
+![plot of chunk Basemap 2](figure/Basemap_2.png) 
 
-Finally, if we want to increase the detail of the base map, get_map has a zoom parameter.
+
+Finally, to increase the detail of the base map, we can use `get_map`'s `zoom` argument
+(result not shown)
 
 
 ```r
@@ -1132,8 +1206,6 @@ lnd.b3 <- ggmap(get_map(location = b, source = "stamen", maptype = "toner",
 lnd.b3 + geom_polygon(data = sport.wgs84.f, aes(x = long, y = lat, group = group, 
     fill = Partic_Per), alpha = 0.5)
 ```
-
-![plot of chunk Basemap 3](figure/Basemap_3.png) 
 
 
 ## Advanced Task: Faceting for Maps
