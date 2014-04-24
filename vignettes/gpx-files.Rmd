@@ -5,22 +5,20 @@ Reading and processing .gpx files
  - Add previous examples of GPX data in R
  - Upload GPX data to OSM
 
-.gpx is the standard format for saving georeferenced (lat/long)
-location data taken from GPS (Global Positioning System) devices.
+GPS eXchange (.gpx) is the standard format for saving georeferenced (lat/long)
+location data taken from Global Positioning System devices.
 The file system itself is a type of xml and can be read as plain text.
 
 Hundreds of thousands of .gpx files are now generated each day worldwide,
-a massive source of information about where and when processes take places.
-Processing, analysing and visualising .gpx files is therefore a useful skill, 
-for example for tracing the movements of vehicles, geolocating photos 
-by comparing their timestamp with a .gpx file, or, as demonstrated in this article,
-simply for tracing a cycle trip and one's exploration of a new city by
-non-motorised transport.
+a massive source of information about where and when processes take place.
+Processing, analysing and visualising these .gpx files is thus useful, 
+for example for tracing the movements of ships, geolocating photos 
+or simply for tracing a trip for fun.
 
 There are many software products designed specifically for handling .gpx
 files and most Geographical Information Systems (GIS) applications allow
 for .gpx files to be loaded. Being a fan of reproducible research and believer
-in the empowering potential of free software and statistical knowhow, 
+in the empowering potential of free software, 
 I decided to try explore some of my own .gpx data in R, to see what it could do.
 
 This article presents the results of my investigations. It demonstrate
@@ -33,13 +31,17 @@ The go-to package for loading spatial data in R is
 rgdal, using the `readOGR` function. This method has many advantages over
 alternative methods, including computational efficiency and the wide range of
 formats available: typing `ogrDrivers()[which(ogrDrivers()[,2]),]`
+will show you all the wierd and wonderful formats that can be loaded with
+your installation - in my
+[OSGeo-Live](https://www.bountysource.com/teams/neovim/fundraiser) install 33 formats are supported.
+This is how point and track layers can be loaded:
 
 
 ```{r}
 library(rgdal)
 (layers <- ogrListLayers("data/2014-03-22.gpx"))
-gp1 <- readOGR("/home/robin/Dropbox/georoutes2/2014-03-170750_20140317_0750.gpx", layer=layers[5])
-gt1 <- readOGR("/home/robin/Dropbox/georoutes2/2014-03-170750_20140317_0750.gpx", layer=layers[3])
+gp1 <- readOGR("2014-03-170750_20140317_0750.gpx", layer=layers[5])
+gt1 <- readOGR("2014-03-170750_20140317_0750.gpx", layer=layers[3])
 names(gp1)
 gp1@data[1:5,1:6]
 plot(gp1)
