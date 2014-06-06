@@ -1,0 +1,269 @@
+Great circles lines on a world map
+========================================================
+
+Sometimes you will want to plot maps on a much larger
+scale that we have covered in the majority of
+the [Creating-maps-in-R repository](https://github.com/Robinlovelace/Creating-maps-in-R/).
+For this there are a range of options, including packages called
+[*maps*](http://cran.r-project.org/web/packages/maps/index.html),
+[`map_data`](http://docs.ggplot2.org/0.9.3/map_data.html) from the
+*ggplot2* package and [*rworldmap*](http://cran.r-project.org/web/packages/rworldmap/index.html).
+
+We will use the latter two options to show how maps of the entire world
+can easily be produced in R. Amazingly, in each of the packages, the geographic
+data for the world and many of its subregions have already been saved, saving the
+need to download and store files of unknown quality from the internet.
+
+# Plotting continents and great circle lines in base graphics
+
+
+```{r}
+library(rworldmap)
+library(geosphere)
+
+s <- getMap()
+plot(s)
+bbox(s)
+
+set.seed(1984)
+n = 20
+x <- runif(n=n, min=bbox(s)[1,1], max = bbox(s)[1,2] )
+y <- runif(n=n, min=bbox(s)[2,1], max = bbox(s)[2,2] )
+p <- SpatialPoints(matrix(cbind(x,y), ncol=2), proj4string=CRS("+proj=longlat +datum=WGS84"))
+
+points(p, col = "red")
+
+head(gcIntermediate(p[1,], p[2])) # take a look at the output of the gcIntermediate function
+lines(gcIntermediate(p[1,], p[2,]))
+
+# for loop to plot all lines going to zone 5
+for(i in 1:length(p)){
+  lines(gcIntermediate(p[5,], p[i,]), col = "green")
+}
+```
+
+```{r}
+# beautify the map a little
+names(s@data)
+library(rgdal)
+# s <- spTransform(s, CRSobj=CRS("+proj=robin +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs"))
+rcols <- terrain.colors(length(unique(s$REGION)))
+s$col <- as.numeric(factor(s$REGION))
+par(bg = 'lightblue')
+plot(s, col = rcols[s$col], xlim = c(-180, 180))
+points(p, col = "red")
+for(i in 1:length(p)){
+  lines(gcIntermediate(p[5,], p[i,]), col = "black")
+}
+par(bg = 'white')
+```
+
+# Doing it in ggplot2
+
+The 'beautified' map above certainly is more interesting visually, with added
+colours. But it's difficult to call it truly beautiful. For that, as with
+so many things in R plotting, we turn to ggplot2.
+
+```{r}
+s <- map_data("world")
+m <- ggplot(s, aes(x=long, y=lat, group=group)) +
+  geom_polygon(fill="green", colour="black")
+m
+```
+
+When we add the lines in projected maps (i.e. with a Euclidean coordinate system)
+based solely on origins and destinations, this works fine, but generates incorrect
+shortest path lines in ggplot2.
+
+```{r}
+# adding lines
+# for all combinations of lines, use this code
+# p1 <- do.call(rbind, rep(list(coordinates(p)),n ))
+# p2 <- cbind(rep(coordinates(p)[,1], each=n ), rep(coordinates(p)[,2], each=n ))
+
+# for all lines goint to point 5:
+p1 <- coordinates(p[5,])[rep(1, n),]
+p2 <- coordinates(p)
+
+ggplot() + geom_segment(aes(x = p1[,1], y = p1[,2], xend = p2[,1], yend = p2[,2]))
+ggplot() + geom_polygon(data = s,aes(x=long, y=lat, group=group), 
+  fill="green", colour="black") +  
+  geom_segment(aes(x = p1[,1], y = p1[,2], xend = p2[,1], yend = p2[,2]))
+```
+
+# Adding great circle lines
+
+Adding great circle lines in ggplot2 is similar, but we must
+save all of the coordinates of the paths in advance before plotting,
+because ggplot2 like to add all its layers in one function: you
+cannot iteratively add to the map using a `for` loop as we did
+in the base graphics example above.
+
+To create the for loop, first create a data frame of a single line.
+The iterate for all zones and use `rbind` to place one data frame on
+top of the next:
+
+```{r}
+paths <- gcIntermediate(p[5,], p[1,])
+paths <- data.frame(paths)
+paths$group <- 1
+
+sel <- setdiff(2:length(p), 5)
+for(i in sel){
+  paths.tmp <- gcIntermediate(p[5,], p[i,])
+  paths.tmp <- data.frame(paths.tmp)
+  paths.tmp$group <- i
+  paths <- rbind(paths, paths.tmp)
+}
+```
+
+To plot multiple paths, we can use the `geom_segment` command.
+Before plotting the lines on the map, it's sometimes best to first
+plot them on their own to ensure that everything is working.
+Note the use of the command `ggplot()`, which initiates an
+empty ggplot2 instances, ready to be filled with layers.
+This is more flexible than stating the data at the outset.
+
+```{r}
+ggplot() + geom_path(data = paths, aes(lon, lat , group = group))
+ggplot() + geom_polygon(data = s, aes(x=long, y=lat, group=group), 
+  fill = "green", colour="black") +
+  geom_path(data = paths, aes(lon, lat , group = group)) +
+  theme(panel.background = element_rect(fill = 'lightblue'))
+```
+
+## Changing projection in ggplot
+
+*ggplot2* has inbuilt map projection functionality with the
+function `coord_map`. This distorts the Euclidean axis of the
+map and allows some truly extraodinary shapes (these
+transformations can also be done in base graphics, 
+e.g. by using `spTransform`). However,
+as shown in the examples below, the library is currently buggy
+for plotting polygons.
+
+```{r}
+# to see the range of projections available using this method, try ?mapproject
+m <- last_plot()
+m + coord_map()
+
+# remove fill as this clearly causes problems:
+m <- ggplot() + geom_path(data = s, aes(x=long, y=lat, group=group), colour="black") +
+  geom_path(data = paths, aes(lon, lat , group = group)) 
+m + coord_map("bicentric", lon = 0)
+m + coord_map("bonne", lat= 0)
+m + coord_map("ortho", orientation=c(41, -74, 0)) # for ortho maps
+```
+
+
+
+
+
+```{r, echo=FALSE}
+# ### This code will create a map of aid donations from Spain
+# # Thanks to http://stackoverflow.com/questions/19621057/plotting-great-circle-paths 
+# library(rworldmap)
+# library(WDI) # WORLD BANK INDICATORS
+# 
+# ## lines of either type may obscure more than they add
+# ##**choose line option here
+# addLines <- 'gc' #'none''straight' 'gc'
+# if ( addLines == 'gc' ) library(geosphere)
+# 
+# # setting background colours
+# oceanCol = rgb(7,0,30,maxColorValue=255) 
+# landCol = oceanCol 
+# 
+# #produces a list of indicator IDs and names as a matrix
+# indicatorList <- WDIsearch('aid flows')
+# 
+# #setting up a world map shaped plot window
+# #*beware this is windows specific
+# mapDevice('windows',width=10,height=4.5)
+# 
+# 
+# year <- 2000
+# #for(indNum in 1:2)
+# for(indNum in 1:nrow(indicatorList))
+# {
+#   indID <- indicatorList[indNum][1]
+#   donorISO3 <- substr(indID,start=8,stop=10)
+# 
+#   dFdonor <- WDI(indicator=indID,start=year,end=year)
+#   #divide by 10^6 for million dollars
+#   dFdonor[indID] <- dFdonor[indID] * 1/10^6
+# 
+#   sPDFdonor <- joinCountryData2Map(dFdonor,nameJoinColumn='country',joinCode='NAME')
+#   #take out Antarctica
+#   sPDFdonor <- sPDFdonor[-which(row.names(sPDFdonor)=='Antarctica'),]
+# 
+#   legendTitle=paste("aid flow from",donorISO3,year,"(millions US$)") 
+#   mapBubbles(sPDFdonor, nameZSize=indID, plotZeroVals=FALSE, legendHoriz=TRUE, legendPos="bottom", fill=FALSE, legendTitle=legendTitle, oceanCol=oceanCol, landCol=landCol,borderCol=rgb(50,50,50,maxColorValue=255),lwd=0.5,lwdSymbols=1)
+#   #removed because not working , main=paste('donor', donorISO3,year)
+# 
+#   #now can I plot lines from the centroid of the donor to the centroids of the recipients
+#   xDonor <- sPDFdonor$LON[ which(sPDFdonor$ISO3==donorISO3) ]
+#   yDonor <- sPDFdonor$LAT[ which(sPDFdonor$ISO3==donorISO3) ] 
+#   xRecips <- sPDFdonor$LON[ which(sPDFdonor[[indID]] > 0) ]
+#   yRecips <- sPDFdonor$LAT[ which(sPDFdonor[[indID]] > 0) ]
+#   amountRecips <- sPDFdonor[[indID]][ which(sPDFdonor[[indID]] > 0) ]
+# 
+# 
+#   ## straight lines
+#   if ( addLines == 'straight' )
+#   {
+#     for(line in 1:length(xRecips))
+#     {  
+#        #col <- 'blue'
+#        #i could modify the colour of the lines by the size of the donation
+#        #col=rgb(1,1,1,alpha=amountRecips[line]/max(amountRecips))
+#        #moving up lower values
+#        col=rgb(1,1,0,alpha=sqrt(amountRecips[line])/sqrt(max(amountRecips)))
+#        lines(x=c(xDonor,xRecips[line]),y=c(yDonor,yRecips[line]),col=col, lty="dotted", lwd=0.5)   #lty = "dashed", "dotted", "dotdash", "longdash", lwd some devices support <1
+#     }
+#   }
+# 
+#   ## great circle lines
+#   ## don't work well when donor not centred in the map
+#   ## also the loop fails at CEC & TOT because not ISO3 codes
+#   if ( addLines == 'gc' & donorISO3 != "CEC" & donorISO3 != "TOT" )
+#   {  
+#     for(line in 1:length(xRecips))
+#     {
+#       #gC <- gcIntermediate(c(xDonor,yDonor),c(xRecips[line],yRecips[line]), n=50, breakAtDateLine=TRUE)
+#       #30/10/13 lines command failed with Error in xy.coords(x, y) : 
+#       #'x' is a list, but does not have components 'x' and 'y'
+#       #adding sp=TRUE solved
+#       gC <- gcIntermediate(c(xDonor,yDonor),c(xRecips[line],yRecips[line]), n=50, breakAtDateLine=TRUE, sp=TRUE)
+# 
+#       #i could modify the colour of the lines by the size of the donation
+#       #col=rgb(1,1,1,alpha=amountRecips[line]/max(amountRecips))
+#       #moving up lower values
+#       col=rgb(1,1,0,alpha=sqrt(amountRecips[line])/sqrt(max(amountRecips)))
+# 
+#       lines(gC,col=col,lwd=0.5)
+#     }
+#   }  
+# 
+#   #adding coasts in blue looks nice but may distract
+#   data(coastsCoarse)
+#   plot(coastsCoarse,add=TRUE,col='blue')
+# 
+#   #repeating mapBubbles with add=T to go on top of the lines
+#   mapBubbles(sPDFdonor, nameZSize=indID, plotZeroVals=FALSE, fill=FALSE, addLegend=FALSE, add=TRUE, ,lwd=2)
+#   #removed because not working : , main=paste('donor', donorISO3,year)
+# 
+#   #looking at adding country labels
+#   text(xRecips,yRecips,sPDFdonor$NAME[ which(sPDFdonor[[indID]] > 0) ],col=rgb(1,1,1,alpha=0.3),cex=0.6,pos=4) #pos=4 right (1=b,2=l,3=ab)
+# 
+#   #add a title 
+#   nameDonor <- sPDFdonor$NAME[ which(sPDFdonor$ISO3==donorISO3) ]
+#   mtext(paste("Aid flow from",nameDonor,year), cex = 1.8, line=-0.8)
+# 
+#   #savePlot(paste("C:\\rProjects\\aidVisCompetition2012\\Rplots\\greatCircles\\wdiAidFlowLinesDonor",donorISO3,year,sep=''),type='png')
+#   #savePlot(paste("C:\\rProjects\\aidVisCompetition2012\\Rplots\\greatCircles\\wdiAidFlowLinesDonor",donorISO3,year,sep=''),type='pdf')
+# 
+# } #end of indNum loop
+```
+
+
