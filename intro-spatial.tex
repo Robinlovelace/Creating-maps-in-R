@@ -131,11 +131,12 @@ file}, as described below. The entire tutorial was written in RMarkdown,
 which allows R code to run as the document compiles. Thus all the
 examples are entirely reproducible.
 
-Suggested improvements welcome - please
-\href{https://help.github.com/articles/fork-a-repo}{fork}, improve and
-push this document to its original home to ensure its longevity. The
-tutorial was developed for a series of Short Courses put on by the
-National Centre for Research Methods (NCRM), via the TALISMAN node (see
+Suggested improvements welcome, via emails to the authors or by
+\href{https://help.github.com/articles/fork-a-repo}{forking} the
+\href{https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial.Rmd}{master
+version} of this document. The tutorial was developed for a series of
+Short Courses funded by the National Centre for Research Methods (NCRM),
+via the TALISMAN node (see
 \href{http://www.geotalisman.org/}{geotalisman.org}).
 
 \subsection{Typographic conventions and getting
@@ -1125,8 +1126,8 @@ if you intend to perform more sophisticated spatial analysis in R.
 \end{Shaded}
 
 \begin{verbatim}
-## rgeos version: 0.2-19, (SVN revision 394)
-##  GEOS runtime version: 3.3.8-CAPI-1.7.8 
+## rgeos version: 0.3-2, (SVN revision 413M)
+##  GEOS runtime version: 3.3.9-CAPI-1.7.9 
 ##  Polygon checking: TRUE
 \end{verbatim}
 
@@ -1477,7 +1478,7 @@ plot with the \texttt{get\_map} function:
 \end{Highlighting}
 \end{Shaded}
 
-We can then produce the plot as before.
+We can then produce the plot as before:
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1486,8 +1487,14 @@ We can then produce the plot as before.
 \end{Highlighting}
 \end{Shaded}
 
-Finally, if we want to increase the detail of the base map, get\_map has
-a zoom parameter.
+\begin{figure}[htbp]
+\centering
+\includegraphics{figure/Basemap_2.png}
+\caption{plot of chunk Basemap 2}
+\end{figure}
+
+Finally, to increase the detail of the base map, we can use
+\texttt{get\_map}'s \texttt{zoom} argument (result not shown)
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1498,12 +1505,6 @@ a zoom parameter.
     \DataTypeTok{fill =} \NormalTok{Partic_Per), }\DataTypeTok{alpha =} \FloatTok{0.5}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
-
-\begin{figure}[htbp]
-\centering
-\includegraphics{figure/Basemap_3.png}
-\caption{plot of chunk Basemap 3}
-\end{figure}
 
 \subsection{Advanced Task: Faceting for
 Maps}\label{advanced-task-faceting-for-maps}
@@ -1691,11 +1692,11 @@ object to WGS84
 \section{Aknowledgements}\label{aknowledgements}
 
 Many thanks to Rachel Oldroyed and Alistair Leak who helped demonstrate
-these materials to participants on the NCRM short corses for which this
+these materials to participants on the NCRM short courses for which this
 tutorial was developed. Amy O'Neill helped organise the course and
-helped channel feedback from participants. The final thanks is to the
-participants themselves who trialed earlier versions of this tutorial
-and provided very useful feedback.
+encouraged feedback from participants. The final thanks is to all users
+and developers of open source software for making powerful tools such as
+R accessible and enjoyable to use.
 
 \section{References}\label{references}
 
