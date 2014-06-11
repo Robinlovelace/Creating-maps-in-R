@@ -745,6 +745,10 @@ the results (not shown here) on your computer.
 \end{Shaded}
 
 \begin{verbatim}
+## Warning: Name partially matched in data frame
+\end{verbatim}
+
+\begin{verbatim}
 ##  [1] "Barking and Dagenham"   "Barnet"                
 ##  [3] "Bexley"                 "Brent"                 
 ##  [5] "Bromley"                "Camden"                
@@ -1058,8 +1062,7 @@ area of each borough (figure 6). As an additional step, try comparing
 the mean area of each borough with the mean value of \texttt{stations}
 points within it: \texttt{plot(stations.m\$NUMBER, areas)}.
 
-\subsection{Adding different symbols for tube stations and train
-stations}\label{adding-different-symbols-for-tube-stations-and-train-stations}
+\emph{Adding different symbols for tube stations and train stations}
 
 Imagine that we want to now display all tube and train stations on top
 of the previously created choropleth map. How would we do this? The
@@ -1099,8 +1102,8 @@ could add the following code to the chunk added above:
 
 \begin{figure}[htbp]
 \centering
-\includegraphics{figure/unnamed-chunk-23.png}
-\caption{plot of chunk unnamed-chunk-23}
+\includegraphics{figure/Symbol_levels_for_train_station_types_in_London.png}
+\caption{plot of chunk Symbol levels for train station types in London}
 \end{figure}
 
 This may seem a frustrating and unintuitive way of altering map graphics
@@ -1126,8 +1129,8 @@ if you intend to perform more sophisticated spatial analysis in R.
 \end{Shaded}
 
 \begin{verbatim}
-## rgeos version: 0.3-2, (SVN revision 413M)
-##  GEOS runtime version: 3.3.9-CAPI-1.7.9 
+## rgeos version: 0.2-19, (SVN revision 394)
+##  GEOS runtime version: 3.4.2-CAPI-1.8.2 r3921 
 ##  Polygon checking: TRUE
 \end{verbatim}
 

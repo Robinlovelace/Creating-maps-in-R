@@ -649,7 +649,7 @@ borough (figure 6). As an additional step, try comparing the mean
 area of each borough with the 
 mean value of `stations` points within it: `plot(stations.m$NUMBER, areas)`.
 
-## Adding different symbols for tube stations and train stations
+*Adding different symbols for tube stations and train stations*
 
 Imagine that we want to now display all tube and train stations
 on top of the previously created choropleth map. How would we do this?
@@ -666,7 +666,7 @@ points(stations[sel,], pch = sym)
 legend(legend = c("Tube", "Dual c."), "bottomright", pch = unique(sym))
 ```
 
-```{r echo=FALSE}
+```{r Symbol levels for train station types in London, echo=FALSE}
 q <- cut(stations.m$NUMBER,  breaks= c(quantile(stations.m$NUMBER)), include.lowest=T)
 summary(q)
 clr <- as.character(factor(q, labels = paste0("grey", seq(20, 80, 20))))
