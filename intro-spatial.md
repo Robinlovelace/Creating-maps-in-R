@@ -549,6 +549,10 @@ levels(crimeAg$Spatial_DistrictNam)
 ```
 
 ```
+## Warning: Name partially matched in data frame
+```
+
+```
 ##  [1] "Barking and Dagenham"   "Barnet"                
 ##  [3] "Bexley"                 "Brent"                 
 ##  [5] "Bromley"                "Camden"                
@@ -827,7 +831,7 @@ borough (figure 6). As an additional step, try comparing the mean
 area of each borough with the 
 mean value of `stations` points within it: `plot(stations.m$NUMBER, areas)`.
 
-## Adding different symbols for tube stations and train stations
+*Adding different symbols for tube stations and train stations*
 
 Imagine that we want to now display all tube and train stations
 on top of the previously created choropleth map. How would we do this?
@@ -866,7 +870,7 @@ legend(legend = c("Tube", "Dual c."), "bottomright", pch = unique(sym))
 ## [9] "Roundabout, Primary Route Single C'way"
 ```
 
-![plot of chunk unnamed-chunk-23](figure/unnamed-chunk-23.png) 
+![plot of chunk Symbol levels for train station types in London](figure/Symbol_levels_for_train_station_types_in_London.png) 
 
 
 This may seem a frustrating and unintuitive way of altering 
@@ -891,8 +895,8 @@ library(rgeos)
 ```
 
 ```
-## rgeos version: 0.3-2, (SVN revision 413M)
-##  GEOS runtime version: 3.3.9-CAPI-1.7.9 
+## rgeos version: 0.2-19, (SVN revision 394)
+##  GEOS runtime version: 3.4.2-CAPI-1.8.2 r3921 
 ##  Polygon checking: TRUE
 ```
 
