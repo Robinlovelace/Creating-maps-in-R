@@ -29,10 +29,11 @@ the input data can be downloaded as a
 as described below. The entire tutorial was written in RMarkdown, which 
 allows R code to run as the document compiles. Thus all the examples are entirely reproducible.
 
-Suggested improvements welcome - please 
-[fork](https://help.github.com/articles/fork-a-repo), improve and push this document 
-to its original home to ensure its longevity. The tutorial was developed for 
-a series of Short Courses put on by the National Centre for Research Methods (NCRM), 
+Suggested improvements welcome, via emails to the authors or by
+[forking](https://help.github.com/articles/fork-a-repo)
+the [master version](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial.Rmd) of this document.
+The tutorial was developed for 
+a series of Short Courses funded by the National Centre for Research Methods (NCRM), 
 via the TALISMAN node (see [geotalisman.org](http://www.geotalisman.org/)). 
 
 ## Typographic conventions and getting help
@@ -1082,12 +1083,11 @@ Books: despite the strength of R's online community, nothing beats a physical bo
 # Aknowledgements
 
 Many thanks to Rachel Oldroyed and Alistair Leak who helped demonstrate 
-these materials to participants on the NCRM short corses for which 
+these materials to participants on the NCRM short courses for which 
 this tutorial was developed. Amy O'Neill helped organise the course 
-and helped channel feedback from participants. 
-The final thanks is to the participants themselves
-who trialed earlier versions of this tutorial and provided very useful 
-feedback. 
+and encouraged feedback from participants. 
+The final thanks is to all users and developers of open source software
+for making powerful tools such as R accessible and enjoyable to use.
 
 # References
 
