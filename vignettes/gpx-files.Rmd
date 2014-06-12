@@ -1,0 +1,160 @@
+Reading and processing .gpx files
+========================================================
+
+## To do
+ - Add previous examples of GPX data in R
+ - Upload GPX data to OSM
+
+GPS eXchange (.gpx) is the standard format for saving georeferenced (lat/long)
+location data taken from Global Positioning System devices.
+The file system itself is a type of xml and can be read as plain text.
+
+Hundreds of thousands of .gpx files are now generated each day worldwide,
+a massive source of information about where and when processes take place.
+Processing, analysing and visualising these .gpx files is thus useful, 
+for example for tracing the movements of ships, geolocating photos 
+or simply for tracing a trip for fun.
+
+There are many software products designed specifically for handling .gpx
+files and most Geographical Information Systems (GIS) applications allow
+for .gpx files to be loaded. Being a fan of reproducible research and believer
+in the empowering potential of free software, 
+I decided to try explore some of my own .gpx data in R, to see what it could do.
+
+This article presents the results of my investigations. It demonstrate
+some basic methods for loading, analysing and visualisting .gps data in
+the world's favourite free statistical programming language: R.
+
+## Loading the data
+
+The go-to package for loading spatial data in R is
+rgdal, using the `readOGR` function. This method has many advantages over
+alternative methods, including computational efficiency and the wide range of
+formats available: typing `ogrDrivers()[which(ogrDrivers()[,2]),]`
+will show you all the wierd and wonderful formats that can be loaded with
+your installation - in my
+[OSGeo-Live](https://www.bountysource.com/teams/neovim/fundraiser) install 33 formats are supported.
+This is how point and track layers can be loaded:
+
+
+```{r}
+library(rgdal)
+(layers <- ogrListLayers("data/2014-03-22.gpx"))
+gp1 <- readOGR("2014-03-170750_20140317_0750.gpx", layer=layers[5])
+gt1 <- readOGR("2014-03-170750_20140317_0750.gpx", layer=layers[3])
+names(gp1)
+gp1@data[1:5,1:6]
+plot(gp1)
+plot(gt1, add = T, col = "red")
+```
+
+Here we have loaded the data as a point and a track layer (`gp1` and `gt1` respectively)
+As the plots illustrate, the track contains a dense network in the west of the plot 
+and then a more extensive loop extending to the east. We shall further explore
+these data and interpret their meaning in the next section. For now, however, 
+let's see another way to load the dataset.
+
+```{r, echo=FALSE, eval=FALSE}
+The more convoluted way to load the track is remember that gpx files are 
+a type of xml, with classes defined for waypoints, tracks, coordinates etc.
+The XML package is used to parse xml data, including scraping websites.
+```
+
+
+
+```{r}
+library(plotKML)
+p1 <- readGPX("~/Dropbox/georoutes2/2014-03-22.gpx")
+names(p1)
+head(p1$tracks[[1]][[1]])
+head(unlist(gp1$tracks))
+t1 <- do.call("rbind", unlist(p1$tracks, recursive=F))
+plot(t1$lon, t1$lat)
+## Extract data frames
+```
+
+## Extracting basic statistics
+
+It is all very well and good loading and making basic plots of
+gpx data. But to be able to extract useful insights from
+data and understand something of *what it means*, 
+we must do some quantitative analysis. For understanding
+the core features of almost any dataset, a surprisingly small
+number of functions are needed. To find the number of points
+in the dataset and the timespan of data collection, 
+
+```{r}
+nrow(gp1)
+range(as.character(gp1$time))
+```
+
+So we have ~2000 track points collected over the duration
+of 3 days, from the 17th untill the 20th March 2014.
+GPS devices have very accurate timestamp data: they
+rely on fraction of a second differences between different
+satalit signals to triangulate position. To extract this
+time data, we need to convert the timestamp factors
+first into a character string, and finally into a date-time class.
+
+```{r}
+library(chron)
+gp1$ctime <- as.chron(as.character(gp1$time))
+plot(gp1$ctime)
+```
+
+To better understand the distribtut
+
+```{r}
+gp1.18 <- gp1[which(chron::days(gp1$ctime) == 18),]
+plot(gp1.18)
+gp1.n18 <- gp1[-which(chron::days(gp1$ctime) == 18),]
+```
+
+
+
+## A heat-map of activity
+
+A heat map can demonstrate where location is most concentrated,
+even in cases where the points or lines are so densly packed that
+overlap. A basic heat map of the area can be created very rapidly 
+using `spatstat
+
+```{r}
+library(spatstat)
+library(maptools)
+gp1.ppp <- as(SpatialPoints(gp1), "ppp")
+plot(density(gp1.ppp))
+```
+
+As might have been expected, the results of this preliminary heat map plot are
+rather dissapointing: the zone of high density to the west totally dominates,
+while the loop is barely visible. The density increases slightly where
+the two sides of the loop meet just to east of centre, indicating that
+this line is overlapped. The first way to deal with this is to plot the
+heatmap with a lower bandwidth, reducing the area over which points are
+spatially aggregated.
+
+```{r}
+plot(density(gp1.ppp, adjust=0.2))
+```
+
+Still it is difficult to extract useful information from this visualisation
+because we are essentially dealing processes on two different spatial scales.
+The large loop out to the east is many times the area of the high density
+blob to the west. So, using the information gleaned in the previous section
+we take a subset of the data for future heatmaps to see what is going on in that
+western blob.
+
+gp1.
+
+## Looking at elevation
+
+Recalling the contents of the `@data` slot of the data, let's take a quick
+look at elevation, which can be useful for various applications.
+
+```{r}
+plot( gp1$track_seg_point_id, gp1$ele )
+```
+
+
+

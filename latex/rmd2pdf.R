@@ -6,35 +6,37 @@ system(mess) # create latex file
 mess <- paste("sed 's/plot of.chunk.//g' intro-spatial.tex > intro-spatial-rl.tex")
 system(mess) # replace "plot of chunk " text with nowth
 
-mess <- paste("sed -i -e 's/width=\\\\maxwidth/width=8cm/g' intro-spatial-rl.tex")
+mess <- paste("sed -i -e 's/=\\\\ScaleIfNeeded/=8cm/g' intro-spatial-rl.tex")
 system(mess) # reduce plot size
 
 mess <- paste("sed -i -e 's/\\\\section{References}/\\\\newpage \\\\section{References}/g' intro-spatial-rl.tex")
 system(mess) # Put refs on new page
 
-mess <- "sed -i -e '64i\\\\\\maketitle' intro-spatial-rl.tex"
+mess <- paste("sed -i -e 's/\\\\date{}//g' intro-spatial-rl.tex")
+system(mess) # add date
+
+mess <- "sed -i -e '90i\\\\\\tableofcontents' intro-spatial-rl.tex"
 system(mess) # make title
 
-mess <- "sed -i -e '62i\\\\\\usepackage[margin=2cm]{geometry}' intro-spatial-rl.tex"
+mess <- "sed -i -e '90i\\\\\\maketitle' intro-spatial-rl.tex"
+system(mess) # make title
+
+mess <- "sed -i -e '87i\\\\\\usepackage[margin=2cm]{geometry}' intro-spatial-rl.tex"
 system(mess) # shrink margins
 
-mess <- "sed -i -e '62i\\\\\\markboth{\\\\hfill }{GeoTALISMAN Short Course \\\\hfill}' intro-spatial-rl.tex"
+mess <- "sed -i -e '87i\\\\\\markboth{\\\\hfill }{GeoTALISMAN Short Course \\\\hfill}' intro-spatial-rl.tex"
 system(mess) # add headings
 
-mess <- "sed -i -e '62i\\\\\\pagestyle{myheadings}' intro-spatial-rl.tex"
+mess <- "sed -i -e '87i\\\\\\pagestyle{myheadings}' intro-spatial-rl.tex"
 system(mess) # add headings
 
-mess <- "sed -i -e '53i\\urlcolor=blue,' intro-spatial-rl.tex"
+mess <- "sed -i -e '78i\\linkcolor=blue,' intro-spatial-rl.tex"
 system(mess) # make title
-
-
-
-
 
 # add bigger blocks of text
 # text will be inserted after the line
 
-idx <- 63
+idx <- 91
 # open the file and read in all the lines 
 conn <- file("intro-spatial-rl.tex")
 text <- readLines(conn)
