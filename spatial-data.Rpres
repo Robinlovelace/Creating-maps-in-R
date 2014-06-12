@@ -3,8 +3,20 @@ An introduction to R for visualising spatial data
 author: Robin Lovelace
 date: 24th January 2014
 
+Slides available online: [rpubs.com/robinlovelace](http://rpubs.com/RobinLovelace/11931)
+
 Introduction
 ========================================================
+![Talisman logo](http://talisman.blogweb.casa.ucl.ac.uk/files/2012/01/cropped-chess2.jpg)
+
+This course is brought to you by [TALISMAN](http://geotalisman.org/), a
+project based at the University of Leeds and UCL. It is 
+funded by the ESRC's National Centre for Research Methods ([NCRM](http://www.ncrm.ac.uk/))
+
+![Sponsors](https://dl.dropboxusercontent.com/u/15008199/img/tali-logo.png)
+
+Course agenda
+=======================================================
 
 During this course we will cover these topics
 
@@ -132,16 +144,34 @@ Source: [R-Bloggers](http://www.r-bloggers.com/mapped-british-and-spanish-shippi
 R in the wild 3: Reproducible maps of energy use in commuting
 ============
 
-![engergy](figure/engenergy.png)
+![energy](figure/engenergy.png)
 
 Energy use of commuting - my [thesis](https://github.com/Robinlovelace/thesis-reproducible) and [RPubs](http://rpubs.com/RobinLovelace/7178)
+
+R in the wild 4: Infographic of housing project finances
+================
+
+<!--
+![infog](https://raw.github.com/Robinlovelace/robinlovelace.github.io/master/figure/unnamed-chunk-53.png)
+-->
+
+<div style="float:center"><img src="https://raw.github.com/Robinlovelace/robinlovelace.github.io/master/figure/unnamed-chunk-53.png" /></div>
+
+Flexibility of ggplot2 - see [robinlovelace.net](http://robinlovelace.net/r/2013/12/27/coxcomb-plots-spiecharts-R.html)
 
 
 Getting up-and-running for the tutorial
 ===========
-Any questions?
+Before progressing further: **Any questions?**
+
+**Course materials** are all available online from a [GitHub repository](https://github.com/Robinlovelace/Creating-maps-in-R). Click "Download ZIP" to download all the test data, ready to procede.
+
+The main document to accompany this tutorial is a [pdf](https://github.com/Robinlovelace/Creating-maps-in-R/raw/master/intro-spatial-rl.pdf) within the main repository. This is to be made available for free worldwide - any comments/corrections welcom.
+
+Plug: [An Introduction to Spatial Microsimulation using R](http://www.ncrm.ac.uk/training/show.php?article=4786) - a two day course using R, 8th - 9th May
 
 Live demonstration
+
 
 
 

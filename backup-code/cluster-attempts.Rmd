@@ -1,0 +1,88 @@
+Failed cluster attempts
+========================================================
+
+Trying to get smooth polygons:
+
+```{r}
+lns <- slot(SLDF[6,], "lines")
+plot(SLDF[6,])
+SLDm <- lapply( SLDF@lines , slot , "Lines" )
+plot(SLDm) ## fail
+```
+
+Try to convert lines to polys, Bivand style:
+
+```{r}
+SLDH <- SLDF[6,]
+lns <- slot(SLDH, "lines")
+table(sapply(lns, function(x) length(slot(x, "Lines"))))
+
+islands <- sapply(lns, function(x) { # fail
+crds <- slot(slot(x, "Lines")[[1]], "coords")
+identical(crds[1, ], crds[nrow(crds), ])
+})
+
+
+list_of_Lines <- slot(islands, "lines")
+islands_sp <- SpatialPolygons(lapply(list_of_Lines, function(x) {
+Polygons(list(Polygon(slot(slot(x, "Lines")[[1]],
+"coords"))), ID = slot(x, "ID"))
+}), proj4string = proj4string(lnd))
+summary(islands_sp)
+
+
+islands <- sapply(lns, function(x) {
+crds <- slot(slot(x, "Lines")[[1]], "coords")
+identical(crds[1, ], crds[nrow(crds), ])
+})
+table(islands)
+```
+
+table(sapply(lns, function(x) length(slot(x, "Lines"))))
+
+lclusts <- sapply(lns, function(x) {
+crds <- slot(slot(x, "Lines")[[1]], "coords")
+identical(crds[1, ], crds[nrow(crds), ])
+})
+table(lclusts)
+lls <- SLDF[6,lclusts]
+plot(lls)
+plot(lclusts, col="red")
+
+plot(SLDF[6,], add=T)
+lbc <- gIntersection(lb, SLDF[6,])
+plot(lbc)
+```
+
+Let's try it with `clusterset`:
+```{r}
+example(clusterset)
+plot(clusterset(sSp, result="domain", ))
+```
+
+Extracting it directly from the density:
+```{r}
+summary(Dens$v)[,1:3]
+Dsub <- Dens[which(Dens$v > 1.675e-07)]
+summary(Dsub)
+plot(Dsub)
+```
+
+Using the lines to clip a polygon of London.
+
+```{r}
+# lb <- unionSpatialPolygons(lnd, IDs=1:nrow(lnd) ) # don't seem to work
+library(rgeos)
+lb <- gUnaryUnion(lnd)
+library(raster)
+Dr <- raster(Dsg)
+proj4string(Dr) <- proj4string(stations)
+Drc <- cut(Dr, breaks=8) 
+Drp <- rasterToPolygons(Drc, dissolve=T) # create density polygons
+spplot(Drp) # check that the clustering worked OK
+lclust <- Drp[3,]
+
+plot(lb)
+plot(lclust, add = T)
+plot(stations[lclust,], add=T, col = "red")
+```
