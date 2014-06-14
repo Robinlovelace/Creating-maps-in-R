@@ -2,7 +2,9 @@
 .Rhistory
 .RData
 *.log
+lndbor.geojson
 *.synctex.gz
+*.toc
 *.aux
 *.out
 *.html
@@ -11,4 +13,4 @@ intro-spatial.tex
 ggmapTemp.png
 *Girona*
 exclude/
-
+*~

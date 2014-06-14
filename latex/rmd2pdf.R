@@ -21,10 +21,7 @@ system(mess) # make title
 mess <- "sed -i -e '90i\\\\\\maketitle' intro-spatial-rl.tex"
 system(mess) # make title
 
-mess <- "sed -i -e '87i\\\\\\usepackage{geometry}' intro-spatial-rl.tex"
-system(mess) # shrink margins
-
-mess <- "sed -i -e '88i\\\\\\geometry{pass,a4paper,margin=2cm}' intro-spatial-rl.tex"
+mess <- "sed -i -e '87i\\\\\\usepackage[a4paper,margin=2cm]{geometry}' intro-spatial-rl.tex"
 system(mess) # shrink margins
 
 mess <- "sed -i -e '87i\\\\\\markboth{\\\\hfill }{GeoTALISMAN Short Course \\\\hfill}' intro-spatial-rl.tex"
