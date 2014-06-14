@@ -339,7 +339,7 @@ First things first, before we start data manipulation we will check the referenc
 summary of the `sport` object above. This represents the coordinate reference system used in the data. 
 In this file it has been incorrectly specified so we must change it with the following:
 
-```{r}
+```{r, warning=FALSE}
 proj4string(sport) <- CRS("+init=epsg:27700")
 ```
 
@@ -352,7 +352,7 @@ like WGS84 for latitude and longitude we would use the following code:
 sport.wgs84 <- spTransform(sport, CRS("+init=epsg:4326"))
 ```
 
-The above line of code uses the function `spTransform`, from the `sp` package, 
+The above line of code uses the function `spTransform`, from the **sp** package, 
 to convert the `sport` object into a new form, with the Coordinate Reference System (CRS)
 specified as WGS84. 
 The different epsg codes are a bit of hassle to remember but you can search for them at 
@@ -475,14 +475,14 @@ then renamed the level to match the `lnd` dataset. Note that we could not
 rename the variable directly, as it is stored as a factor.
 
 We are now ready to join the datasets. It is recommended to use 
-the `join` function in the `plyr` package but the `merge` function 
+the `join` function in the **plyr** package but the `merge` function 
 could equally be used. Note that when we ask for help for a function 
 that is not loaded, nothing happens, indicating we need to load it:
 
 ```{r, results='hide'}
-?join
+help(join) # error flagged
 library(plyr)
-?join
+help(join) # should now be loaded
 ```
 
 The documentation for join will be displayed if the plyr package is loaded (if not,

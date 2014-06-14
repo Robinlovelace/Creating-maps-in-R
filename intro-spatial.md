@@ -2,7 +2,7 @@ Part I: Introduction
 ========================================================
 
 This tutorial is an introduction to spatial data in R and map making with 
-R's 'base' graphics and the popular graphics package `ggplot2`. 
+R's 'base' graphics and the popular graphics package **ggplot2**. 
 It assumes no prior knowledge of spatial data analysis but 
 prior understanding of the R command line would be beneficial. 
 For people new to R, we recommend working through an
@@ -19,7 +19,7 @@ and visualisation. It is divided into five parts:
 - Introduction, which provides a guide to R's syntax and preparing for the tutorial
 - Spatial data in R, which describes basic spatial functions in R
 - Manipulating spatial data, which includes changing projection, clipping and spatial joins
-- Map making with `ggplot2`, a recent graphics package for producing beautiful maps quickly
+- Map making with **ggplot2**, a recent graphics package for producing beautiful maps quickly
 - Taking spatial analysis in R further, a compilation of resources for furthering your skills
 
 An up-to-date version of this tutorial is maintained at
@@ -39,7 +39,8 @@ via the TALISMAN node (see [geotalisman.org](http://www.geotalisman.org/)).
 ## Typographic conventions and getting help
 
 To ensure reproducibility and allow automatic syntax highlighting, 
-this document has been written in RMarkdown. 
+this document has been written in
+[RMarkdown](http://rmarkdown.rstudio.com/). 
 We try to follow best practice in terms of style, roughly following 
 Google's style guide and an in-depth guide written by 
 [Johnson (2013)](http://cran.r-project.org/web/packages/rockchalk/vignettes/Rstyle.pdf).
@@ -73,7 +74,8 @@ Each time it is used, a new
 object is created (or an old one is overwritten) with a name of your choosing.
 
 To distinguish between prose and code, please be aware of the following typographic conventions: R code (e.g. `plot(x, y)`) is
-written in a `monospace` font while prose is not. Blocks of code such as:
+written in a `monospace` font and package names (e.g. **rgdal**)
+are written in **bold**. Blocks of code such as:
 
 
 ```r
@@ -86,9 +88,9 @@ c(1:3, 5)^2
 
 
 are compiled in-line: the `##` indicates this is output from R. Some of the 
-output from the code below is quite long so we only show the output that is 
-useful - it should also be clear when we have decided to omit an image from this document 
-to save space. All images in this document are small and low-quality to save space;
+output from the code below is quite long so some is omitted.
+It should also be clear when we have decided to omit an image to save space.
+All images in this document are small and low-quality to save space;
 they should 
 display better on your computer screen and can be saved at any resolution.
 The code presented here is not the only way to do things: we encourage you to 
@@ -118,7 +120,8 @@ R has a huge and growing number of spatial data packages.
 We recommend taking a quick browse on R's main website: 
 [http://cran.r-project.org/web/views/Spatial.html](http://cran.r-project.org/web/views/Spatial.html).
 
-The packages we will be using are `ggplot2`, `rgdal`, `rgeos`, `maptools` and `ggmap`.
+The packages we will be using are 
+**ggplot2**, **rgdal**, **rgeos**, **maptools** and **ggmap**.
 To test whether a package is installed, ggplot2 for example, enter `library(ggplot2)`. 
 If you get an error message, it needs to be installed: `install.packages("ggplot2")`.
 These will be downloaded from CRAN (the Comprehensive R Archive Network); if you are prompted 
@@ -131,7 +134,8 @@ Install these packages now.
 
 ## Starting the tutorial
 
-Now that we have taken a look at R's syntax and installed the necessary packages, 
+Now that we have taken a look at R's syntax and installed the
+necessary packages, 
 we can start looking at some real spatial data. This second part introduces some
 spatial datasets that we will download from the internet. Plotting these datasets
 and interrogating the attribute data form the foundation of spatial data 
@@ -155,7 +159,8 @@ setwd("C:/Users/username/Desktop/Creating-maps-in-R-master/")
 
 
 If you are working in RStudio, you can create a project that will automatically 
-set your working directory.To do this click "Session" from the top
+set your working directory.
+To do this click "Session" from the top
 toolbar and select "Set working directory > choose directory". 
 
 It is also worth taking a look at the input data in your file browser 
@@ -175,9 +180,9 @@ is the ability to read in spatial data, such as
 [shapefiles](http://en.wikipedia.org/wiki/Shapefile) 
 (a common geographical file format). There are a number of ways to do this, 
 the most commonly used and versatile of which is `readOGR`.
-This function, from the `rgdal` package, automatically extracts information
+This function, from the **rgdal** package, automatically extracts information
 about the projection and the attributes of data.
-`rgdal` is R’s interface to the "Geospatial Abstraction Library (GDAL)"
+**rgdal** is R’s interface to the "Geospatial Abstraction Library (GDAL)"
 which is used by other open source GIS packages such as QGIS and enables 
 R to handle a broader range of spatial data formats. If you've not already
 *installed* and loaded the rgdal package (as described above for ggplot2) do so now:
@@ -219,7 +224,7 @@ please see Cheshire and Lovelace (2014).
 
 ## Basic plotting 
 
-We have now created a new spatial object called "sport" from the "london_sport" shapefile. Spatial objects are made up of a number of different *slots*, mainly the attribute *slot* and the geometry *slot*. The attribute *slot* can be thought of as an attribute table and the geometry *slot* is where the spatial object (and it's attibutes) lie in space. Lets now analyse the sport object with some basic commands:
+We have now created a new spatial object called "sport" from the "london_sport" shapefile. Spatial objects are made up of a number of different *slots*, mainly the attribute *slot* and the geometry *slot*. The attribute *slot* can be thought of as an attribute table and the geometry *slot* is where the spatial object (and it's attributes) lie in space. Lets now analyse the sport object with some basic commands:
 
 
 ```r
@@ -241,13 +246,13 @@ mean(sport$Partic_Per)
 ```
 
 
-Take a look at this output and notice the table format of the data and the column names. There are two important symbols at work in the above block of code: the `@` symbol in the first line of code is used to refer to the attribute *slot* of the dataset; the `$` symbol refers to a specific variable (column name) in the attribute *slot* of the dataset, which was identified from the result of running the first line of code. If you are using RStudio, test out the autocompletion functionality
+Take a look at this output and notice the table format of the data and the column names. There are two important symbols at work in the above block of code: the `@` symbol in the first line of code is used to refer to the attribute *slot* of the dataset; the `$` symbol refers to a specific variable (column name) in the attribute *slot* of the dataset, which was identified from the result of running the first line of code. If you are using RStudio, test out the auto-completion functionality
 by hitting `tab` before completing the command - this can save you a lot of time in the long run. 
 
 The `head` function in the first line of the code above simply means "show the first few lines of data", i.e. the head. It's default is to output the first 6 rows of the dataset (try simply `head(sport@data)`), 
 but we can specify the number of lines with `n = 2` after the comma. 
 The second line of the code above calculates the mean value of the variable `Partic_Per` (sports participation per 100 people) for each of the zones in the sport object. 
-To explore the sport object further, try typing `nrow(sport)` and record how many zones the dataset contains.You can also try `ncol(sport)`. 
+To explore the sport object further, try typing `nrow(sport)` and record how many zones the dataset contains. You can also try `ncol(sport)`. 
 
 Now we have seen something of the attribute *slot* of the spatial dataset, 
 let us look at sport's *geometry* data, which describes where the polygons are located 
@@ -262,7 +267,7 @@ plot(sport)  # not shown in tutorial - try it on your computer
 
 `plot` is one of the most useful functions in R, as it changes its behaviour 
 depending on the input data (this is called *polymorphism* by computer scientists). 
-Inputing another dataset such as `plot(sport@data)` will generate 
+Inputting another dataset such as `plot(sport@data)` will generate 
 an entirely different type of plot. Thus R is intelligent at guessing what you want to 
 do with the data you provide it with. 
 
@@ -331,10 +336,10 @@ you should see how this works. `sport` will disappear from the workspace and the
 ## Attribute data
 
 All shapefiles have both attribute table and geometry data. These are automatically loaded with 
-`readOGR`. The loaded attribute data can be treated in a similar way to an R 
+`readOGR`. The loaded attribute data can be treated the same as an R 
 [data frame](http://www.statmethods.net/input/datatypes.html). 
 
-R delibrately hides the geometry of spatial data unless you print 
+R deliberately hides the geometry of spatial data unless you print 
 the entire object (try typing `print(sport)`). 
 Let's take a look at the headings of sport, using the following command: `names(sport)`
 Remember, the attribute data contained in spatial objects are kept in a 'slot' that can be accessed using the `@` symbol: `sport@data`. This is useful if you do not wish to work with the spatial components of the data at all times. 
@@ -364,7 +369,7 @@ us what the maximum and minimum x and y values are, for plotting.
 Finally, we are told something of the coordinate reference system
 with the `Is projected` and `proj4string` lines. 
 In this case, we have a projected system, which means it is a 
-cartesian reference system, relative to some point on the surface of the Earth.
+Cartesian reference system, relative to some point on the surface of the Earth.
 We will cover reprojecting data in the next part of the tutorial. 
 
 # Part III: Manipulating spatial data
@@ -394,13 +399,6 @@ In this file it has been incorrectly specified so we must change it with the fol
 proj4string(sport) <- CRS("+init=epsg:27700")
 ```
 
-```
-## Warning: A new CRS was assigned to an object with an existing CRS:
-## +proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 +x_0=400000 +y_0=-100000 +ellps=airy +units=m +no_defs
-## without reprojecting.
-## For reprojection, use function spTransform in package rgdal
-```
-
 
 You will see a warning. This simply states that you are changing 
 the coordinate reference system, not reprojecting the data. R uses epsg codes to refer to different coordinate reference systems. Epsg:27700 is the code for British National Grid.
@@ -413,7 +411,7 @@ sport.wgs84 <- spTransform(sport, CRS("+init=epsg:4326"))
 ```
 
 
-The above line of code uses the function `spTransform`, from the `sp` package, 
+The above line of code uses the function `spTransform`, from the **sp** package, 
 to convert the `sport` object into a new form, with the Coordinate Reference System (CRS)
 specified as WGS84. 
 The different epsg codes are a bit of hassle to remember but you can search for them at 
@@ -484,7 +482,7 @@ summary(crimeDat$MajorText)  # summarise the column 'MajorText' for the crimeDat
 
 # Extract 'Theft & Handling' crimes from crimeDat object and save these as
 # crimeTheft
-crimeTheft <- crimeDat[which(crimeDat$MajorText == "Theft & Handling"), ]
+crimeTheft <- crimeDat[crimeDat$MajorText == "Theft & Handling", ]
 head(crimeTheft, 2)  # take a look at the result (replace 2 with 10 to see more rows)
 
 # Calculate the sum of the crime count for each district and save result as
@@ -526,7 +524,7 @@ lnd$name %in% crimeAg$Spatial_DistrictName
 
 ```r
 # Return rows which do not match
-lnd$name[which(!lnd$name %in% crimeAg$Spatial_DistrictName)]
+lnd$name[!lnd$name %in% crimeAg$Spatial_DistrictName]
 ```
 
 ```
@@ -576,8 +574,8 @@ levels(crimeAg$Spatial_DistrictNam)
 
 # Rename row 25 in crimeAg to match row 25 in lnd, as suggested results form
 # above
-levels(crimeAg$Spatial_DistrictName)[25] <- as.character(lnd$name[which(!lnd$name %in% 
-    crimeAg$Spatial_DistrictName)])
+levels(crimeAg$Spatial_DistrictName)[25] <- as.character(lnd$name[!lnd$name %in% 
+    crimeAg$Spatial_DistrictName])
 lnd$name %in% crimeAg$Spatial_DistrictName  # now all columns match
 ```
 
@@ -593,15 +591,15 @@ then renamed the level to match the `lnd` dataset. Note that we could not
 rename the variable directly, as it is stored as a factor.
 
 We are now ready to join the datasets. It is recommended to use 
-the `join` function in the `plyr` package but the `merge` function 
+the `join` function in the **plyr** package but the `merge` function 
 could equally be used. Note that when we ask for help for a function 
 that is not loaded, nothing happens, indicating we need to load it:
 
 
 ```r
-`?`(join)
+help(join)  # error flagged
 library(plyr)
-`?`(join)
+help(join)  # should now be loaded
 ```
 
 
@@ -687,24 +685,48 @@ The problem is that the stations dataset is far more extensive than the
 London borough dataset; so we will take a spatially determined subset of the 
 stations object so that they all fit within the lnd extent. This is *clipping*. 
 
-There are a number of functions that we can use to clip the stations dataset
-so that only those falling within London boroughs are retained. 
-These include `overlay`, `sp::over`, and `rgeos::gIntersects`
-(the word preceding the `::` symbol refers to the package which the function is from).
-Use `?` followed by the function to get help on each and find out which is 
-most appropriate. `gIntersects` can produce the same output as 
-`over` for basic joins (Bivand et al. 2013).
+Two functions can be used to clip the stations dataset
+so that only those falling within London boroughs are retained:
+`sp::over`, and `rgeos::gIntersects` (the word preceding the `::` symbol refers to the package which the function is from).
+Use `?` followed by the function to get help on each. Whether
+`gIntersects` of `over` is needed depends
+on the spatial data classes being compared (Bivand et al. 2013).
 
-In this tutorial we will use the `over` function as it is easiest to use. 
-`gIntersects` can achieve the same result, but with more lines of code. 
+In this tutorial we will use the `over` function as it is easiest to use.
+In fact, it can be called just by using square brackets:
+
+
+```r
+stations <- stations[lnd, ]
+plot(stations)  # test the clip succeeded (see figure 5)
+```
+
+![plot of chunk The clipped stations dataset](figure/The_clipped_stations_dataset.png) 
+
+
+
+
+
+The above line of code says: "output all `stations` within
+the `lnd` object bounds". This is an incredibly concise way
+of clipping and has the added advantage of being consistent
+with R's syntax for non-spatial clipping.
+To prove it worked, only stations within the London boroughs appear in the plot.
+
+`gIntersects` can achieve the same result, but with more lines of code
+(see [www.rpubs.com/RobinLovelace](http://www.rpubs.com/RobinLovelace/11796) for more on this) . 
 It may seem confusing that two different functions 
 can be used to generate the same result. However, 
-this is a common issue in programming; the question
+this is a common issue in R; the question
 is finding the most appropriate solution.
 
-`over` takes two main input arguments: the target layer (the layer to be altered) and the 
-source layer by which the target layer is to be clipped. The output of `over` is a data frame of the same 
-dimensions as the original dataset (in this case `stations`), except that the points which fall outside the zone of interest are set to a value of `NA` ("no answer").
+In its less concise form (without use of square brackets),
+`over` takes two main input arguments:
+the target layer (the layer to be altered) and the 
+source layer by which the target layer is to be clipped.
+The output of `over` is a data frame of the same 
+dimensions as the original dataset (in this case `stations`),
+except that the points which fall outside the zone of interest are set to a value of `NA` ("no answer").
 We can use this to make a subset of the original polygons, 
 remembering the square bracket notation described in the first section.
 We create a new object, `sel` (short for "selection"),
@@ -720,28 +742,8 @@ stations <- stations[!is.na(sel[, 1]), ]
 Typing `summary(sel)` should provide insight into how this 
 worked: it is a dataframe with 1801 NA values, representing 
 zones outside of the London polygon.
-Because this is a common procedure it is actually possible 
-to perform it with a single line of code: 
-
-
-```r
-stations <- stations[lnd, ]
-plot(stations)  # test the clip succeeded (see figure 5)
-```
-
-![plot of chunk The clipped stations dataset](figure/The_clipped_stations_dataset.png) 
-
-
-
-
-
-As the figure shows, only stations within the London boroughs are now shown.
-
-The *third* way to achieve the 
-same result uses the `rgeos` package. 
-This is more complex and not included in this tutorial
-(interested readers can see a vignette of this, to accompany the tutorial 
-on [RPubs.com/Robinlovelace](http://rpubs.com/RobinLovelace/11796)). 
+Note that the preceding two lines of code is equivalent to the
+single line of code, `stations <- stations[lnd, ]`.
 The next section demonstrates
 spatial aggregation, a more advanced version of spatial subsetting.
 
@@ -873,7 +875,7 @@ legend(legend = c("Tube", "Dual c."), "bottomright", pch = unique(sym))
 ![plot of chunk Symbol levels for train station types in London](figure/Symbol_levels_for_train_station_types_in_London.png) 
 
 
-This may seem a frustrating and unintuitive way of altering 
+This may seem a frustrating and un-intuitive way of altering 
 map graphics compared with something like QGIS. That's because it is!
 It may not worth pulling too 
 much hair out over R's base graphics because there is another 
@@ -921,7 +923,7 @@ a quick plot:
 
 
 ```r
-plot(lnd[which(grepl("Barking", lnd$name)), ])
+plot(lnd[grepl("Barking", lnd$name), ])
 points(stations)
 ```
 
@@ -951,7 +953,7 @@ Whilst the instructions are step by step you are encouraged to deviate from them
 (trying different colours for example) to get a better understanding 
 of what we are doing. 
 
-`ggplot2` is one of the best documented packages in R. 
+**ggplot2** is one of the best documented packages in R. 
 The full documentation for it can be found online and it is recommended you 
 test out the examples on your own machines and play with them: 
 http://docs.ggplot2.org/current/ .
@@ -1032,11 +1034,11 @@ The following steps will create a map to show the percentage of the population i
 ## "Fortifying" spatial objects for ggplot2 maps
 
 To get the shapefiles into a format that can be plotted we have to use the `fortify()` function. Spatial objects in R have a number of slots containing the various items of data (polygon geometry, projection, attribute information) associated with a shapefile. Slots can be thought of as shelves within the data object that contain the different attributes. The "polygons" slot contains the geometry of the polygons in the form of the XY coordinates used to draw the polygon outline. The generic plot function can work out what to do with these, ggplot2 cannot. We therefore need to extract them as a data frame. The fortify function was written specifically for this purpose.
-For this to work, either `maptools` or `rgeos` packages must be installed.
+For this to work, either **maptools** or **rgeos** packages must be installed.
 
 
 ```r
-sport.f <- fortify(sport, region = "ons_label")
+sport.f <- fortify(sport, region = "ons_label")  # you may need to load maptools
 ```
 
 
@@ -1144,7 +1146,7 @@ b[2, ] <- (b[2, ] - mean(b[2, ])) * 1.05 + mean(b[2, ])
 ```
 
 
-This is then fed into the `get_map` function as the location parameter. The syntax below contains 2 functions. `ggmap` is required to produce the plot and provides the base map data.
+This is then fed into the `get_map` function as the location parameter. The syntax below contains 2 functions. **ggmap** is required to produce the plot and provides the base map data.
 
 
 ```r
@@ -1284,18 +1286,24 @@ Add a title and replace the axes names with "easting" and
 
 # Part V: Taking spatial data analysis in R further
 
-The skills you have learned in this tutorial are applicable to a very wide 
-range of datasets, spatial or not. Often experimentation is the 
+The skills taught in this tutorial are applicable to a very wide 
+range of situations, spatial or not. Often experimentation is the 
 most rewarding learning method, rather than just searching for the 
 'best' way of doing something (Kabakoff, 2011). We recommend you play around
-with your own data.
+with your data.
 
 If you would like to learn more about R's spatial functionalities, 
 including more exercises on loading, saving and manipulating data, 
-we recommend a slightly longer and more advanced tutorial (Cheshire and Lovelace, 2014).
-An up-to-date repository of this project, including example dataset and all the code used 
-to compile the tutorial, can be found on its GitHub page: 
+we recommend a slightly longer and 
+more advanced tutorial (Cheshire and Lovelace, 2014).
+An up-to-date repository of this project,
+including example datasets and all the code used,
+can be found on its GitHub page: 
 [github.com/geocomPP/sdvwR](https://github.com/geocomPP/sdvwR). 
+There are also a number of bonus 'vignettes' associated with
+the present tutorial. These can be found on the
+[vignettes page](https://github.com/Robinlovelace/Creating-maps-in-R/tree/master/vignettes) of the project's repository.
+
 Another advanced tutorial is "Using spatial data", which has example 
 code and data that can be downloaded from the 
 [useR 2013 conference page](http://www.edii.uclm.es/~useR-2013//Tutorials/Bivand.html).
@@ -1307,7 +1315,8 @@ The supportive online communities surrounding large open source programs such as
 are one of their greatest assets, so we recommend you become an active 
 "[open source citizen](http://blog.cleverelephant.ca/2013/10/being-open-source-citizen.html)" rather than a passive consumer (Ramsey & Dubovsky, 2013). 
 
-This does not necessarily mean writing R source code - it can simply mean helping
+This does not necessarily mean writing a new package or contributing
+to R's 'Core Team' - it can simply involve helping
 others use R. We therefore conclude the tutorial with a list of resources
 that will help you further sharpen you R skills, find help and contribute 
 to the growing online R community:
@@ -1318,23 +1327,20 @@ to the growing online R community:
 
 Books: despite the strength of R's online community, nothing beats a physical book for concentrated learning. We would particularly recommend the following:
 
- * ggplot2: elegant graphics for data analysis (Wickham 2009)
+ * ggplot2: elegant graphics for data analysis (Wickham 2009).
  * Bivand et al. (2013) Provide a dense and detailed overview of spatial 
- data analysis in an updated version of the book by the developers of many
- of R's spatial functions.
+ data analysis.
  * Kabacoff (2011) is a more general R book; it has many fun worked examples.
  
 # R quick reference
 
 `#`: comments all text until line end
 
-`x <- 3`: create new object, called x, and assign value of 3
+`df <- data.frame(x = 1:9, y = (1:9)^2`: create new object of class `data.frame`, called df, and assign values
 
-`help(plot)`: ask R for basic help on function. Replace `plot` with any function. 
+`help(plot)`: ask R for basic help on function, the same as `?plot`. Replace `plot` with any function (e.g. `spTransform`).  
 
-`?plot`: same as above 
-
-`library(ggplot2)`: load a package (replace `ggplot2` with your package name)
+`library(ggplot2)`: load a package (replace **ggplot2** with your package name)
 
 `install.packages("ggplot2")`: install package - note quotation marks
 
@@ -1358,9 +1364,9 @@ Books: despite the strength of R's online community, nothing beats a physical bo
 
 # Aknowledgements
 
-Many thanks to Rachel Oldroyed and Alistair Leak who helped demonstrate 
-these materials to participants on the NCRM short courses for which 
-this tutorial was developed. Amy O'Neill helped organise the course 
+Many thanks to Rachel Oldroyd and Alistair Leak who helped demonstrate 
+these materials on the NCRM short courses for which 
+this tutorial was developed. Amy O'Neill organised the course 
 and encouraged feedback from participants. 
 The final thanks is to all users and developers of open source software
 for making powerful tools such as R accessible and enjoyable to use.
