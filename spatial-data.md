@@ -1,9 +1,11 @@
 An introduction to R for visualising spatial data
 ========================================================
 author: Robin Lovelace
-date: 24th January 2014
+date: 12th June 2014
 
 Slides available online: [rpubs.com/robinlovelace](http://rpubs.com/RobinLovelace/11931)
+
+Course home: [github.com/Robinlovelace/Creating-maps-in-R](https://github.com/Robinlovelace/Creating-maps-in-R). See also: [eprints.ncrm.ac.uk/3295/](http://eprints.ncrm.ac.uk/3295/)
 
 Introduction
 ========================================================
@@ -96,6 +98,28 @@ Why R for spatial data?
 > line in a fraction of the time you can do it with
 > a GUI (Sherman 2008, p. 283)
 
+Why R for spatial data II
+=============================
+It can take data in a wide range of formats.
+E.g. MySQL database dump gives you this:
+
+LINESTRING(-1.81 52.55,-1.81 52.55, … )  - solved:
+
+
+
+```r
+ps <- as.list(ps) # make a list
+for(i in 1:length(ps)){
+  ps[[i]] <- gsub("LINESTRING\\(", "", ps[[i]])
+  ps[[i]] <- gsub("\\)", "", ps[[i]])
+  ps[[i]] <- gsub(" ", ",", ps[[i]])
+  ps[[i]] <- matrix(ps[[i]], ncol=2, byrow=T)
+  ps[[i]] <- Line(ps[[i]])
+}
+```
+
+
+
 Visualisation
 ===========================
 
@@ -166,9 +190,9 @@ Before progressing further: **Any questions?**
 
 **Course materials** are all available online from a [GitHub repository](https://github.com/Robinlovelace/Creating-maps-in-R). Click "Download ZIP" to download all the test data, ready to procede.
 
-The main document to accompany this tutorial is a [pdf](https://github.com/Robinlovelace/Creating-maps-in-R/raw/master/intro-spatial-rl.pdf) within the main repository. This is to be made available for free worldwide - any comments/corrections welcom.
+The main document to accompany this tutorial is a [pdf](https://github.com/Robinlovelace/Creating-maps-in-R/raw/master/intro-spatial-rl.pdf) within the main repository. This is to be made available for free worldwide - any comments/corrections welcome.
 
-Plug: [An Introduction to Spatial Microsimulation using R](http://www.ncrm.ac.uk/training/show.php?article=4786) - a two day course using R, 8th - 9th May
+Plug: [An Introduction to Spatial Microsimulation using R](http://eprints.ncrm.ac.uk/3348/): Course 18th - 19th Sept, Cambridge
 
 Live demonstration
 
