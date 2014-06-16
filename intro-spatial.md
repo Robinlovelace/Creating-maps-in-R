@@ -817,19 +817,14 @@ summary(q)
 
 ```r
 clr <- as.character(factor(q, labels = paste0("grey", seq(20, 80, 20))))
-plot(stations.m, col = clr)
+plot(stations.m, col = clr)  # plot (not shown in printed tutorial)
 legend(legend = paste0("q", 1:4), fill = paste0("grey", seq(20, 80, 20)), "topright")
-```
-
-![plot of chunk Choropleth map of mean values of stations in each borough](figure/Choropleth_map_of_mean_values_of_stations_in_each_borough.png) 
-
-```r
 areas <- sapply(stations.m@polygons, function(x) x@area)
 ```
 
 
 This results in a simple choropleth map and a new vector containing the area of each
-borough (figure 6). As an additional step, try comparing the mean 
+borough (the basis for figure 6). As an additional step, try comparing the mean 
 area of each borough with the 
 mean value of `stations` points within it: `plot(stations.m$NUMBER, areas)`.
 
@@ -840,25 +835,18 @@ on top of the previously created choropleth map. How would we do this?
 The shape of points in R is determined by the `pch` argument, as demonstrated by the 
 result of entering the following code: `plot(1:10, pch=1:10)`.
 To apply this knowledge to our map, we could add the following
-code to the chunk added above:
+code to the chunk added above (see figure 6):
 
 
 ```r
-levels(stations$LEGEND)
-sel <- which(grepl("Rapid|C'", stations$LEGEND))
+levels(stations$LEGEND)  # we want A roads and rapit transit stations (RTS)
+sel <- which(grepl("A Road|Rapid", stations$LEGEND))
 sym <- as.integer(stations$LEGEND[sel])
 points(stations[sel, ], pch = sym)
-legend(legend = c("Tube", "Dual c."), "bottomright", pch = unique(sym))
+legend(legend = c("A Road", "RTS"), "bottomright", pch = unique(sym))
 ```
 
 
-
-```
-## [1.82e+04,1.94e+04] (1.94e+04,1.99e+04] (1.99e+04,2.05e+04] 
-##                   9                   8                   8 
-##  (2.05e+04,2.1e+04] 
-##                   8
-```
 
 ```
 ## [1] "Railway Station"                           
@@ -1241,12 +1229,7 @@ london.data.melt <- melt(london.data, id = c("Area.Code", "Area.Name"))
 
 
 
-Only do this step if reshape and melt failed
 
-
-```r
-london.data.melt <- read.csv("london_data_melt.csv")
-```
 
 
 Merge the population data with the London borough geometry contained within our sport.f object.
@@ -1265,8 +1248,9 @@ plot.data <- plot.data[order(plot.data$order), ]
 ```
 
 
-We can now use faceting to produce one map per year (this may take a little while to appear as displayed
-in figure 12). 
+We can now use faceting to produce one map per year
+(this may take a little while to appear as displayed
+in figure 11). 
 
 
 ```r

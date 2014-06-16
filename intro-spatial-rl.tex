@@ -1048,28 +1048,17 @@ For an optional advanced task, let us analyse and plot the result.
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{clr <-}\StringTok{ }\KeywordTok{as.character}\NormalTok{(}\KeywordTok{factor}\NormalTok{(q, }\DataTypeTok{labels =} \KeywordTok{paste0}\NormalTok{(}\StringTok{"grey"}\NormalTok{, }\KeywordTok{seq}\NormalTok{(}\DecValTok{20}\NormalTok{, }\DecValTok{80}\NormalTok{, }\DecValTok{20}\NormalTok{))))}
-\KeywordTok{plot}\NormalTok{(stations.m, }\DataTypeTok{col =} \NormalTok{clr)}
+\KeywordTok{plot}\NormalTok{(stations.m, }\DataTypeTok{col =} \NormalTok{clr)  }\CommentTok{# plot (not shown in printed tutorial)}
 \KeywordTok{legend}\NormalTok{(}\DataTypeTok{legend =} \KeywordTok{paste0}\NormalTok{(}\StringTok{"q"}\NormalTok{, }\DecValTok{1}\NormalTok{:}\DecValTok{4}\NormalTok{), }\DataTypeTok{fill =} \KeywordTok{paste0}\NormalTok{(}\StringTok{"grey"}\NormalTok{, }\KeywordTok{seq}\NormalTok{(}\DecValTok{20}\NormalTok{, }\DecValTok{80}\NormalTok{, }\DecValTok{20}\NormalTok{)), }\StringTok{"topright"}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{figure}[htbp]
-\centering
-\includegraphics{figure/Choropleth_map_of_mean_values_of_stations_in_each_borough.png}
-\caption{Choropleth map of mean values of stations in each
-borough}
-\end{figure}
-
-\begin{Shaded}
-\begin{Highlighting}[]
 \NormalTok{areas <-}\StringTok{ }\KeywordTok{sapply}\NormalTok{(stations.m@polygons, function(x) x@area)}
 \end{Highlighting}
 \end{Shaded}
 
 This results in a simple choropleth map and a new vector containing the
-area of each borough (figure 6). As an additional step, try comparing
-the mean area of each borough with the mean value of \texttt{stations}
-points within it: \texttt{plot(stations.m\$NUMBER, areas)}.
+area of each borough (the basis for figure 6). As an additional step,
+try comparing the mean area of each borough with the mean value of
+\texttt{stations} points within it:
+\texttt{plot(stations.m\$NUMBER, areas)}.
 
 \emph{Adding different symbols for tube stations and train stations}
 
@@ -1078,24 +1067,17 @@ of the previously created choropleth map. How would we do this? The
 shape of points in R is determined by the \texttt{pch} argument, as
 demonstrated by the result of entering the following code:
 \texttt{plot(1:10, pch=1:10)}. To apply this knowledge to our map, we
-could add the following code to the chunk added above:
+could add the following code to the chunk added above (see figure 6):
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{levels}\NormalTok{(stations$LEGEND)}
-\NormalTok{sel <-}\StringTok{ }\KeywordTok{which}\NormalTok{(}\KeywordTok{grepl}\NormalTok{(}\StringTok{"Rapid|C'"}\NormalTok{, stations$LEGEND))}
+\KeywordTok{levels}\NormalTok{(stations$LEGEND)  }\CommentTok{# we want A roads and rapit transit stations (RTS)}
+\NormalTok{sel <-}\StringTok{ }\KeywordTok{which}\NormalTok{(}\KeywordTok{grepl}\NormalTok{(}\StringTok{"A Road|Rapid"}\NormalTok{, stations$LEGEND))}
 \NormalTok{sym <-}\StringTok{ }\KeywordTok{as.integer}\NormalTok{(stations$LEGEND[sel])}
 \KeywordTok{points}\NormalTok{(stations[sel, ], }\DataTypeTok{pch =} \NormalTok{sym)}
-\KeywordTok{legend}\NormalTok{(}\DataTypeTok{legend =} \KeywordTok{c}\NormalTok{(}\StringTok{"Tube"}\NormalTok{, }\StringTok{"Dual c."}\NormalTok{), }\StringTok{"bottomright"}\NormalTok{, }\DataTypeTok{pch =} \KeywordTok{unique}\NormalTok{(sym))}
+\KeywordTok{legend}\NormalTok{(}\DataTypeTok{legend =} \KeywordTok{c}\NormalTok{(}\StringTok{"A Road"}\NormalTok{, }\StringTok{"RTS"}\NormalTok{), }\StringTok{"bottomright"}\NormalTok{, }\DataTypeTok{pch =} \KeywordTok{unique}\NormalTok{(sym))}
 \end{Highlighting}
 \end{Shaded}
-
-\begin{verbatim}
-## [1.82e+04,1.94e+04] (1.94e+04,1.99e+04] (1.99e+04,2.05e+04] 
-##                   9                   8                   8 
-##  (2.05e+04,2.1e+04] 
-##                   8
-\end{verbatim}
 
 \begin{verbatim}
 ## [1] "Railway Station"                           
@@ -1545,14 +1527,6 @@ Load the data - this shows historic population values between 1801 and
 \end{Highlighting}
 \end{Shaded}
 
-Only do this step if reshape and melt failed
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{london.data.melt <-}\StringTok{ }\KeywordTok{read.csv}\NormalTok{(}\StringTok{"london_data_melt.csv"}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
 Merge the population data with the London borough geometry contained
 within our sport.f object.
 
@@ -1571,7 +1545,7 @@ Reorder this data (ordering is important for plots).
 \end{Shaded}
 
 We can now use faceting to produce one map per year (this may take a
-little while to appear as displayed in figure 12).
+little while to appear as displayed in figure 11).
 
 \begin{Shaded}
 \begin{Highlighting}[]

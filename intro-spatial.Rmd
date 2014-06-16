@@ -644,17 +644,17 @@ stations.m <- aggregate(stations[c("NUMBER")] , by = lnd, FUN = mean)
 
 For an optional advanced task, let us analyse and plot the result.
 
-```{r Choropleth map of mean values of stations in each borough}
+```{r Choropleth map of mean values of stations in each borough, fig.keep='none'}
 q <- cut(stations.m$NUMBER,  breaks= c(quantile(stations.m$NUMBER)), include.lowest=T)
 summary(q)
 clr <- as.character(factor(q, labels = paste0("grey", seq(20, 80, 20))))
-plot(stations.m, col = clr)
+plot(stations.m, col = clr) # plot (not shown in printed tutorial)
 legend(legend = paste0("q", 1:4), fill = paste0("grey", seq(20, 80, 20)),  "topright")
 areas <- sapply(stations.m@polygons, function(x) x@area)
 ```
 
 This results in a simple choropleth map and a new vector containing the area of each
-borough (figure 6). As an additional step, try comparing the mean 
+borough (the basis for figure 6). As an additional step, try comparing the mean 
 area of each borough with the 
 mean value of `stations` points within it: `plot(stations.m$NUMBER, areas)`.
 
@@ -665,27 +665,26 @@ on top of the previously created choropleth map. How would we do this?
 The shape of points in R is determined by the `pch` argument, as demonstrated by the 
 result of entering the following code: `plot(1:10, pch=1:10)`.
 To apply this knowledge to our map, we could add the following
-code to the chunk added above:
+code to the chunk added above (see figure 6):
 
 ```{r, eval=F}
-levels(stations$LEGEND)
-sel <- which(grepl("Rapid|C'", stations$LEGEND ))
+levels(stations$LEGEND) # we want A roads and rapit transit stations (RTS)
+sel <- which(grepl("A Road|Rapid", stations$LEGEND ))
 sym <- as.integer(stations$LEGEND[sel])
 points(stations[sel,], pch = sym)
-legend(legend = c("Tube", "Dual c."), "bottomright", pch = unique(sym))
+legend(legend = c("A Road", "RTS"), "bottomright", pch = unique(sym))
 ```
 
 ```{r Symbol levels for train station types in London, echo=FALSE}
 q <- cut(stations.m$NUMBER,  breaks= c(quantile(stations.m$NUMBER)), include.lowest=T)
-summary(q)
 clr <- as.character(factor(q, labels = paste0("grey", seq(20, 80, 20))))
 plot(stations.m, col = clr)
 legend(legend = paste0("q", 1:4), fill = paste0("grey", seq(20, 80, 20)),  "topright")
 levels(stations$LEGEND)
-sel <- which(grepl("Rapid|C'", stations$LEGEND ))
+sel <- which(grepl("A Road|Rapid", stations$LEGEND ))
 sym <- as.integer(stations$LEGEND[sel])
 points(stations[sel,], pch = sym)
-legend(legend = c("Tube", "Dual c."), "bottomright", pch = unique(sym))
+legend(legend = c("A Road", "RTS"), "bottomright", pch = unique(sym))
 ```
 
 This may seem a frustrating and un-intuitive way of altering 
@@ -980,10 +979,9 @@ london.data.melt <- melt(london.data, id = c("Area.Code", "Area.Name"))
 ```
 
 
-Only do this step if reshape and melt failed
-
-```{r, eval=F}
-london.data.melt <- read.csv("london_data_melt.csv")
+```{r, echo=FALSE, eval=FALSE}
+# london.data.melt <- read.csv("london_data_melt.csv")
+# Only do this step if reshape and melt failed
 ```
 
 Merge the population data with the London borough geometry contained within our sport.f object.
@@ -998,15 +996,16 @@ Reorder this data (ordering is important for plots).
 plot.data <- plot.data[order(plot.data$order), ]
 ```
 
-We can now use faceting to produce one map per year (this may take a little while to appear as displayed
-in figure 12). 
+We can now use faceting to produce one map per year
+(this may take a little while to appear as displayed
+in figure 11). 
 
 ```{r Faceted map}
 ggplot(data = plot.data, aes(x = long, y = lat, fill = value, group = group)) + 
   geom_polygon() + 
   geom_path(colour="grey", lwd=0.1) + 
   coord_equal() +
-  facet_wrap(~variable)
+  facet_wrap(~ variable)
 ``` 
 
 Again there is a lot going on here so explore the documentation to make sure you understand it. 
