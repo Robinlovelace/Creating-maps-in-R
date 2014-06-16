@@ -819,6 +819,11 @@ summary(q)
 clr <- as.character(factor(q, labels = paste0("grey", seq(20, 80, 20))))
 plot(stations.m, col = clr)  # plot (not shown in printed tutorial)
 legend(legend = paste0("q", 1:4), fill = paste0("grey", seq(20, 80, 20)), "topright")
+```
+
+![plot of chunk Choropleth map of mean values of stations in each borough, fig.](figure/Choropleth_map_of_mean_values_of_stations_in_each_borough__fig_.png) 
+
+```r
 areas <- sapply(stations.m@polygons, function(x) x@area)
 ```
 
@@ -840,7 +845,7 @@ code to the chunk added above (see figure 6):
 
 ```r
 levels(stations$LEGEND)  # we want A roads and rapit transit stations (RTS)
-sel <- which(grepl("A Road|Rapid", stations$LEGEND))
+sel <- grepl("A Road|Rapid", stations$LEGEND)
 sym <- as.integer(stations$LEGEND[sel])
 points(stations[sel, ], pch = sym)
 legend(legend = c("A Road", "RTS"), "bottomright", pch = unique(sym))
@@ -862,6 +867,24 @@ legend(legend = c("A Road", "RTS"), "bottomright", pch = unique(sym))
 
 ![plot of chunk Symbol levels for train station types in London](figure/Symbol_levels_for_train_station_types_in_London.png) 
 
+
+In the above block of code, we first identified which types of transport
+points are present in the map with `levels` (this command only works on
+factor data, and tells us the unique names of the factors that the vector can
+hold). Next we select a subset of `stations` using a new command, `grepl`, to
+determine which points we want to plot. Note that `grepl`'s first argument
+is a text string (hence the quote marks) and that the second is a factor
+(try typing `class(stations$LEGEND)` to test this).
+`grepl` uses *regular expressions* to match whether each element in a vector
+of text or factor names match the text pattern we want. In this case,
+because we are only interested in roundabouts that are A roads and
+Rapid Transit systems (RTS). Note the use of the vertical separator `|` to
+indicate that we want to match `LEGEND` names that contain either "A Road"
+*or* "Rapid". Based on the positive matches (saved as `sel`, a vector of
+`TRUE` and `FALSE` values), we subset the stations. Finally we plot these as points,
+using the integer of their name to decide the symbol and add a legend. 
+(See the documentation of `?legend` for detail on the complexities of
+legend creation in R's base graphics.)
 
 This may seem a frustrating and un-intuitive way of altering 
 map graphics compared with something like QGIS. That's because it is!

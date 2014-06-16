@@ -1037,6 +1037,18 @@ For an optional advanced task, let us analyse and plot the result.
 \NormalTok{clr <-}\StringTok{ }\KeywordTok{as.character}\NormalTok{(}\KeywordTok{factor}\NormalTok{(q, }\DataTypeTok{labels =} \KeywordTok{paste0}\NormalTok{(}\StringTok{"grey"}\NormalTok{, }\KeywordTok{seq}\NormalTok{(}\DecValTok{20}\NormalTok{, }\DecValTok{80}\NormalTok{, }\DecValTok{20}\NormalTok{))))}
 \KeywordTok{plot}\NormalTok{(stations.m, }\DataTypeTok{col =} \NormalTok{clr)  }\CommentTok{# plot (not shown in printed tutorial)}
 \KeywordTok{legend}\NormalTok{(}\DataTypeTok{legend =} \KeywordTok{paste0}\NormalTok{(}\StringTok{"q"}\NormalTok{, }\DecValTok{1}\NormalTok{:}\DecValTok{4}\NormalTok{), }\DataTypeTok{fill =} \KeywordTok{paste0}\NormalTok{(}\StringTok{"grey"}\NormalTok{, }\KeywordTok{seq}\NormalTok{(}\DecValTok{20}\NormalTok{, }\DecValTok{80}\NormalTok{, }\DecValTok{20}\NormalTok{)), }\StringTok{"topright"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics{figure/Choropleth_map_of_mean_values_of_stations_in_each_borough__fig_.png}
+\caption{plot of chunk Choropleth map of mean values of stations in each
+borough, fig.}
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
 \NormalTok{areas <-}\StringTok{ }\KeywordTok{sapply}\NormalTok{(stations.m@polygons, function(x) x@area)}
 \end{Highlighting}
 \end{Shaded}
@@ -1059,7 +1071,7 @@ could add the following code to the chunk added above (see figure 6):
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{levels}\NormalTok{(stations$LEGEND)  }\CommentTok{# we want A roads and rapit transit stations (RTS)}
-\NormalTok{sel <-}\StringTok{ }\KeywordTok{which}\NormalTok{(}\KeywordTok{grepl}\NormalTok{(}\StringTok{"A Road|Rapid"}\NormalTok{, stations$LEGEND))}
+\NormalTok{sel <-}\StringTok{ }\KeywordTok{grepl}\NormalTok{(}\StringTok{"A Road|Rapid"}\NormalTok{, stations$LEGEND)}
 \NormalTok{sym <-}\StringTok{ }\KeywordTok{as.integer}\NormalTok{(stations$LEGEND[sel])}
 \KeywordTok{points}\NormalTok{(stations[sel, ], }\DataTypeTok{pch =} \NormalTok{sym)}
 \KeywordTok{legend}\NormalTok{(}\DataTypeTok{legend =} \KeywordTok{c}\NormalTok{(}\StringTok{"A Road"}\NormalTok{, }\StringTok{"RTS"}\NormalTok{), }\StringTok{"bottomright"}\NormalTok{, }\DataTypeTok{pch =} \KeywordTok{unique}\NormalTok{(sym))}
@@ -1083,6 +1095,26 @@ could add the following code to the chunk added above (see figure 6):
 \includegraphics{figure/Symbol_levels_for_train_station_types_in_London.png}
 \caption{plot of chunk Symbol levels for train station types in London}
 \end{figure}
+
+In the above block of code, we first identified which types of transport
+points are present in the map with \texttt{levels} (this command only
+works on factor data, and tells us the unique names of the factors that
+the vector can hold). Next we select a subset of \texttt{stations} using
+a new command, \texttt{grepl}, to determine which points we want to
+plot. Note that \texttt{grepl}'s first argument is a text string (hence
+the quote marks) and that the second is a factor (try typing
+\texttt{class(stations\$LEGEND)} to test this). \texttt{grepl} uses
+\emph{regular expressions} to match whether each element in a vector of
+text or factor names match the text pattern we want. In this case,
+because we are only interested in roundabouts that are A roads and Rapid
+Transit systems (RTS). Note the use of the vertical separator
+\texttt{\textbar{}} to indicate that we want to match \texttt{LEGEND}
+names that contain either ``A Road'' \emph{or} ``Rapid''. Based on the
+positive matches (saved as \texttt{sel}, a vector of \texttt{TRUE} and
+\texttt{FALSE} values), we subset the stations. Finally we plot these as
+points, using the integer of their name to decide the symbol and add a
+legend. (See the documentation of \texttt{?legend} for detail on the
+complexities of legend creation in R's base graphics.)
 
 This may seem a frustrating and un-intuitive way of altering map
 graphics compared with something like QGIS. That's because it is! It may
