@@ -1396,5 +1396,6 @@ Wilkinson, L. (2005). The grammar of graphics. Springer.
 
 ```r
 source("latex/rmd2pdf.R")  # convert .Rmd to .tex file
+system("pdflatex intro-spatial-rl.tex")
 ```
 

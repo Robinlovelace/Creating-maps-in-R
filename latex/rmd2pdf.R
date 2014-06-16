@@ -6,7 +6,7 @@ system(mess) # create latex file
 mess <- paste("sed 's/plot of.chunk.//g' intro-spatial.tex > intro-spatial-rl.tex")
 system(mess) # replace "plot of chunk " text with nowth
 
-mess <- paste("sed -i -e 's/=\\\\ScaleIfNeeded/=8cm/g' intro-spatial-rl.tex")
+mess <- paste("sed -i -e 's/=\\\\ScaleIfNeeded/=10cm/g' intro-spatial-rl.tex")
 system(mess) # reduce plot size
 
 mess <- paste("sed -i -e 's/\\\\section{References}/\\\\newpage \\\\section{References}/g' intro-spatial-rl.tex")
