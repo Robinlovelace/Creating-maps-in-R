@@ -58,7 +58,7 @@
 \let\Oldincludegraphics\includegraphics
 {%
  \catcode`\@=11\relax%
- \gdef\includegraphics{\@ifnextchar[{\Oldincludegraphics}{\Oldincludegraphics[width=8cm]}}%
+ \gdef\includegraphics{\@ifnextchar[{\Oldincludegraphics}{\Oldincludegraphics[width=10cm]}}%
 }%
 \ifxetex
   \usepackage[setpagesize=false, % page size defined by xetex
@@ -1743,6 +1743,7 @@ Wilkinson, L. (2005). The grammar of graphics. Springer.
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{source}\NormalTok{(}\StringTok{"latex/rmd2pdf.R"}\NormalTok{)  }\CommentTok{# convert .Rmd to .tex file}
+\KeywordTok{system}\NormalTok{(}\StringTok{"pdflatex intro-spatial-rl.tex"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
