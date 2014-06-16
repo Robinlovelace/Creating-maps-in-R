@@ -9,6 +9,9 @@ system(mess) # replace "plot of chunk " text with nowth
 mess <- paste("sed -i -e 's/=\\\\ScaleIfNeeded/=10cm/g' intro-spatial-rl.tex")
 system(mess) # reduce plot size
 
+mess <- paste("sed -i -e 's/\\\\section{R quick reference}/\\\\newpage \\\\section{R quick reference}/g' intro-spatial-rl.tex")
+system(mess) # Put refs on new page
+
 mess <- paste("sed -i -e 's/\\\\section{References}/\\\\newpage \\\\section{References}/g' intro-spatial-rl.tex")
 system(mess) # Put refs on new page
 
