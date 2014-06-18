@@ -23,23 +23,21 @@ and visualisation. It is divided into five parts:
 - Taking spatial analysis in R further, a compilation of resources for furthering your skills
 
 An up-to-date version of this tutorial is maintained at
-[https://github.com/Robinlovelace/Creating-maps-in-R](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial-rl.pdf) and the entire tutorial, including
+[https://github.com/Robinlovelace/Creating-maps-in-R](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial-rl.pdf). The source files used to create this tutorial, including
 the input data can be downloaded as a
 [zip file](https://github.com/Robinlovelace/Creating-maps-in-R/archive/master.zip), 
-as described below. The entire tutorial was written in RMarkdown, which 
-allows R code to run as the document compiles. Thus all the examples are entirely reproducible.
+as described below. The entire tutorial was written in
+[RMarkdown](http://rmarkdown.rstudio.com/), which 
+allows R code to run as the document compiles, ensuring reproducibility.
 
-Suggested improvements welcome, via emails to the authors or by
-[forking](https://help.github.com/articles/fork-a-repo)
-the [master version](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial.Rmd) of this document.
-The tutorial was developed for 
-a series of Short Courses funded by the National Centre for Research Methods (NCRM), 
-via the TALISMAN node (see [geotalisman.org](http://www.geotalisman.org/)). 
+Any suggested improvements or new
+[vignettes](https://github.com/Robinlovelace/Creating-maps-in-R/tree/master/vignettes) are welcome, via email
+to Robin or by [forking](https://help.github.com/articles/fork-a-repo)
+the [master version](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial.Rmd) of this document. 
 
 ## Typographic conventions and getting help
 
-To ensure reproducibility and allow automatic syntax highlighting, 
-this document has been written in
+The syntax highlighting in this document is thanks to
 [RMarkdown](http://rmarkdown.rstudio.com/). 
 We try to follow best practice in terms of style, roughly following 
 Google's style guide and an in-depth guide written by 
@@ -547,10 +545,6 @@ levels(crimeAg$Spatial_DistrictNam)
 ```
 
 ```
-## Warning: Name partially matched in data frame
-```
-
-```
 ##  [1] "Barking and Dagenham"   "Barnet"                
 ##  [3] "Bexley"                 "Brent"                 
 ##  [5] "Bromley"                "Camden"                
@@ -908,8 +902,8 @@ library(rgeos)
 ```
 
 ```
-## rgeos version: 0.2-19, (SVN revision 394)
-##  GEOS runtime version: 3.4.2-CAPI-1.8.2 r3921 
+## rgeos version: 0.3-2, (SVN revision 413M)
+##  GEOS runtime version: 3.3.9-CAPI-1.7.9 
 ##  Polygon checking: TRUE
 ```
 
@@ -1365,12 +1359,16 @@ Books: despite the strength of R's online community, nothing beats a physical bo
 
 `rm(df)`: remove the `df` object
 
-`proj4string(df)`: set coordinate reference system of `df` object
+`proj4string(df)`: query coordinate reference system of `df` object
 
 `spTransform(df, CRS("+init=epsg:4326")`: reproject `df` object to WGS84 
 
 # Aknowledgements
 
+The tutorial was developed for 
+a series of Short Courses funded by the National Centre for Research Methods (NCRM), 
+via the TALISMAN node (see [geotalisman.org](http://www.geotalisman.org/)).
+Thanks to the [ESRC](http://www.esrc.ac.uk/) for funding applied methods research.
 Many thanks to Rachel Oldroyd and Alistair Leak who helped demonstrate 
 these materials on the NCRM short courses for which 
 this tutorial was developed. Amy O'Neill organised the course 
@@ -1402,7 +1400,10 @@ Wilkinson, L. (2005). The grammar of graphics. Springer.
 
 
 ```r
-source("latex/rmd2pdf.R")  # convert .Rmd to .tex file
-system("pdflatex intro-spatial-rl.tex")
+# build the pdf version of the tutorial
+
+# source('latex/rmd2pdf.R') # convert .Rmd to .tex file
+
+# system('pdflatex intro-spatial-rl.tex')
 ```
 

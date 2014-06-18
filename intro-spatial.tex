@@ -124,26 +124,25 @@ is divided into five parts:
 \end{itemize}
 
 An up-to-date version of this tutorial is maintained at
-\href{https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial-rl.pdf}{https://github.com/Robinlovelace/Creating-maps-in-R}
-and the entire tutorial, including the input data can be downloaded as a
+\href{https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial-rl.pdf}{https://github.com/Robinlovelace/Creating-maps-in-R}.
+The source files used to create this tutorial, including the input data
+can be downloaded as a
 \href{https://github.com/Robinlovelace/Creating-maps-in-R/archive/master.zip}{zip
-file}, as described below. The entire tutorial was written in RMarkdown,
-which allows R code to run as the document compiles. Thus all the
-examples are entirely reproducible.
+file}, as described below. The entire tutorial was written in
+\href{http://rmarkdown.rstudio.com/}{RMarkdown}, which allows R code to
+run as the document compiles, ensuring reproducibility.
 
-Suggested improvements welcome, via emails to the authors or by
+Any suggested improvements or new
+\href{https://github.com/Robinlovelace/Creating-maps-in-R/tree/master/vignettes}{vignettes}
+are welcome, via email to Robin or by
 \href{https://help.github.com/articles/fork-a-repo}{forking} the
 \href{https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial.Rmd}{master
-version} of this document. The tutorial was developed for a series of
-Short Courses funded by the National Centre for Research Methods (NCRM),
-via the TALISMAN node (see
-\href{http://www.geotalisman.org/}{geotalisman.org}).
+version} of this document.
 
 \subsection{Typographic conventions and getting
 help}\label{typographic-conventions-and-getting-help}
 
-To ensure reproducibility and allow automatic syntax highlighting, this
-document has been written in
+The syntax highlighting in this document is thanks to
 \href{http://rmarkdown.rstudio.com/}{RMarkdown}. We try to follow best
 practice in terms of style, roughly following Google's style guide and
 an in-depth guide written by
@@ -739,10 +738,6 @@ the results (not shown here) on your computer.
 \end{Shaded}
 
 \begin{verbatim}
-## Warning: Name partially matched in data frame
-\end{verbatim}
-
-\begin{verbatim}
 ##  [1] "Barking and Dagenham"   "Barnet"                
 ##  [3] "Bexley"                 "Brent"                 
 ##  [5] "Bromley"                "Camden"                
@@ -1139,8 +1134,8 @@ if you intend to perform more sophisticated spatial analysis in R.
 \end{Shaded}
 
 \begin{verbatim}
-## rgeos version: 0.2-19, (SVN revision 394)
-##  GEOS runtime version: 3.4.2-CAPI-1.8.2 r3921 
+## rgeos version: 0.3-2, (SVN revision 413M)
+##  GEOS runtime version: 3.3.9-CAPI-1.7.9 
 ##  Polygon checking: TRUE
 \end{verbatim}
 
@@ -1691,20 +1686,24 @@ specified location
 
 \texttt{rm(df)}: remove the \texttt{df} object
 
-\texttt{proj4string(df)}: set coordinate reference system of \texttt{df}
-object
+\texttt{proj4string(df)}: query coordinate reference system of
+\texttt{df} object
 
 \texttt{spTransform(df, CRS("+init=epsg:4326")}: reproject \texttt{df}
 object to WGS84
 
 \section{Aknowledgements}\label{aknowledgements}
 
-Many thanks to Rachel Oldroyd and Alistair Leak who helped demonstrate
-these materials on the NCRM short courses for which this tutorial was
-developed. Amy O'Neill organised the course and encouraged feedback from
-participants. The final thanks is to all users and developers of open
-source software for making powerful tools such as R accessible and
-enjoyable to use.
+The tutorial was developed for a series of Short Courses funded by the
+National Centre for Research Methods (NCRM), via the TALISMAN node (see
+\href{http://www.geotalisman.org/}{geotalisman.org}). Thanks to the
+\href{http://www.esrc.ac.uk/}{ESRC} for funding applied methods
+research. Many thanks to Rachel Oldroyd and Alistair Leak who helped
+demonstrate these materials on the NCRM short courses for which this
+tutorial was developed. Amy O'Neill organised the course and encouraged
+feedback from participants. The final thanks is to all users and
+developers of open source software for making powerful tools such as R
+accessible and enjoyable to use.
 
 \section{References}\label{references}
 
@@ -1735,8 +1734,11 @@ Wilkinson, L. (2005). The grammar of graphics. Springer.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{source}\NormalTok{(}\StringTok{"latex/rmd2pdf.R"}\NormalTok{)  }\CommentTok{# convert .Rmd to .tex file}
-\KeywordTok{system}\NormalTok{(}\StringTok{"pdflatex intro-spatial-rl.tex"}\NormalTok{)}
+\CommentTok{# build the pdf version of the tutorial}
+
+\CommentTok{# source('latex/rmd2pdf.R') # convert .Rmd to .tex file}
+
+\CommentTok{# system('pdflatex intro-spatial-rl.tex')}
 \end{Highlighting}
 \end{Shaded}
 
