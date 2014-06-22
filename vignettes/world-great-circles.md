@@ -107,7 +107,7 @@ plot(s)
 points(p, col = "red")
 ```
 
-![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3.png) 
+![plot of chunk Plotting points](figure/Plotting points.png) 
 
 ## Joining the dots
 
@@ -122,7 +122,7 @@ segments(x0 = rep(coordinates(p[1,])[1], n), y0 = rep(coordinates(p[1,])[2], n),
          x1 = coordinates(p)[,1], y1 = coordinates(p)[,2])
 ```
 
-![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4.png) 
+![plot of chunk Plotting segments](figure/Plotting segments.png) 
 
 (Incidentally, isn't the use of `segments` here rather clunky - any suggestions
 of a more elegant way to do this welcome.)
@@ -153,7 +153,7 @@ for(i in 1:length(p)){
 }
 ```
 
-![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5.png) 
+![plot of chunk Plotting great circles 1](figure/Plotting great circles 1.png) 
 
 Fantastic. Now we have great circle lines represented on a
 map with a [geographic coordinate system (CRS)](http://en.wikipedia.org/wiki/Geographic_coordinate_system)
@@ -199,7 +199,7 @@ for(i in 1:length(p)){
 }
 ```
 
-![plot of chunk unnamed-chunk-6](figure/unnamed-chunk-6.png) 
+![plot of chunk Beautifying](figure/Beautifying.png) 
 
 ```r
 par(bg = 'white')
@@ -219,7 +219,7 @@ m <- ggplot(s, aes(x=long, y=lat, group=group)) +
 m
 ```
 
-![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-7.png) 
+![plot of chunk ggplot world 1](figure/ggplot world 1.png) 
 
 When we add the lines in projected maps (i.e. with a Euclidean coordinate system)
 based solely on origins and destinations, this works fine, but
@@ -245,7 +245,7 @@ ggplot() + geom_polygon(data = s,aes(x=long, y=lat, group=group),
   geom_segment(aes(x = p1[,1], y = p1[,2], xend = p2[,1], yend = p2[,2]))
 ```
 
-![plot of chunk unnamed-chunk-8](figure/unnamed-chunk-8.png) 
+![plot of chunk Adding world lines ggplot2 style](figure/Adding world lines ggplot2 style.png) 
 
 ## Adding great circle lines to ggplot2 maps
 
@@ -289,7 +289,7 @@ ggplot() + geom_polygon(data = s, aes(x=long, y=lat, group=group),
   theme(panel.background = element_rect(fill = 'lightblue'))
 ```
 
-![plot of chunk unnamed-chunk-10](figure/unnamed-chunk-10.png) 
+![plot of chunk polygon paths ggplo2](figure/polygon paths ggplo2.png) 
 
 ## Changing projection in ggplot
 
@@ -308,7 +308,7 @@ m <- last_plot()
 m + coord_map()
 ```
 
-![plot of chunk unnamed-chunk-11](figure/unnamed-chunk-111.png) 
+![plot of chunk ggplot2 projections](figure/ggplot2 projections1.png) 
 
 ```r
 # remove fill as this clearly causes problems:
@@ -319,7 +319,7 @@ m <- ggplot() + geom_path(data = s, aes(x=long, y=lat, group=group), colour="bla
 m + coord_map("ortho", orientation=c(41, -74, 0)) # for ortho maps
 ```
 
-![plot of chunk unnamed-chunk-11](figure/unnamed-chunk-112.png) 
+![plot of chunk ggplot2 projections](figure/ggplot2 projections2.png) 
 
 ## Conclusion
 

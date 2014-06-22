@@ -32,7 +32,7 @@ lapply(x, require, character.only = T)
 Let us proceed by loading an entire map of the world from
 the **rworldmap** function `getMap`:
 
-```{r, fig.keep='none'}
+```{r Basic plot, fig.keep='none'}
 s <- getMap() # load the map data
 class(s) # what type of are we dealing with?
 nrow(s) # n. polygons
@@ -59,7 +59,7 @@ over the surface of the earth in terms of longitude. Note the use of
 which have a much lower surface area than the equator, per
 [line of longitude](http://en.wikipedia.org/wiki/Cylindrical_equal-area_projection).
 
-```{r}
+```{r Plotting points}
 set.seed(1984)
 n = 20
 x <- runif(n=n, min=bbox(s)[1,1], max = bbox(s)[1,2] )
@@ -77,7 +77,7 @@ So how to join these randomly scattered points on the planet?
 A first approximation would be to join them with straight lines.
 Let's join point 1, for example, to all others to test this method:
 
-```{r}
+```{r Plotting segments}
 plot(s)
 segments(x0 = rep(coordinates(p[1,])[1], n), y0 = rep(coordinates(p[1,])[2], n),
          x1 = coordinates(p)[,1], y1 = coordinates(p)[,2])
@@ -91,7 +91,7 @@ lines over the Earth's surface: these are not the shortest,
 [great circle](http://en.wikipedia.org/wiki/Great_circle) lines.
 To add these great circle lines, we must use the **geosphere** package:
 
-```{r}
+```{r Plotting great circles 1}
 head(gcIntermediate(p[1,], p[2]), 2) # take a look at the output of the gcIntermediate function
 plot(s)
 lines(gcIntermediate(p[1,], p[2,]), col = "blue", lwd = 3)
@@ -112,7 +112,7 @@ The maps we created so far are not exactly beautiful.
 Let's try to make the map look a little nicer:
 
 
-```{r}
+```{r Beautifying}
 names(s@data)
 library(rgdal)
 # s <- spTransform(s, CRSobj=CRS("+proj=robin +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs"))
@@ -133,7 +133,7 @@ The 'beautified' map above certainly is more interesting visually, with added
 colours. But it's difficult to call it truly beautiful. For that, as with
 so many things in R plotting, we turn to ggplot2.
 
-```{r}
+```{r ggplot world 1}
 s <- map_data("world")
 m <- ggplot(s, aes(x=long, y=lat, group=group)) +
   geom_polygon(fill="green", colour="black")
@@ -145,7 +145,7 @@ based solely on origins and destinations, this works fine, but
 as with the previous example, generates incorrect
 shortest path lines:
 
-```{r}
+```{r Adding world lines ggplot2 style}
 # adding lines
 # for all combinations of lines, use this code
 # p1 <- do.call(rbind, rep(list(coordinates(p)),n ))
@@ -175,7 +175,7 @@ To create the for loop, first create a data frame of a single line.
 The iterate for all zones and use `rbind` to place one data frame on
 top of the next:
 
-```{r}
+```{r ggpaths}
 paths <- gcIntermediate(p[5,], p[1,])
 paths <- data.frame(paths)
 paths$group <- 1
@@ -196,7 +196,7 @@ Note the use of the command `ggplot()`, which initiates an
 empty ggplot2 instances, ready to be filled with layers.
 This is more flexible than stating the data at the outset.
 
-```{r}
+```{r polygon paths ggplo2}
 ggplot() + geom_polygon(data = s, aes(x=long, y=lat, group=group), 
   fill = "green", colour="black") +
   geom_path(data = paths, aes(lon, lat , group = group)) +
@@ -213,7 +213,7 @@ e.g. by using `spTransform`). However,
 as shown in the examples below, the library is currently buggy
 for plotting polygons.
 
-```{r}
+```{r ggplot2 projections}
 # to see the range of projections available using this method, try ?mapproject
 m <- last_plot()
 m + coord_map()
