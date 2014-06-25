@@ -1,3 +1,25 @@
+---
+title: "Introduction to visualising spatial data in R"
+author: "Robin Lovelace (R.Lovelace@Leeds.ac.uk) and James Cheshire (james.cheshire@ucl.ac.uk)"
+output:
+  pdf_document:
+    fig_cap: yes
+    fig_height: 3.5
+    fig_width: 4.5
+    keep_tex: yes
+    toc: yes
+    highlight: pygments
+---
+
+```{r}
+# rob00x-at-gmail-o-com
+# ~~~___~~The future ~
+# ~~/__/~|~~ is low ~
+# ~/~~|~~|_ energy.~
+# robinlovelace.net
+```
+
+
 Part I: Introduction 
 ========================================================
 
@@ -50,7 +72,7 @@ above a line of code or directly following it, as illustrated in the block of
 code presented below, which should create figure 1 
 if typed correctly into the R command line.
 
-```{r Basic plot of x and y}
+```{r fig.cap="Basic plot of x and y"}
 # Generate data
 x <- 1:400
 y <- sin(x / 10) * exp(x * -0.01) 
@@ -76,15 +98,20 @@ c(1:3, 5)^2
 ```
 
 are compiled in-line: the `##` indicates this is output from R. Some of the 
-output from the code below is quite long so some is omitted.
-It should also be clear when we have decided to omit an image to save space.
-All images in this document are small and low-quality to save space;
-they should 
+output that results from the code in this tutorial long; we only
+include key output.
+In a few cases we omit images to save space and this will be clear from
+the comments.
+Images in this document are small and low-quality enable portability of the
+pdf. They should 
 display better on your computer screen and can be saved at any resolution.
+
 The code presented here is not the only way to do things: we encourage you to 
 play with it and try things out to gain a deeper understanding of R.
 Don't worry, you cannot 'break' anything using R and all the input data 
-can be re-loaded if things do go wrong.
+can be re-loaded if things do go wrong. As with learning to skate, you learn
+by falling and, although painful, getting an `Error:` message in R is less
+painful than landing on ones face on concrete. We encourage `Error:`s! 
 
 If you require help on any function, use the `help` function, 
 e.g. `help(plot)`. Because R users love being concise, 
@@ -109,8 +136,8 @@ We recommend taking a quick browse on R's main website:
 [http://cran.r-project.org/web/views/Spatial.html](http://cran.r-project.org/web/views/Spatial.html).
 
 The packages we will be using are 
-**ggplot2**, **rgdal**, **rgeos**, **maptools** and **ggmap**.
-To test whether a package is installed, ggplot2 for example, enter `library(ggplot2)`. 
+**ggplot2**, **rgdal**, **rgeos**, **maptools**, **mapproj** and **ggmap**.
+To test whether a package is installed, **ggplot2** for example, enter `library(ggplot2)`. 
 If you get an error message, it needs to be installed: `install.packages("ggplot2")`.
 These will be downloaded from CRAN (the Comprehensive R Archive Network); if you are prompted 
 to select a 'mirror', select one that is close to your home. 
@@ -179,14 +206,19 @@ sport <- readOGR(dsn = "data", "london_sport")
 ```
 
 In the code above `dsn` stands for "data source name" and is an *argument* of the *function* `readOGR`. Note that each new argument is separated by a comma.
-The `dsn` argument in this case, specifies the directory in which the dataset is stored. 
+The `dsn` argument in this case is a *character string*
+(indicated by quote marks like this one `"`) that
+specifies the directory where the data files are stored. 
 R functions have a default order of arguments, so `dsn = ` does not 
-actually need to be typed. If there data were stored in the 
-current working directory, one could use `readOGR(".", "london_sport")`.
-For clarity, it is good practice to include argument names, such as `dsn` when learning new functions. 
+actually need to be typed for the command to run. If the data were stored in the 
+current working directory, for example, one could use `readOGR(".", "london_sport")`.
+For clarity, it is good practice to include argument names,
+such as `dsn` when learning new functions and we continue this tradition below. 
 
-The next argument is a *character string*. This is simply the name of the file required. 
-There is no need to add a file extension (e.g. `.shp`) in this case. 
+The next argument is another *character string*:
+simply the name of the file required. 
+There is no need to add a file extension (e.g. `.shp`) in this case.
+
 The files beginning `london_sport` from the 
 [example dataset](http://spatial.ly/wp-content/uploads/2013/12/spatialggplot.zip)
 contain the borough population and 
@@ -209,7 +241,8 @@ mean(sport$Partic_Per)
 ```
 
 Take a look at this output and notice the table format of the data and the column names. There are two important symbols at work in the above block of code: the `@` symbol in the first line of code is used to refer to the attribute *slot* of the dataset; the `$` symbol refers to a specific variable (column name) in the attribute *slot* of the dataset, which was identified from the result of running the first line of code. If you are using RStudio, test out the auto-completion functionality
-by hitting `tab` before completing the command - this can save you a lot of time in the long run. 
+by hitting `tab` before completing the command -
+this can save you a lot of time in the long run. 
 
 The `head` function in the first line of the code above simply means "show the first few lines of data", i.e. the head. It's default is to output the first 6 rows of the dataset (try simply `head(sport@data)`), 
 but we can specify the number of lines with `n = 2` after the comma. 
@@ -258,7 +291,7 @@ To do this, simply use the `add = TRUE` argument after the initial plot.
 (`add = T` would also work, but we like to spell things out in this tutorial for clarity).
 What does the `col` argument refer to in the below block - it should be obvious (see figure 2).
 
-```{r Preliminary plot of London with areas of high sports participation highlighted in blue}
+```{r fig.cap="Preliminary plot of London with areas of high sports participation highlighted in blue"}
 plot(sport)
 plot(sport[sport$Partic_Per > 25,], col = "blue", add = TRUE)
 ```
@@ -371,7 +404,7 @@ in case we ever need to re-use `sport`.
 We will call this new object 
 `lnd`, short for London:
 
-```{r Plot of London}
+```{r fig.cap="Plot of London"}
 library(rgdal) # ensure rgdal is loaded
 # Create new object called "lnd" from "london_sport" shapefile
 lnd <- readOGR(dsn = "data", "london_sport")
@@ -400,6 +433,8 @@ head(crimeDat)
 # encounter this problem in your research, but it highlights the importance
 # of checking the input data. To overcome this issue we
 # can set the encoding manually, and continue.
+
+# variant: markdown_github
 ```
 
 The aspatial dataset we are going to join to the `lnd` object is a
@@ -531,7 +566,7 @@ OSGB 1936 (or [EPSG 27700](http://spatialreference.org/ref/epsg/27700/))
 is the official CRS for the UK, so
 we will convert the dataset to this:
  
-```{r Sampling and plotting stations}
+```{r fig.cap="Sampling and plotting stations"}
 # Create new stations27700 object which the stations object reprojected into OSGB36
 stations27700 <- spTransform(stations, CRSobj = CRS(proj4string(lnd)))
 stations <- stations27700 # overwrite the stations object with stations27700
@@ -555,7 +590,7 @@ on the spatial data classes being compared (Bivand et al. 2013).
 In this tutorial we will use the `over` function as it is easiest to use.
 In fact, it can be called just by using square brackets:
 
-```{r The clipped stations dataset}
+```{r fig.cap="The clipped stations dataset"}
 stations <- stations[lnd, ]
 plot(stations) # test the clip succeeded (see figure 5)
 ```
@@ -642,7 +677,7 @@ stations.m <- aggregate(stations[c("NUMBER")] , by = lnd, FUN = mean)
 
 For an optional advanced task, let us analyse and plot the result.
 
-```{r Choropleth map of mean values of stations in each borough, fig.}
+```{r fig.cap="Choropleth map of mean values of stations in each borough"}
 q <- cut(stations.m$NUMBER,  breaks= c(quantile(stations.m$NUMBER)), include.lowest=T)
 summary(q)
 clr <- as.character(factor(q, labels = paste0("grey", seq(20, 80, 20))))
@@ -673,7 +708,7 @@ points(stations[sel,], pch = sym)
 legend(legend = c("A Road", "RTS"), "bottomright", pch = unique(sym))
 ```
 
-```{r Symbol levels for train station types in London, echo=FALSE}
+```{r fig.cap="Symbol levels for train station types in London", echo=FALSE}
 q <- cut(stations.m$NUMBER,  breaks= c(quantile(stations.m$NUMBER)), include.lowest=T)
 clr <- as.character(factor(q, labels = paste0("grey", seq(20, 80, 20))))
 plot(stations.m, col = clr)
@@ -738,7 +773,7 @@ points in each zone. According to this, Barking and Dagenham should contain
 every stage with R, so let's check to see this is indeed the case with 
 a quick plot:
 
-```{r Transport points in Barking and Dagenham}
+```{r fig.cap="Transport points in Barking and Dagenham"}
 plot(lnd[grepl("Barking", lnd$name),])
 points(stations)
 ```
@@ -747,7 +782,7 @@ Now the fun part: count the points in the polygon and report back how many there
 
 We have now seen how to load, join and clip data. The second half of this tutorial 
 is concerned with *visualisation* of the results. For this, we will use
-ggplot2 and begin by looking at how it handles non-spatial data.
+**ggplot2** and begin by looking at how it handles non-spatial data.
 
 # Part IV: Map making with ggplot2
 
@@ -757,7 +792,7 @@ different method of creating plots in R using the
 The package is an implementation of the Grammar of Graphics (Wilkinson 2005) - 
 a general scheme for data visualisation that breaks up graphs 
 into semantic components such as scales and layers. 
-ggplot2 can serve as a replacement for the base graphics in R (the functions you have been plotting with today) and contains a number of default options that match good visualisation practice.
+**ggplot2** can serve as a replacement for the base graphics in R (the functions you have been plotting with today) and contains a number of default options that match good visualisation practice.
 
 The maps we produce will not be that meaningful - 
 the focus here is on sound visualisation with R and not sound analysis 
@@ -782,11 +817,11 @@ library(ggplot2)
 
 It is worth noting that the basic `plot()` function requires no 
 data preparation but additional effort in colour selection/adding the map key etc. 
-`qplot()` and `ggplot()` (from the ggplot2 package) 
+`qplot()` and `ggplot()` (from the **ggplot2** package) 
 require some additional steps to format the spatial data but select 
 colours and add keys etc. automatically. More on this later.
 
-As a first attempt with ggplot2 we can create a scatter plot with the attribute data in the 'sport' object created above. Type:
+As a first attempt with **ggplot2** we can create a scatter plot with the attribute data in the 'sport' object created above. Type:
 
 ```{r}
 p <- ggplot(sport@data, aes(Partic_Per, Pop_2001))
@@ -807,7 +842,7 @@ This is because you have not told ggplot what you want
 to do with the data. We do this by adding so-called "geoms", 
 in this case `geom_point()`.
 
-```{r A simple ggplot }
+```{r fig.cap="A simple ggplot"}
 p + geom_point()
 ```
 
@@ -815,13 +850,13 @@ Within the brackets you can alter the nature of the points. Try something like `
 
 If you want to scale the points by borough population and colour them by sports participation this is also fairly easy by adding another `aes()` argument.
 
-```{r ggplot with aesthetics, eval=FALSE}
+```{r fig.cap="ggplot with aesthetics", eval=FALSE}
 p + geom_point(aes(colour=Partic_Per, size=Pop_2001))
 ```
 
-The real power of ggplot2 lies in its ability to add layers to a plot. In this case we can add text to the plot.
+The real power of **ggplot2** lies in its ability to add layers to a plot. In this case we can add text to the plot.
 
-```{r ggplot for text}
+```{r fig.cap="ggplot for text"}
 p + geom_point(aes(colour = Partic_Per, size = Pop_2001)) + geom_text(size = 2, aes(label = name))
 ```
 
@@ -831,7 +866,7 @@ The following steps will create a map to show the percentage of the population i
 
 ## "Fortifying" spatial objects for ggplot2 maps
 
-To get the shapefiles into a format that can be plotted we have to use the `fortify()` function. Spatial objects in R have a number of slots containing the various items of data (polygon geometry, projection, attribute information) associated with a shapefile. Slots can be thought of as shelves within the data object that contain the different attributes. The "polygons" slot contains the geometry of the polygons in the form of the XY coordinates used to draw the polygon outline. The generic plot function can work out what to do with these, ggplot2 cannot. We therefore need to extract them as a data frame. The fortify function was written specifically for this purpose.
+To get the shapefiles into a format that can be plotted we have to use the `fortify()` function. Spatial objects in R have a number of slots containing the various items of data (polygon geometry, projection, attribute information) associated with a shapefile. Slots can be thought of as shelves within the data object that contain the different attributes. The "polygons" slot contains the geometry of the polygons in the form of the XY coordinates used to draw the polygon outline. The generic plot function can work out what to do with these, **ggplot2** cannot. We therefore need to extract them as a data frame. The fortify function was written specifically for this purpose.
 For this to work, either **maptools** or **rgeos** packages must be installed.
 
 ```{r, warning=FALSE}
@@ -853,10 +888,10 @@ head(sport.f[, 1:8])
 ```
 
 It is now straightforward to produce a map using all the built in tools 
-(such as setting the breaks in the data) that ggplot2 has to offer. 
+(such as setting the breaks in the data) that **ggplot2** has to offer. 
 `coord_equal()` is the equivalent of asp=T in regular plots with R:
 
-```{r Map of Lond Sports Participation}
+```{r fig.cap="Map of Lond Sports Participation"}
 Map <- ggplot(sport.f, aes(long, lat, group = group, fill = Partic_Per)) + 
   geom_polygon() + 
   coord_equal() + 
@@ -878,7 +913,7 @@ to individual polygons (in this case London Boroughs).
 The default colours are really nice but we may wish to produce the map in black and white, 
 which should produce a map like that shown below (and try changing the colors):
 
-```{r, Greyscale map}
+```{r fig.cap="Greyscale map"}
 Map + scale_fill_gradient(low = "white", high = "black")
 ```
 
@@ -894,7 +929,7 @@ ggsave("my_large_plot.png", scale = 3, dpi = 400)
 ## Adding base maps to ggplot2 with ggmap
 
 [ggmap](http://journal.r-project.org/archive/2013-1/kahle-wickham.pdf) 
-is a package that uses the ggplot2 syntax as a 
+is a package that uses the **ggplot2** syntax as a 
 template to create maps with image tiles taken from map servers 
 such as Google and 
 [OpenStreetMap](http://www.openstreetmap.org/):
@@ -920,8 +955,13 @@ b[2, ] <- (b[2, ] - mean(b[2, ])) * 1.05 + mean(b[2, ])
 
 This is then fed into the `get_map` function as the location parameter. The syntax below contains 2 functions. **ggmap** is required to produce the plot and provides the base map data.
 
-```{r, message=FALSE}
+```{r, message=FALSE, eval=FALSE}
 lnd.b1 <- ggmap(get_map(location = b))
+```
+
+```{r, echo=FALSE, eval=FALSE}
+# save(lnd.b1, file = "data/lnd.b1.RData")
+load("data/lnd.b1.RData") # load saved map
 ```
 
 In much the same way as we did above we can then layer the plot with different geoms. 
@@ -944,19 +984,28 @@ lnd.b1 +
                alpha = 0.5)
 ```
 
-The code above contains a lot of parameters. Use the ggplot2 help pages to find out what they are. 
+The code above contains a lot of parameters. Use the **ggplot2** help pages to find out what they are. 
 The resulting map looks okay, but it would be improved with a simpler base map in black and white. 
 A design firm called stamen provide the tiles we need and they can be brought into the 
 plot with the `get_map` function:
 
-```{r}
+```{r, eval=FALSE}
+# download basemap (use load("data/lnd.b2.RData") if you have no internet)
 lnd.b2 <- ggmap(get_map(location = b, source = "stamen", 
-                        maptype = "toner", crop = TRUE))
+          maptype = "toner", crop = TRUE))
 ```
+
+```{r, echo=FALSE}
+# save(lnd.b2, file = "data/lnd.b2.RData")
+load("data/lnd.b2.RData") # load saved map
+```
+
 
 We can then produce the plot as before:
 
-```{r, Basemap 2}
+```{r fig.cap="Basemap 2"}
+library(mapproj) # mapproj library needed here
+
 lnd.b2 + 
   geom_polygon(data = sport.wgs84.f, 
                aes(x = long, y = lat, group = group, fill = Partic_Per),
@@ -966,9 +1015,18 @@ lnd.b2 +
 Finally, to increase the detail of the base map, we can use `get_map`'s `zoom` argument
 (result not shown)
 
-```{r Basemap 3, eval=FALSE}
-lnd.b3 <- ggmap(get_map(location = b, source = "stamen", maptype = "toner", crop = TRUE, zoom = 11))
+```{r, eval=FALSE}
+# download basemap (try load("data/lnd.b3.RData") if you lack internet)
+lnd.b3 <- ggmap(get_map(location = b, source = "stamen",
+  maptype = "toner", crop = TRUE, zoom = 11))
+```
 
+```{r, eval=F, echo=FALSE}
+# save(lnd.b3, file = "data/lnd.b3.RData")
+# load("data/lnd.b3.RData") # load saved map
+```
+
+```{r fig.cap="Basemap 3", eval=FALSE}
 lnd.b3 + 
   geom_polygon(data = sport.wgs84.f, 
                aes(x = long, y = lat, group = group, fill = Partic_Per), 
@@ -1014,9 +1072,9 @@ plot.data <- plot.data[order(plot.data$order), ]
 
 We can now use faceting to produce one map per year
 (this may take a little while to appear as displayed
-in figure 11). 
+in figure 13). 
 
-```{r Faceted map}
+```{r fig.cap="Faceted map", fig.height=10, fig.width=6}
 ggplot(data = plot.data, aes(x = long, y = lat, fill = value, group = group)) + 
   geom_polygon() + 
   geom_path(colour="grey", lwd=0.1) + 
@@ -1143,10 +1201,6 @@ Wickham, H. (2009). ggplot2: elegant graphics for data analysis. Springer.
 
 Wilkinson, L. (2005). The grammar of graphics. Springer.
 
-```{r}
-# build the pdf version of the tutorial
-
-# source("latex/rmd2pdf.R") # convert .Rmd to .tex file
-
-# system("pdflatex intro-spatial-rl.tex")
+```{r, echo=FALSE}
+# system("mv intro-spatial.pdf intro-spatial-rl.pdf")
 ```
