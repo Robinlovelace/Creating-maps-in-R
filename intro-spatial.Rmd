@@ -11,7 +11,9 @@ output:
     highlight: pygments
 ---
 
-```{r}
+\newpage
+
+```{r, echo=FALSE}
 # rob00x-at-gmail-o-com
 # ~~~___~~The future ~
 # ~~/__/~|~~ is low ~
