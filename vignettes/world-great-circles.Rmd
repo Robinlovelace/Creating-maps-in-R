@@ -1,3 +1,9 @@
+---
+output:
+  html_document:
+    keep_md: yes
+    self_contained: no
+---
 Great circles lines on a world map with **rworldmap** and **ggplot2**
 ========================================================
 
@@ -33,6 +39,7 @@ Let us proceed by loading an entire map of the world from
 the **rworldmap** function `getMap`:
 
 ```{r Basic plot, fig.keep='none'}
+library(ggmap)
 s <- getMap() # load the map data
 class(s) # what type of are we dealing with?
 nrow(s) # n. polygons

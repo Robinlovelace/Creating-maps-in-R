@@ -31,6 +31,16 @@ lapply(x, require, character.only = T)
 ```
 
 ```
+## Loading required package: rworldmap
+## Loading required package: sp
+## ### Welcome to rworldmap ###
+## For a short introduction type : 	 vignette('rworldmap')
+## Loading required package: geosphere
+## Loading required package: ggmap
+## Loading required package: ggplot2
+```
+
+```
 ## [[1]]
 ## [1] TRUE
 ## 
@@ -46,6 +56,7 @@ the **rworldmap** function `getMap`:
 
 
 ```r
+library(ggmap)
 s <- getMap() # load the map data
 class(s) # what type of are we dealing with?
 ```
@@ -107,7 +118,7 @@ plot(s)
 points(p, col = "red")
 ```
 
-![plot of chunk Plotting points](https://raw.githubusercontent.com/Robinlovelace/Creating-maps-in-R/master/figure/Plotting points.png) 
+![plot of chunk Plotting points](./world-great-circles_files/figure-html/Plotting points.png) 
 
 ## Joining the dots
 
@@ -122,7 +133,7 @@ segments(x0 = rep(coordinates(p[1,])[1], n), y0 = rep(coordinates(p[1,])[2], n),
          x1 = coordinates(p)[,1], y1 = coordinates(p)[,2])
 ```
 
-![plot of chunk Plotting segments](https://raw.githubusercontent.com/Robinlovelace/Creating-maps-in-R/master/figure/Plotting segments.png) 
+![plot of chunk Plotting segments](./world-great-circles_files/figure-html/Plotting segments.png) 
 
 (Incidentally, isn't the use of `segments` here rather clunky - any suggestions
 of a more elegant way to do this welcome.)
@@ -139,8 +150,8 @@ head(gcIntermediate(p[1,], p[2]), 2) # take a look at the output of the gcInterm
 
 ```
 ##        lon    lat
-## [1,] 55.16 -37.47
-## [2,] 53.16 -37.25
+## [1,] 55.15 -37.46
+## [2,] 53.15 -37.23
 ```
 
 ```r
@@ -153,7 +164,7 @@ for(i in 1:length(p)){
 }
 ```
 
-![plot of chunk Plotting great circles 1](https://raw.githubusercontent.com/Robinlovelace/Creating-maps-in-R/master/figure/Plotting great circles 1.png) 
+![plot of chunk Plotting great circles 1](./world-great-circles_files/figure-html/Plotting great circles 1.png) 
 
 Fantastic. Now we have great circle lines represented on a
 map with a [geographic coordinate system (CRS)](http://en.wikipedia.org/wiki/Geographic_coordinate_system)
@@ -188,6 +199,18 @@ names(s@data)
 
 ```r
 library(rgdal)
+```
+
+```
+## rgdal: version: 0.8-10, (SVN revision 478)
+## Geospatial Data Abstraction Library extensions to R successfully loaded
+## Loaded GDAL runtime: GDAL 1.10.0, released 2013/04/24
+## Path to GDAL shared files: /usr/share/gdal/1.10
+## Loaded PROJ.4 runtime: Rel. 4.8.0, 6 March 2012, [PJ_VERSION: 480]
+## Path to PROJ.4 shared files: (autodetected)
+```
+
+```r
 # s <- spTransform(s, CRSobj=CRS("+proj=robin +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs"))
 rcols <- terrain.colors(length(unique(s$REGION)))
 s$col <- as.numeric(factor(s$REGION))
@@ -199,7 +222,7 @@ for(i in 1:length(p)){
 }
 ```
 
-![plot of chunk Beautifying](https://raw.githubusercontent.com/Robinlovelace/Creating-maps-in-R/master/figure/Beautifying.png) 
+![plot of chunk Beautifying](./world-great-circles_files/figure-html/Beautifying.png) 
 
 ```r
 par(bg = 'white')
@@ -219,7 +242,7 @@ m <- ggplot(s, aes(x=long, y=lat, group=group)) +
 m
 ```
 
-![plot of chunk ggplot world 1](https://raw.githubusercontent.com/Robinlovelace/Creating-maps-in-R/master/figure/ggplot world 1.png) 
+![plot of chunk ggplot world 1](./world-great-circles_files/figure-html/ggplot world 1.png) 
 
 When we add the lines in projected maps (i.e. with a Euclidean coordinate system)
 based solely on origins and destinations, this works fine, but
@@ -245,7 +268,7 @@ ggplot() + geom_polygon(data = s,aes(x=long, y=lat, group=group),
   geom_segment(aes(x = p1[,1], y = p1[,2], xend = p2[,1], yend = p2[,2]))
 ```
 
-![plot of chunk Adding world lines ggplot2 style](https://raw.githubusercontent.com/Robinlovelace/Creating-maps-in-R/master/figure/Adding world lines ggplot2 style.png) 
+![plot of chunk Adding world lines ggplot2 style](./world-great-circles_files/figure-html/Adding world lines ggplot2 style.png) 
 
 ## Adding great circle lines to ggplot2 maps
 
@@ -289,7 +312,7 @@ ggplot() + geom_polygon(data = s, aes(x=long, y=lat, group=group),
   theme(panel.background = element_rect(fill = 'lightblue'))
 ```
 
-![plot of chunk polygon paths ggplo2](https://raw.githubusercontent.com/Robinlovelace/Creating-maps-in-R/master/figure/polygon paths ggplo2.png) 
+![plot of chunk polygon paths ggplo2](./world-great-circles_files/figure-html/polygon paths ggplo2.png) 
 
 ## Changing projection in ggplot
 
@@ -308,7 +331,7 @@ m <- last_plot()
 m + coord_map()
 ```
 
-![plot of chunk ggplot2 projections](https://raw.githubusercontent.com/Robinlovelace/Creating-maps-in-R/master/figure/ggplot2 projections1.png) 
+![plot of chunk ggplot2 projections](./world-great-circles_files/figure-html/ggplot2 projections1.png) 
 
 ```r
 # remove fill as this clearly causes problems:
@@ -319,7 +342,7 @@ m <- ggplot() + geom_path(data = s, aes(x=long, y=lat, group=group), colour="bla
 m + coord_map("ortho", orientation=c(41, -74, 0)) # for ortho maps
 ```
 
-![plot of chunk ggplot2 projections](https://raw.githubusercontent.com/Robinlovelace/Creating-maps-in-R/master/figure/ggplot2 projections2.png) 
+![plot of chunk ggplot2 projections](./world-great-circles_files/figure-html/ggplot2 projections2.png) 
 
 ## Conclusion
 
