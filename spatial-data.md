@@ -3,9 +3,7 @@ An introduction to R for visualising spatial data
 author: Robin Lovelace
 date: 14th July 2014
 
-```{r,echo=FALSE}
-# date: 12th June 2014
-```
+
 
 
 Slides available online from the course's home: [github.com/Robinlovelace/Creating-maps-in-R](https://github.com/Robinlovelace/Creating-maps-in-R). 
@@ -36,21 +34,7 @@ During this tutorial we will
 - Make maps with **ggplot2** (14:00 - 14:20)
 - Taking it further + Q & A (14:20 onwards)
 
-```{r, echo=FALSE}
-# During this course we will cover these topics
-# 
-# - An introduction to R                    (9:30 - 10:30)
-# - Loading and interrogating spatial data (10:30 - 11:30)
-# - Manipulating spatial objects (11:30 - 12:30)
-# 
-# LUNCH
-# 
-# - Making maps in ggplot2 (13:30 - 14:30)              
-# - Basemaps (14:30 - 15:30)
-# - More advanced visuals (15:30 - 16:00)
-# 
-# - Taking it further + Q & A (16:00 onwards)
-```
+
 
 
 
@@ -126,7 +110,8 @@ E.g. MySQL database dump gives you this:
 LINESTRING(-1.81 52.55,-1.81 52.55, … )  - solved:
 
 
-```{r, eval=FALSE}
+
+```r
 ps <- as.list(ps) # make a list
 for(i in 1:length(ps)){
   ps[[i]] <- gsub("LINESTRING\\(", "", ps[[i]])

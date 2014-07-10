@@ -1,0 +1,82 @@
+---
+title: "R Spatial Reference Card"
+author: "Robin"
+date: "10/07/2014"
+output: pdf_document
+---
+
+R has powerful and effective spatial data processing tools. It is the purpose
+of this reference card to summarise the most important and frequently used
+packages and functions. Some of the commands use real datasets from the
+'Creating-maps-in-R' GitHub repository. Unzip this repo and run the commands from
+the folder's root directory to see the commands in action, or use R's help functions.
+Using the example of the `help` command, type:
+`?help` (for information on a specific function),
+`??help` (to search for word in R's documentation)
+and `example(help)` (for premade examples of that function).
+
+# Key packages
+
+Additional packages must be installed (using `install.packages('packageName')`) on top of R's [default packages](http://www.hep.by/gnu/r-patched/r-admin/R-admin_33.html) to use R's spatial capabilities. Some of the most important and frequently loaded, via `library(packageName)`,
+spatial packages are:
+
+- **sp**: basis of most other spatial R packages - provides Spatial* classes
+- **rgdal**: R's interface to the GDAL data import library
+- **rgeos**: provides a number of spatial functions
+- **maptools**: tools for handling spatial objects
+- **raster**: provides functions for raster data
+
+To refer to a function in relation to its package, use the `::` symbol.
+`sp::spTransform`, for example, is the same as `spTransform`, but avoids
+any ambiguity by specifying the package of which it is a part. There are
+hundreds of additional R packages described on the Comprehensive
+R Archive Network's (CRAN) website under the
+[*spatial view*](http://cran.r-project.org/web/views/Spatial.html).
+
+# R's Spatial* classes
+
+To work with spatial data, R uses *classes* that are more complex
+that the default *S3* `vector`, `list` and `data.frame` data classes
+in R's base packages. Spatial object classes can be identified with the
+function `class(objectName)`. Each contain a number of different
+*slots*: sub-classes of specific types. Some important
+spatial classes provided by the `sp` package include:
+
+- `SpatialPoints`: point data, with x and y coordinates for each item
+- `SpatialLines`: line data, composed of lists of the `Lines` sub-class or *slot*
+- `SpatialPolygons`: polygon data, with `Polygons` and `Polygon` *slots*.
+- `SpatialPixels`: a spatial class for raster data
+
+It is important to note that each of the above classes cannot contain non-spatial
+attribute data. First they must be converted into a class of the same name but suffixed
+with `DataFrame`. Thus `spPdf <- SpatialPointsDataFrame(spP, df)` will, provided
+`nrow(spP) == nrow(df)` and that `spP` and `df` are of `SpatialPoints` and `data.frame`
+classes, respectively, create a new object containing spatial and non-spatial information.
+The attribute data can be accessed in this instance by `spPdf@data`: the `@data` notation
+refers to the `data` slot of the new object. More fundamental spatial classes, which
+are in fact subsets of the `Spatial*` type classes listed above, include `bbox` (the
+object's bounding box) and `proj4string` (the projection of the object, which can be `NA`).
+
+# Loading and querying spatial data
+
+```{r, warning=FALSE, message=FALSE, results='hide'}
+library(rgdal)
+SpDf <- readOGR("data/", "london_sport") # this loads a shapefile
+```
+
+# Allocating and changing projection
+
+Query the current projection of an object: 
+```{r}
+proj4string(SpDf)
+```
+
+# Spatial subsetting
+
+# Spatial aggregation
+
+# Spatial graphics
+
+# Basemaps and advanced functions
+
+
