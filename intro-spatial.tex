@@ -330,7 +330,7 @@ described above for ggplot2) do so now:
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{library}\NormalTok{(rgdal)}
-\NormalTok{sport <-}\StringTok{ }\KeywordTok{readOGR}\NormalTok{(}\DataTypeTok{dsn =} \StringTok{"data"}\NormalTok{, }\StringTok{"london_sport"}\NormalTok{)}
+\NormalTok{lnd_sport <-}\StringTok{ }\KeywordTok{readOGR}\NormalTok{(}\DataTypeTok{dsn =} \StringTok{"data"}\NormalTok{, }\StringTok{"london_sport"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -384,7 +384,7 @@ with some basic commands:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{head}\NormalTok{(sport@data, }\DataTypeTok{n =} \DecValTok{2}\NormalTok{)}
+\KeywordTok{head}\NormalTok{(lnd_sport@data, }\DataTypeTok{n =} \DecValTok{2}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -396,7 +396,7 @@ with some basic commands:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{mean}\NormalTok{(sport$Partic_Per)}
+\KeywordTok{mean}\NormalTok{(lnd_sport$Partic_Per)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -417,38 +417,38 @@ the command - this can save you a lot of time in the long run.
 The \texttt{head} function in the first line of the code above simply
 means ``show the first few lines of data'', i.e.~the head. It's default
 is to output the first 6 rows of the dataset (try simply
-\texttt{head(sport@data)}), but we can specify the number of lines with
-\texttt{n = 2} after the comma. The second line of the code above
+\texttt{head(lnd\_sport@data)}), but we can specify the number of lines
+with \texttt{n = 2} after the comma. The second line of the code above
 calculates the mean value of the variable \texttt{Partic\_Per} (sports
-participation per 100 people) for each of the zones in the sport object.
-To explore the sport object further, try typing \texttt{nrow(sport)} and
-record how many zones the dataset contains. You can also try
-\texttt{ncol(sport)}.
+participation per 100 people) for each of the zones in the
+\texttt{lnd\_sport} object. To explore \texttt{lnd\_sport} object
+further, try typing \texttt{nrow(lnd\_sport)} and record how many zones
+the dataset contains. You can also try \texttt{ncol(lnd\_sport)}.
 
 Now we have seen something of the attribute \emph{slot} of the spatial
-dataset, let us look at sport's \emph{geometry} data, which describes
-where the polygons are located in space:
+dataset, let us look at the object's \emph{geometry} data, which
+describes where the polygons are located in space:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{plot}\NormalTok{(sport) }\CommentTok{# not shown in tutorial - try it on your computer}
+\KeywordTok{plot}\NormalTok{(lnd_sport) }\CommentTok{# not shown in tutorial - try it on your computer}
 \end{Highlighting}
 \end{Shaded}
 
 \texttt{plot} is one of the most useful functions in R, as it changes
 its behaviour depending on the input data (this is called
 \emph{polymorphism} by computer scientists). Inputting another dataset
-such as \texttt{plot(sport@data)} will generate an entirely different
-type of plot. Thus R is intelligent at guessing what you want to do with
-the data you provide it with.
+such as \texttt{plot(lnd\_sport@data)} will generate an entirely
+different type of plot. Thus R is intelligent at guessing what you want
+to do with the data you provide it with.
 
 R has powerful subsetting capabilities that can be accessed very
 concisely using square brackets, as shown in the following example:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{#select rows from attribute slot of sport object, where sports participation is less than 15.}
-\NormalTok{sport@data[sport$Partic_Per <}\StringTok{ }\DecValTok{15}\NormalTok{, ]}
+\CommentTok{#select rows from attribute slot of lnd_sport object, where sports participation is less than 15.}
+\NormalTok{lnd_sport@data[lnd_sport$Partic_Per <}\StringTok{ }\DecValTok{15}\NormalTok{, ]}
 \end{Highlighting}
 \end{Shaded}
 
@@ -459,28 +459,29 @@ concisely using square brackets, as shown in the following example:
 ## 32      00AA City of London        9.1     7181
 \end{verbatim}
 
-The above line of code asked R to select rows from the sport object,
-where sports participation is lower than 15, in this case rows 17, 21
-and 32, which are Harrow, Newham and the city centre respectively. The
-square brackets work as follows: anything before the comma refers to the
-rows that will be selected, anything after the comma refers to the
-number of columns that should be returned. For example if the dataset
-had 1000 columns and you were only interested in the first two columns
-you could specify \texttt{1:2} after the comma. The ``:'' symbol simply
-means ``to'', i.e.~columns 1 to 2. Try experimenting with the square
-brackets notation (e.g.~guess the result of
-\texttt{sport@data{[}1:2, 1:3{]}} and test it): it will be useful.
+The above line of code asked R to select rows from the
+\texttt{lnd\_sport} object, where sports participation is lower than 15,
+in this case rows 17, 21 and 32, which are Harrow, Newham and the city
+centre respectively. The square brackets work as follows: anything
+before the comma refers to the rows that will be selected, anything
+after the comma refers to the number of columns that should be returned.
+For example if the dataset had 1000 columns and you were only interested
+in the first two columns you could specify \texttt{1:2} after the comma.
+The ``:'' symbol simply means ``to'', i.e.~columns 1 to 2. Try
+experimenting with the square brackets notation (e.g.~guess the result
+of \texttt{lnd\_sport@data{[}1:2, 1:3{]}} and test it): it will be
+useful.
 
 So far we have been interrogating only the attribute \emph{slot}
-(\texttt{@data}) of the \texttt{sport} object, but the square brackets
-can also be used to subset spatial datasets, i.e.~the geometry
+(\texttt{@data}) of the \texttt{lnd\_sport} object, but the square
+brackets can also be used to subset spatial datasets, i.e.~the geometry
 \emph{slot}. Using the same logic as before try to plot a subset of
 zones with high sports participation.
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{#plot zones from sports object where sports participation is greater than 25.}
-\KeywordTok{plot}\NormalTok{(sport[sport$Partic_Per >}\StringTok{ }\DecValTok{25}\NormalTok{, ]) }\CommentTok{# output not shown in tutorial}
+\KeywordTok{plot}\NormalTok{(lnd_sport[lnd_sport$Partic_Per >}\StringTok{ }\DecValTok{25}\NormalTok{, ]) }\CommentTok{# output not shown in tutorial}
 \end{Highlighting}
 \end{Shaded}
 
@@ -493,8 +494,8 @@ spell things out in this tutorial for clarity). What does the
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{plot}\NormalTok{(sport)}
-\KeywordTok{plot}\NormalTok{(sport[sport$Partic_Per >}\StringTok{ }\DecValTok{25}\NormalTok{,], }\DataTypeTok{col =} \StringTok{"blue"}\NormalTok{, }\DataTypeTok{add =} \OtherTok{TRUE}\NormalTok{)}
+\KeywordTok{plot}\NormalTok{(lnd_sport)}
+\KeywordTok{plot}\NormalTok{(lnd_sport[lnd_sport$Partic_Per >}\StringTok{ }\DecValTok{25}\NormalTok{,], }\DataTypeTok{col =} \StringTok{"blue"}\NormalTok{, }\DataTypeTok{add =} \OtherTok{TRUE}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -513,11 +514,11 @@ language; we will cover this in more detail in subsequent sections.
 
 While we are on the topic of loading data, it is worth pointing out that
 R can save and load data efficiently into its own data format
-(\texttt{.RData}). Try \texttt{save(sport, file = "sport.RData")} and
-see what happens. If you type \texttt{rm(sport)} (which removes the
-object) and then \texttt{load("sport.RData")} you should see how this
-works. \texttt{sport} will disappear from the workspace and then
-reappear.
+(\texttt{.RData}). Try \texttt{save(lnd\_sport, file = "sport.RData")}
+and see what happens. If you type \texttt{rm(lnd\_sport)} (which removes
+the object) and then \texttt{load("sport.RData")} you should see how
+this works. \texttt{lnd\_sport} will disappear from the workspace and
+then reappear.
 
 \subsection{Attribute data}\label{attribute-data}
 
@@ -527,19 +528,19 @@ can be treated the same as an R
 \href{http://www.statmethods.net/input/datatypes.html}{data frame}.
 
 R deliberately hides the geometry of spatial data unless you print the
-entire object (try typing \texttt{print(sport)}). Let's take a look at
-the headings of sport, using the following command:
-\texttt{names(sport)} Remember, the attribute data contained in spatial
-objects are kept in a `slot' that can be accessed using the \texttt{@}
-symbol: \texttt{sport@data}. This is useful if you do not wish to work
-with the spatial components of the data at all times.
+entire object (try typing \texttt{print(lnd\_sport)}). Let's take a look
+at the headings of sport, using the following command:
+\texttt{names(lnd\_sport)} Remember, the attribute data contained in
+spatial objects are kept in a `slot' that can be accessed using the
+\texttt{@} symbol: \texttt{lnd\_sport@data}. This is useful if you do
+not wish to work with the spatial components of the data at all times.
 
-Type \texttt{summary(sport)} to get some additional information about
-the sport data object. Spatial objects in R contain much additional
+Type \texttt{summary(lnd\_sport)} to get some additional information
+about the data object. Spatial objects in R contain much additional
 information:
 
 \begin{verbatim}
-summary(sport)
+summary(lnd_sport)
 
 ## Object of class SpatialPolygonsDataFrame
 ## Coordinates:
@@ -551,7 +552,7 @@ summary(sport)
 ## [+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 ....]
 \end{verbatim}
 
-The above output tells us that \texttt{sport} is a special spatial
+The above output tells us that \texttt{lnd\_sport} is a special spatial
 class, in this case a \texttt{SpatialPolygonsDataFrame}, meaning it is
 composed of various polygons, each of which has attributes. This is the
 typical class of data found in administrative zones. The coordinates
@@ -582,14 +583,14 @@ is joined to other dataset based on spatial location.
 
 First things first, before we start data manipulation we will check the
 reference system of our spatial datasets. You may have noticed the word
-\texttt{proj4string} in the summary of the \texttt{sport} object above.
-This represents the coordinate reference system used in the data. In
-this file it has been incorrectly specified so we must change it with
+\texttt{proj4string} in the summary of the \texttt{lnd\_sport} object
+above. This represents the coordinate reference system used in the data.
+In this file it has been incorrectly specified so we must change it with
 the following:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{proj4string}\NormalTok{(sport) <-}\StringTok{ }\KeywordTok{CRS}\NormalTok{(}\StringTok{"+init=epsg:27700"}\NormalTok{)}
+\KeywordTok{proj4string}\NormalTok{(lnd_sport) <-}\StringTok{ }\KeywordTok{CRS}\NormalTok{(}\StringTok{"+init=epsg:27700"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -602,30 +603,31 @@ following code:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{sport.wgs84 <-}\StringTok{ }\KeywordTok{spTransform}\NormalTok{(sport, }\KeywordTok{CRS}\NormalTok{(}\StringTok{"+init=epsg:4326"}\NormalTok{))}
+\NormalTok{lnd_sport.wgs84 <-}\StringTok{ }\KeywordTok{spTransform}\NormalTok{(lnd_sport, }\KeywordTok{CRS}\NormalTok{(}\StringTok{"+init=epsg:4326"}\NormalTok{))}
 \end{Highlighting}
 \end{Shaded}
 
 The above line of code uses the function \texttt{spTransform}, from the
-\textbf{sp} package, to convert the \texttt{sport} object into a new
-form, with the Coordinate Reference System (CRS) specified as WGS84. The
-different epsg codes are a bit of hassle to remember but you can search
-for them at \href{http://spatialreference.org/}{spatialreference.org}.
+\textbf{sp} package, to convert the \texttt{lnd\_sport} object into a
+new form, with the Coordinate Reference System (CRS) specified as WGS84.
+The different epsg codes are a bit of hassle to remember but you can
+search for them at
+\href{http://spatialreference.org/}{spatialreference.org}.
 
 \subsection{Attribute joins}\label{attribute-joins}
 
 Attribute joins are used to link additional pieces of information to our
-polygons. in the \texttt{sport} object, for example, we have 5 attribute
-variables - that can be found by typing \texttt{names(sport)}. But what
-happens when we want to add an additional variable from an external data
-table? We will use the example of recorded crimes by borough to
-demonstrate this.
+polygons. in the \texttt{lnd\_sport} object, for example, we have 5
+attribute variables - that can be found by typing
+\texttt{names(lnd\_sport)}. But what happens when we want to add an
+additional variable from an external data table? We will use the example
+of recorded crimes by borough to demonstrate this.
 
 To reaffirm our starting point, let's re-load the ``london\_sport''
 shapefile as a new object and plot it. This is identical to the
-\texttt{sport} object in the first instance, but we will give it a new
-name, in case we ever need to re-use \texttt{sport}. We will call this
-new object \texttt{lnd}, short for London:
+\texttt{lnd\_sport} object in the first instance, but we will give it a
+new name, in case we ever need to re-use \texttt{lnd\_sport}. We will
+call this new object \texttt{lnd}, short for London:
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1250,23 +1252,22 @@ spatial data but select colours and add keys etc. automatically. More on
 this later.
 
 As a first attempt with \textbf{ggplot2} we can create a scatter plot
-with the attribute data in the `sport' object created above. Type:
+with the attribute data in the \texttt{lnd} object created above. Type:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{p <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(sport@data, }\KeywordTok{aes}\NormalTok{(Partic_Per, Pop_2001))}
+\NormalTok{p <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(lnd@data, }\KeywordTok{aes}\NormalTok{(Partic_Per, Pop_2001))}
 \end{Highlighting}
 \end{Shaded}
 
 What you have just done is set up a ggplot object where you say where
-you want the input data to come from. \texttt{sport@data} is actually a
-data frame contained within the wider spatial object \texttt{sport} (the
-\texttt{@} enables you to access the attribute table of the sport
-shapefile). The characters inside the \texttt{aes} argument refer to the
-parts of that data frame you wish to use (the variables
-\texttt{Partic\_Per} and \texttt{Pop\_2001}). This has to happen within
-the brackets of \texttt{aes()}, which means, roughly speaking
-`aesthetics that vary'.
+you want the input data to come from. \texttt{lnd@data} is actually a
+data frame contained within the wider spatial object \texttt{lnd} (the
+\texttt{@} enables you to access the attribute table of the shapefile).
+The characters inside the \texttt{aes} argument refer to the parts of
+that data frame you wish to use (the variables \texttt{Partic\_Per} and
+\texttt{Pop\_2001}). This has to happen within the brackets of
+\texttt{aes()}, which means, roughly speaking `aesthetics that vary'.
 
 If you just type p and hit enter you get the error
 \texttt{No layers in plot}. This is because you have not told ggplot
@@ -1341,18 +1342,18 @@ must be installed.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{sport.f <-}\StringTok{ }\KeywordTok{fortify}\NormalTok{(sport, }\DataTypeTok{region =} \StringTok{"ons_label"}\NormalTok{) }\CommentTok{# you may need to load maptools}
+\NormalTok{lnd.f <-}\StringTok{ }\KeywordTok{fortify}\NormalTok{(lnd, }\DataTypeTok{region =} \StringTok{"ons_label"}\NormalTok{) }\CommentTok{# you may need to load maptools}
 \end{Highlighting}
 \end{Shaded}
 
-This step has lost the attribute information associated with the sport
+This step has lost the attribute information associated with the lnd
 object. We can add it back using the merge function (this performs a
 data join). To find out how this function works look at the output of
 typing \texttt{?merge}.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{sport.f <-}\StringTok{ }\KeywordTok{merge}\NormalTok{(sport.f, sport@data, }\DataTypeTok{by.x =} \StringTok{"id"}\NormalTok{, }\DataTypeTok{by.y =} \StringTok{"ons_label"}\NormalTok{)}
+\NormalTok{lnd.f <-}\StringTok{ }\KeywordTok{merge}\NormalTok{(lnd.f, lnd@data, }\DataTypeTok{by.x =} \StringTok{"id"}\NormalTok{, }\DataTypeTok{by.y =} \StringTok{"ons_label"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1360,14 +1361,14 @@ Take a look at the \texttt{sport.f} object to see its contents. You
 should see a large data frame containing the latitude and longitude
 (they are actually Easting and Northing as the data are in British
 National Grid format) coordinates alongside the attribute information
-associated with each London Borough. If you type \texttt{print(sport.f)}
+associated with each London Borough. If you type \texttt{print(lnd.f)}
 you will see just how many coordinate pairs are required! To keep the
 output to a minimum, take a peek at the object using just the
 \texttt{head} command:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{head}\NormalTok{(sport.f[, }\DecValTok{1}\NormalTok{:}\DecValTok{8}\NormalTok{])}
+\KeywordTok{head}\NormalTok{(lnd.f[, }\DecValTok{1}\NormalTok{:}\DecValTok{8}\NormalTok{])}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1388,10 +1389,10 @@ plots with R:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{Map <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(sport.f, }\KeywordTok{aes}\NormalTok{(long, lat, }\DataTypeTok{group =} \NormalTok{group, }\DataTypeTok{fill =} \NormalTok{Partic_Per)) +}
+\NormalTok{Map <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(lnd.f, }\KeywordTok{aes}\NormalTok{(long, lat, }\DataTypeTok{group =} \NormalTok{group, }\DataTypeTok{fill =} \NormalTok{Partic_Per)) +}
 \StringTok{  }\KeywordTok{geom_polygon}\NormalTok{() +}
 \StringTok{  }\KeywordTok{coord_equal}\NormalTok{() +}
-\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{x =} \StringTok{"Easting (m)"}\NormalTok{, }\DataTypeTok{y =} \StringTok{"Northing (m)"}\NormalTok{, }\DataTypeTok{fill =} \StringTok{"% Sport Partic."}\NormalTok{) +}
+\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{x =} \StringTok{"Easting (m)"}\NormalTok{, }\DataTypeTok{y =} \StringTok{"Northing (m)"}\NormalTok{, }\DataTypeTok{fill =} \StringTok{"% Sports}\CharTok{\textbackslash{}n}\StringTok{Participation"}\NormalTok{) +}
 \StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"London Sports Participation"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -1448,17 +1449,18 @@ create maps with image tiles taken from map servers such as Google and
 \end{Highlighting}
 \end{Shaded}
 
-The \texttt{sport} object loaded previously is in British National Grid
+The \texttt{lnd} object loaded previously is in British National Grid
 but the ggmap image tiles are in WGS84. We therefore need to use the
-sport.wgs84 object created in the reprojection operation earlier.
+\texttt{lnd\_sport.wgs84} object created in the reprojection operation
+earlier.
 
 The first job is to calculate the bounding box (bb for short) of the
-sport.wgs84 object to identify the geographic extent of the image tiles
-that we need.
+\texttt{lnd\_sport.wgs84} object to identify the geographic extent of
+the image tiles that we need.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{b <-}\StringTok{ }\KeywordTok{bbox}\NormalTok{(sport.wgs84)}
+\NormalTok{b <-}\StringTok{ }\KeywordTok{bbox}\NormalTok{(lnd_sport.wgs84)}
 \NormalTok{b[}\DecValTok{1}\NormalTok{, ] <-}\StringTok{ }\NormalTok{(b[}\DecValTok{1}\NormalTok{, ] -}\StringTok{ }\KeywordTok{mean}\NormalTok{(b[}\DecValTok{1}\NormalTok{, ])) *}\StringTok{ }\FloatTok{1.05} \NormalTok{+}\StringTok{ }\KeywordTok{mean}\NormalTok{(b[}\DecValTok{1}\NormalTok{, ])}
 \NormalTok{b[}\DecValTok{2}\NormalTok{, ] <-}\StringTok{ }\NormalTok{(b[}\DecValTok{2}\NormalTok{, ] -}\StringTok{ }\KeywordTok{mean}\NormalTok{(b[}\DecValTok{2}\NormalTok{, ])) *}\StringTok{ }\FloatTok{1.05} \NormalTok{+}\StringTok{ }\KeywordTok{mean}\NormalTok{(b[}\DecValTok{2}\NormalTok{, ])}
 \CommentTok{# scale longitude and latitude (increase bb by 5% for plot)}
@@ -1479,13 +1481,14 @@ required to produce the plot and provides the base map data.
 In much the same way as we did above we can then layer the plot with
 different geoms.
 
-First fortify the sport.wgs84 object and then merge with the required
-attribute data (we already did this step to create the sport.f object).
+First fortify the \texttt{lnd\_sport.wgs84} object and then merge with
+the required attribute data (we already did this step to create the
+\texttt{lnd.f} object).
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{sport.wgs84.f <-}\StringTok{ }\KeywordTok{fortify}\NormalTok{(sport.wgs84, }\DataTypeTok{region =} \StringTok{"ons_label"}\NormalTok{)}
-\NormalTok{sport.wgs84.f <-}\StringTok{ }\KeywordTok{merge}\NormalTok{(sport.wgs84.f, sport.wgs84@data,}
+\NormalTok{lnd_sport.wgs84.f <-}\StringTok{ }\KeywordTok{fortify}\NormalTok{(lnd_sport.wgs84, }\DataTypeTok{region =} \StringTok{"ons_label"}\NormalTok{)}
+\NormalTok{lnd_sport.wgs84.f <-}\StringTok{ }\KeywordTok{merge}\NormalTok{(lnd_sport.wgs84.f, lnd_sport.wgs84@data,}
                       \DataTypeTok{by.x =} \StringTok{"id"}\NormalTok{, }\DataTypeTok{by.y =} \StringTok{"ons_label"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -1495,7 +1498,7 @@ We can now overlay this on our base map.
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{lnd.b1 +}
-\StringTok{  }\KeywordTok{geom_polygon}\NormalTok{(}\DataTypeTok{data =} \NormalTok{sport.wgs84.f,}
+\StringTok{  }\KeywordTok{geom_polygon}\NormalTok{(}\DataTypeTok{data =} \NormalTok{lnd_sport.wgs84.f,}
                \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \NormalTok{long, }\DataTypeTok{y =} \NormalTok{lat, }\DataTypeTok{group =} \NormalTok{group, }\DataTypeTok{fill =} \NormalTok{Partic_Per),}
                \DataTypeTok{alpha =} \FloatTok{0.5}\NormalTok{)}
 \end{Highlighting}
@@ -1530,7 +1533,7 @@ We can then produce the plot as before:
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{lnd.b2 +}
-\StringTok{  }\KeywordTok{geom_polygon}\NormalTok{(}\DataTypeTok{data =} \NormalTok{sport.wgs84.f,}
+\StringTok{  }\KeywordTok{geom_polygon}\NormalTok{(}\DataTypeTok{data =} \NormalTok{lnd_sport.wgs84.f,}
                \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \NormalTok{long, }\DataTypeTok{y =} \NormalTok{lat, }\DataTypeTok{group =} \NormalTok{group, }\DataTypeTok{fill =} \NormalTok{Partic_Per),}
                \DataTypeTok{alpha =} \FloatTok{0.5}\NormalTok{)}
 \end{Highlighting}
@@ -1556,7 +1559,7 @@ Finally, to increase the detail of the base map, we can use
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{lnd.b3 +}
-\StringTok{  }\KeywordTok{geom_polygon}\NormalTok{(}\DataTypeTok{data =} \NormalTok{sport.wgs84.f,}
+\StringTok{  }\KeywordTok{geom_polygon}\NormalTok{(}\DataTypeTok{data =} \NormalTok{lnd_sport.wgs84.f,}
                \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \NormalTok{long, }\DataTypeTok{y =} \NormalTok{lat, }\DataTypeTok{group =} \NormalTok{group, }\DataTypeTok{fill =} \NormalTok{Partic_Per),}
                \DataTypeTok{alpha =} \FloatTok{0.5}\NormalTok{)}
 \end{Highlighting}
@@ -1590,11 +1593,11 @@ Load the data - this shows historic population values between 1801 and
 \end{Shaded}
 
 Merge the population data with the London borough geometry contained
-within our sport.f object.
+within our \texttt{lnd.f} object.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{plot.data <-}\StringTok{ }\KeywordTok{merge}\NormalTok{(sport.f, london.data.melt, }\DataTypeTok{by.x =} \StringTok{"id"}\NormalTok{, }\DataTypeTok{by.y =} \StringTok{"Area.Code"}\NormalTok{)}
+\NormalTok{plot.data <-}\StringTok{ }\KeywordTok{merge}\NormalTok{(lnd.f, london.data.melt, }\DataTypeTok{by.x =} \StringTok{"id"}\NormalTok{, }\DataTypeTok{by.y =} \StringTok{"Area.Code"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 

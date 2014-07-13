@@ -60,24 +60,37 @@ object's bounding box) and `proj4string` (the projection of the object, which ma
 
 ```{r, warning=FALSE, message=FALSE, results='hide'}
 library(rgdal)
-SpDf <- readOGR("data/", "london_sport") # this loads a shapefile and names it SpDf 
+lnd_sport <- readOGR("data/", "london_sport") # this loads a shapefile and names it lnd_sport 
 ```
 
 # Allocating and changing projection
 
-Query the current projection of an object: 
-```{r}
-proj4string(SpDf)
+Query the current projection of an object:
+
+```{r, eval=FALSE}
+proj4string(lnd_sport)
 ```
+
+```{r, echo=FALSE}
+paste0(strtrim(proj4string(lnd_sport), 48 ), "...")
+```
+
 Change the Coordinate Reference System (CRS) if it has been incorrectly assigned:
-```{r}
-proj4string(SpDf) <-CRS("+init=epsg:27700")
+
+```{r, warning=FALSE}
+proj4string(lnd_sport) <- CRS("+init=epsg:27700")
 ```
-Note the warning above which states that the coordinate reference system has been changed but the data
+
+Note a warning message should appear which states that
+the coordinate reference system has been changed but the data
 has not been transformed. To transform the data use:
+
 ```{r}
-SpDf.wgs84 <-spTransform(SpDf("+init=epsg:4326"))
+lnd_sport.wgs84 <-spTransform(lnd_sport, CRS("+init=epsg:4326"))
 ```
+
+`epsg=` allows access to a very wide range of CRS - see the
+[spatialreference.org/](http://spatialreference.org/) website for details.
 
 # Spatial subsetting
 

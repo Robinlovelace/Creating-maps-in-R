@@ -204,7 +204,7 @@ R to handle a broader range of spatial data formats. If you've not already
 
 ```{r, message=FALSE}
 library(rgdal)
-sport <- readOGR(dsn = "data", "london_sport")
+lnd_sport <- readOGR(dsn = "data", "london_sport")
 ```
 
 In the code above `dsn` stands for "data source name" and is an *argument* of the *function* `readOGR`. Note that each new argument is separated by a comma.
@@ -238,31 +238,31 @@ please see Cheshire and Lovelace (2014).
 We have now created a new spatial object called "sport" from the "london_sport" shapefile. Spatial objects are made up of a number of different *slots*, mainly the attribute *slot* and the geometry *slot*. The attribute *slot* can be thought of as an attribute table and the geometry *slot* is where the spatial object (and it's attributes) lie in space. Lets now analyse the sport object with some basic commands:
 
 ```{r}
-head(sport@data, n = 2)
-mean(sport$Partic_Per)
+head(lnd_sport@data, n = 2)
+mean(lnd_sport$partic_per)
 ```
 
 Take a look at this output and notice the table format of the data and the column names. There are two important symbols at work in the above block of code: the `@` symbol in the first line of code is used to refer to the attribute *slot* of the dataset; the `$` symbol refers to a specific variable (column name) in the attribute *slot* of the dataset, which was identified from the result of running the first line of code. If you are using RStudio, test out the auto-completion functionality
 by hitting `tab` before completing the command -
 this can save you a lot of time in the long run.
 
-The `head` function in the first line of the code above simply means "show the first few lines of data", i.e. the head. It's default is to output the first 6 rows of the dataset (try simply `head(sport@data)`),
+The `head` function in the first line of the code above simply means "show the first few lines of data", i.e. the head. It's default is to output the first 6 rows of the dataset (try simply `head(lnd_sport@data)`),
 but we can specify the number of lines with `n = 2` after the comma.
-The second line of the code above calculates the mean value of the variable `Partic_Per` (sports participation per 100 people) for each of the zones in the sport object.
-To explore the sport object further, try typing `nrow(sport)` and record how many zones the dataset contains. You can also try `ncol(sport)`.
+The second line of the code above calculates the mean value of the variable `partic_per` (sports participation per 100 people) for each of the zones in the `lnd_sport` object.
+To explore `lnd_sport` object further, try typing `nrow(lnd_sport)` and record how many zones the dataset contains. You can also try `ncol(lnd_sport)`.
 
 Now we have seen something of the attribute *slot* of the spatial dataset,
-let us look at sport's *geometry* data, which describes where the polygons are located
-in space:
+let us look at the object's *geometry* data, which describes where
+the polygons are located in space:
 
 
 ```{r, eval=FALSE}
-plot(sport) # not shown in tutorial - try it on your computer
+plot(lnd_sport) # not shown in tutorial - try it on your computer
 ```
 
 `plot` is one of the most useful functions in R, as it changes its behaviour
 depending on the input data (this is called *polymorphism* by computer scientists).
-Inputting another dataset such as `plot(sport@data)` will generate
+Inputting another dataset such as `plot(lnd_sport@data)` will generate
 an entirely different type of plot. Thus R is intelligent at guessing what you want to
 do with the data you provide it with.
 
@@ -270,22 +270,22 @@ R has powerful subsetting capabilities that can be accessed very concisely using
 as shown in the following example:
 
 ```{r}
-#select rows from attribute slot of sport object, where sports participation is less than 15.
-sport@data[sport$Partic_Per < 15, ]
+#select rows from attribute slot of lnd_sport object, where sports participation is less than 15.
+lnd_sport@data[lnd_sport$partic_per < 15, ]
 ```
 
-The above line of code asked R to select rows from the sport object, where sports participation is lower than 15,
+The above line of code asked R to select rows from the `lnd_sport` object, where sports participation is lower than 15,
 in this case rows 17, 21 and 32, which are Harrow, Newham and the city centre respectively. The square brackets work as follows:
 anything before the comma refers to the rows that will be selected, anything after
 the comma refers to the number of columns that should be returned. For example if the dataset had 1000 columns and you were only interested in the first two columns you could specify `1:2` after the comma. The ":" symbol simply means "to", i.e. columns 1 to 2. Try experimenting with the square brackets notation
-(e.g. guess the result of `sport@data[1:2, 1:3]` and test it): it will be useful.
+(e.g. guess the result of `lnd_sport@data[1:2, 1:3]` and test it): it will be useful.
 
-So far we have been interrogating only the attribute *slot* (`@data`) of the `sport` object, but the square brackets can also be used to subset spatial datasets, i.e. the geometry *slot*. Using the same logic as before try
+So far we have been interrogating only the attribute *slot* (`@data`) of the `lnd_sport` object, but the square brackets can also be used to subset spatial datasets, i.e. the geometry *slot*. Using the same logic as before try
 to plot a subset of zones with high sports participation.
 
 ```{r, eval=FALSE}
 #plot zones from sports object where sports participation is greater than 25.
-plot(sport[sport$Partic_Per > 25, ]) # output not shown in tutorial
+plot(lnd_sport[lnd_sport$partic_per > 25, ]) # output not shown in tutorial
 ```
 
 This is useful, but it would be great to see these sporty areas in context.
@@ -294,8 +294,8 @@ To do this, simply use the `add = TRUE` argument after the initial plot.
 What does the `col` argument refer to in the below block - it should be obvious (see figure 2).
 
 ```{r fig.cap="Preliminary plot of London with areas of high sports participation highlighted in blue"}
-plot(sport)
-plot(sport[sport$Partic_Per > 25,], col = "blue", add = TRUE)
+plot(lnd_sport)
+plot(lnd_sport[lnd_sport$partic_per > 25,], col = "blue", add = TRUE)
 ```
 
 Congratulations! You have just interrogated and visualised a
@@ -307,9 +307,9 @@ we will cover this in more detail in subsequent sections.
 
 While we are on the topic of loading data, it is worth pointing out
 that R can save and load data efficiently into its own data format (`.RData`).
-Try `save(sport, file = "sport.RData")` and see what happens.
-If you type `rm(sport)` (which removes the object) and then `load("sport.RData")`
-you should see how this works. `sport` will disappear from the workspace and then reappear.
+Try `save(lnd_sport, file = "sport.RData")` and see what happens.
+If you type `rm(lnd_sport)` (which removes the object) and then `load("sport.RData")`
+you should see how this works. `lnd_sport` will disappear from the workspace and then reappear.
 
 ## Attribute data
 
@@ -318,16 +318,16 @@ All shapefiles have both attribute table and geometry data. These are automatica
 [data frame](http://www.statmethods.net/input/datatypes.html).
 
 R deliberately hides the geometry of spatial data unless you print
-the entire object (try typing `print(sport)`).
-Let's take a look at the headings of sport, using the following command: `names(sport)`
-Remember, the attribute data contained in spatial objects are kept in a 'slot' that can be accessed using the `@` symbol: `sport@data`. This is useful if you do not wish to work with the spatial components of the data at all times.
+the entire object (try typing `print(lnd_sport)`).
+Let's take a look at the headings of sport, using the following command: `names(lnd_sport)`
+Remember, the attribute data contained in spatial objects are kept in a 'slot' that can be accessed using the `@` symbol: `lnd_sport@data`. This is useful if you do not wish to work with the spatial components of the data at all times.
 
-Type `summary(sport)` to get some additional information about the
-sport data object. Spatial objects in R contain
+Type `summary(lnd_sport)` to get some additional information about the
+data object. Spatial objects in R contain
 much additional information:
 
 ```
-summary(sport)
+summary(lnd_sport)
 
 ## Object of class SpatialPolygonsDataFrame
 ## Coordinates:
@@ -339,7 +339,7 @@ summary(sport)
 ## [+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 ....]
 ```
 
-The above output tells us that `sport` is a special spatial class,
+The above output tells us that `lnd_sport` is a special spatial class,
 in this case a `SpatialPolygonsDataFrame`, meaning it is composed of
 various polygons, each of which has attributes. This is the typical
 class of data found in administrative zones. The coordinates tell
@@ -369,11 +369,11 @@ data is joined to other dataset based on spatial location.
 ## Changing projection
 
 First things first, before we start data manipulation we will check the reference system of our spatial datasets. You may have noticed the word `proj4string` in the
-summary of the `sport` object above. This represents the coordinate reference system used in the data.
+summary of the `lnd_sport` object above. This represents the coordinate reference system used in the data.
 In this file it has been incorrectly specified so we must change it with the following:
 
 ```{r, warning=FALSE}
-proj4string(sport) <- CRS("+init=epsg:27700")
+proj4string(lnd_sport) <- CRS("+init=epsg:27700")
 ```
 
 You will see a warning. This simply states that you are changing
@@ -382,11 +382,11 @@ If we wanted to reproject the data into something
 like WGS84 for latitude and longitude we would use the following code:
 
 ```{r}
-sport.wgs84 <- spTransform(sport, CRS("+init=epsg:4326"))
+lnd_sport_wgs84 <- spTransform(lnd_sport, CRS("+init=epsg:4326"))
 ```
 
 The above line of code uses the function `spTransform`, from the **sp** package,
-to convert the `sport` object into a new form, with the Coordinate Reference System (CRS)
+to convert the `lnd_sport` object into a new form, with the Coordinate Reference System (CRS)
 specified as WGS84.
 The different epsg codes are a bit of hassle to remember but you can search for them at
 [spatialreference.org](http://spatialreference.org/).
@@ -394,15 +394,15 @@ The different epsg codes are a bit of hassle to remember but you can search for 
 ## Attribute joins
 
 Attribute joins are used to link additional pieces of information to our polygons.
-in the `sport` object, for example, we have 5 attribute variables - that can be
-found by typing `names(sport)`. But what happens when we want to add an additional
+in the `lnd_sport` object, for example, we have 5 attribute variables - that can be
+found by typing `names(lnd_sport)`. But what happens when we want to add an additional
 variable from an external data table? We will use the example of recorded crimes by
 borough to demonstrate this.
 
 To reaffirm our starting point, let's re-load the
 "london_sport" shapefile as a new object and plot it. This is identical to
-the `sport` object in the first instance, but we will give it a new name,
-in case we ever need to re-use `sport`.
+the `lnd_sport` object in the first instance, but we will give it a new name,
+in case we ever need to re-use `lnd_sport`.
 We will call this new object
 `lnd`, short for London:
 
@@ -647,8 +647,8 @@ As with R's very terse code for spatial subsetting, the base function
 also behaves differently when the inputs are spatial objects.
 
 ```{r}
-stations.c <- aggregate(x = stations["CODE"], by = lnd, FUN = length)
-head(stations.c@data)
+stations_agg <- aggregate(x = stations["CODE"], by = lnd, FUN = length)
+head(stations_agg@data)
 ```
 
 The above code performs a number of steps in just one line:
@@ -657,15 +657,15 @@ The above code performs a number of steps in just one line:
 interested in the spatial data from `stations` and its `CODE` variable (any variable
 could have been used here as we are merely counting how many points exist).
 - It counts the number of `stations` points in each borough, using the function `length`.
-- A new spatial object is created, with the same geometry as `lnd`, and assigned the name `stations.c`, the count of stations.
+- A new spatial object is created, with the same geometry as `lnd`, and assigned the name `stations_agg`, the count of stations.
 
 It may seem confusing that the result of the aggregated function is a new shape,
 not a list of numbers - this is because values are assigned to the elements within
-the `lnd` object. To extract the raw count data, one could enter `stations.c$CODE`.
+the `lnd` object. To extract the raw count data, one could enter `stations_agg$CODE`.
 This variable could be added to the original `lnd` object as a new field, as follows:
 
 ```{r}
-lnd$NPoints <- stations.c$CODE
+lnd$NPoints <- stations_agg$CODE
 ```
 
 As shown below, the spatial implementation of
@@ -674,7 +674,7 @@ In this case we take the variable `NUMBER`
 and find its mean value for the stations in each ward.
 
 ```{r}
-stations.m <- aggregate(stations[c("NUMBER")] , by = lnd, FUN = mean)
+stations.m <- aggregate(stations_agg("NUMBER")] , by = lnd, FUN = mean)
 ```
 
 For an optional advanced task, let us analyse and plot the result.
@@ -823,19 +823,18 @@ data preparation but additional effort in colour selection/adding the map key et
 require some additional steps to format the spatial data but select
 colours and add keys etc. automatically. More on this later.
 
-As a first attempt with **ggplot2** we can create a scatter plot with the attribute data in the 'sport' object created above. Type:
+As a first attempt with **ggplot2** we can create a scatter plot with the attribute data in the `lnd` object created above. Type:
 
 ```{r}
-p <- ggplot(sport@data, aes(Partic_Per, Pop_2001))
+p <- ggplot(lnd@data, aes(partic_per, Pop_2001))
 ```
 
 What you have just done is set up a ggplot object where
 you say where you want the input data to come from.
-`sport@data` is actually a data frame contained within the
-wider spatial object `sport` (the `@` enables you to
-access the attribute table of the
-sport shapefile). The characters inside the `aes` argument
-refer to the parts of that data frame you wish to use (the variables `Partic_Per` and `Pop_2001`).
+`lnd@data` is actually a data frame contained within the
+wider spatial object `lnd` (the `@` enables you to
+access the attribute table of the shapefile). The characters inside the `aes` argument
+refer to the parts of that data frame you wish to use (the variables `partic_per` and `Pop_2001`).
 This has to happen within the brackets of `aes()`, which means,
 roughly speaking 'aesthetics that vary'.
 
@@ -853,13 +852,13 @@ Within the brackets you can alter the nature of the points. Try something like `
 If you want to scale the points by borough population and colour them by sports participation this is also fairly easy by adding another `aes()` argument.
 
 ```{r fig.cap="ggplot with aesthetics", eval=FALSE}
-p + geom_point(aes(colour=Partic_Per, size=Pop_2001))
+p + geom_point(aes(colour=partic_per, size=Pop_2001))
 ```
 
 The real power of **ggplot2** lies in its ability to add layers to a plot. In this case we can add text to the plot.
 
 ```{r fig.cap="ggplot for text"}
-p + geom_point(aes(colour = Partic_Per, size = Pop_2001)) + geom_text(size = 2, aes(label = name))
+p + geom_point(aes(colour = partic_per, size = Pop_2001)) + geom_text(size = 2, aes(label = name))
 ```
 
 This idea of layers (or geoms) is quite different from the standard plot functions in R, but you will find that each of the functions does a lot of clever stuff to make plotting much easier (see the documentation for a full list).
@@ -872,21 +871,21 @@ To get the shapefiles into a format that can be plotted we have to use the `fort
 For this to work, either **maptools** or **rgeos** packages must be installed.
 
 ```{r, warning=FALSE}
-sport.f <- fortify(sport, region = "ons_label") # you may need to load maptools
+lnd.f <- fortify(lnd, region = "ons_label") # you may need to load maptools
 ```
 
-This step has lost the attribute information associated with the sport object. We can add it back using the merge function (this performs a data join). To find out how this function works look at
+This step has lost the attribute information associated with the lnd object. We can add it back using the merge function (this performs a data join). To find out how this function works look at
 the output of typing `?merge`.
 
 ```{r}
-sport.f <- merge(sport.f, sport@data, by.x = "id", by.y = "ons_label")
+lnd.f <- merge(lnd.f, lnd@data, by.x = "id", by.y = "ons_label")
 ```
 
-Take a look at the `sport.f` object to see its contents. You should see a large data frame containing the latitude and longitude (they are actually Easting and Northing as the data are in British National Grid format) coordinates alongside the attribute information associated with each London Borough. If you type `print(sport.f)` you will see just how many coordinate pairs are required!
+Take a look at the `sport.f` object to see its contents. You should see a large data frame containing the latitude and longitude (they are actually Easting and Northing as the data are in British National Grid format) coordinates alongside the attribute information associated with each London Borough. If you type `print(lnd.f)` you will see just how many coordinate pairs are required!
 To keep the output to a minimum, take a peek at the object using just the `head` command:
 
 ```{r}
-head(sport.f[, 1:8])
+head(lnd.f[, 1:8])
 ```
 
 It is now straightforward to produce a map using all the built in tools
@@ -894,10 +893,10 @@ It is now straightforward to produce a map using all the built in tools
 `coord_equal()` is the equivalent of asp=T in regular plots with R:
 
 ```{r fig.cap="Map of Lond Sports Participation"}
-Map <- ggplot(sport.f, aes(long, lat, group = group, fill = Partic_Per)) +
+Map <- ggplot(lnd.f, aes(long, lat, group = group, fill = partic_per)) +
   geom_polygon() +
   coord_equal() +
-  labs(x = "Easting (m)", y = "Northing (m)", fill = "% Sport Partic.") +
+  labs(x = "Easting (m)", y = "Northing (m)", fill = "% Sports\nParticipation") +
   ggtitle("London Sports Participation")
 ```
 
@@ -940,15 +939,15 @@ such as Google and
 library(ggmap) # you may have to use install.packages to install it first
 ```
 
-The `sport` object loaded previously is in British National Grid but the ggmap
-image tiles are in WGS84. We therefore need to use the sport.wgs84
+The `lnd` object loaded previously is in British National Grid but the ggmap
+image tiles are in WGS84. We therefore need to use the `lnd_sport_wgs84`
 object created in the reprojection operation earlier.
 
 The first job is to calculate the bounding box (bb for short) of the
-sport.wgs84 object to identify the geographic extent of the image tiles that we need.
+`lnd_sport_wgs84` object to identify the geographic extent of the image tiles that we need.
 
 ```{r}
-b <- bbox(sport.wgs84)
+b <- bbox(lnd_sport_wgs84)
 b[1, ] <- (b[1, ] - mean(b[1, ])) * 1.05 + mean(b[1, ])
 b[2, ] <- (b[2, ] - mean(b[2, ])) * 1.05 + mean(b[2, ])
 # scale longitude and latitude (increase bb by 5% for plot)
@@ -968,12 +967,12 @@ load("data/lnd.b1.RData") # load saved map
 
 In much the same way as we did above we can then layer the plot with different geoms.
 
-First fortify the sport.wgs84 object and then merge with the required attribute
-data (we already did this step to create the sport.f object).
+First fortify the `lnd_sport_wgs84` object and then merge with the required attribute
+data (we already did this step to create the `lnd.f` object).
 
 ```{r}
-sport.wgs84.f <- fortify(sport.wgs84, region = "ons_label")
-sport.wgs84.f <- merge(sport.wgs84.f, sport.wgs84@data,
+lnd_sport_wgs84.f <- fortify(lnd_sport_wgs84, region = "ons_label")
+lnd_sport_wgs84.f <- merge(lnd_sport_wgs84.f, lnd_sport_wgs84@data,
                       by.x = "id", by.y = "ons_label")
 ```
 
@@ -981,8 +980,8 @@ We can now overlay this on our base map.
 
 ```{r, eval=FALSE}
 lnd.b1 +
-  geom_polygon(data = sport.wgs84.f,
-               aes(x = long, y = lat, group = group, fill = Partic_Per),
+  geom_polygon(data = lnd_sport_wgs84.f,
+               aes(x = long, y = lat, group = group, fill = partic_per),
                alpha = 0.5)
 ```
 
@@ -1009,8 +1008,8 @@ We can then produce the plot as before:
 library(mapproj) # mapproj library needed here
 
 lnd.b2 +
-  geom_polygon(data = sport.wgs84.f,
-               aes(x = long, y = lat, group = group, fill = Partic_Per),
+  geom_polygon(data = lnd_sport_wgs84.f,
+               aes(x = long, y = lat, group = group, fill = partic_per),
                alpha = 0.5)
 ```
 
@@ -1030,8 +1029,8 @@ lnd.b3 <- ggmap(get_map(location = b, source = "stamen",
 
 ```{r fig.cap="Basemap 3", eval=FALSE}
 lnd.b3 +
-  geom_polygon(data = sport.wgs84.f,
-               aes(x = long, y = lat, group = group, fill = Partic_Per),
+  geom_polygon(data = lnd_sport_wgs84.f,
+               aes(x = long, y = lat, group = group, fill = partic_per),
                alpha = 0.5)
 ```
 
@@ -1042,28 +1041,29 @@ library(reshape2) # this may not be installed.
 # If not install it, or skip the next two steps
 ```
 
-Load the data - this shows historic population values between 1801 and 2001 for London, again from the London data store.
+Load the data - this shows historic population values between 1801 and 2001
+for London, again from the London data store.
 
 ```{r}
-london.data <- read.csv("data/census-historic-population-borough.csv")
+london_data <- read.csv("data/census-historic-population-borough.csv")
 ```
 
 "Melt" the data so that the columns become rows.
 
 ```{r}
-london.data.melt <- melt(london.data, id = c("Area.Code", "Area.Name"))
+london_data_molten <- melt(london_data, id = c("Area.Code", "Area.Name"))
 ```
 
 
 ```{r, echo=FALSE, eval=FALSE}
-# london.data.melt <- read.csv("london_data_melt.csv")
+# london_data_molten <- read.csv("london_data_melt.csv")
 # Only do this step if reshape and melt failed
 ```
 
-Merge the population data with the London borough geometry contained within our sport.f object.
+Merge the population data with the London borough geometry contained within our `lnd.f` object.
 
 ```{r}
-plot.data <- merge(sport.f, london.data.melt, by.x = "id", by.y = "Area.Code")
+plot.data <- merge(lnd.f, london_data_molten, by.x = "id", by.y = "Area.Code")
 ```
 
 Reorder this data (ordering is important for plots).
