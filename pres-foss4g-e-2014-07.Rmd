@@ -1,0 +1,120 @@
+---
+title: "Teaching R as a command line GIS"
+author: "Robin"
+date: "16/07/2014"
+output: beamer_presentation
+---
+
+## A presentation of 2 halves
+
+```{r, echo=FALSE}
+library(png)
+library(grid)
+```
+
+```{r Halves, fig.height=1.5}
+img <- readPNG("figure/pitch.png")
+ grid.raster(img) # this presentation: written in R(md)!
+```
+
+- Cutting edge research is nothing without communication
+- Teaching and outreach benefit from innovation and application
+
+## The two sides of knowledge creation
+
+```{r Sides, fig.height=2, echo=FALSE}
+img <- readPNG("~/Dropbox/Public/img/ivory-tower.png")
+ grid.raster(img) # this presentation: written in R(md)!
+```
+
+- Message of this presentation: don't get stuck in an isolated ivory tower or
+comfortable teaching bubble!
+
+```{r, echo=FALSE}
+# It's a chicken and egg situation: which comes first?
+```
+
+## The structure of this presentation
+
+- Inside the Teaching Bubble
+   + Problems
+   + Solutions
+   + Lessons learned   
+
+- Stuck (up) in the Ivory Tower
+   + Problems
+   + Solutions
+   + Lessons learned   
+
+- Transcending the teaching/learning divide
+
+```{r, echo=FALSE}
+#    + Input data
+#    + A spatial interaction model
+#    + Extensions
+```
+
+- Conclusion
+
+## A bit of context
+
+## The teaching bubble - in numbers
+
+- 7 R courses, 7 months
+- 5 introductory, 2 'advanced'
+- Over 150 attendees from many different countries
+
+## Human issues
+
+- Very different abilities `->` different learning rates
+- Some people 'getting left behind'
+- 'Never touched a command line' `->` frustration
+- Not understanding method/applications
+
+## Technical issues
+
+- Projectors failing
+- R or RStudio not installed
+- Packages breaking
+- No internet
+- GitHub `merge`: confusion and chaos
+
+## Solutions
+
+- Start VERY slowly
+- Right balance of content between:
+    + lecturing (boring but necessary)
+    + worked examples (risk loosing people but fun and interactive)
+    + working on your own (can do at home but encourages good questions)
+    
+## Lessons learned
+
+- The importance of demonstrators
+
+## The importance of demonstrators
+
+## Themes that cut across the divide
+
+- Reproducibility a great benefit in teaching and research
+- Good research can lead to good teaching and vice versa
+- The balance between spontaneity and stability
+- The software MATTERS: take time to describe not only *what* you did, but *how* you did it
+    + Details are important - e.g. autocompletion in RStudio
+
+
+```{r}
+summary(cars)
+```
+
+## Transcending the teaching/research divide
+
+- Teaching and research needn't compete
+- Good research can provide excellent teaching materials
+- Innovative teaching can lead to new research ideas and people power
+- Teaching can link people up
+- Open source software joins people from different place together
+
+## Conclusions
+
+## References
+

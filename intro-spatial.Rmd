@@ -86,13 +86,12 @@ plot(x, y) # plot the result
 ```
 
 In the above code we first created a new *object* that we have called `x`.
-Any name could have been used, like `xBumkin`, but `x` works just fine here,
-although it is good practice to give your objects meaningful names.
-Note the use of the `<-` "arrow" symbol, which tells R to create a new object.
-We will be using this symbol a lot in the tutorial
-(tip: typing `Alt -` on the keyboard will create it in RStudio.).
-Each time it is used, a new
-object is created (or an old one is overwritten) with a name of your choosing.
+Any name could have been used, like `x_bumkin`, but `x` is concise
+and works just fine here. It is good practice to give your objects meaningful names.
+Note `<-`, the directional "arrow" assignment symbol. This creates new objects.
+We will be using this symbol a lot in the
+tutorial.^[Tip: typing `Alt -` on the keyboard will create it in RStudio.
+The equals sign `=` also works but is not recommended by R developers.]
 
 To distinguish between prose and code, please be aware of the following typographic conventions: R code (e.g. `plot(x, y)`) is
 written in a `monospace` font and package names (e.g. **rgdal**)
@@ -102,21 +101,22 @@ are written in **bold**. Blocks of code such as:
 c(1:3, 5)^2
 ```
 
-are compiled in-line: the `##` indicates this is output from R. Some of the
-output that results from the code in this tutorial long; we only
-include key output.
-In a few cases we omit images to save space and this will be clear from
+are compiled in-line: the `##` indicates output from R. Sometimes
+output from code in this tutorial is reduced to save space, so do
+not be alarmed if R produces unexpected `warning` messages.
+In a few cases we omit images to save space. This will be clear from
 the comments.
 Images in this document are small and low-quality enable portability of the
 pdf. They should
 display better on your computer screen and can be saved at any resolution.
 
 The code presented here is not the only way to do things: we encourage you to
-play with it and try things out to gain a deeper understanding of R.
-Don't worry, you cannot 'break' anything using R and all the input data
+play to gain a deeper understanding of R.
+Do not worry, you cannot 'break' anything using R and all the input data
 can be re-loaded if things do go wrong. As with learning to skate, you learn
-by falling and, although painful, getting an `Error:` message in R is less
-painful than landing on ones face on concrete. We encourage `Error:`s!
+by falling and, getting an `Error:` message in R is much less
+painful than landing on ones face on concrete! We encourage `Error:`s - it
+means you are trying new things.
 
 If you require help on any function, use the `help` function,
 e.g. `help(plot)`. Because R users love being concise,
@@ -600,7 +600,8 @@ points(stations) # overlay the station points on the previous plot (shown in fig
 ```
 
 Now we can clearly see that the `stations` points overlay the boroughs.
-The problem is that the stations object is far more extensive than `lnd`.
+The problem is that the spatial extent of `stations` is
+great than that of `lnd`.
 We will take a spatially determined subset of the
 stations object that fall inside greater London. This is *clipping*.
 
