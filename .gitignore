@@ -9,7 +9,10 @@ lndbor.geojson
 *.out
 *.html
 *.backup
+pres*
+!pres*R*
 intro-spatial.tex
+intro-spatial.pdf
 ggmapTemp.png
 *Girona*
 exclude/

@@ -1,6 +1,6 @@
 ---
 title: "Teaching R as a command line GIS"
-author: "Robin"
+author: "Robin Lovelace, `@robinlovelace`"
 date: "16/07/2014"
 output: beamer_presentation
 ---
@@ -22,7 +22,7 @@ img <- readPNG("figure/pitch.png")
 
 ## The two sides of knowledge creation
 
-```{r Sides, fig.height=2, echo=FALSE}
+```{r Sides, fig.height=2.7, echo=FALSE}
 img <- readPNG("~/Dropbox/Public/img/ivory-tower.png")
  grid.raster(img) # this presentation: written in R(md)!
 ```
@@ -70,6 +70,11 @@ comfortable teaching bubble!
 - Some people 'getting left behind'
 - 'Never touched a command line' `->` frustration
 - Not understanding method/applications
+
+## solutions
+
+Extensions
+QGIS + make familiar
 
 ## Technical issues
 

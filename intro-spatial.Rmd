@@ -475,7 +475,7 @@ crime_data <- read.csv("data/mps-recordedcrime-borough.csv",
   fileEncoding = "UCS-2LE")
 
 head(crime_data) # display first 6 lines
-summary(crime_data$MajorText) # summarise the column "MajorText"
+summary(crime_data$MajorText) # summary of crime type
 
 # Extract "Theft & Handling" crimes and save
 crime_theft <- crime_data[crime_data$MajorText == "Theft & Handling", ]
@@ -494,13 +494,13 @@ briefly about the outputs is all that is needed at this stage to improve your
 intuitive understanding of R. It is worth pointing out a few things
 that you may not have seen before that will likely be useful in the future:
 
-- in the first line of code the `fileEncoding` argument is used.
+- In the first line of code the `fileEncoding` argument is used.
 This is rarely necessary, but in this case the file comes in a strange file format.
 9 times out of ten you can omit this argument but it's worth knowing about.
-- the `which` function is used to select only those observations that
+- The `which` function is used to select only those observations that
 meet a specific condition, in this case all crimes involving "Theft and Handling".
-- the
-`~` symbol means "by": we aggregated the CrimeCount variable by the district name.
+- The
+`~` symbol means "by": we aggregated the `CrimeCount` variable by the district name.
 
 Now that we have crime data at the borough level (`Spatial_DistrictName`), the challenge is to join it to the `lnd` object. We will base our join on the `Spatial_DistrictName` variable from the `crime_ag` object and the `name` variable from the `lnd` object. It is not always straight forward to join objects based on names as the names do not always match. Let us see which names in the `crime_ag` object match the spatial data object, `lnd`:
 
@@ -520,7 +520,7 @@ crime data. Look at the results (not shown here) on your computer.
 
 ```{r}
 # Discover the names of the names
-levels(crime_ag$Spatial_DistrictNam)
+levels(crime_ag$Spatial_DistrictName)
 
 # Rename row 25 in crime_ag to match row 25 in lnd, as suggested results form above
 levels(crime_ag$Spatial_DistrictName)[25] <-
@@ -591,12 +591,12 @@ is the official CRS for the UK, so
 we will convert the object to this:
  
 ```{r fig.cap="Sampling and plotting stations"}
-# Create new stations27700 object which the stations object reprojected into OSGB36
+# Create reprojected stations object
 stations27700 <- spTransform(stations, CRSobj = CRS(proj4string(lnd)))
 stations <- stations27700 # overwrite the stations object with stations27700
 rm(stations27700) # remove the stations27700 object to clear up
 plot(lnd) # plot London for context (see figure 4 below)
-points(stations) # overlay the station points on the previous plot (shown in figure 4)
+points(stations) # overlay the station points
 ```
 
 Now we can clearly see that the `stations` points overlay the boroughs.

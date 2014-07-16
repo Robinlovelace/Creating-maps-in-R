@@ -197,14 +197,14 @@ create figure 1 if typed correctly into the R command line.
 \end{figure}
 
 In the above code we first created a new \emph{object} that we have
-called \texttt{x}. Any name could have been used, like \texttt{xBumkin},
-but \texttt{x} works just fine here, although it is good practice to
-give your objects meaningful names. Note the use of the
-\texttt{\textless{}-} ``arrow'' symbol, which tells R to create a new
-object. We will be using this symbol a lot in the tutorial (tip: typing
-\texttt{Alt -} on the keyboard will create it in RStudio.). Each time it
-is used, a new object is created (or an old one is overwritten) with a
-name of your choosing.
+called \texttt{x}. Any name could have been used, like
+\texttt{x\_bumkin}, but \texttt{x} is concise and works just fine here.
+It is good practice to give your objects meaningful names. Note
+\texttt{\textless{}-}, the directional ``arrow'' assignment symbol. This
+creates new objects. We will be using this symbol a lot in the
+tutorial.\footnote{Tip: typing \texttt{Alt -} on the keyboard will
+  create it in RStudio. The equals sign \texttt{=} also works but is not
+  recommended by R developers.}
 
 To distinguish between prose and code, please be aware of the following
 typographic conventions: R code (e.g. \texttt{plot(x, y)}) is written in
@@ -221,20 +221,21 @@ written in \textbf{bold}. Blocks of code such as:
 ## [1]  1  4  9 25
 \end{verbatim}
 
-are compiled in-line: the \texttt{\#\#} indicates this is output from R.
-Some of the output that results from the code in this tutorial long; we
-only include key output. In a few cases we omit images to save space and
-this will be clear from the comments. Images in this document are small
-and low-quality enable portability of the pdf. They should display
-better on your computer screen and can be saved at any resolution.
+are compiled in-line: the \texttt{\#\#} indicates output from R.
+Sometimes output from code in this tutorial is reduced to save space, so
+do not be alarmed if R produces unexpected \texttt{warning} messages. In
+a few cases we omit images to save space. This will be clear from the
+comments. Images in this document are small and low-quality enable
+portability of the pdf. They should display better on your computer
+screen and can be saved at any resolution.
 
 The code presented here is not the only way to do things: we encourage
-you to play with it and try things out to gain a deeper understanding of
-R. Don't worry, you cannot `break' anything using R and all the input
-data can be re-loaded if things do go wrong. As with learning to skate,
-you learn by falling and, although painful, getting an \texttt{Error:}
-message in R is less painful than landing on ones face on concrete. We
-encourage \texttt{Error:}s!
+you to play to gain a deeper understanding of R. Do not worry, you
+cannot `break' anything using R and all the input data can be re-loaded
+if things do go wrong. As with learning to skate, you learn by falling
+and, getting an \texttt{Error:} message in R is much less painful than
+landing on ones face on concrete! We encourage \texttt{Error:}s - it
+means you are trying new things.
 
 If you require help on any function, use the \texttt{help} function,
 e.g. \texttt{help(plot)}. Because R users love being concise, this can
@@ -276,11 +277,11 @@ has already been installed on your computer. Install these packages now.
 
 Now that we have taken a look at R's syntax and installed the necessary
 packages, we can start looking at some real spatial data. This second
-part introduces some spatial datasets that we will download from the
-internet. Plotting these datasets and interrogating the attribute data
-form the foundation of spatial data analysis in R, so we will focus on
-these elements in the next two parts of the tutorial, before focussing
-on creating attractive maps in Part IV.
+part introduces some spatial files that we will download from the
+internet. Plotting and interrogating spatial objects are central spatial
+data analysis in R, so we will focus on these elements in the next two
+parts of the tutorial, before focussing on creating attractive maps in
+Part IV.
 
 \subsection{Downloading the data}\label{downloading-the-data}
 
@@ -360,10 +361,10 @@ The next argument is another \emph{character string}: simply the name of
 the file required. There is no need to add a file extension (e.g.
 \texttt{.shp}) in this case.
 
-The files beginning \texttt{london\_sport} from the
-\href{http://spatial.ly/wp-content/uploads/2013/12/spatialggplot.zip}{example
-dataset} contain the borough population and the percentage of the
-population participating in sporting activities and was taken from the
+The files beginning \texttt{london\_sport} in the \texttt{data/}
+\href{https://github.com/Robinlovelace/Creating-maps-in-R/tree/master/data}{directory}
+contain the 2001 borough population and percentage participating in
+sporting activities from the
 \href{http://data.london.gov.uk/datastore/package/active-people-survey-kpi-data-borough}{active
 people survey}. The boundary data is from the
 \href{http://www.ordnancesurvey.co.uk/oswebsite/opendata/}{Ordnance
@@ -410,9 +411,9 @@ with some basic commands:
 Take a look at this output and notice the table format of the data and
 the column names. There are two important symbols at work in the above
 block of code: the \texttt{@} symbol in the first line of code is used
-to refer to the attribute \emph{slot} of the dataset; the \texttt{\$}
-symbol refers to a specific variable (column name) in the attribute
-\emph{slot} of the dataset, which was identified from the result of
+to refer to the attribute \emph{slot} of the object. The \texttt{\$}
+symbol refers to a specific attribute (a variable with a column name) in
+the \texttt{data} \emph{slot}, which was identified from the result of
 running the first line of code. If you are using RStudio, test out the
 auto-completion functionality by hitting \texttt{tab} before completing
 the command - this can save you a lot of time in the long run.
@@ -429,8 +430,8 @@ further, try typing \texttt{nrow(lnd\_sport)} and record how many zones
 the dataset contains. You can also try \texttt{ncol(lnd\_sport)}.
 
 Now we have seen something of the attribute \emph{slot} of the spatial
-dataset, let us look at the object's \emph{geometry} data, which
-describes where the polygons are located in space:
+object, let us look at its \emph{geometry}, which describes where the
+polygons are located in space:
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -440,7 +441,7 @@ describes where the polygons are located in space:
 
 \texttt{plot} is one of the most useful functions in R, as it changes
 its behaviour depending on the input data (this is called
-\emph{polymorphism} by computer scientists). Inputting another dataset
+\emph{polymorphism} by computer scientists). Inputting another object
 such as \texttt{plot(lnd\_sport@data)} will generate an entirely
 different type of plot. Thus R is intelligent at guessing what you want
 to do with the data you provide it with.
@@ -468,16 +469,16 @@ in this case rows 17, 21 and 32, which are Harrow, Newham and the city
 centre respectively. The square brackets work as follows: anything
 before the comma refers to the rows that will be selected, anything
 after the comma refers to the number of columns that should be returned.
-For example if the dataset had 1000 columns and you were only interested
-in the first two columns you could specify \texttt{1:2} after the comma.
-The ``:'' symbol simply means ``to'', i.e.~columns 1 to 2. Try
-experimenting with the square brackets notation (e.g.~guess the result
-of \texttt{lnd\_sport@data{[}1:2, 1:3{]}} and test it): it will be
-useful.
+For example if the data frame had 1000 columns and you were only
+interested in the first two columns you could specify \texttt{1:2} after
+the comma. The ``:'' symbol simply means ``to'', i.e.~columns 1 to 2.
+Try experimenting with the square brackets notation (e.g.~guess the
+result of \texttt{lnd\_sport@data{[}1:2, 1:3{]}} and test it): it will
+be useful.
 
 So far we have been interrogating only the attribute \emph{slot}
 (\texttt{@data}) of the \texttt{lnd\_sport} object, but the square
-brackets can also be used to subset spatial datasets, i.e.~the geometry
+brackets can also be used to subset spatial objects, i.e.~the geometry
 \emph{slot}. Using the same logic as before try to plot a subset of
 zones with high sports participation.
 
@@ -510,9 +511,9 @@ participation highlighted in blue}
 \end{figure}
 
 Congratulations! You have just interrogated and visualised a spatial
-dataset: what kind of places have high levels of sports participation?
-The map tells us. Do not worry for now about the intricacies of how this
-was achieved: you have learned vital basics of how R works as a
+object: where are areas with high levels of sports participation in
+London? The map tells us. Do not worry for now about the intricacies of
+how this was achieved: you have learned vital basics of how R works as a
 language; we will cover this in more detail in subsequent sections.
 
 While we are on the topic of loading data, it is worth pointing out that
@@ -578,9 +579,9 @@ reside in additional packages alluded to in the introduction.
 
 This course is introductory so only commonly required data manipulation
 tasks, \emph{reprojecting} and \emph{joining/clipping} are covered here.
-We will first look at joining an aspatial dataset to our spatial object
-using an attribute join. We will then cover spatial joins, whereby data
-is joined to other dataset based on spatial location.
+We will look at joining non-spatial data to our spatial object. We will
+then cover spatial joins, whereby data is joined to other dataset based
+on spatial location.
 
 \subsection{Changing projection}\label{changing-projection}
 
@@ -606,7 +607,7 @@ A commonly used geographical (`lat/lon') CRS is `WGS84', whose EPSG code
 is \texttt{4326}. The following code shows how to search the list of
 available EPSG codes and create a new version of \texttt{lnd\_sport} in
 WGS84:\footnote{Note: entering \texttt{projInfo()} will provide
-  additional CRS options available from \textbf{rgdal}}
+  additional CRS options available from \textbf{rgdal}.}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -671,7 +672,7 @@ call this new object \texttt{lnd}, short for London:
 
 \begin{figure}[htbp]
 \centering
-\includegraphics{./intro-spatial_files/figure-latex/unnamed-chunk-13.pdf}
+\includegraphics{./intro-spatial_files/figure-latex/unnamed-chunk-14.pdf}
 \caption{Plot of London}
 \end{figure}
 
@@ -685,13 +686,15 @@ call this new object \texttt{lnd}, short for London:
 ## [1] 33
 \end{verbatim}
 
-The aspatial dataset we are going to join to the \texttt{lnd} object is
-a dataset on recorded crimes, this dataset currently resides in a comma
-delimited (\texttt{.csv}) file called ``mps-recordedcrime-borough'' with
-each row representing a single reported crime. We are going to use a
-function called \texttt{aggregate} to pre-process this dataset ready to
-join to our spatial \texttt{lnd} dataset. First we will create a new
-object called \texttt{crime\_data} to store this data.
+The non-spatial data we are going to join to the \texttt{lnd} object
+contains records on crimes in London. This is stored in a
+comma-delimited {[}(\texttt{.csv}){]} file called
+``mps-recordedcrime-borough''. Viewing the
+\href{https://raw.githubusercontent.com/Robinlovelace/Creating-maps-in-R/master/data/mps-recordedcrime-borough.csv}{file}
+locally shows that each row representing a single reported crime. We are
+going to use a function called \texttt{aggregate} to pre-process these
+records, ready to join to our spatial \texttt{lnd} dataset. A new object
+called \texttt{crime\_data} is created to store this data.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -700,7 +703,7 @@ object called \texttt{crime\_data} to store this data.
   \DataTypeTok{fileEncoding =} \StringTok{"UCS-2LE"}\NormalTok{)}
 
 \KeywordTok{head}\NormalTok{(crime_data) }\CommentTok{# display first 6 lines}
-\KeywordTok{summary}\NormalTok{(crime_data$MajorText) }\CommentTok{# summarise the column "MajorText"}
+\KeywordTok{summary}\NormalTok{(crime_data$MajorText) }\CommentTok{# summary of crime type}
 
 \CommentTok{# Extract "Theft & Handling" crimes and save}
 \NormalTok{crime_theft <-}\StringTok{ }\NormalTok{crime_data[crime_data$MajorText ==}\StringTok{ "Theft & Handling"}\NormalTok{, ]}
@@ -724,17 +727,17 @@ likely be useful in the future:
 \begin{itemize}
 \itemsep1pt\parskip0pt\parsep0pt
 \item
-  in the first line of code the \texttt{fileEncoding} argument is used.
+  In the first line of code the \texttt{fileEncoding} argument is used.
   This is rarely necessary, but in this case the file comes in a strange
   file format. 9 times out of ten you can omit this argument but it's
   worth knowing about.
 \item
-  the \texttt{which} function is used to select only those observations
+  The \texttt{which} function is used to select only those observations
   that meet a specific condition, in this case all crimes involving
   ``Theft and Handling''.
 \item
-  the \texttt{\textasciitilde{}} symbol means ``by'': we aggregated the
-  CrimeCount variable by the district name.
+  The \texttt{\textasciitilde{}} symbol means ``by'': we aggregated the
+  \texttt{CrimeCount} variable by the district name.
 \end{itemize}
 
 Now that we have crime data at the borough level
@@ -781,7 +784,7 @@ the results (not shown here) on your computer.
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{# Discover the names of the names}
-\KeywordTok{levels}\NormalTok{(crime_ag$Spatial_DistrictNam)}
+\KeywordTok{levels}\NormalTok{(crime_ag$Spatial_DistrictName)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -880,7 +883,7 @@ main table, one-to-many, or one-to-one. Because boroughs in London are
 quite large, we will conduct a many-to-one spatial join. We will be
 using transport infrastructure points such as tube stations and
 roundabouts as the spatial data to join, with the aim of finding out
-which and how many are found in each London borough.
+about how many are found in each London borough.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -900,35 +903,35 @@ The above code loads the data correctly, but also shows that there are
 problems with it: the Coordinate Reference System (CRS) of
 \texttt{stations} differs from that of our \texttt{lnd} object. OSGB
 1936 (or \href{http://spatialreference.org/ref/epsg/27700/}{EPSG 27700})
-is the official CRS for the UK, so we will convert the dataset to this:
+is the official CRS for the UK, so we will convert the object to this:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# Create new stations27700 object which the stations object reprojected into OSGB36}
+\CommentTok{# Create reprojected stations object}
 \NormalTok{stations27700 <-}\StringTok{ }\KeywordTok{spTransform}\NormalTok{(stations, }\DataTypeTok{CRSobj =} \KeywordTok{CRS}\NormalTok{(}\KeywordTok{proj4string}\NormalTok{(lnd)))}
 \NormalTok{stations <-}\StringTok{ }\NormalTok{stations27700 }\CommentTok{# overwrite the stations object with stations27700}
 \KeywordTok{rm}\NormalTok{(stations27700) }\CommentTok{# remove the stations27700 object to clear up}
 \KeywordTok{plot}\NormalTok{(lnd) }\CommentTok{# plot London for context (see figure 4 below)}
-\KeywordTok{points}\NormalTok{(stations) }\CommentTok{# overlay the station points on the previous plot (shown in figure 4)}
+\KeywordTok{points}\NormalTok{(stations) }\CommentTok{# overlay the station points}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{figure}[htbp]
 \centering
-\includegraphics{./intro-spatial_files/figure-latex/unnamed-chunk-21.pdf}
+\includegraphics{./intro-spatial_files/figure-latex/unnamed-chunk-22.pdf}
 \caption{Sampling and plotting stations}
 \end{figure}
 
 Now we can clearly see that the \texttt{stations} points overlay the
-boroughs. The problem is that the stations dataset is far more extensive
-than the London borough dataset; so we will take a spatially determined
-subset of the stations object so that they all fit within the lnd
-extent. This is \emph{clipping}.
+boroughs. The problem is that the spatial extent of \texttt{stations} is
+great than that of \texttt{lnd}. We will take a spatially determined
+subset of the stations object that fall inside greater London. This is
+\emph{clipping}.
 
-Two functions can be used to clip the stations dataset so that only
-those falling within London boroughs are retained: \texttt{sp::over},
-and \texttt{rgeos::gIntersects} (the word preceding the \texttt{::}
-symbol refers to the package which the function is from). Use \texttt{?}
+Two functions can be used to clip \texttt{stations} so that only those
+falling within London boroughs are retained: \texttt{sp::over}, and
+\texttt{rgeos::gIntersects} (the word preceding the \texttt{::} symbol
+refers to the package which the function is from). Use \texttt{?}
 followed by the function to get help on each. Whether
 \texttt{gIntersects} of \texttt{over} is needed depends on the spatial
 data classes being compared (Bivand et al. 2013).
@@ -945,7 +948,7 @@ to use. In fact, it can be called just by using square brackets:
 
 \begin{figure}[htbp]
 \centering
-\includegraphics{./intro-spatial_files/figure-latex/unnamed-chunk-22.pdf}
+\includegraphics{./intro-spatial_files/figure-latex/unnamed-chunk-23.pdf}
 \caption{The clipped stations dataset}
 \end{figure}
 
@@ -966,7 +969,7 @@ In its less concise form (without use of square brackets), \texttt{over}
 takes two main input arguments: the target layer (the layer to be
 altered) and the source layer by which the target layer is to be
 clipped. The output of \texttt{over} is a data frame of the same
-dimensions as the original dataset (in this case \texttt{stations}),
+dimensions as the original object (in this case \texttt{stations}),
 except that the points which fall outside the zone of interest are set
 to a value of \texttt{NA} (``no answer''). We can use this to make a
 subset of the original polygons, remembering the square bracket notation
@@ -1082,7 +1085,7 @@ For an optional advanced task, let us analyse and plot the result.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics{./intro-spatial_files/figure-latex/unnamed-chunk-28.pdf}
+\includegraphics{./intro-spatial_files/figure-latex/unnamed-chunk-29.pdf}
 \caption{Choropleth map of mean values of stations in each borough}
 \end{figure}
 
@@ -1131,7 +1134,7 @@ could add the following code to the chunk added above (see figure 6):
 
 \begin{figure}[htbp]
 \centering
-\includegraphics{./intro-spatial_files/figure-latex/unnamed-chunk-30.pdf}
+\includegraphics{./intro-spatial_files/figure-latex/unnamed-chunk-31.pdf}
 \caption{Symbol levels for train station types in London}
 \end{figure}
 
@@ -1212,7 +1215,7 @@ case with a quick plot:
 
 \begin{figure}[htbp]
 \centering
-\includegraphics{./intro-spatial_files/figure-latex/unnamed-chunk-33.pdf}
+\includegraphics{./intro-spatial_files/figure-latex/unnamed-chunk-34.pdf}
 \caption{Transport points in Barking and Dagenham}
 \end{figure}
 
@@ -1297,7 +1300,7 @@ what you want to do with the data. We do this by adding so-called
 
 \begin{figure}[htbp]
 \centering
-\includegraphics{./intro-spatial_files/figure-latex/unnamed-chunk-36.pdf}
+\includegraphics{./intro-spatial_files/figure-latex/unnamed-chunk-37.pdf}
 \caption{A simple ggplot}
 \end{figure}
 
@@ -1326,7 +1329,7 @@ a plot. In this case we can add text to the plot.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics{./intro-spatial_files/figure-latex/unnamed-chunk-38.pdf}
+\includegraphics{./intro-spatial_files/figure-latex/unnamed-chunk-39.pdf}
 \caption{ggplot for text}
 \end{figure}
 
@@ -1435,7 +1438,7 @@ in black and white, which should produce a map like that shown below
 
 \begin{figure}[htbp]
 \centering
-\includegraphics{./intro-spatial_files/figure-latex/unnamed-chunk-43.pdf}
+\includegraphics{./intro-spatial_files/figure-latex/unnamed-chunk-44.pdf}
 \caption{Greyscale map}
 \end{figure}
 
@@ -1556,7 +1559,7 @@ We can then produce the plot as before:
 
 \begin{figure}[htbp]
 \centering
-\includegraphics{./intro-spatial_files/figure-latex/unnamed-chunk-53.pdf}
+\includegraphics{./intro-spatial_files/figure-latex/unnamed-chunk-54.pdf}
 \caption{Basemap 2}
 \end{figure}
 
@@ -1639,7 +1642,7 @@ little while to appear as displayed in figure 13).
 
 \begin{figure}[htbp]
 \centering
-\includegraphics{./intro-spatial_files/figure-latex/unnamed-chunk-63.pdf}
+\includegraphics{./intro-spatial_files/figure-latex/unnamed-chunk-64.pdf}
 \caption{Faceted map}
 \end{figure}
 
@@ -1662,7 +1665,7 @@ If you would like to learn more about R's spatial functionalities,
 including more exercises on loading, saving and manipulating data, we
 recommend a slightly longer and more advanced tutorial (Cheshire and
 Lovelace, 2014). An up-to-date repository of this project, including
-example datasets and all the code used, can be found on its GitHub page:
+example data and all the code used, can be found on its GitHub page:
 \href{https://github.com/geocomPP/sdvwR}{github.com/geocomPP/sdvwR}.
 There are also a number of bonus `vignettes' associated with the present
 tutorial. These can be found on the
