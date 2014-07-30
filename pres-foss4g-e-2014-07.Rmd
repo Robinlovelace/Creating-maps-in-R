@@ -2,7 +2,10 @@
 title: "Teaching R as a command line GIS"
 author: "Robin Lovelace, `@robinlovelace`"
 date: "16/07/2014"
-output: beamer_presentation
+output:
+  beamer_presentation:
+    highlight: pygments
+    incremental: yes
 ---
 
 ## A presentation of 2 halves
@@ -10,9 +13,10 @@ output: beamer_presentation
 ```{r, echo=FALSE}
 library(png)
 library(grid)
+#     logo: ~/Dropbox/Public/img/Leeds-logo.jpg
 ```
 
-```{r Halves, fig.height=1.5}
+```{r Halves, fig.height=2}
 img <- readPNG("figure/pitch.png")
  grid.raster(img) # this presentation: written in R(md)!
 ```
@@ -37,32 +41,45 @@ comfortable teaching bubble!
 ## The structure of this presentation
 
 - Inside the Teaching Bubble
-   + Problems
-   + Solutions
-   + Lessons learned   
+    + Problems
+    + Solutions
+    + Lessons learned   
 
 - Stuck (up) in the Ivory Tower
-   + Problems
-   + Solutions
-   + Lessons learned   
+    + Problems
+    + Solutions
+    + Lessons learned   
 
-- Transcending the teaching/learning divide
+- **Crossing the teaching/learning divide**
 
 ```{r, echo=FALSE}
 #    + Input data
 #    + A spatial interaction model
 #    + Extensions
-```
 
-- Conclusion
+# - Conclusion
+```
 
 ## A bit of context
 
-## The teaching bubble - in numbers
+Based largely on "visualising spatial data" tutorial, hosted on
+CRAN (contributed docs) and github: [**github.com/Robinlovelace/Creating-maps-in-R**](https://github.com/Robinlovelace/Creating-maps-in-R)
+
+![Talisman logo](http://talisman.blogweb.casa.ucl.ac.uk/files/2012/01/cropped-chess2.jpg)
+
+Courses delivered through [TALISMAN](http://geotalisman.org/), a
+project based at the University of Leeds and UCL. It is 
+funded by the ESRC's National Centre for Research Methods ([NCRM](http://www.ncrm.ac.uk/))
+
+## R courses taught
 
 - 7 R courses, 7 months
 - 5 introductory, 2 'advanced'
 - Over 150 attendees from many different countries
+
+**We improved the content and delivery over time**
+
+**Iteration, feedback and communication are important**
 
 ## Human issues
 
@@ -71,10 +88,12 @@ comfortable teaching bubble!
 - 'Never touched a command line' `->` frustration
 - Not understanding method/applications
 
-## solutions
+## Solutions: workshop design
 
-Extensions
-QGIS + make familiar
+- Extensions for more advanced users
+- Reproduce examples in QGIS to make familiar
+- Interactive worked examples
+- Implement consistent [naming convention](http://www.r-bloggers.com/consistent-naming-conventions-in-r/)
 
 ## Technical issues
 
@@ -84,32 +103,81 @@ QGIS + make familiar
 - No internet
 - GitHub `merge`: confusion and chaos
 
-## Solutions
+## Solutions to technical issues
 
 - Start VERY slowly
 - Right balance of content between:
     + lecturing (boring but necessary)
     + worked examples (risk loosing people but fun and interactive)
     + working on your own (can do at home but encourages good questions)
-    
+- Secretly save data that needs to be downloaded from the internet
+
+## Example of 'hidden code' in the tutorial
+
+Tutorial was written in **RMarkdown**, which runs
+R code 'live' in the document. Ensures reproducibility
+but can create problems.
+
+```{r, message=FALSE, eval=FALSE}
+# shown, not run: ```{r, message=FALSE, eval=FALSE}
+# create basemap for london
+lnd_b1 <- ggmap(get_map(location = b)) 
+
+# not shown but run: ```{r, echo=FALSE}
+load("data/lnd_b1.RData") # load saved map
+```
+
+
 ## Lessons learned
 
 - The importance of demonstrators
+- Repition
+- Details are important
+- Focus on software more than concepts
+- Simplicity
 
-## The importance of demonstrators
+```{r}
+plot( , )
+```
+
+
+## Part II: Research and what R can do
+
+- World class data manipulation and processing
+- Wide range of GIS functions
+- **Excels and spatial statistics**
+- **Modelling**: e.g. Bayesian model comparison
+
+**Next: some examples**
+
+## Custom data processing:
+
+It can take data in a wide range of formats.
+E.g. MySQL database dump gives you this file `ps`:
+
+    LINESTRING(-1.81 52.55,-1.81 52.55, … )  
+    LINESTRING(-1.34 52.43,-1.41 52.45, … )  
+
+Solution:
+
+```{r, eval=FALSE}
+ps <- as.list(ps) # make a list
+for(i in 1:length(ps)){
+  ps[[i]] <- gsub("LINESTRING\\(", "", ps[[i]])
+  ps[[i]] <- gsub("\\)", "", ps[[i]])
+  ps[[i]] <- gsub(" ", ",", ps[[i]])
+  ps[[i]] <- matrix(ps[[i]], ncol=2, byrow=T)
+  ps[[i]] <- Line(ps[[i]])
+}
+```
 
 ## Themes that cut across the divide
 
 - Reproducibility a great benefit in teaching and research
 - Good research can lead to good teaching and vice versa
 - The balance between spontaneity and stability
-- The software MATTERS: take time to describe not only *what* you did, but *how* you did it
+- Describe not only *what* you did, but *how* you did it
     + Details are important - e.g. autocompletion in RStudio
-
-
-```{r}
-summary(cars)
-```
 
 ## Transcending the teaching/research divide
 
@@ -121,5 +189,15 @@ summary(cars)
 
 ## Conclusions
 
-## References
+- **R is Free Open Source Software**
+- It is great with geo-spatial data **analysis** and **modelling**
+- It's **FOSS4GDAM**! (FOSS4G for short)
+
+- **It deserves more attention from OSGeo and FOSS4G community**
+    + E.g. manageR plugin for
+    [**integration in QGIS**](http://www.maths.lancs.ac.uk/~rowlings/Teaching/UseR2012/introduction2Talk.html)
+    + E.g. R integration with QGIS with [**spqr**](http://www.maths.lancs.ac.uk/~rowlings/Qgis/Plugins/Documentation/spqr/)
+
+- Hopefully this talk will help integration with R and FOSS4G
+
 
