@@ -986,7 +986,7 @@ This is then fed into the `get_map` function as the location parameter. The synt
 lnd_b1 <- ggmap(get_map(location = b)) # create basemap for london
 ```
 
-```{r, echo=FALSE, eval=FALSE}
+```{r, echo=FALSE}
 # save(lnd_b1, file = "data/lnd_b1.RData")
 load("data/lnd_b1.RData") # load saved map
 ```
