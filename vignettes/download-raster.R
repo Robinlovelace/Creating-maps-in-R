@@ -1,20 +1,10 @@
-# Script to scrape geo-references images from Google maps and save as geotiffs
-library(ggmap)
-library(raster)
-gc <- as.numeric(geocode("Roseband, Leeds"))
-ggmap(get_map(location = , zoom = 10))
-gm <- get_map(location = gc, zoom = 20)
-ggmap(gm)
-gc[2]
-gc
-gc <- c(-1.5662, 53.8057)
-gm <- get_map(gc, zoom = 20, maptype = "satellite")
-ggmap(gm)
+# Script to scrape geo-referenced images from Google maps and save as geotiffs
 
-gr1 <- ggmap_rast(map = gm)
-class(gr1)
-(bb <- bbox(gr1))
-plot(gr1)
+library(ggmap) # type install.packages("ggmap") if you get an error
+library(raster) # type install.packages("raster") if you get an error
+gc <- as.numeric(geocode("LS7 3HB")) ########## any postcode or place name google maps understands
+gm <- get_map(gc, zoom = 17, maptype = "satellite")
+ggmap(gm)
 
 # Create raster layer from ggmap objects with new function
 ggmap_rast <- function(map){
@@ -31,26 +21,35 @@ ggmap_rast <- function(map){
   stack(red,green,blue)
 }
 
+gr1 <- ggmap_rast(map = gm)
+class(gr1)
+bb <- bbox(gr1)
+plotRGB(gr1)
+
 # Stitching together many bounding boxes
-n_row <- 3 # height in bb units
-n_col <- 6 # width
-bb_array <- array(NA, dim = c(2, 2, n_col, n_row))
-bb_array[1,,1,1] <- bb[1, ] - (n_row / 2) * (bb[1, 2] - bb[1, 1]) # top left x
-bb_array[2,,1,1] <- bb[1, ] - (n_col / 2) * (bb[2, 2] - bb[2, 1]) # top left y
-for(i in 1:n_row){
-  for(j in 1:n_col){
-    bb_array[1,,j,i] <- bb[1, ] - (n_row / 2) * (bb[1, 2] - bb[1, 1]) + (i - 1)* (bb[1, 2] - bb[1, 1])
-    bb_array[2,,j,i] <- bb[2, ] - (n_col / 2) * (bb[2, 2] - bb[2, 1]) + (j - 1)* (bb[2, 2] - bb[2, 1])
+
+n_col <- 4 # width in bb units ################## add your input here 
+n_row <- 1 # height ################## add your input here
+
+bb_array <- array(NA, dim = c(2, 2, n_row, n_col))
+bb_array[1,,1,1] <- bb[1, ] - ((n_col - 1) / 2) * (bb[1, 2] - bb[1, 1]) # top left x
+bb_array[2,,1,1] <- bb[1, ] - ((n_row - 1)  / 2) * (bb[2, 2] - bb[2, 1]) # top left y
+for(i in 1:n_col){
+  for(j in 1:n_row){
+    bb_array[1,,j,i] <- bb[1, ] - ((n_col - 1) / 2) * (bb[1, 2] - bb[1, 1]) + (i - 1)* (bb[1, 2] - bb[1, 1])
+    bb_array[2,,j,i] <- bb[2, ] - ((n_row - 1)  / 2) * (bb[2, 2] - bb[2, 1]) + (j - 1)* (bb[2, 2] - bb[2, 1])
   }
 }
 
 # Using the bounding boxes to download the images
 grm <- ggmap_rast(get_map(bb_array[,,1,1], maptype = "satellite"))
-for(i in 1:n_row){
-  for(j in 1:n_col){
+
+for(i in 1:n_col){
+  for(j in 1:n_row){
     gr <- ggmap_rast(get_map(bb_array[,,j,i], maptype = "satellite"))
-    grm <- raster::merge(gr, grm, tolerance = 1)
+    grm <- raster::merge(grm, gr, tolerance = 5)
   }
 }
 plotRGB(grm)
-writeRaster(grm, filename = "/tmp/output.tif", format="GTiff") # save output
+writeRaster(grm, filename = "ls7-wide.tif", format="GTiff") # save output
+writeRaster(grm, filename = "~/semitemp/ls7-wide.bmp", format="BMP") # save output

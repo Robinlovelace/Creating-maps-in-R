@@ -1,0 +1,31 @@
+'Reverse clipping' in R
+========================================================
+
+A reverse clip saves only the part of your spatial object that is *outside*
+the bounds of another object, as opposed to a regular clip which saves the
+parts that are *inside* the other object.
+
+```{r}
+# simplify UK geometry 1st
+ukborder <- readOGR("/scratch/data/boundaries/uk-outline/", "infuse_uk_2011")
+library(rgeos)
+ukG <- gSimplify(ukborder, tol = 1000)
+object.size(ukG) / 1000000
+plot(ukG)
+ukG <- SpatialPolygonsDataFrame(ukG, data.frame(zone = 1), match.ID = F)
+writeOGR(ukG, "/home/georl/repos/Creating-maps-in-R/data/", "ukbord", "ESRI Shapefile")
+```
+
+
+Let's load some data to see it in operation:
+
+```{r}
+summary(cars)
+```
+
+You can also embed plots, for example:
+
+```{r fig.width=7, fig.height=6}
+plot(cars)
+```
+
