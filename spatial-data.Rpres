@@ -1,7 +1,7 @@
 An introduction to R for visualising spatial data
 ========================================================
 author: Robin Lovelace
-date: 14th July 2014
+date: 1st October 2014
 
 ```{r,echo=FALSE}
 # date: 12th June 2014
@@ -26,15 +26,18 @@ Course agenda
 =======================================================
 
 
-During this tutorial we will
+During this course we will cover these topics
 
-- Introduce R as a GIS (13:00 - 13:10)
-- Discover basic GIS commands in R (13:10 - 13:55)
+- An introduction to R (9:30 - 10:30)
+- Loading and interrogating spatial data (10:30 - 11:30)
+- Manipulating spatial objects (11:30 - 12:30)
 
-- **5 minute break!!!**
+LUNCH
 
-- Make maps with **ggplot2** (14:00 - 14:20)
-- Taking it further + Q & A (14:20 onwards)
+- Making maps in ggplot2 (13:30 - 14:30)
+- Basemaps (14:30 - 15:30)
+- More advanced visuals (15:30 - 16:00)
+- Taking it further + Q & A (16:00 onwards)
 
 ```{r, echo=FALSE}
 # During this course we will cover these topics

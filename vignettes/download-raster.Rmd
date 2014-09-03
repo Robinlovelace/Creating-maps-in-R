@@ -1,5 +1,5 @@
 ---
-  title: "Harvesting arial photos in R"
+  title: "Aerial photos in R"
 author: "Robin Lovelace"
 date: "30/07/2014"
 output: html_document

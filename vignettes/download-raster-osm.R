@@ -1,11 +1,11 @@
 # Script to scrape geo-references images from Google maps and save as geotiffs
 library(ggmap)
 library(raster)
-gc <- as.numeric(geocode("LS2 9JT"))
+gc <- as.numeric(geocode("NG7 6PD"))
 ggmap(get_map(location = gc))
 gm <- get_map(location = gc, zoom = 18)
 ggmap(gm)
-gm <- get_map(gc, zoom = 18, maptype = "satellite")
+gm <- get_map(gc, zoom = 17, source = 'osm')
 ggmap(gm)
 
 # Create raster layer from ggmap objects with new function
@@ -42,14 +42,14 @@ for(i in 1:n_col){
 }
 
 # Using the bounding boxes to download the images
-grm <- ggmap_rast(get_map(bb_array[,,1,1], maptype = "satellite"))
+grm <- ggmap_rast(get_map(bb_array[,,1,1], source="osm"))
 
 for(i in 1:n_col){
   for(j in 1:n_row){
-    gr <- ggmap_rast(get_map(bb_array[,,j,i], maptype = "satellite"))
+    gr <- ggmap_rast(get_map(bb_array[,,j,i], source="osm"))
     grm <- raster::merge(grm, gr, tolerance = 5)
   }
 }
 plotRGB(grm)
 
-writeRaster(grm, filename = "/tmp/output.tif", format="GTiff") # save output
+writeRaster(grm, filename = "~/Desktop/Leslie-rd-osm.bmp", format="BMP", overwrite =T) # save output
