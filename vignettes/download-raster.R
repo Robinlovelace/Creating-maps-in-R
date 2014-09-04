@@ -1,5 +1,5 @@
 # Script to scrape geo-references images from Google maps and save as geotiffs
-library(ggmap)
+library(ggmap) # install.packages('ggmap') must be run first - same for 'raster'
 library(raster)
 gc <- as.numeric(geocode("LS2 9JT"))
 ggmap(get_map(location = gc))
