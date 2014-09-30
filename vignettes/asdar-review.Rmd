@@ -1,0 +1,112 @@
+---
+title: "ASDAR book Review"
+author: "Robin Lovelace"
+date: "09/09/2014"
+output: html_document
+---
+
+I was recently invited to write a book review for
+[Applied Spatial Analysis and Policy](http://www.springer.com/social+sciences/population+studies/journal/12061) (ASAP).
+The book, I conclude, "is the authoritative resource on R’s spatial capabilities" and should be of interest to many R users.
+
+Below is a preprint of the full review, now 
+[published on ASAP's website](http://link.springer.com/article/10.1007/s12061-014-9118-y#page-1).
+
+As a geographer and heavy R user, I was naturally excited to discover Applied Spatial
+Data Analysis with R (ASDAR). I purchased a copy of the first edition in the summer
+of 2012 at the European Region Science Association (ERSA) annual conference in
+Bratislava and was pleased to get my copy signed by the book’s lead author and
+influential R programmer Roger Bivand (who also manages R’s spatial ‘Task View’
+and contributes to many R packages).
+
+Two years later, I no longer feel like a beginner in the world of R for geographical
+applications and ASDAR was certainly of great assistance. Now in its second edition,
+the book has been substantially rewritten to account for rapid progress in R’s spatial
+capabilities. As an advanced user who teaches R for GIS applications and having read
+both versions of the book, I feel that I am well-placed to write this review.
+The book’s tone and technical focus (it contains code, equations or images on most
+pages) suits well its intended audience: advanced or intermediate users of R wanting to
+improve their spatial analysis skills.
+
+A major selling point of ASDAR is that its authors are some of the core developers
+of R’s spatial capabilities. This shows in the introductory chapter where R’s advantages
+over ‘legacy’ GIS packages are expounded: R is completely free and open source,
+providing huge potential benefits in terms of education and reproducibility (Ince et al.,
+2012). Rich in code and examples, the book demonstrates that R can be used as a
+powerful command-line GIS. Using many images and case studies, ASDAR acts as a
+bridge between developers and users, providing flesh around the terse skeleton of R’s
+inbuilt documentation. The authors have spent more time than most thinking about how
+best to perform spatial operations in R and this shows: often there are multiple solutions
+to spatial problems and ASDAR provides much-needed guidance on current best
+practice.
+
+A good example is
+[spatial subsetting](http://robinlovelace.net/r/2014/07/29/clipping-with-r.html): I discovered through reading ASDAR that the
+elements of overlap between two spatial object (`a` and `b`, say) can be found using the
+following notation:
+
+```{r, eval=FALSE}
+a[b,]
+```
+
+
+This incredibly terse syntax allows complex spatial operations to be
+conducted with a minimum of typing. This and other features make R the most intuitive
+and feature rich command-line GIS system available and the book does a good job of
+communicating this. The provision of extra code and data on the
+[ASDAR website](http://www.asdar-book.org/)
+is exemplary, allowing readers to re-create most of the
+images on their own computers.
+
+In terms of content, ASDAR is divided into two parts: handling spatial data and
+analysing spatial data. The former is about general purpose GIS applications that one
+could expect from any GIS package: reprojection, overlays, visualisations, buffers,
+clipping and loading and saving from various data formats. The final chapter on spatio-
+temporal data provides an excellent introduction to the powerful spacetime package. It
+would be possible to harvest all this information from the wider internet. But ASDAR
+provides the only resource, to my knowledge, where it is all available in a single
+cohesive place with clear explanations and example data.
+
+The second part is where the power of R’s spatial statistical tools become apparent.
+Topics include point pattern analysis, geostatistics, modelling areal data (of great
+interest to social scientists) and disease mapping. It becomes apparent that in some
+cases, R is the only high level language for some operations, including customisable
+geographically weighted regression and Bayesian modelling. Despite the provision of
+dozens of lines of code in each section, the authors maintain an impressive adherence to
+the theory on which each function is based.
+
+The only downsides of the book apply to specific users:
+
+- complete R novices will find the learning curve steep and scary (so should consult
+more introductory texts before reading ASDAR);
+- specialists in niches other than spatial epidemiology (e.g. LiDAR, interactive data
+visualisation and 3D modelling) may not find what they need.
+
+The former point can in fact be seen as an advantage of ASDAR over other texts; it
+refuses to water-down key concepts and dives straight into the code at an early stage.
+The second point can also be seen as an advantage; it would be impossible to cover
+every aspect of spatial data analysis, and the authors have made a strategic decision to
+focus on a use case where R clearly outperforms competitors. The focus on disease
+mapping in Part 2 plays to R’s strengths. Personally, I think the book would benefit
+from description of animated and online maps using
+the **[animation](http://cran.r-project.org/web/packages/animation/index.html)**,
+**[shiny](http://glimmer.rstudio.com/joshuagordon/nationalparks/)** or
+[**rMaps**](http://rmaps.github.io/)
+packages. However, these are minor gripes considering the packages were not even
+released when the book was being written! The R spatial ecosystem is rapidly evolving
+so no book can be 100 % up-to-date.
+
+One example of this that I'm involved in is 'spatial microsimulation',
+a topic about which I'm running a course in Cambridge next week
+([see here for details](http://store.leeds.ac.uk/browse/extra_info.asp?compid=1&modid=2&deptid=9&catid=47&prodid=449)).
+
+In summary, this book is the authoritative resource on R’s spatial capabilities. I
+heartily recommend ASDAR to all existing R users interested in spatial data and
+adventurous R beginners with a strong grounding in GIS.
+
+## References
+
+Ince, D. C., Hatton, L., & Graham-Cumming, J. (2012). [The case for open computer programs](http://srv2.lemig.umontreal.ca/donnees/geo1512/INCE_N_2012_open_computer_programs.pdf). Nature, 482(7386), 485–488.
+
+Lovelace, R. and Cheshire, J. (2014).
+[Introduction to visualising spatial data in R](https://github.com/Robinlovelace/Creating-maps-in-R/raw/master/intro-spatial-rl.pdf). National Centre for Research Methods Working Paper 08/14, 14(03). Retrieved from http://eprints.ncrm.ac.uk/3295/.

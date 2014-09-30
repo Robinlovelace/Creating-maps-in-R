@@ -1,7 +1,7 @@
 # Script to scrape geo-references images from Google maps and save as geotiffs
 library(ggmap) # install.packages('ggmap') must be run first - same for 'raster'
 library(raster)
-gc <- as.numeric(geocode("LS2 9JT"))
+gc <- as.numeric(geocode("LS2 9JT")) # centre point of the raster images to grab
 ggmap(get_map(location = gc))
 gm <- get_map(location = gc, zoom = 18)
 ggmap(gm)
@@ -52,4 +52,5 @@ for(i in 1:n_col){
 }
 plotRGB(grm)
 
-writeRaster(grm, filename = "/tmp/output.tif", format="GTiff") # save output
+# writeRaster(grm, filename = "/tmp/output.tif", format="GTiff") # save output
+writeRaster(grm, filename = "/tmp/output.bmp", format="BMP") # save output
