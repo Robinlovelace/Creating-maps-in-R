@@ -1,9 +1,12 @@
 # Script to scrape geo-references images from Google maps and save as geotiffs
 library(ggmap) # install.packages('ggmap') must be run first - same for 'raster'
 library(raster)
-gc <- as.numeric(geocode("LS2 9JT")) # centre point of the raster images to grab
-ggmap(get_map(location = gc))
-gm <- get_map(location = gc, zoom = 18)
+gc <- as.numeric(geocode("Old crow wood")) # centre point of the raster images to grab
+x_adjust <- 0.0018 # move centrepoint in x location
+y_adjust <- -0.003 # move y direction
+gc <- gc + c(x_adjust, y_adjust)
+ggmap(get_map(location = gc ))
+gm <- get_map(location = gc, zoom = 16)
 ggmap(gm)
 gm <- get_map(gc, zoom = 18, maptype = "satellite")
 ggmap(gm)
@@ -29,7 +32,7 @@ bb <- bbox(gr1)
 
 # Stitching together many bounding boxes
 n_col <- 3 # width in bb units ################## add your input here 
-n_row <- 2 # height ################## add your input here
+n_row <- 4 # height ################## add your input here
 
 bb_array <- array(NA, dim = c(2, 2, n_row, n_col))
 bb_array[1,,1,1] <- bb[1, ] - ((n_col - 1) / 2) * (bb[1, 2] - bb[1, 1]) # top left x
@@ -52,5 +55,5 @@ for(i in 1:n_col){
 }
 plotRGB(grm)
 
-# writeRaster(grm, filename = "/tmp/output.tif", format="GTiff") # save output
-writeRaster(grm, filename = "/tmp/output.bmp", format="BMP") # save output
+writeRaster(grm, filename = "~/Dropbox/incredible-farm.tiff", format="GTiff", overwrite = TRUE) # save output
+# writeRaster(grm, filename = "~/Dropbox/highbury.bmp", format="BMP", overwrite = TRUE) # save output
