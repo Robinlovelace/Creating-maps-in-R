@@ -8,8 +8,8 @@ output: pdf_document
 R has a suite of powerful and effective spatial data processing tools. It is the purpose
 of this reference card to summarise the most important and frequently used
 packages and functions. Some of the commands use real datasets from the
-'Creating-maps-in-R' GitHub repository. Unzip this repo and run the commands from
-the folder's root directory to see the commands in action, or use R's help functions.
+'Creating-maps-in-R' [GitHub repository](http://www.github.com/Robinovelace/Creating-maps-in-R). Unzip this repo and run the commands from the folder's root directory to see the commands in action, or use R's help functions.
+
 Using the example of the `help` command, type:
 `?help` (for information on a specific function),
 `??help` (to search for word in R's documentation)
@@ -18,9 +18,14 @@ and `example(help)` (for pre-made examples of that function).
 # Key packages
 
 Additional packages must be installed (using `install.packages('packageName')`) on top of 
-R's [default packages](http://www.hep.by/gnu/r-patched/r-admin/R-admin_33.html) to use R's spatial 
-capabilities. Packages are loaded via `library(packageName)`.
-Some of the most important and frequently used spatial packages are:
+R's [default packages](http://www.hep.by/gnu/r-patched/r-admin/R-admin_33.html) to utilise R's spatial 
+capabilities. Packages are loaded using `library(packageName)`.For example: the `library(rgdal)` will load the rgdal package which is R's interface to the 'Geospatial Abstraction Library(GDAL). rgdal has a number of useful functions including `readOGR` which loads spatial data formats such as shapefiles.  
+
+```{r}
+library(rgdal)
+```
+
+Some other important and frequently used spatial packages are:
 
 - **sp**: basis of most other spatial R packages - provides Spatial* classes
 - **rgdal**: R's interface to the GDAL data import library
@@ -35,7 +40,7 @@ R Archive Network's (CRAN) website under the
 # R's Spatial* classes
 
 To work with spatial data, R uses *classes* that are more complex
-that the default data classes in R's base package; *S3* `vector`, `list` and `data.frame` s. 
+than the default data classes in R's base package; *S3* `vector`, `list` and `data.frame` s. 
 Spatial object classes can be identified with the
 function `class(objectName)`. Each contains a number of different data
 *slots*: sub-classes of specific types. Some important
@@ -43,46 +48,90 @@ spatial classes provided by the `sp` package include:
 
 - `SpatialPoints`: point data, each point represented by an x and y coordinate
 - `SpatialLines`: line data, composed of lists of the `Lines` sub-class or *slot*
-- `SpatialPolygons`: polygon data, with `Polygons` and `Polygon` *slots*
+- `SpatialPolygons`: polygon data, with `Polygons` and `Polygon` *slots* dewwed
 - `SpatialPixels`: a spatial class for raster data comprised of pixels
 
 It is important to note that each of the above classes cannot contain non-spatial
-attribute data. First they must be converted into a class of the same name but suffixed
-with `DataFrame`. Thus `spPdf <- SpatialPointsDataFrame(spP, df)` will create a new object 
-containing spatial and non-spatial information.
+attribute data (imagine an attribute table in a GIS). Therefore, they must first be converted into a class of the same name but suffixed with `DataFrame`. Thus `SpDf <- SpatialPointsDataFrame(sp, df)` will create a new object containing points with spatial and non-spatial information called SpDf. Likewise `SlDf <- SpatialLinesDataFrame` will create a new object containing lines with spatial and non-spatial information. 
 
-The attribute data of the spPdf object can be accessed in this instance by `spPdf@data`: the `@data` notation
-refers to the `data` slot of the new object. More fundamental spatial classes, which
+The attribute data of the SpDf object can be accessed in this instance by using `spPdf@data`. The `@data` notation refers to the `data` slot of the new object. More fundamental spatial classes, which
 are in fact subsets of the `Spatial*` type classes listed above, include `bbox` (the
 object's bounding box) and `proj4string` (the projection of the object, which may be `NA`).
 
-# Loading and querying spatial data
-
+# Loading spatial data
+Create a new spatial object called SpDf using the 'london_sport' shapefile: 
 ```{r, warning=FALSE, message=FALSE, results='hide'}
-library(rgdal)
-SpDf <- readOGR("data/", "london_sport") # this loads a shapefile and names it SpDf 
+SpDf <- readOGR("data/", "london_sport") 
+```
+
+Plot the SpDf object using the geometry slot:
+
+plot(SpDf)
+
+#Analysing Attribute data
+
+Print the column headings of the SpDf object:
+```{r}
+names(SpDf)
+```
+
+Print the entire SpDf object:
+```{r}
+print(SpDf)
+```
+
+Print a defined number of rows from the SpDf object (2 in this case):
+```{r}
+head(SpDf@data, n=2)
+```
+
+Some basic column statistics:
+```{r}
+mean(SpDf$Partic_Per) #calculate the mean value of the Partic_Per column
+max(SpDf$Partic_Per)  #calculate the maximum value 
+min(SpDf$Partic_Per)  #calculate the minimum value
+sum(SpDf$Partic_Per)  #Calculate the sum of the values
+
+nrow(SpDf)  #Return the number of rows in the dataset
+ncol(SpDf)  #Return the number of columns in the dataset 
+```
+
+Additional information about the SpDf object:
+```{r}
+Summary(SpDf)
 ```
 
 # Allocating and changing projection
+Before undertaking any further analysis it is useful to know the Coordinate Reference System(CRS) of the SpDf object. 
 
 Query the current projection of an object: 
 ```{r}
 proj4string(SpDf)
 ```
+
 Change the Coordinate Reference System (CRS) if it has been incorrectly assigned:
 ```{r}
 proj4string(SpDf) <-CRS("+init=epsg:27700")
 ```
+
 Note the warning above which states that the coordinate reference system has been changed but the data
 has not been transformed. To transform the data use:
 ```{r}
 SpDf.wgs84 <-spTransform(SpDf("+init=epsg:4326"))
 ```
 
+#Attribute Joins
+Attribute joins are used to link additional pieces of information to pre-existing polygons. In the SpDf object, for example, there are 5 attribute variables (you saw these earlier when typing `names(SpDf)`)
+
 # Spatial subsetting
+
+
 
 # Spatial aggregation
 
 # Spatial graphics
 
 # Basemaps and advanced functions
+
+
+
