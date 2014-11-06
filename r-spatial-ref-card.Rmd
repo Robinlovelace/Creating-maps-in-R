@@ -1,41 +1,38 @@
 ---
 title: "R Spatial Reference Card"
-author: "Robin"
-date: "10/07/2014"
+author: "Robin Lovelace and Rachel Oldroyd"
 output: pdf_document
+geometry: margin=0.3in
 ---
 
-R has a suite of powerful and effective spatial data processing tools. It is the purpose
-of this reference card to summarise the most important and frequently used
-packages and functions. Some of the commands use real datasets from the
-'Creating-maps-in-R' [GitHub repository](http://www.github.com/Robinovelace/Creating-maps-in-R). Unzip this repo and run the commands from the folder's root directory to see the commands in action, or use R's help functions.
+```{r global_options, include=FALSE}
+library(knitr)
+opts_chunk$set(fig.width=12, fig.height=8, fig.path='Figs/',
+warning=FALSE, message=FALSE, results='hide')
+# remove or change these options to see the output of the commands
+```
+
+R has a suite of powerful and effective spatial data processing tools. This reference card to summarises the fundamentals of R for geographical applications, in terms of packages and functions. The code has been tested on data from the
+'Creating-maps-in-R' [GitHub repository](http://www.github.com/Robinovelace/Creating-maps-in-R). Run the commands from the [unzipped folder](https://github.com/Robinlovelace/Creating-maps-in-R/archive/master.zip) to see the commands in action!
 
 Using the example of the `help` command, type:
 `?help` (for information on a specific function),
 `??help` (to search for word in R's documentation)
 and `example(help)` (for pre-made examples of that function).
 
-# Key packages
+**Key packages**
 
 Additional packages must be installed (using `install.packages('packageName')`) on top of 
 R's [default packages](http://www.hep.by/gnu/r-patched/r-admin/R-admin_33.html) to utilise R's spatial 
-capabilities. Packages are loaded using `library(packageName)`.For example: the `library(rgdal)` will load the rgdal package which is R's interface to the 'Geospatial Abstraction Library(GDAL). rgdal has a number of useful functions including `readOGR` which loads spatial data formats such as shapefiles.  
-
-```{r}
-library(rgdal)
-```
-
-Some other important and frequently used spatial packages are:
+capabilities. Packages are loaded using `library(packageName)`. For example, `r library(rgdal)` will load the **rgdal** package which is R's interface to the 'Geospatial Abstraction Library' (GDAL). The most important and frequently used *general purpose* spatial packages are:
 
 - **sp**: basis of most other spatial R packages - provides Spatial* classes
 - **rgdal**: R's interface to the GDAL data import library
 - **rgeos**: provides a number of spatial functions
 - **maptools**: tools for handling spatial objects
-- **raster**: provides functions for raster data
 
-There are hundreds of additional R packages described on the Comprehensive
-R Archive Network's (CRAN) website under the
-[*spatial view*](http://cran.r-project.org/web/views/Spatial.html).
+**raster** and **spatstat** are mature and extremely useful spatial packages, providing functions for raster and point-pattern applications, respectively.
+There are hundreds of additional R packages described on the [CRAN website](http://cran.r-project.org) in the [*spatial view*](http://cran.r-project.org/web/views/Spatial.html).
 
 # R's Spatial* classes
 
@@ -52,79 +49,80 @@ spatial classes provided by the `sp` package include:
 - `SpatialPixels`: a spatial class for raster data comprised of pixels
 
 It is important to note that each of the above classes cannot contain non-spatial
-attribute data (like attribute tables in GIS softward like QGIS). Therefore, they must first be converted into a class of the same name but suffixed with `DataFrame`. Thus `SpDf <- SpatialPointsDataFrame(sp, df)` will create a new object containing points with spatial and non-spatial information called SpDf. Likewise `SlDf <- SpatialLinesDataFrame` will create a new object containing lines with spatial and non-spatial information. 
+attribute data (like attribute tables in GIS softward like QGIS). Therefore, they must first be converted into a class of the same name but suffixed with `DataFrame`. Thus `london <- SpatialPointsDataFrame(sp, df)` will create a new object containing points with spatial and non-spatial information called london. Likewise `SlDf <- SpatialLinesDataFrame` will create a new object containing lines with spatial and non-spatial information. 
 
-The attribute data of the SpDf object can be accessed in this instance by using `spPdf@data`. The `@data` notation refers to the `data` slot of the new object. More fundamental spatial classes, which
+The attribute data of the london object can be accessed in this instance by using `spPdf@data`. The `@data` notation refers to the `data` slot of the new object. More fundamental spatial classes, which
 are in fact subsets of the `Spatial*` type classes listed above, include `bbox` (the
 object's bounding box) and `proj4string` (the projection of the object, which may be `NA`).
 
-# Loading spatial data
-Create a new spatial object called SpDf using the 'london_sport' shapefile: 
+**Loading spatial data**
+`readOGR` from **rgdal** can load a wide variety of spatial data types. The following line loads spatial data representing London:
+
 ```{r, warning=FALSE, message=FALSE, results='hide'}
-SpDf <- readOGR("data/", "london_sport") 
+london <- readOGR("data/", "london_sport") 
 ```
 
-Plot the SpDf object using the geometry slot:
+Plot the london object using the geometry slot:
 
-plot(SpDf)
+plot(london)
 
 #Analysing Attribute data
 
-Print the column headings of the SpDf object:
+Print the column headings of the london object:
 ```{r}
-names(SpDf)
+names(london)
 ```
 
-Print the entire SpDf object:
+Print the entire london object:
 ```{r}
-print(SpDf)
+print(london)
 ```
 
-Print a defined number of rows from the SpDf object (2 in this case):
+Print a defined number of rows from the london object (2 in this case):
 ```{r}
-head(SpDf@data, n=2)
+head(london@data, n=2)
 ```
 
 Some basic column statistics:
 ```{r}
-mean(SpDf$Partic_Per) #calculate the mean value of the Partic_Per column
-max(SpDf$Partic_Per)  #calculate the maximum value 
-min(SpDf$Partic_Per)  #calculate the minimum value
-sum(SpDf$Partic_Per)  #Calculate the sum of the values
+mean(london$Partic_Per) #calculate the mean value of the Partic_Per column
+max(london$Partic_Per)  #calculate the maximum value 
+min(london$Partic_Per)  #calculate the minimum value
+sum(london$Partic_Per)  #Calculate the sum of the values
 
-nrow(SpDf)  #Return the number of rows in the dataset
-ncol(SpDf)  #Return the number of columns in the dataset 
+nrow(london)  #Return the number of rows in the dataset
+ncol(london)  #Return the number of columns in the dataset 
 ```
 
-Additional information about the SpDf object:
+Additional information about the london object:
 ```{r}
-Summary(SpDf)
+summary(london)
 ```
 
 # Allocating and changing projection
-Before undertaking any further analysis it is useful to know the Coordinate Reference System(CRS) of the SpDf object. 
+Before undertaking any further analysis it is useful to know the Coordinate Reference System(CRS) of the london object. 
 
 Query the current projection of an object: 
 ```{r}
-proj4string(SpDf)
+proj4string(london)
 ```
 Change the Coordinate Reference System (CRS) if it has been incorrectly assigned:
 
 Change the Coordinate Reference System (CRS) if it has been incorrectly assigned:
 ```{r}
-proj4string(SpDf) <-CRS("+init=epsg:27700")
+proj4string(london) <-CRS("+init=epsg:27700")
 ```
 
 Note the warning above which states that the coordinate reference system has been changed but the data
 has not been transformed. To transform the data use:
 
 ```{r}
-SpDf.wgs84 <-spTransform(SpDf("+init=epsg:4326"))
+london.wgs84 <-spTransform(london, CRS("+init=epsg:4326"))
 ```
 
 #Attribute Joins
 
-Attribute joins are used to link additional pieces of information to pre-existing polygons. In the SpDf object, for example, there are 5 attribute variables (you saw these earlier when typing `names(SpDf)`)
+Attribute joins are used to link additional pieces of information to pre-existing polygons. In the london object, for example, there are 5 attribute variables (you saw these earlier when typing `names(london)`)
 
 # Spatial subsetting
 
