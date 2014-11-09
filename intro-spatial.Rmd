@@ -538,9 +538,9 @@ could equally be used. Note that when we ask for help for a function
 that is not loaded, nothing happens, indicating we need to load it:
 
 ```{r, results='hide'}
-help(join) # error flagged
-library(plyr)
-help(join) # should now be loaded
+help(left_join) # error flagged
+library(dplyr) # load the powerful dplyr package (use plyr if unavailable)
+help(left_join) # should now be loaded (use join if unavailable)
 ```
 
 The documentation for join will be displayed if the plyr package is loaded (if not,
@@ -550,14 +550,62 @@ same name, so we will rename the variable to make the join work:
 ```{r, results='hide'}
 head(lnd$name)
 head(crime_ag$Spatial_DistrictName) # the variables to join
-crime_ag <- rename(crime_ag, replace = c("Spatial_DistrictName" = "name"))
-head(join(lnd@data, crime_ag)) # test it works
-lnd@data <- join(lnd@data, crime_ag)
+# commented out: old version using plyr version of rename
+# crime_ag <- rename(crime_ag, replace = c("Spatial_DistrictName" = "name"))
+crime_ag <- rename(crime_ag, name = Spatial_DistrictName)
+# head(join(lnd@data, crime_ag)) # test it works
+lnd@data <- left_join(lnd@data, crime_ag)
 ```
 
 Take a look at the `lnd@data` object. You should
 see new variables added, meaning the attribute join
 was successful.
+
+### Challenge: create a map of additional variables in London
+
+With the attribute joining skills you have learned in this section,
+you should now be able to take datasets from many sources and
+join them to your geographical data. To test your skills, try to
+join additional borough-level variables to the `lnd` object.
+An excellent dataset on this can be found on the the 
+[data.gov.uk](http://data.london.gov.uk/dataset/london-borough-profiles)
+website. 
+
+Using this dataset and the methods developed above, Figure 4 was
+created: the proportion of council seats won by conservatives
+in the 2014 local elections. **The challenge** is to create 
+a similar map of a different variable (you may need to skip to
+Part IV to plot continuous variables).
+
+```{r, echo=FALSE, results='hide', message=FALSE, warning=FALSE, fig.cap="Proportion of council seats won by conservatives in the 2014 local elections using data from data.london.gov and joined using the methods presented in this section"}
+library(ggmap)
+borough_dat <- read.csv("data/london-borough-profiles-2014.csv")
+names(borough_dat)
+borough_dat <- rename(borough_dat, conservative = Proportion.of.seats.won.by.Conservatives.in.2014.election)
+borough_dat$conservative <- as.numeric(as.character(borough_dat$conservative))
+summary(borough_dat$conservative)
+head(lnd$ons_label)
+head(borough_dat$Code)
+# check the joining variables work
+summary(borough_dat$Code %in% lnd$ons_label)
+# rename the linking variable
+borough_dat <- rename(borough_dat, ons_label = Code)
+to_join <- select(borough_dat, ons_label, conservative)
+lnd@data <- left_join(lnd@data, to_join)
+
+lnd_f <- fortify(lnd, region = "ons_label") # you may need to load maptools
+lnd_f <- rename(lnd_f, ons_label = id)
+
+lnd_f <- left_join(lnd_f, lnd@data)
+
+map <- ggplot(lnd_f, aes(long, lat, group = group, fill = conservative)) +
+  geom_polygon() +
+  coord_equal() +
+  labs(x = "Easting (m)", y = "Northing (m)", fill = "% who\nvoted\nConservative") +
+  scale_fill_continuous(low = "grey", high = "blue") +
+  theme_nothing(legend = T)
+map
+```
 
 ## Clipping and spatial joins
 
