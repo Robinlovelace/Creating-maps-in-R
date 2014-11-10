@@ -20,6 +20,9 @@ output:
 # ~~/__/~|~~ is low ~
 # ~/~~|~~|_ energy.~
 # robinlovelace.net
+# TODO: add details for the ggplot2 section
+# TODO: create animation of population change over time
+# dplyr + rename instead of merge
 ```
 
 
@@ -141,7 +144,7 @@ We recommend taking a quick browse on R's main website:
 [http://cran.r-project.org/web/views/Spatial.html](http://cran.r-project.org/web/views/Spatial.html).
 
 The packages we will be using are
-**ggplot2**, **rgdal**, **rgeos**, **maptools**, **mapproj** and **ggmap**.
+**ggmap** (which extends **ggplot**), **rgdal**, **rgeos**, **maptools** and **dplyr**.
 To test whether a package is installed, **ggplot2** for example, enter `library(ggplot2)`.
 If you get an error message, it needs to be installed: `install.packages("ggplot2")`.
 These will be downloaded from CRAN (the Comprehensive R Archive Network); if you are prompted
@@ -497,7 +500,7 @@ that you may not have seen before that will likely be useful in the future:
 - In the first line of code the `fileEncoding` argument is used.
 This is rarely necessary, but in this case the file comes in a strange file format.
 9 times out of ten you can omit this argument but it's worth knowing about.
-- The `which` function is used to select only those observations that
+- The `==` function is used to select only those observations that
 meet a specific condition, in this case all crimes involving "Theft and Handling".
 - The
 `~` symbol means "by": we aggregated the `CrimeCount` variable by the district name.
@@ -533,14 +536,14 @@ then renamed the level to match the `lnd` dataset. Note that we could not
 rename the variable directly, as it is stored as a factor.
 
 We are now ready to join the datasets. It is recommended to use
-the `join` function in the **plyr** package but the `merge` function
+the `inner_join` function **dplyr** but the `merge` function
 could equally be used. Note that when we ask for help for a function
 that is not loaded, nothing happens, indicating we need to load it:
 
 ```{r, results='hide'}
-help(left_join) # error flagged
+help(inner_join) # error flagged
 library(dplyr) # load the powerful dplyr package (use plyr if unavailable)
-help(left_join) # should now be loaded (use join if unavailable)
+help(inner_join) # should now be loaded (use join if unavailable)
 ```
 
 The documentation for join will be displayed if the plyr package is loaded (if not,
@@ -669,8 +672,8 @@ plot(stations) # test the clip succeeded (see figure 5)
 ```
 
 ```{r, echo=F,eval=FALSE}
-save(lnd, file="data/lnd.RData")
-save(stations, file="data/stations.RData")
+# save(lnd, file="data/lnd.RData")
+# save(stations, file="data/stations.RData")
 ```
 
 The above line of code says: "output all `stations` within
@@ -753,7 +756,8 @@ For an optional advanced task, let us analyse and plot the result.
 ```{r fig.cap="Choropleth map of mean values of stations in each borough"}
 q <- cut(lnd_n$NUMBER, breaks= c(quantile(lnd_n$NUMBER)), include.lowest=T)
 summary(q)
-clr <- as.character(factor(q, labels = paste0("grey", seq(20, 80, 20))))
+clr <- as.character(factor(q,
+  labels = paste0("grey", seq(from = 20, to = 80, by = 20))))
 plot(lnd_n, col = clr) # plot (not shown in printed tutorial)
 legend(legend = paste0("q", 1:4), fill = paste0("grey", seq(20, 80, 20)), "topright")
 areas <- sapply(lnd_n@polygons, function(x) x@area)
@@ -949,11 +953,13 @@ For this to work, either **maptools** or **rgeos** packages must be installed.
 lnd_f <- fortify(lnd, region = "ons_label") # you may need to load maptools
 ```
 
-This step has lost the attribute information associated with the lnd object. We can add it back using the merge function (this performs a data join). To find out how this function works look at
-the output of typing `?merge`.
+This step has lost the attribute information associated with the lnd object. We can add it back using the `inner_join`
+function (this performs a data join).
+To find out how this function works look at
+the output of typing `?inner_join`.
 
 ```{r}
-lnd_f <- merge(lnd_f, lnd@data, by.x = "id", by.y = "ons_label")
+lnd_f <- inner_join(lnd_f, lnd@data, by = c("id" = "ons_label"))
 ```
 
 Take a look at the `sport.f` object to see its contents. You should see a large data frame containing the latitude and longitude (they are actually Easting and Northing as the data are in British National Grid format) coordinates alongside the attribute information associated with each London Borough. If you type `print(lnd_f)` you will see just how many coordinate pairs are required!
@@ -1010,12 +1016,12 @@ such as Google and
 [OpenStreetMap](http://www.openstreetmap.org/):
 
 ```{r}
-library(ggmap) # you may have to use install.packages to install it first
+library(ggmap) # install.packages("ggmap") if not installed
 ```
 
 The `lnd` object loaded previously is in British National Grid but the ggmap
 image tiles are in WGS84. We therefore need to use the `lnd_sport_wgs84`
-object created in the reprojection operation earlier.
+object created in the reprojection operation (see Section III).
 
 The first job is to calculate the bounding box (bb for short) of the
 `lnd_sport_wgs84` object to identify the geographic extent of the image tiles that we need.
@@ -1030,13 +1036,13 @@ b[2, ] <- (b[2, ] - mean(b[2, ])) * 1.05 + mean(b[2, ])
 
 This is then fed into the `get_map` function as the location parameter. The syntax below contains 2 functions. **ggmap** is required to produce the plot and provides the base map data.
 
-```{r, message=FALSE, eval=FALSE}
+```{r, message=FALSE}
 lnd_b1 <- ggmap(get_map(location = b)) # create basemap for london
 ```
 
 ```{r, echo=FALSE}
 # save(lnd_b1, file = "data/lnd_b1.RData")
-load("data/lnd_b1.RData") # load saved map
+# load("data/lnd_b1.RData") # load saved map
 ```
 
 In much the same way as we did above we can then layer the plot with different geoms.
@@ -1046,8 +1052,8 @@ data (we already did this step to create the `lnd_f` object).
 
 ```{r}
 lnd_wgs84_f <- fortify(lnd_sport_wgs84, region = "ons_label")
-lnd_wgs84_f <- merge(lnd_wgs84_f, lnd_sport_wgs84@data,
-                      by.x = "id", by.y = "ons_label")
+lnd_wgs84_f <- inner_join(lnd_wgs84_f, lnd_sport_wgs84@data,
+  by = c("id" = "ons_label"))
 ```
 
 We can now overlay this on our base map.
@@ -1109,34 +1115,55 @@ lnd_b3 +
 
 ## Advanced Task: Faceting for Maps
 
-```{r}
-library(reshape2) # this may not be installed.
+```{r, echo=FALSE}
+# library(reshape2) # old way of doing
 # If not install it, or skip the next two steps
 ```
 
 Load the data - this shows historic population values between 1801 and 2001
 for London, again from the London data store.
 
+`tidy` the data so that the columns become rows. In other words,
+convert the data from 'flat' to 'long' format, which is the form
+required by **ggplot2** for facetting graphics: the date of the
+population survey become a variable in its own right, rather than
+being strung-out over many columns.
+
 ```{r}
 london_data <- read.csv("data/census-historic-population-borough.csv")
+library(tidyr) # if not install it, or skip the next two steps
+ltidy <- gather(london_data, date, pop, -Area.Code, -Area.Name)
+head(ltidy, 2)
 ```
 
-"Melt" the data so that the columns become rows.
-
-```{r}
-lnd_molten <- melt(london_data, id = c("Area.Code", "Area.Name"))
-```
+In the above code we take the `london_data` object and create the
+column names 'date' (the date of the record, previously spread
+over many columns) and 'pop' (the population which varies). The
+minus (`-`) symbol in this context tells gather not to include the
+`Area.Name` and `Area.Code` as columns to be removed. In other words,
+"leave these columns be". Data tidying is an important subject: more can
+be read on the subject in Wickham (2014) or in a `vignette` about
+the package, accessed from within R by entering `vignette("tidy-data")`.
 
 
 ```{r, echo=FALSE, eval=FALSE}
+# lnd_molten <- melt(london_data, id = c("Area.Code", "Area.Name"))
 # lnd_molten <- read.csv("london_data_melt.csv")
 # Only do this step if reshape and melt failed
 ```
 
-Merge the population data with the London borough geometry contained within our `lnd_f` object.
+Merge the population data with the London borough geometry contained within our `lnd_f` object, using the `inner_join` function from
+the **dplyr** package:
 
 ```{r}
-lnd_f <- merge(lnd_f, lnd_molten, by.x = "id", by.y = "Area.Code")
+ltidy <- rename(ltidy, id = Area.Code)
+lnd_f <- inner_join(lnd_f, ltidy)
+```
+
+```{r, echo=FALSE}
+# old way of doing it
+# lnd_f <- merge(lnd_f, ltidy, by.x = "id", by.y = "Area.Code")
+
 ```
 
 Reorder this data (ordering is important for plots).
@@ -1150,11 +1177,13 @@ We can now use faceting to produce one map per year
 in figure 13).
 
 ```{r fig.cap="Faceted map", fig.height=10, fig.width=6}
-ggplot(data = lnd_f, aes(x = long, y = lat, fill = value, group = group)) +
+ggplot(data = lnd_f,
+  aes(x = long, y = lat, fill = pop, group = group)) +
   geom_polygon() +
   geom_path(colour="grey", lwd=0.1) +
   coord_equal() +
-  facet_wrap(~ variable)
+  facet_wrap(~ date)
+
 ```
 
 Again there is a lot going on here so explore the documentation to make sure you understand it.
@@ -1162,6 +1191,14 @@ Try out different colour values as well.
 
 Add a title and replace the axes names with "easting" and
 "northing" and save your map as a pdf.
+
+```{r, echo=FALSE}
+# **Creating an animation of population change over time**
+
+# library(animation)
+```
+
+\clearpage
 
 # Part V: Taking spatial data analysis in R further
 
@@ -1274,6 +1311,8 @@ Torfs and Brauer (2012). A (very) short Introduction to R. The Comprehensive R A
 Wickham, H. (2009). ggplot2: elegant graphics for data analysis. Springer.
 
 Wickham, H. (in press). [Advanced R](http://adv-r.had.co.nz/). CRC Press.
+
+Wickham, H. (2014). Tidy data. The Journal of Statistical Software, 14(5), Retrieved from http://www.jstatsoft.org/v59/i10
 
 Wilkinson, L. (2005). The grammar of graphics. Springer.
 
