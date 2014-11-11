@@ -1,7 +1,7 @@
 An introduction to R for visualising spatial data
 ========================================================
 author: Robin Lovelace
-date: 1st October 2014
+date: 10th October 2014
 
 ```{r,echo=FALSE}
 # date: 12th June 2014

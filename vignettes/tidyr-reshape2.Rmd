@@ -1,0 +1,7 @@
+---
+title: "tidyr and reshape2"
+author: "Robin Lovelace"
+date: "11/10/2014"
+output: html_document
+---
+
