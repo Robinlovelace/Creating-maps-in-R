@@ -121,10 +121,10 @@ by falling and, getting an `Error:` message in R is much less
 painful than landing on ones face on concrete! We encourage `Error:`s - it
 means you are trying new things.
 
-If you require help on any function, use the `help` function,
+If you require help on any function, use the `help` command,
 e.g. `help(plot)`. Because R users love being concise,
 this can also be written as `?plot`. Feel free to use it
-at any point you'd like more detail on a specific function
+at any point you would like more detail on a specific function
 (although R's help files are famously cryptic for the un-initiated).
 Help on more general terms can be found using the `??` symbol. To test this,
 try typing `??regression`.
@@ -170,7 +170,7 @@ before focussing on creating attractive maps in Part IV.
 Download the data for this tutorial from :
 [https://github.com/Robinlovelace/Creating-maps-in-R](https://github.com/Robinlovelace/Creating-maps-in-R).
 Click on the "Download ZIP" button on the right hand side and once
-it is downloaded unzip this to a new folder on your PC.
+it is downloaded unzip this to a new folder on your computer.
 
 If you are working in RStudio, you can create a project that will automatically
 set your working directory.
@@ -188,8 +188,7 @@ grid.raster(readPNG("figure/rstudio-proj.png"))
 ```
 
 
-If you ever need to change the working directory of R, you can change
-project or use the [`setwd` command](http://www.statmethods.net/interface/workspace.html).
+If you ever need to change the working directory of R, you can use the 'Session' menu at the top of the page or use the [`setwd` command](http://www.statmethods.net/interface/workspace.html).
 
 ```{r, eval= F, echo=FALSE}
 # Use the `setwd` command to set the working directory to the folder where the data is saved.
@@ -200,10 +199,9 @@ project or use the [`setwd` command](http://www.statmethods.net/interface/worksp
 ```
 
 It is also worth taking a look at the input data in your file browser
-before opening them in R, to get a feel for them. You could try opening the
-file "london_sport.shp", within the "data" folder of the project, in a GIS program such as
-QGIS (which can be freely downloaded from the internet),
-for example, to get a feel for it before loading it into R.
+before opening them in R. You could try opening the
+file "london_sport.shp"(located within the "data" folder of the project), in a GIS program such as
+QGIS (which can be freely downloaded from the internet) to explore the attribute and geometry information in a familiar environment. 
 Also note that .shp files are composed of several files for each object:
 you should be able to open "london_sport.dbf" in a spreadsheet program such as
 LibreOffice Calc. Once you've understood something of this input data
@@ -309,10 +307,11 @@ to plot a subset of zones with high sports participation.
 plot(lnd_sport[lnd_sport$Partic_Per > 25, ]) # output not shown in tutorial
 ```
 
-This is useful, but it would be great to see these sporty areas in context.
-To do this, simply use the `add = TRUE` argument after the initial plot.
+This plot is useful, but it only shows the areas which meet the criteria. To see the sporty areas in context with the other areas of the map simply use the `add = TRUE` argument after the initial plot.
 (`add = T` would also work, but we like to spell things out in this tutorial for clarity).
 What does the `col` argument refer to in the below block - it should be obvious (see figure 3).
+
+If you wish to experiment with mulitple criteria queries, use the '&' sign. 
 
 ```{r fig.cap="Preliminary plot of London with areas of high sports participation highlighted in blue"}
 plot(lnd_sport) # plot the london_sport object
@@ -401,7 +400,7 @@ You may have noticed the word `proj4string` in the
 summary of the `lnd_sport` object above.
 This represents it CRS mathematically.
 In some spatial data files, no CRS is specified or
-worse, and incorrect CRS value is given.
+worse, an incorrect CRS value is given.
 Provided the correct CRS is known, this can be righted with a single line:
 
 ```{r, warning=FALSE}
@@ -428,7 +427,7 @@ lnd_sport_wgs84 <- spTransform(lnd_sport, CRS("+init=epsg:4326")) # reproject
 The above code uses the function `spTransform`, from the **sp** package,
 to convert the `lnd_sport` object into a new form, with the Coordinate Reference System (CRS)
 specified as WGS84.
-The different epsg codes are a bit of hassle to remember but you can search for them at
+The different EPSG codes are a bit of hassle to remember but you can search for them at
 [spatialreference.org](http://spatialreference.org/).
 
 ## Attribute joins
@@ -437,7 +436,7 @@ Attribute joins are used to link additional pieces of information to our polygon
 in the `lnd_sport` object, for example, we have 5 attribute variables - that can be
 found by typing `names(lnd_sport)`. But what happens when we want to add an additional
 variable from an external data table? We will use the example of recorded crimes by
-borough to demonstrate this.
+London boroughs to demonstrate this.
 
 To reaffirm our starting point, let's re-load the
 "london_sport" shapefile as a new object and plot it. This is identical to
@@ -480,12 +479,12 @@ head(crime_data)
 ```
 
 The non-spatial data we are going to join to the `lnd` object
-contains records on crimes in London. This is stored in a comma-delimited
+contains records of crimes in London. This is stored in a comma separated values
 [(`.csv`)] file called "mps-recordedcrime-borough".
 Viewing the [file](https://raw.githubusercontent.com/Robinlovelace/Creating-maps-in-R/master/data/mps-recordedcrime-borough.csv)
-locally shows that each row representing a single reported crime.
+locally shows that each row represents a single reported crime.
 We are going to use a function called `aggregate`
-to pre-process these records, ready to join to our spatial
+to aggregate the crimes at the borough level, ready to join to our spatial
 `lnd` dataset. A new object called `crime_data` is created to store this data.
 
 ```{r, echo=FALSE, eval=FALSE}
@@ -503,14 +502,14 @@ to pre-process these records, ready to join to our spatial
 crime_data <- read.csv("data/mps-recordedcrime-borough.csv")
 
 head(crime_data, 3) # display first 3 lines
-summary(crime_data$MajorText) # summary of crime type
+summary(crime_data$CrimeType) # summary of crime type
 
 # Extract "Theft & Handling" crimes and save
-crime_theft <- crime_data[crime_data$MajorText == "Theft & Handling", ]
+crime_theft <- crime_data[crime_data$CrimeType == "Theft & Handling", ]
 head(crime_theft, 2) # take a look at the result (replace 2 with 10 to see more rows)
 
 # Calculate the sum of the crime count for each district and save result as a new object
-crime_ag <- aggregate(CrimeCount ~ DName, FUN = sum, data = crime_theft)
+crime_ag <- aggregate(CrimeCount ~ Borough, FUN = sum, data = crime_theft)
 # Show the first two rows of the aggregated crime data
 head(crime_ag, 2)
 ```
@@ -528,13 +527,13 @@ meet a specific condition, in this case all crimes involving "Theft and Handling
 - The
 `~` symbol means "by": we aggregated the `CrimeCount` variable by the district name.
 
-Now that we have crime data at the borough level (`DName`), the challenge is to join it to the `lnd` object. We will base our join on the `DName` variable from the `crime_ag` object and the `name` variable from the `lnd` object. It is not always straight forward to join objects based on names as the names do not always match. Let us see which names in the `crime_ag` object match the spatial data object, `lnd`:
+Now that we have crime data at the borough level, the challenge is to join it to the `lnd` object. We will base our join on the `Borough` variable from the `crime_ag` object and the `name` variable from the `lnd` object. It is not always straight forward to join objects based on names as the names do not always match. Let us see which names in the `crime_ag` object match the spatial data object, `lnd`:
 
 ```{r}
-# Compare the name column in lnd to DName column in crime_ag to see which rows match.
-lnd$name %in% crime_ag$DName
+# Compare the name column in lnd to Borough column in crime_ag to see which rows match.
+lnd$name %in% crime_ag$Borough
 # Return rows which do not match
-lnd$name[!lnd$name %in% crime_ag$DName]
+lnd$name[!lnd$name %in% crime_ag$Borough]
 ```
 
 The first line of code above uses the `%in%` command to
@@ -546,13 +545,13 @@ crime data. Look at the results (not shown here) on your computer.
 
 ```{r}
 # Discover the names of the names
-levels(crime_ag$DName)
+levels(crime_ag$Borough)
 
 # Select the problematic row - the one which *does not* (via the ! symbol) match 
-sel <- !lnd$name %in% crime_ag$DName # create selection
+sel <- !lnd$name %in% crime_ag$Borough # create selection
 # Rename row 25 in crime_ag to match row 25 in lnd, as suggested results form above
-levels(crime_ag$DName)[25] <- as.character(lnd$name[sel])
-summary(lnd$name %in% crime_ag$DName) # now all columns match
+levels(crime_ag$Borough)[25] <- as.character(lnd$name[sel])
+summary(lnd$name %in% crime_ag$Borough) # now all columns match
 ```
 
 The above code block first identified the row with the faulty name and
@@ -582,10 +581,10 @@ same name, so we will rename the variable to make the join work:
 
 ```{r, results='hide'}
 head(lnd$name)
-head(crime_ag$DName) # the variables to join
-crime_ag <- rename(crime_ag, name = DName)
+head(crime_ag$Borough) # the variables to join
+crime_ag <- rename(crime_ag, replace = c("Borough" = "name"))
 # head(join(lnd@data, crime_ag)) # test it works
-lnd@data <- left_join(lnd@data, crime_ag)
+lnd@data <- join(lnd@data, crime_ag)
 ```
 
 Take a look at the `lnd@data` object. You should
@@ -688,7 +687,7 @@ Two functions can be used to clip `stations`
 so that only those falling within London boroughs are retained:
 `sp::over`, and `rgeos::gIntersects` (the word preceding the `::` symbol refers to the package which the function is from).
 Use `?` followed by the function to get help on each. Whether
-`gIntersects` of `over` is needed depends
+`gIntersects` or `over` is needed depends
 on the spatial data classes being compared (Bivand et al. 2013).
 
 In this tutorial we will use the `over` function as it is easiest to use.
@@ -783,6 +782,7 @@ For an optional advanced task, let us analyse and plot the result.
 
 ```{r fig.cap="Choropleth map of mean values of stations in each borough"}
 q <- cut(lnd_n$NUMBER, breaks= c(quantile(lnd_n$NUMBER)), include.lowest=T)
+
 summary(q) # check what we've created
 greys <- paste0("grey", seq(from = 20, to = 80, by = 20)) # create grey colours
 clr <- as.character(factor(q, labels = greys)) # convert output of qs to greys
