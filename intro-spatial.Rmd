@@ -569,7 +569,8 @@ library(dplyr) # load the powerful dplyr package (use plyr if unavailable)
 help(inner_join) # should now be loaded (use join if unavailable)
 ```
 
-The documentation for join will be displayed if the plyr package is loaded (if not,
+The documentation for join will be displayed if
+the **dplyr** package is loaded (if not,
 load or install and load it!). It requires all joining variables to have the
 same name, so we will rename the variable to make the join work:
 
@@ -579,12 +580,11 @@ same name, so we will rename the variable to make the join work:
 ```
 
 
-```{r, results='hide'}
+```{r, results='hide', message=FALSE}
 head(lnd$name)
 head(crime_ag$Borough) # the variables to join
-crime_ag <- rename(crime_ag, replace = c("Borough" = "name"))
-# head(join(lnd@data, crime_ag)) # test it works
-lnd@data <- join(lnd@data, crime_ag)
+crime_ag <- rename(crime_ag, name = Borough)
+lnd@data <- inner_join(lnd@data, crime_ag)
 ```
 
 Take a look at the `lnd@data` object. You should
@@ -1089,8 +1089,7 @@ We can now overlay this on our base map.
 ```{r, eval=FALSE}
 lnd_b1 +
   geom_polygon(data = lnd_wgs84_f,
-               aes(x = long, y = lat, group = group, fill = Partic_Per),
-               alpha = 0.5)
+    aes(x = long, y = lat, group = group, fill = Partic_Per), alpha = 0.5)
 ```
 
 The code above contains a lot of parameters. Use the **ggplot2** help pages to find out what they are.
@@ -1115,9 +1114,8 @@ We can then produce the plot as before:
 library(mapproj) # mapproj library needed - install.packages("mapproj")
 
 lnd_b2 +
-  geom_polygon(data = lnd_wgs84_f,
-               aes(x = long, y = lat, group = group, fill = Partic_Per),
-               alpha = 0.5)
+  geom_polygon(data = lnd_wgs84_f, 
+    aes(x = long, y = lat, group = group, fill = Partic_Per), alpha = 0.5)
 ```
 
 Finally, to increase the detail of the base map, we can use `get_map`'s `zoom` argument
@@ -1137,8 +1135,7 @@ lnd_b3 <- ggmap(get_map(location = b, source = "stamen",
 ```{r fig.cap="Basemap 3", eval=FALSE}
 lnd_b3 +
   geom_polygon(data = lnd_wgs84_f,
-               aes(x = long, y = lat, group = group, fill = Partic_Per),
-               alpha = 0.5)
+    aes(x = long, y = lat, group = group, fill = Partic_Per), alpha = 0.5)
 ```
 
 ## Advanced Task: Faceting for Maps
@@ -1194,24 +1191,30 @@ lnd_f <- inner_join(lnd_f, ltidy)
 
 ```
 
-Reorder this data (ordering is important for plots).
+Reorder this data (ordering is important for plots) and rename the dates.
 
 ```{r}
 lnd_f <- lnd_f[order(lnd_f$order), ]
+lnd_f$date <- gsub(pattern = "Pop_", replacement = "", lnd_f$date)
 ```
 
 We can now use faceting to produce one map per year
 (this may take a little while to appear as displayed
 in Figure 15).
 
-```{r fig.cap="Faceted map", fig.height=6, fig.width=5}
+```{r fig.cap="Faceted map", fig.height=7, fig.width=7}
 ggplot(data = lnd_f,
-  aes(x = long, y = lat, fill = pop, group = group)) +
+  aes(x = long, y = lat, fill = pop/1000, group = group)) +
   geom_polygon() +
-  geom_path(colour="grey", lwd=0.1) +
+  geom_path(colour="black", lwd=0.05) +
   coord_equal() +
-  facet_wrap(~ date)
-
+  facet_wrap(~ date) + 
+  scale_fill_gradient2(low = "green", mid = "grey", high = "red",
+    midpoint = 150, name = "Population\n(thousands)") +
+  theme(axis.text = element_blank(), # change the theme options
+    axis.title = element_blank(), # remove axis titles
+    axis.ticks = element_blank()) # remove axis ticks
+# ggsave("figure/facet_london.png", width = 9, height = 9)
 ```
 
 Again there is a lot going on here so explore the documentation to make sure you understand it.
