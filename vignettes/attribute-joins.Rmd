@@ -1,0 +1,224 @@
+---
+title: "Basic mapping and attribute joins in R"
+author: "Robin Lovelace"
+output:
+  html_document:
+    keep_md: yes
+    self_contained: no
+---
+
+This post is based on the free and open source [Creating-maps-in-R](https://github.com/Robinlovelace/Creating-maps-in-R) created for teaching R as a command-line GIS.
+
+R is well known as an language ideally suited for
+data processing, statistics and modelling. R has a number of spatial packages,
+allowing analyses that would require hundreds of lines of code in other languages
+to be implemented with relative ease. Geographically weighted regression,
+analysis of space-time data and raster processing are three niche
+areas where R outperform much of the competition, thanks to community contributions such as
+**[spgwr](http://cran.r-project.org/web/packages/spgwr/index.html)**, 
+**[spacetime](http://cran.r-project.org/web/packages/spacetime/index.html)**
+and the wonderfully straightforward **[raster](http://cran.r-project.org/web/packages/raster/index.html)** packages.
+
+What seems to be less well known is that R performs
+well as a self standing Geographical Information System (GIS) in its own right.
+Everyday tasks such as reading and writing geographical data formats, reprojecting,
+joining, subsetting and overlaying spatial objects can be easy and intuitive in
+R, once you understand the slightly specialist data formats and syntax of spatial
+R objects and functions. These basic operations are the basic foundations of GIS. Mastering
+them will make much more advanced operations much easier. Based on the saying
+'master walking before trying to run', this mini tutorial demonstrates how to
+load and plot a simple geographical object in R, illustrating that the ease with
+which continuous and binned choropleth map color schemes can be created using
+**[ggmap](http://cran.r-project.org/web/packages/ggmap/index.html)**, an extension
+of the popular
+**[ggplot2](http://cran.r-project.org/package=ggplot2)** graphics package.
+Crucially, we will also see how to *join* spatial and non spatial datasets,
+resulting in a map of where the Conservative party succeeded and failed
+in gaining council seats in the
+[2014 local elections](http://en.wikipedia.org/wiki/United_Kingdom_local_elections,_2014).
+
+<--more-->
+
+As with any project, the starting point is to load the data we'll be using.
+In this case we can download all the datasets from a single souce:
+the [Creating-maps-in-R](https://github.com/Robinlovelace/Creating-maps-in-R)
+github repository which is designed to introduce R's basic geographical
+functionality to beginners. We can use R to download and unzip
+the files using the following commands (from a Linux-based
+[operating system](http://lubuntu.net/)). This ensures reproducibility:
+
+```{r, message=FALSE, results='hide'}
+# load the packages we'll be using for this tutorial
+x <- c("rgdal", "dplyr", "ggmap", "RColorBrewer")
+lapply(x, library, character.only = TRUE)
+```
+
+
+```{r, eval=FALSE}
+# download the repository:
+download.file("https://github.com/Robinlovelace/Creating-maps-in-R/archive/master.zip", destfile = "rmaps.zip", method = "wget")
+unzip("rmaps.zip") # unzip the files
+```
+
+Once 'in' the folder, R has easy access to all the datasets we 
+need for this tutorial. As this is about GIS, the first stage is to
+load and plot some spatial data: a map of London:
+
+```{r, message=FALSE}
+setwd("/home/robin/Desktop/Creating-maps-in-R-master/") # navigate into the unzipped folder
+london <- readOGR("data/", layer = "london_sport")
+plot(london)
+```
+
+The data has clearly loaded correctly and can be visualised, but where
+*is* it? The `london` is simply printed, a load of unreadable information
+is printed, including the coordinates defining the geographical extent
+of each zone and additional non-geographical attributes.
+The [polymophic](http://heather.cs.ucdavis.edu/~matloff/R/RProg.pdf)
+means that [generic functions](http://adv-r.had.co.nz/OO-essentials.html#s3)
+behave differently depending on the type of data they are fed.
+The following command, for example, is actually calling `mean.Date`
+behind the scenes, allowing R to tell us that the the 2^nd^ of July
+was half way through the year. The default `mean.default`
+function does not work:
+
+```{r}
+mean(as.Date(c("01/01/2014", "31/12/2014"), format = "%d/%m/%Y"))
+```
+
+In the same way, we can use the trusty `summary` function to summarise
+our R object:
+
+```{r}
+summary(london)
+```
+
+This has outputed some very useful information: the bounding box
+of the object, its coordinate reference system (CRS) and even
+summaries of the attributes associated with each zone. `nrow(london)`
+will tell us that there are 33 polygons represented within the object.
+
+To gain a fuller understanding of the structure of the `london` object,
+we can use the `str` function (but only on the first polygon, to avoid
+an extrememly long output):
+
+```{r}
+str(london[1,])
+```
+
+This shows us that the fundamental structure of a `SpatialPolygonsDataFrame`
+is actually rather complicated. This complexity is useful, allowing R to store
+the full range of information needed to describe almost any polygon-based dataset.
+The `@` symbol in the structure represents *slots* which
+are specific to the
+[S4 object class](http://adv-r.had.co.nz/OO-essentials.html#s4) and
+contain specific
+pieces of information within the wider `london` object. The basic
+slots within the london object are:
+
+- `@data`, which contains the the attribute data for the zones
+- `@polygons`, the geographic data associated with each polygon (this confusingly contains the `@Polygons` slot: each polygon feature can contain multiple `Polygons`, e.g. if an administrative zone is non-contiguous)
+- `@plotOrder` is simply the order in which the polygons are plotted
+- `@bbox` is a slot associated with all spatial objects, representing its spatial extent
+- `@proj4string` the CRS associated with the object
+
+Critically for exploring the attributes of `london` is the `data` slot.
+We can look at and modify the attributes of the subdivisions of `london` easily
+using the `@` notation:
+
+```{r}
+head(london@data)
+```
+
+Having seen his notation, many (if not most) R beginners will tend to
+always use it to refer to attribute data in spatial objects. Yet `@` is often not
+needed. To refer to the population of London, for example, the following lines
+of code yield the same result:
+
+```{r}
+mean(london@data$Pop_2001)
+mean(london$Pop_2001)
+```
+
+Thus we can treat the S4 spatial data classes as if they were regular
+data frames in *some* contexts, which is extremely useful for concise code.
+To plot the population of London zones on a map, the following code
+[works](http://www.stat.ubc.ca/~jenny/STAT545A/block14_colors.html):
+
+```{r}
+cols <- brewer.pal(n = 4, name = "Greys")
+lcols <- cut(london$Pop_2001,
+  breaks = quantile(london$Pop_2001),
+  labels = cols)
+plot(london, col = as.character(lcols))
+```
+
+Now, how about joining additional variables to the spatial object?
+To join information to the existing variables, the *join* functions
+from **dplyr** (which replaces and improves on **plyr**) are a godsend.
+The following code loads a non-geographical dataset and joins an additional
+variable to `london@data`:
+
+```{r}
+ldat <- read.csv("/home/robin/Desktop/Creating-maps-in-R-master/data/london-borough-profiles-2014.csv")
+dat <- select(ldat, Code, contains("Anxiety"))
+dat <- rename(dat, ons_label = Code, Anxiety = Anxiety.score.2012.13..out.of.10.)
+dat$Anxiety <- as.numeric(as.character(dat$Anxiety))
+london@data <- left_join(london@data, dat)
+head(london@data) # the new data has been added
+```
+
+## Plotting maps with **ggplot**
+
+In order to plot the average anxiety scores across london we can use **ggplot2**:
+
+```{r}
+lf <- fortify(london, region = "ons_label")
+lf <- rename(lf, ons_label = id)
+lf <- left_join(lf, london@data)
+ggplot(lf) + geom_polygon(aes(long, lat, group = group, fill = Anxiety))
+```
+
+## The challenge
+
+Using the skills you have learned in the above tutorial, see if you can
+replicate the graph below: the proportion of Conservative councilors selected
+in different parts of London. Hint: the data is contained in `ldat`, as
+downloaded from here: http://data.london.gov.uk/dataset/london-borough-profiles.
+
+```{r, echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+dat <- rename(ldat, conservative = Proportion.of.seats.won.by.Conservatives.in.2014.election)
+dat$conservative <- as.numeric(as.character(dat$conservative))
+summary(dat$conservative)
+head(london$ons_label)
+head(dat$Code)
+# check the joining variables work
+summary(dat$Code %in% london$ons_label)
+# rename the linking variable
+dat <- rename(dat, ons_label = Code)
+to_join <- select(dat, ons_label, conservative)
+london@data <- left_join(london@data, to_join)
+
+london_f <- fortify(london, region = "ons_label") # you may need to load maptools
+london_f <- rename(london_f, ons_label = id)
+
+london_f <- left_join(london_f, london@data)
+
+map <- ggplot(london_f, aes(long, lat, group = group, fill = conservative)) +
+  geom_polygon() +
+  coord_equal() +
+  labs(x = "Easting (m)", y = "Northing (m)", fill = "% who\nvoted\nConservative") +
+  scale_fill_continuous(low = "grey", high = "blue") +
+  theme_nothing(legend = T)
+map
+```
+
+
+
+
+
+
+
+
+
+

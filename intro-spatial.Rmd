@@ -20,6 +20,9 @@ output:
 # ~~/__/~|~~ is low ~
 # ~/~~|~~|_ energy.~
 # robinlovelace.net
+# TODO: add details for the ggplot2 section
+# TODO: create animation of population change over time
+# dplyr + rename instead of merge
 ```
 
 
@@ -141,7 +144,7 @@ We recommend taking a quick browse on R's main website:
 [http://cran.r-project.org/web/views/Spatial.html](http://cran.r-project.org/web/views/Spatial.html).
 
 The packages we will be using are
-**ggplot2**, **rgdal**, **rgeos**, **maptools**, **mapproj** and **ggmap**.
+**ggmap** (which extends **ggplot**), **rgdal**, **rgeos**, **maptools** and **dplyr**.
 To test whether a package is installed, **ggplot2** for example, enter `library(ggplot2)`.
 If you get an error message, it needs to be installed: `install.packages("ggplot2")`.
 These will be downloaded from CRAN (the Comprehensive R Archive Network); if you are prompted
@@ -164,22 +167,37 @@ before focussing on creating attractive maps in Part IV.
 
 ## Downloading the data
 
-Download the data for this tutorial now from :
+Download the data for this tutorial from :
 [https://github.com/Robinlovelace/Creating-maps-in-R](https://github.com/Robinlovelace/Creating-maps-in-R).
-Click on the "Download ZIP" button on the right hand side and once it is downloaded unzip this to a new folder on your PC.
-Use the `setwd` command to set the working directory to the folder where the data is saved.
-If your username is "username" and you saved the files into a
-folder called "Creating-maps-in-R-master" on your Desktop, for example,
-you would type the following:
-
-```{r, eval= F}
-setwd("C:/Users/username/Desktop/Creating-maps-in-R-master/")
-```
+Click on the "Download ZIP" button on the right hand side and once
+it is downloaded unzip this to a new folder on your PC.
 
 If you are working in RStudio, you can create a project that will automatically
 set your working directory.
-To do this click "Session" from the top
-toolbar and select "Set working directory > choose directory".
+To do this click on `File -> Open File...` in the top
+menu, navigate to unzipped `Creating-maps-in-R` folder and double click
+on the `Creating-maps-in-R.Rproj` project file. Alternatively, you can use the *project menu* to open the project or create a new one. It is 
+*highly recommended* that you use RStudio's projects to organise your
+R work and that you organise your files into sub-folders (e.g. `code`, `input-data`, `figures`) to avoid digital clutter (Figure 2). The RStudio website contains an overview of the 
+software: [rstudio.com/products/rstudio/](http://www.rstudio.com/products/rstudio/).
+
+```{r, fig.cap="The RStudio environment with the project tab poised to open the Creating-maps-in-R project.", echo=FALSE}
+library(png)
+library(grid)
+grid.raster(readPNG("figure/rstudio-proj.png"))
+```
+
+
+If you ever need to change the working directory of R, you can change
+project or use the [`setwd` command](http://www.statmethods.net/interface/workspace.html).
+
+```{r, eval= F, echo=FALSE}
+# Use the `setwd` command to set the working directory to the folder where the data is saved.
+# If your username is "username" and you saved the files into a
+# folder called "Creating-maps-in-R-master" on your Desktop, for example,
+# you would type the following:
+# setwd("C:/Users/username/Desktop/Creating-maps-in-R-master/")
+```
 
 It is also worth taking a look at the input data in your file browser
 before opening them in R, to get a feel for them. You could try opening the
@@ -294,11 +312,12 @@ plot(lnd_sport[lnd_sport$Partic_Per > 25, ]) # output not shown in tutorial
 This is useful, but it would be great to see these sporty areas in context.
 To do this, simply use the `add = TRUE` argument after the initial plot.
 (`add = T` would also work, but we like to spell things out in this tutorial for clarity).
-What does the `col` argument refer to in the below block - it should be obvious (see figure 2).
+What does the `col` argument refer to in the below block - it should be obvious (see figure 3).
 
 ```{r fig.cap="Preliminary plot of London with areas of high sports participation highlighted in blue"}
-plot(lnd_sport)
-plot(lnd_sport[lnd_sport$Partic_Per > 25,], col = "blue", add = TRUE)
+plot(lnd_sport) # plot the london_sport object
+sel <- lnd_sport$Partic_Per > 25 # select the zones with high sports participation
+plot(lnd_sport[ sel , ], col = "blue", add = TRUE) # add selected zones to existing map
 ```
 
 Congratulations! You have just interrogated and visualised a
@@ -469,12 +488,21 @@ We are going to use a function called `aggregate`
 to pre-process these records, ready to join to our spatial
 `lnd` dataset. A new object called `crime_data` is created to store this data.
 
+```{r, echo=FALSE, eval=FALSE}
+# # convert crime_data and rename cols
+# crime_data <- read.csv("data/mps-recordedcrime-borough.csv",
+#   fileEncoding = "UCS-2LE")
+# names(crime_data)
+# crime_data <- rename(crime_data, DName = Spatial_DistrictName)
+# write.csv(crime_data, file = "data/mps-recordedcrime-borough.csv")
+```
+
+
 ```{r, results='hide'}
 # Create and look at new crime_data object
-crime_data <- read.csv("data/mps-recordedcrime-borough.csv",
-  fileEncoding = "UCS-2LE")
+crime_data <- read.csv("data/mps-recordedcrime-borough.csv")
 
-head(crime_data) # display first 6 lines
+head(crime_data, 3) # display first 3 lines
 summary(crime_data$MajorText) # summary of crime type
 
 # Extract "Theft & Handling" crimes and save
@@ -482,8 +510,7 @@ crime_theft <- crime_data[crime_data$MajorText == "Theft & Handling", ]
 head(crime_theft, 2) # take a look at the result (replace 2 with 10 to see more rows)
 
 # Calculate the sum of the crime count for each district and save result as a new object
-crime_ag <- aggregate(CrimeCount ~ Spatial_DistrictName, FUN = sum,
-                     data = crime_theft)
+crime_ag <- aggregate(CrimeCount ~ DName, FUN = sum, data = crime_theft)
 # Show the first two rows of the aggregated crime data
 head(crime_ag, 2)
 ```
@@ -494,21 +521,20 @@ briefly about the outputs is all that is needed at this stage to improve your
 intuitive understanding of R. It is worth pointing out a few things
 that you may not have seen before that will likely be useful in the future:
 
-- In the first line of code the `fileEncoding` argument is used.
-This is rarely necessary, but in this case the file comes in a strange file format.
-9 times out of ten you can omit this argument but it's worth knowing about.
-- The `which` function is used to select only those observations that
+- In the first line of code we specify the location of the file (check in your
+file browser to be sure).
+- The `==` function is used to select only those observations that
 meet a specific condition, in this case all crimes involving "Theft and Handling".
 - The
 `~` symbol means "by": we aggregated the `CrimeCount` variable by the district name.
 
-Now that we have crime data at the borough level (`Spatial_DistrictName`), the challenge is to join it to the `lnd` object. We will base our join on the `Spatial_DistrictName` variable from the `crime_ag` object and the `name` variable from the `lnd` object. It is not always straight forward to join objects based on names as the names do not always match. Let us see which names in the `crime_ag` object match the spatial data object, `lnd`:
+Now that we have crime data at the borough level (`DName`), the challenge is to join it to the `lnd` object. We will base our join on the `DName` variable from the `crime_ag` object and the `name` variable from the `lnd` object. It is not always straight forward to join objects based on names as the names do not always match. Let us see which names in the `crime_ag` object match the spatial data object, `lnd`:
 
 ```{r}
-# Compare the name column in lnd to Spatial_DistrictName column in crime_ag to see which rows match.
-lnd$name %in% crime_ag$Spatial_DistrictName
+# Compare the name column in lnd to DName column in crime_ag to see which rows match.
+lnd$name %in% crime_ag$DName
 # Return rows which do not match
-lnd$name[!lnd$name %in% crime_ag$Spatial_DistrictName]
+lnd$name[!lnd$name %in% crime_ag$DName]
 ```
 
 The first line of code above uses the `%in%` command to
@@ -520,12 +546,13 @@ crime data. Look at the results (not shown here) on your computer.
 
 ```{r}
 # Discover the names of the names
-levels(crime_ag$Spatial_DistrictName)
+levels(crime_ag$DName)
 
+# Select the problematic row - the one which *does not* (via the ! symbol) match 
+sel <- !lnd$name %in% crime_ag$DName # create selection
 # Rename row 25 in crime_ag to match row 25 in lnd, as suggested results form above
-levels(crime_ag$Spatial_DistrictName)[25] <-
-  as.character(lnd$name[!lnd$name %in% crime_ag$Spatial_DistrictName])
-lnd$name %in% crime_ag$Spatial_DistrictName # now all columns match
+levels(crime_ag$DName)[25] <- as.character(lnd$name[sel])
+summary(lnd$name %in% crime_ag$DName) # now all columns match
 ```
 
 The above code block first identified the row with the faulty name and
@@ -533,31 +560,83 @@ then renamed the level to match the `lnd` dataset. Note that we could not
 rename the variable directly, as it is stored as a factor.
 
 We are now ready to join the datasets. It is recommended to use
-the `join` function in the **plyr** package but the `merge` function
+the `inner_join` function **dplyr** but the `merge` function
 could equally be used. Note that when we ask for help for a function
 that is not loaded, nothing happens, indicating we need to load it:
 
 ```{r, results='hide'}
-help(join) # error flagged
-library(plyr)
-help(join) # should now be loaded
+help(inner_join) # error flagged
+library(dplyr) # load the powerful dplyr package (use plyr if unavailable)
+help(inner_join) # should now be loaded (use join if unavailable)
 ```
 
 The documentation for join will be displayed if the plyr package is loaded (if not,
 load or install and load it!). It requires all joining variables to have the
 same name, so we will rename the variable to make the join work:
 
+```{r, echo=FALSE}
+# commented out: old version using plyr version of rename
+# crime_ag <- rename(crime_ag, replace = c("DName" = "name"))
+```
+
+
 ```{r, results='hide'}
 head(lnd$name)
-head(crime_ag$Spatial_DistrictName) # the variables to join
-crime_ag <- rename(crime_ag, replace = c("Spatial_DistrictName" = "name"))
-head(join(lnd@data, crime_ag)) # test it works
-lnd@data <- join(lnd@data, crime_ag)
+head(crime_ag$DName) # the variables to join
+crime_ag <- rename(crime_ag, name = DName)
+# head(join(lnd@data, crime_ag)) # test it works
+lnd@data <- left_join(lnd@data, crime_ag)
 ```
 
 Take a look at the `lnd@data` object. You should
 see new variables added, meaning the attribute join
 was successful.
+
+### Challenge: create a map of additional variables in London
+
+With the attribute joining skills you have learned in this section,
+you should now be able to take datasets from many sources and
+join them to your geographical data. To test your skills, try to
+join additional borough-level variables to the `lnd` object.
+An excellent dataset on this can be found on the the 
+[data.gov.uk](http://data.london.gov.uk/dataset/london-borough-profiles)
+website. 
+
+Using this dataset and the methods developed above, Figure 5 was
+created: the proportion of council seats won by conservatives
+in the 2014 local elections. **The challenge** is to create 
+a similar map of a different variable (you may need to skip to
+Part IV to plot continuous variables).
+
+```{r, echo=FALSE, results='hide', message=FALSE, warning=FALSE, fig.cap="Proportion of council seats won by conservatives in the 2014 local elections using data from data.london.gov and joined using the methods presented in this section"}
+library(ggmap)
+borough_dat <- read.csv("data/london-borough-profiles-2014.csv")
+names(borough_dat)
+borough_dat <- rename(borough_dat, conservative = Proportion.of.seats.won.by.Conservatives.in.2014.election)
+borough_dat$conservative <- as.numeric(as.character(borough_dat$conservative))
+summary(borough_dat$conservative)
+head(lnd$ons_label)
+head(borough_dat$Code)
+# check the joining variables work
+summary(borough_dat$Code %in% lnd$ons_label)
+# rename the linking variable
+borough_dat <- rename(borough_dat, ons_label = Code)
+to_join <- select(borough_dat, ons_label, conservative)
+lnd@data <- left_join(lnd@data, to_join)
+
+lnd_f <- fortify(lnd, region = "ons_label") # you may need to load maptools
+lnd_f <- rename(lnd_f, ons_label = id)
+
+lnd_f <- left_join(lnd_f, lnd@data)
+
+map <- ggplot(lnd_f, aes(long, lat, group = group, fill = conservative)) +
+  geom_polygon() +
+  coord_equal() +
+  labs(x = "Easting (m)", y = "Northing (m)", fill = "% who\nvoted\nConservative") +
+  scale_fill_continuous(low = "grey", high = "blue") +
+  theme_nothing(legend = T)
+map
+```
 
 ## Clipping and spatial joins
 
@@ -595,7 +674,7 @@ we will convert the object to this:
 stations27700 <- spTransform(stations, CRSobj = CRS(proj4string(lnd)))
 stations <- stations27700 # overwrite the stations object with stations27700
 rm(stations27700) # remove the stations27700 object to clear up
-plot(lnd) # plot London for context (see figure 4 below)
+plot(lnd) # plot London for context (see Figure 6)
 points(stations) # overlay the station points
 ```
 
@@ -617,12 +696,12 @@ In fact, it can be called just by using square brackets:
 
 ```{r fig.cap="The clipped stations dataset"}
 stations <- stations[lnd, ]
-plot(stations) # test the clip succeeded (see figure 5)
+plot(stations) # test the clip succeeded (see figure 7)
 ```
 
 ```{r, echo=F,eval=FALSE}
-save(lnd, file="data/lnd.RData")
-save(stations, file="data/stations.RData")
+# save(lnd, file="data/lnd.RData")
+# save(stations, file="data/stations.RData")
 ```
 
 The above line of code says: "output all `stations` within
@@ -704,15 +783,16 @@ For an optional advanced task, let us analyse and plot the result.
 
 ```{r fig.cap="Choropleth map of mean values of stations in each borough"}
 q <- cut(lnd_n$NUMBER, breaks= c(quantile(lnd_n$NUMBER)), include.lowest=T)
-summary(q)
-clr <- as.character(factor(q, labels = paste0("grey", seq(20, 80, 20))))
+summary(q) # check what we've created
+greys <- paste0("grey", seq(from = 20, to = 80, by = 20)) # create grey colours
+clr <- as.character(factor(q, labels = greys)) # convert output of qs to greys
 plot(lnd_n, col = clr) # plot (not shown in printed tutorial)
-legend(legend = paste0("q", 1:4), fill = paste0("grey", seq(20, 80, 20)), "topright")
+legend(legend = paste0("q", 1:4), fill = greys, "topright")
 areas <- sapply(lnd_n@polygons, function(x) x@area)
 ```
 
 This results in a simple choropleth map and a new vector containing the area of each
-borough (the basis for figure 6). As an additional step, try comparing the mean
+borough (the basis for Figure 8). As an additional step, try comparing the mean
 area of each borough with the
 mean value of `stations` points within it: `plot(lnd_n$NUMBER, areas)`.
 
@@ -723,7 +803,7 @@ on top of the previously created choropleth map. How would we do this?
 The shape of points in R is determined by the `pch` argument, as demonstrated by the
 result of entering the following code: `plot(1:10, pch=1:10)`.
 To apply this knowledge to our map, we could add the following
-code to the chunk added above (see figure 6):
+code to the chunk added above (see Figure 9):
 
 ```{r, eval=F}
 levels(stations$LEGEND) # we want A roads and rapid transit stations (RTS)
@@ -901,14 +981,16 @@ For this to work, either **maptools** or **rgeos** packages must be installed.
 lnd_f <- fortify(lnd, region = "ons_label") # you may need to load maptools
 ```
 
-This step has lost the attribute information associated with the lnd object. We can add it back using the merge function (this performs a data join). To find out how this function works look at
-the output of typing `?merge`.
+This step has lost the attribute information associated with the lnd object. We can add it back using the `inner_join`
+function (this performs a data join).
+To find out how this function works look at
+the output of typing `?inner_join`.
 
 ```{r}
-lnd_f <- merge(lnd_f, lnd@data, by.x = "id", by.y = "ons_label")
+lnd_f <- inner_join(lnd_f, lnd@data, by = c("id" = "ons_label"))
 ```
 
-Take a look at the `sport.f` object to see its contents. You should see a large data frame containing the latitude and longitude (they are actually Easting and Northing as the data are in British National Grid format) coordinates alongside the attribute information associated with each London Borough. If you type `print(lnd_f)` you will see just how many coordinate pairs are required!
+Take a look at the `lnd_f` object to see its contents (which stands for "London, fortified"). You should see a large data frame containing the latitude and longitude (they are actually Easting and Northing as the data are in British National Grid format) coordinates alongside the attribute information associated with each London Borough. If you type `print(lnd_f)` you will see just how many coordinate pairs are required!
 To keep the output to a minimum, take a peek at the object using just the `head` command:
 
 ```{r}
@@ -962,12 +1044,12 @@ such as Google and
 [OpenStreetMap](http://www.openstreetmap.org/):
 
 ```{r}
-library(ggmap) # you may have to use install.packages to install it first
+library(ggmap) # install.packages("ggmap") if not installed
 ```
 
 The `lnd` object loaded previously is in British National Grid but the ggmap
 image tiles are in WGS84. We therefore need to use the `lnd_sport_wgs84`
-object created in the reprojection operation earlier.
+object created in the reprojection operation (see Section III).
 
 The first job is to calculate the bounding box (bb for short) of the
 `lnd_sport_wgs84` object to identify the geographic extent of the image tiles that we need.
@@ -982,13 +1064,13 @@ b[2, ] <- (b[2, ] - mean(b[2, ])) * 1.05 + mean(b[2, ])
 
 This is then fed into the `get_map` function as the location parameter. The syntax below contains 2 functions. **ggmap** is required to produce the plot and provides the base map data.
 
-```{r, message=FALSE, eval=FALSE}
+```{r, message=FALSE}
 lnd_b1 <- ggmap(get_map(location = b)) # create basemap for london
 ```
 
 ```{r, echo=FALSE}
 # save(lnd_b1, file = "data/lnd_b1.RData")
-load("data/lnd_b1.RData") # load saved map
+# load("data/lnd_b1.RData") # load saved map
 ```
 
 In much the same way as we did above we can then layer the plot with different geoms.
@@ -998,8 +1080,8 @@ data (we already did this step to create the `lnd_f` object).
 
 ```{r}
 lnd_wgs84_f <- fortify(lnd_sport_wgs84, region = "ons_label")
-lnd_wgs84_f <- merge(lnd_wgs84_f, lnd_sport_wgs84@data,
-                      by.x = "id", by.y = "ons_label")
+lnd_wgs84_f <- inner_join(lnd_wgs84_f, lnd_sport_wgs84@data,
+  by = c("id" = "ons_label"))
 ```
 
 We can now overlay this on our base map.
@@ -1061,34 +1143,55 @@ lnd_b3 +
 
 ## Advanced Task: Faceting for Maps
 
-```{r}
-library(reshape2) # this may not be installed.
+```{r, echo=FALSE}
+# library(reshape2) # old way of doing
 # If not install it, or skip the next two steps
 ```
 
 Load the data - this shows historic population values between 1801 and 2001
 for London, again from the London data store.
 
+`tidy` the data so that the columns become rows. In other words,
+convert the data from 'flat' to 'long' format, which is the form
+required by **ggplot2** for facetting graphics: the date of the
+population survey become a variable in its own right, rather than
+being strung-out over many columns.
+
 ```{r}
 london_data <- read.csv("data/census-historic-population-borough.csv")
+library(tidyr) # if not install it, or skip the next two steps
+ltidy <- gather(london_data, date, pop, -Area.Code, -Area.Name)
+head(ltidy, 2)
 ```
 
-"Melt" the data so that the columns become rows.
-
-```{r}
-lnd_molten <- melt(london_data, id = c("Area.Code", "Area.Name"))
-```
+In the above code we take the `london_data` object and create the
+column names 'date' (the date of the record, previously spread
+over many columns) and 'pop' (the population which varies). The
+minus (`-`) symbol in this context tells gather not to include the
+`Area.Name` and `Area.Code` as columns to be removed. In other words,
+"leave these columns be". Data tidying is an important subject: more can
+be read on the subject in Wickham (2014) or in a `vignette` about
+the package, accessed from within R by entering `vignette("tidy-data")`.
 
 
 ```{r, echo=FALSE, eval=FALSE}
+# lnd_molten <- melt(london_data, id = c("Area.Code", "Area.Name"))
 # lnd_molten <- read.csv("london_data_melt.csv")
 # Only do this step if reshape and melt failed
 ```
 
-Merge the population data with the London borough geometry contained within our `lnd_f` object.
+Merge the population data with the London borough geometry contained within our `lnd_f` object, using the `inner_join` function from
+the **dplyr** package:
 
 ```{r}
-lnd_f <- merge(lnd_f, lnd_molten, by.x = "id", by.y = "Area.Code")
+ltidy <- rename(ltidy, id = Area.Code)
+lnd_f <- inner_join(lnd_f, ltidy)
+```
+
+```{r, echo=FALSE}
+# old way of doing it
+# lnd_f <- merge(lnd_f, ltidy, by.x = "id", by.y = "Area.Code")
+
 ```
 
 Reorder this data (ordering is important for plots).
@@ -1099,14 +1202,16 @@ lnd_f <- lnd_f[order(lnd_f$order), ]
 
 We can now use faceting to produce one map per year
 (this may take a little while to appear as displayed
-in figure 13).
+in Figure 15).
 
-```{r fig.cap="Faceted map", fig.height=10, fig.width=6}
-ggplot(data = lnd_f, aes(x = long, y = lat, fill = value, group = group)) +
+```{r fig.cap="Faceted map", fig.height=6, fig.width=5}
+ggplot(data = lnd_f,
+  aes(x = long, y = lat, fill = pop, group = group)) +
   geom_polygon() +
   geom_path(colour="grey", lwd=0.1) +
   coord_equal() +
-  facet_wrap(~ variable)
+  facet_wrap(~ date)
+
 ```
 
 Again there is a lot going on here so explore the documentation to make sure you understand it.
@@ -1114,6 +1219,14 @@ Try out different colour values as well.
 
 Add a title and replace the axes names with "easting" and
 "northing" and save your map as a pdf.
+
+```{r, echo=FALSE}
+# **Creating an animation of population change over time**
+
+# library(animation)
+```
+
+\clearpage
 
 # Part V: Taking spatial data analysis in R further
 
@@ -1226,6 +1339,8 @@ Torfs and Brauer (2012). A (very) short Introduction to R. The Comprehensive R A
 Wickham, H. (2009). ggplot2: elegant graphics for data analysis. Springer.
 
 Wickham, H. (in press). [Advanced R](http://adv-r.had.co.nz/). CRC Press.
+
+Wickham, H. (2014). Tidy data. The Journal of Statistical Software, 14(5), Retrieved from http://www.jstatsoft.org/v59/i10
 
 Wilkinson, L. (2005). The grammar of graphics. Springer.
 
