@@ -67,22 +67,16 @@ To test whether a package is installed, **ggplot2** for example, enter `library(
 If there is no output from R, this is good news: it means that the library
 has already been installed on your computer.
 
-If you get an error message, it needs to be installed: `install.packages("ggplot2")`.
+If you get an error message, it needs to be installed using `install.packages("ggplot2")`.
 The package will download from CRAN (the Comprehensive R Archive Network); if you are prompted
 to select a 'mirror', select one that is close to your home.
 Run the above commands to install these packages now.
 
 ## Typographic conventions and getting help
 
-The colourful syntax highlighting in this document is thanks to
-[RMarkdown](http://rmarkdown.rstudio.com/).
-We try to follow best practice in terms of style, roughly following
-Google's style guide, an in-depth guide written by
-[Johnson (2013)](http://cran.r-project.org/web/packages/rockchalk/vignettes/Rstyle.pdf)
-and a [chapter](http://adv-r.had.co.nz/Style.html) from
-[*Advanced R*](http://adv-r.had.co.nz/) (Wickham, in press).
 It is a good idea to get into the habit of consistent and clear writing in
-any language, and R is no exception. Adding comments to your code is also
+any language, and R is no exception. 
+Adding comments to your code is
 good practice, so you remember at a later date what you've done, aiding the
 learning process. There are two main ways of commenting code using the `#` symbol:
 above a line of code or directly following it, as illustrated in the block of
@@ -97,36 +91,27 @@ y <- sin(x / 10) * exp(x * -0.01)
 plot(x, y) # plot the result
 ```
 
-In the above code we first created a new *object* that we have called `x`.
+In the first line of code a new *object* called `x` is created.
 Any name could have been used, like `x_bumkin`, but `x` is concise
 and works just fine here. It is good practice to give your objects meaningful names.
 Note `<-`, the directional "arrow" assignment symbol. This creates new objects.
-We will be using this symbol a lot in the
-tutorial.^[Tip: typing `Alt -` on the keyboard will create it in RStudio.
+We will be using this symbol a lot in this tutorial.^[Tip: typing `Alt -` on the keyboard will create the arrow in RStudio.
 The equals sign `=` also works but is not recommended by R developers.]
 
-To distinguish between prose and code, please be aware of the following typographic conventions: R code (e.g. `plot(x, y)`) is
+To distinguish between prose and code, please be aware of the following typographic conventions used in this document: R code (e.g. `plot(x, y)`) is
 written in a `monospace` font and package names (e.g. **rgdal**)
-are written in **bold**. Blocks of code such as:
+are written in **bold**. 
 
-```{r}
-c(1:3, 5)^2
-```
-
-are compiled in-line: the `##` indicates output from R. Sometimes
-output from code in this tutorial is reduced to save space, so do
-not be alarmed if R produces unexpected `warning` messages.
-In a few cases we omit images to save space. This will be clear from
+A double hash, `##`, at the start of a line of code indicates that this is an output from R. Lengthy outputs have been ommited from the document to save space, so do
+not be alarmed if R produces unexpected `warning` messages which are not mentioned.
+In a few cases images are also ommited to save space. This will be clear from
 the comments.
-Images in this document are small and low-quality enable portability of the
-pdf. They should
-display better on your computer screen and can be saved at any resolution.
 
-The code presented here is not the only way to do things: we encourage you to
-play to gain a deeper understanding of R.
+As with any programming language, there are many ways to produce the same output. The code presented in this document is not the only way to do things. We encourage you to
+play with the code to gain a deeper understanding of R.
 Do not worry, you cannot 'break' anything using R and all the input data
 can be re-loaded if things do go wrong. As with learning to skate, you learn
-by falling and, getting an `Error:` message in R is much less
+by falling and getting an `Error:` message in R is much less
 painful than landing on ones face on concrete! We encourage `Error:`s - it
 means you are trying new things.
 
@@ -155,16 +140,16 @@ before focussing on creating attractive maps in Part IV.
 
 ## Downloading the data
 
-Download the data for this tutorial from :
+Firstly, download the data for this tutorial from :
 [https://github.com/Robinlovelace/Creating-maps-in-R](https://github.com/Robinlovelace/Creating-maps-in-R).
-Click on the "Download ZIP" button on the right hand side and once
-it is downloaded unzip this to a new folder on your computer.
+Click on the "Download ZIP" button on the right hand side of the screen and once
+it is downloaded, unzip this to a new folder on your computer.
 
-If you are working in RStudio, you can create a project that will automatically
-set your working directory.
-To do this click on `File -> Open File...` in the top
-menu, navigate to unzipped `Creating-maps-in-R` folder and double click
-on the `Creating-maps-in-R.Rproj` project file. Alternatively, you can use the *project menu* to open the project or create a new one. It is 
+For this tutorial, we suggest working on the 'Creating-maps-in-R' project which has already been created for you. To open this project, navigate to `File -> Open File...` in the top
+menu and navigate to the unzipped `Creating-maps-in-R` folder. Double click
+on the `Creating-maps-in-R.Rproj` project file to open this project. 
+
+Alternatively, you can use the *project menu* to open the project or create a new one. It is 
 *highly recommended* that you use RStudio's projects to organise your
 R work and that you organise your files into sub-folders (e.g. `code`, `input-data`, `figures`) to avoid digital clutter (Figure 2). The RStudio website contains an overview of the 
 software: [rstudio.com/products/rstudio/](http://www.rstudio.com/products/rstudio/).
@@ -176,7 +161,7 @@ grid.raster(readPNG("figure/rstudio-proj.png"))
 ```
 
 
-If you ever need to change the working directory of R, you can use the 'Session' menu at the top of the page or use the [`setwd` command](http://www.statmethods.net/interface/workspace.html).
+Opening a project sets the current working directory to the project's parent folder, the `Creating-maps-in-R` folder in this case. If you ever need to change your working directory, you can use the 'Session' menu at the top of the page or use the [`setwd` command](http://www.statmethods.net/interface/workspace.html).
 
 ```{r, eval= F, echo=FALSE}
 # Use the `setwd` command to set the working directory to the folder where the data is saved.
@@ -207,42 +192,34 @@ about the projection and the attributes of data.
 **rgdal** is R’s interface to the "Geospatial Abstraction Library (GDAL)"
 which is used by other open source GIS packages such as QGIS and enables
 R to handle a broader range of spatial data formats. If you've not already
-*installed* and loaded the rgdal package (as described above for ggplot2) do so now:
+*installed* and loaded the **rgdal** package (see the 'prerequisites and packages' section) do so now:
 
 ```{r, message=FALSE}
 library(rgdal)
-lnd_sport <- readOGR(dsn = "data", "london_sport")
+lnd_sport <- readOGR(dsn = "data", layer = "london_sport")
 ```
 
-In the code above `dsn` stands for "data source name" and is an *argument* of the *function* `readOGR`. Note that each new argument is separated by a comma.
-The `dsn` argument in this case is a *character string*
-(indicated by quote marks like this one `"`) that
-specifies the directory where the data files are stored.
-R functions have a default order of arguments, so `dsn = ` does not
-actually need to be typed for the command to run. If the data were stored in the
-current working directory, for example, one could use `readOGR(".", "london_sport")`.
-For clarity, it is good practice to include argument names,
-such as `dsn` when learning new functions and we continue this tradition below.
-
-The next argument is another *character string*:
-simply the name of the file required.
-There is no need to add a file extension (e.g. `.shp`) in this case.
+In the second line of code above the `readOGR` function is used to load a shapefile and assign it to a new object called "lnd_sport". `readOGR` is a *function* which accepts two *arguments: `dsn` which stands for "data source name" and specifies the location where the file is stored, and `layer` which specifies the file name. Note that each new argument is separated by a comma and there is no need to specify the file extension (e.g. .shp) when providing the file name.
+Both arguments in this case are *character strings* (indicated by quote marks like this one `"`).
+R functions have a default order of arguments, so `dsn = ` and `layer =` do not
+actually have to be typed for the command to run, for example, `readOGR("data", "london_sport")` would work just as well. 
+For clarity, it is good practice to include argument names such as `dsn` and `layer` when learning new functions and we continue this tradition below.
 
 The files beginning `london_sport` in the `data/`
 [directory](https://github.com/Robinlovelace/Creating-maps-in-R/tree/master/data)
-contain the 2001 borough population and
-percentage participating in sporting activities from the
+contain the population of London Boroughs in 2001 and the percentage of the population 
+participating in sporting activities. This data originates from the
 [active people survey](http://data.london.gov.uk/datastore/package/active-people-survey-kpi-data-borough).
 The boundary data is from the [Ordnance Survey](http://www.ordnancesurvey.co.uk/oswebsite/opendata/).
 
 For information about how to load different types of spatial data,
-the help documentation for `readOGR` is a good place to start. This can be accessed from
-within R by typing `?readOGR`. For another worked example, in which a GPS trace is loaded,
+see the help documentation for `readOGR`. This can be accessed by typing `?readOGR`. 
+For another worked example, in which a GPS trace is loaded, 
 please see Cheshire and Lovelace (2014).
 
 ## Basic plotting
 
-We have now created a new spatial object called "sport" from the "london_sport" shapefile. Spatial objects are made up of a number of different *slots*, mainly the attribute *slot* and the geometry *slot*. The attribute *slot* can be thought of as an attribute table and the geometry *slot* is where the spatial object (and it's attributes) lie in space. Lets now analyse the sport object with some basic commands:
+We have now created a new spatial object called "lnd_sport" from the "london_sport" shapefile. Spatial objects are made up of a number of different *slots*, mainly the attribute *slot* and the geometry *slot*. The attribute *slot* can be thought of as an attribute table and the geometry *slot* is where the spatial object (and its attributes) lie in space. Let's now analyse the sport object with some basic commands:
 
 ```{r}
 head(lnd_sport@data, n = 2)
@@ -557,8 +534,7 @@ library(dplyr) # load the powerful dplyr package (use plyr if unavailable)
 help(inner_join) # should now be loaded (use join if unavailable)
 ```
 
-The documentation for join will be displayed if
-the **dplyr** package is loaded (if not,
+The documentation for join will be displayed if the plyr package is loaded (if not,
 load or install and load it!). It requires all joining variables to have the
 same name, so we will rename the variable to make the join work:
 
@@ -568,11 +544,12 @@ same name, so we will rename the variable to make the join work:
 ```
 
 
-```{r, results='hide', message=FALSE}
+```{r, results='hide'}
 head(lnd$name)
 head(crime_ag$Borough) # the variables to join
-crime_ag <- rename(crime_ag, name = Borough)
-lnd@data <- inner_join(lnd@data, crime_ag)
+crime_ag <- rename(crime_ag, replace = c("Borough" = "name"))
+# head(join(lnd@data, crime_ag)) # test it works
+lnd@data <- join(lnd@data, crime_ag)
 ```
 
 Take a look at the `lnd@data` object. You should
@@ -1077,7 +1054,8 @@ We can now overlay this on our base map.
 ```{r, eval=FALSE}
 lnd_b1 +
   geom_polygon(data = lnd_wgs84_f,
-    aes(x = long, y = lat, group = group, fill = Partic_Per), alpha = 0.5)
+               aes(x = long, y = lat, group = group, fill = Partic_Per),
+               alpha = 0.5)
 ```
 
 The code above contains a lot of parameters. Use the **ggplot2** help pages to find out what they are.
@@ -1102,8 +1080,9 @@ We can then produce the plot as before:
 library(mapproj) # mapproj library needed - install.packages("mapproj")
 
 lnd_b2 +
-  geom_polygon(data = lnd_wgs84_f, 
-    aes(x = long, y = lat, group = group, fill = Partic_Per), alpha = 0.5)
+  geom_polygon(data = lnd_wgs84_f,
+               aes(x = long, y = lat, group = group, fill = Partic_Per),
+               alpha = 0.5)
 ```
 
 Finally, to increase the detail of the base map, we can use `get_map`'s `zoom` argument
@@ -1123,7 +1102,8 @@ lnd_b3 <- ggmap(get_map(location = b, source = "stamen",
 ```{r fig.cap="Basemap 3", eval=FALSE}
 lnd_b3 +
   geom_polygon(data = lnd_wgs84_f,
-    aes(x = long, y = lat, group = group, fill = Partic_Per), alpha = 0.5)
+               aes(x = long, y = lat, group = group, fill = Partic_Per),
+               alpha = 0.5)
 ```
 
 ## Advanced Task: Faceting for Maps
@@ -1179,30 +1159,24 @@ lnd_f <- inner_join(lnd_f, ltidy)
 
 ```
 
-Reorder this data (ordering is important for plots) and rename the dates.
+Reorder this data (ordering is important for plots).
 
 ```{r}
 lnd_f <- lnd_f[order(lnd_f$order), ]
-lnd_f$date <- gsub(pattern = "Pop_", replacement = "", lnd_f$date)
 ```
 
 We can now use faceting to produce one map per year
 (this may take a little while to appear as displayed
 in Figure 15).
 
-```{r fig.cap="Faceted map", fig.height=7, fig.width=7}
+```{r fig.cap="Faceted map", fig.height=6, fig.width=5}
 ggplot(data = lnd_f,
-  aes(x = long, y = lat, fill = pop/1000, group = group)) +
+  aes(x = long, y = lat, fill = pop, group = group)) +
   geom_polygon() +
-  geom_path(colour="black", lwd=0.05) +
+  geom_path(colour="grey", lwd=0.1) +
   coord_equal() +
-  facet_wrap(~ date) + 
-  scale_fill_gradient2(low = "green", mid = "grey", high = "red",
-    midpoint = 150, name = "Population\n(thousands)") +
-  theme(axis.text = element_blank(), # change the theme options
-    axis.title = element_blank(), # remove axis titles
-    axis.ticks = element_blank()) # remove axis ticks
-# ggsave("figure/facet_london.png", width = 9, height = 9)
+  facet_wrap(~ date)
+
 ```
 
 Again there is a lot going on here so explore the documentation to make sure you understand it.
@@ -1310,6 +1284,14 @@ Any suggested improvements or new
 [vignettes](https://github.com/Robinlovelace/Creating-maps-in-R/tree/master/vignettes) are welcome, via email
 to Robin or by [forking](https://help.github.com/articles/fork-a-repo)
 the [master version](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial.Rmd) of this document.
+
+The colourful syntax highlighting in this document is thanks to
+[RMarkdown](http://rmarkdown.rstudio.com/).
+We try to follow best practice in terms of style, roughly following
+Google's style guide, an in-depth guide written by
+[Johnson (2013)](http://cran.r-project.org/web/packages/rockchalk/vignettes/Rstyle.pdf)
+and a [chapter](http://adv-r.had.co.nz/Style.html) from
+[*Advanced R*](http://adv-r.had.co.nz/) (Wickham, in press).
 
 # Aknowledgements
 
