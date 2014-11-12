@@ -241,12 +241,12 @@ and, getting an \texttt{Error:} message in R is much less painful than
 landing on ones face on concrete! We encourage \texttt{Error:}s - it
 means you are trying new things.
 
-If you require help on any function, use the \texttt{help} function,
-e.g. \texttt{help(plot)}. Because R users love being concise, this can
-also be written as \texttt{?plot}. Feel free to use it at any point
-you'd like more detail on a specific function (although R's help files
-are famously cryptic for the un-initiated). Help on more general terms
-can be found using the \texttt{??} symbol. To test this, try typing
+If you require help on any function, use the \texttt{help} command, e.g.
+\texttt{help(plot)}. Because R users love being concise, this can also
+be written as \texttt{?plot}. Feel free to use it at any point you would
+like more detail on a specific function (although R's help files are
+famously cryptic for the un-initiated). Help on more general terms can
+be found using the \texttt{??} symbol. To test this, try typing
 \texttt{??regression}. For the most part, \emph{learning by doing} is a
 good motto, so let's crack on and download some packages and then some
 data.
@@ -293,7 +293,7 @@ Part IV.
 Download the data for this tutorial from :
 \href{https://github.com/Robinlovelace/Creating-maps-in-R}{\url{https://github.com/Robinlovelace/Creating-maps-in-R}}.
 Click on the ``Download ZIP'' button on the right hand side and once it
-is downloaded unzip this to a new folder on your PC.
+is downloaded unzip this to a new folder on your computer.
 
 If you are working in RStudio, you can create a project that will
 automatically set your working directory. To do this click on
@@ -315,21 +315,21 @@ software:
 Creating-maps-in-R project.}
 \end{figure}
 
-If you ever need to change the working directory of R, you can change
-project or use the
+If you ever need to change the working directory of R, you can use the
+`Session' menu at the top of the page or use the
 \href{http://www.statmethods.net/interface/workspace.html}{\texttt{setwd}
 command}.
 
 It is also worth taking a look at the input data in your file browser
-before opening them in R, to get a feel for them. You could try opening
-the file ``london\_sport.shp'', within the ``data'' folder of the
-project, in a GIS program such as QGIS (which can be freely downloaded
-from the internet), for example, to get a feel for it before loading it
-into R. Also note that .shp files are composed of several files for each
-object: you should be able to open ``london\_sport.dbf'' in a
-spreadsheet program such as LibreOffice Calc. Once you've understood
-something of this input data and where it lives, it's time to open it in
-R.
+before opening them in R. You could try opening the file
+``london\_sport.shp''(located within the ``data'' folder of the
+project), in a GIS program such as QGIS (which can be freely downloaded
+from the internet) to explore the attribute and geometry information in
+a familiar environment. Also note that .shp files are composed of
+several files for each object: you should be able to open
+``london\_sport.dbf'' in a spreadsheet program such as LibreOffice Calc.
+Once you've understood something of this input data and where it lives,
+it's time to open it in R.
 
 \subsection{Loading the spatial data}\label{loading-the-spatial-data}
 
@@ -504,12 +504,15 @@ zones with high sports participation.
 \end{Highlighting}
 \end{Shaded}
 
-This is useful, but it would be great to see these sporty areas in
-context. To do this, simply use the \texttt{add = TRUE} argument after
-the initial plot. (\texttt{add = T} would also work, but we like to
-spell things out in this tutorial for clarity). What does the
-\texttt{col} argument refer to in the below block - it should be obvious
-(see figure 3).
+This plot is useful, but it only shows the areas which meet the
+criteria. To see the sporty areas in context with the other areas of the
+map simply use the \texttt{add = TRUE} argument after the initial plot.
+(\texttt{add = T} would also work, but we like to spell things out in
+this tutorial for clarity). What does the \texttt{col} argument refer to
+in the below block - it should be obvious (see figure 3).
+
+If you wish to experiment with mulitple criteria queries, use the `\&'
+sign.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -605,7 +608,7 @@ Before undertaking spatial queries of an object, it is useful to know
 the \emph{coordinate reference system} (CRS) it uses. You may have
 noticed the word \texttt{proj4string} in the summary of the
 \texttt{lnd\_sport} object above. This represents it CRS mathematically.
-In some spatial data files, no CRS is specified or worse, and incorrect
+In some spatial data files, no CRS is specified or worse, an incorrect
 CRS value is given. Provided the correct CRS is known, this can be
 righted with a single line:
 
@@ -646,7 +649,7 @@ WGS84:\footnote{Note: entering \texttt{projInfo()} will provide
 The above code uses the function \texttt{spTransform}, from the
 \textbf{sp} package, to convert the \texttt{lnd\_sport} object into a
 new form, with the Coordinate Reference System (CRS) specified as WGS84.
-The different epsg codes are a bit of hassle to remember but you can
+The different EPSG codes are a bit of hassle to remember but you can
 search for them at
 \href{http://spatialreference.org/}{spatialreference.org}.
 
@@ -657,7 +660,7 @@ polygons. in the \texttt{lnd\_sport} object, for example, we have 5
 attribute variables - that can be found by typing
 \texttt{names(lnd\_sport)}. But what happens when we want to add an
 additional variable from an external data table? We will use the example
-of recorded crimes by borough to demonstrate this.
+of recorded crimes by London boroughs to demonstrate this.
 
 To reaffirm our starting point, let's re-load the ``london\_sport''
 shapefile as a new object and plot it. This is identical to the
@@ -703,14 +706,15 @@ call this new object \texttt{lnd}, short for London:
 \end{verbatim}
 
 The non-spatial data we are going to join to the \texttt{lnd} object
-contains records on crimes in London. This is stored in a
-comma-delimited {[}(\texttt{.csv}){]} file called
+contains records of crimes in London. This is stored in a comma
+separated values {[}(\texttt{.csv}){]} file called
 ``mps-recordedcrime-borough''. Viewing the
 \href{https://raw.githubusercontent.com/Robinlovelace/Creating-maps-in-R/master/data/mps-recordedcrime-borough.csv}{file}
-locally shows that each row representing a single reported crime. We are
-going to use a function called \texttt{aggregate} to pre-process these
-records, ready to join to our spatial \texttt{lnd} dataset. A new object
-called \texttt{crime\_data} is created to store this data.
+locally shows that each row represents a single reported crime. We are
+going to use a function called \texttt{aggregate} to aggregate the
+crimes at the borough level, ready to join to our spatial \texttt{lnd}
+dataset. A new object called \texttt{crime\_data} is created to store
+this data.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -718,14 +722,14 @@ called \texttt{crime\_data} is created to store this data.
 \NormalTok{crime_data <-}\StringTok{ }\KeywordTok{read.csv}\NormalTok{(}\StringTok{"data/mps-recordedcrime-borough.csv"}\NormalTok{)}
 
 \KeywordTok{head}\NormalTok{(crime_data, }\DecValTok{3}\NormalTok{) }\CommentTok{# display first 3 lines}
-\KeywordTok{summary}\NormalTok{(crime_data$MajorText) }\CommentTok{# summary of crime type}
+\KeywordTok{summary}\NormalTok{(crime_data$CrimeType) }\CommentTok{# summary of crime type}
 
 \CommentTok{# Extract "Theft & Handling" crimes and save}
-\NormalTok{crime_theft <-}\StringTok{ }\NormalTok{crime_data[crime_data$MajorText ==}\StringTok{ "Theft & Handling"}\NormalTok{, ]}
+\NormalTok{crime_theft <-}\StringTok{ }\NormalTok{crime_data[crime_data$CrimeType ==}\StringTok{ "Theft & Handling"}\NormalTok{, ]}
 \KeywordTok{head}\NormalTok{(crime_theft, }\DecValTok{2}\NormalTok{) }\CommentTok{# take a look at the result (replace 2 with 10 to see more rows)}
 
 \CommentTok{# Calculate the sum of the crime count for each district and save result as a new object}
-\NormalTok{crime_ag <-}\StringTok{ }\KeywordTok{aggregate}\NormalTok{(CrimeCount ~}\StringTok{ }\NormalTok{DName, }\DataTypeTok{FUN =} \NormalTok{sum, }\DataTypeTok{data =} \NormalTok{crime_theft)}
+\NormalTok{crime_ag <-}\StringTok{ }\KeywordTok{aggregate}\NormalTok{(CrimeCount ~}\StringTok{ }\NormalTok{Borough, }\DataTypeTok{FUN =} \NormalTok{sum, }\DataTypeTok{data =} \NormalTok{crime_theft)}
 \CommentTok{# Show the first two rows of the aggregated crime data}
 \KeywordTok{head}\NormalTok{(crime_ag, }\DecValTok{2}\NormalTok{)}
 \end{Highlighting}
@@ -752,18 +756,18 @@ likely be useful in the future:
   \texttt{CrimeCount} variable by the district name.
 \end{itemize}
 
-Now that we have crime data at the borough level (\texttt{DName}), the
-challenge is to join it to the \texttt{lnd} object. We will base our
-join on the \texttt{DName} variable from the \texttt{crime\_ag} object
-and the \texttt{name} variable from the \texttt{lnd} object. It is not
-always straight forward to join objects based on names as the names do
-not always match. Let us see which names in the \texttt{crime\_ag}
-object match the spatial data object, \texttt{lnd}:
+Now that we have crime data at the borough level, the challenge is to
+join it to the \texttt{lnd} object. We will base our join on the
+\texttt{Borough} variable from the \texttt{crime\_ag} object and the
+\texttt{name} variable from the \texttt{lnd} object. It is not always
+straight forward to join objects based on names as the names do not
+always match. Let us see which names in the \texttt{crime\_ag} object
+match the spatial data object, \texttt{lnd}:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# Compare the name column in lnd to DName column in crime_ag to see which rows match.}
-\NormalTok{lnd$name %in%}\StringTok{ }\NormalTok{crime_ag$DName}
+\CommentTok{# Compare the name column in lnd to Borough column in crime_ag to see which rows match.}
+\NormalTok{lnd$name %in%}\StringTok{ }\NormalTok{crime_ag$Borough}
 \end{Highlighting}
 \end{Shaded}
 
@@ -776,7 +780,7 @@ object match the spatial data object, \texttt{lnd}:
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{# Return rows which do not match}
-\NormalTok{lnd$name[!lnd$name %in%}\StringTok{ }\NormalTok{crime_ag$DName]}
+\NormalTok{lnd$name[!lnd$name %in%}\StringTok{ }\NormalTok{crime_ag$Borough]}
 \end{Highlighting}
 \end{Shaded}
 
@@ -795,7 +799,7 @@ the results (not shown here) on your computer.
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{# Discover the names of the names}
-\KeywordTok{levels}\NormalTok{(crime_ag$DName)}
+\KeywordTok{levels}\NormalTok{(crime_ag$Borough)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -822,10 +826,10 @@ the results (not shown here) on your computer.
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{# Select the problematic row - the one which *does not* (via the ! symbol) match }
-\NormalTok{sel <-}\StringTok{ }\NormalTok{!lnd$name %in%}\StringTok{ }\NormalTok{crime_ag$DName }\CommentTok{# create selection}
+\NormalTok{sel <-}\StringTok{ }\NormalTok{!lnd$name %in%}\StringTok{ }\NormalTok{crime_ag$Borough }\CommentTok{# create selection}
 \CommentTok{# Rename row 25 in crime_ag to match row 25 in lnd, as suggested results form above}
-\KeywordTok{levels}\NormalTok{(crime_ag$DName)[}\DecValTok{25}\NormalTok{] <-}\StringTok{ }\KeywordTok{as.character}\NormalTok{(lnd$name[sel])}
-\KeywordTok{summary}\NormalTok{(lnd$name %in%}\StringTok{ }\NormalTok{crime_ag$DName) }\CommentTok{# now all columns match}
+\KeywordTok{levels}\NormalTok{(crime_ag$Borough)[}\DecValTok{25}\NormalTok{] <-}\StringTok{ }\KeywordTok{as.character}\NormalTok{(lnd$name[sel])}
+\KeywordTok{summary}\NormalTok{(lnd$name %in%}\StringTok{ }\NormalTok{crime_ag$Borough) }\CommentTok{# now all columns match}
 \end{Highlighting}
 \end{Shaded}
 
@@ -870,24 +874,19 @@ it:
 \end{Highlighting}
 \end{Shaded}
 
-The documentation for join will be displayed if the plyr package is
-loaded (if not, load or install and load it!). It requires all joining
-variables to have the same name, so we will rename the variable to make
-the join work:
+The documentation for join will be displayed if the \textbf{dplyr}
+package is loaded (if not, load or install and load it!). It requires
+all joining variables to have the same name, so we will rename the
+variable to make the join work:
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{head}\NormalTok{(lnd$name)}
-\KeywordTok{head}\NormalTok{(crime_ag$DName) }\CommentTok{# the variables to join}
-\NormalTok{crime_ag <-}\StringTok{ }\KeywordTok{rename}\NormalTok{(crime_ag, }\DataTypeTok{name =} \NormalTok{DName)}
-\CommentTok{# head(join(lnd@data, crime_ag)) # test it works}
-\NormalTok{lnd@data <-}\StringTok{ }\KeywordTok{left_join}\NormalTok{(lnd@data, crime_ag)}
+\KeywordTok{head}\NormalTok{(crime_ag$Borough) }\CommentTok{# the variables to join}
+\NormalTok{crime_ag <-}\StringTok{ }\KeywordTok{rename}\NormalTok{(crime_ag, }\DataTypeTok{name =} \NormalTok{Borough)}
+\NormalTok{lnd@data <-}\StringTok{ }\KeywordTok{inner_join}\NormalTok{(lnd@data, crime_ag)}
 \end{Highlighting}
 \end{Shaded}
-
-\begin{verbatim}
-## Joining by: "name"
-\end{verbatim}
 
 Take a look at the \texttt{lnd@data} object. You should see new
 variables added, meaning the attribute join was successful.
@@ -978,7 +977,7 @@ falling within London boroughs are retained: \texttt{sp::over}, and
 \texttt{rgeos::gIntersects} (the word preceding the \texttt{::} symbol
 refers to the package which the function is from). Use \texttt{?}
 followed by the function to get help on each. Whether
-\texttt{gIntersects} of \texttt{over} is needed depends on the spatial
+\texttt{gIntersects} or \texttt{over} is needed depends on the spatial
 data classes being compared (Bivand et al. 2013).
 
 In this tutorial we will use the \texttt{over} function as it is easiest
@@ -1109,6 +1108,7 @@ For an optional advanced task, let us analyse and plot the result.
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{q <-}\StringTok{ }\KeywordTok{cut}\NormalTok{(lnd_n$NUMBER, }\DataTypeTok{breaks=} \KeywordTok{c}\NormalTok{(}\KeywordTok{quantile}\NormalTok{(lnd_n$NUMBER)), }\DataTypeTok{include.lowest=}\NormalTok{T)}
+
 \KeywordTok{summary}\NormalTok{(q) }\CommentTok{# check what we've created}
 \end{Highlighting}
 \end{Shaded}
@@ -1427,12 +1427,12 @@ object using just the \texttt{head} command:
 
 \begin{verbatim}
 ##     id     long      lat order  hole piece  group           name
-## 1 00AA 531026.9 181611.1     1 FALSE     1 00AA.1 City of London
-## 2 00AA 531554.9 181659.3     2 FALSE     1 00AA.1 City of London
-## 3 00AA 532135.6 182198.4     3 FALSE     1 00AA.1 City of London
-## 4 00AA 532946.1 181894.8     4 FALSE     1 00AA.1 City of London
-## 5 00AA 533410.7 182037.9     5 FALSE     1 00AA.1 City of London
-## 6 00AA 533842.7 180793.6     6 FALSE     1 00AA.1 City of London
+## 1 00AA 536757.1 193294.8     1 FALSE     1 00AA.1 City of London
+## 2 00AA 536139.7 192340.0     2 FALSE     1 00AA.1 City of London
+## 3 00AA 536213.8 191848.6     3 FALSE     1 00AA.1 City of London
+## 4 00AA 535728.4 191460.5     4 FALSE     1 00AA.1 City of London
+## 5 00AA 534823.5 191796.0     5 FALSE     1 00AA.1 City of London
+## 6 00AA 528975.4 191791.6     6 FALSE     1 00AA.1 City of London
 \end{verbatim}
 
 It is now straightforward to produce a map using all the built in tools
@@ -1556,8 +1556,7 @@ We can now overlay this on our base map.
 \begin{Highlighting}[]
 \NormalTok{lnd_b1 +}
 \StringTok{  }\KeywordTok{geom_polygon}\NormalTok{(}\DataTypeTok{data =} \NormalTok{lnd_wgs84_f,}
-               \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \NormalTok{long, }\DataTypeTok{y =} \NormalTok{lat, }\DataTypeTok{group =} \NormalTok{group, }\DataTypeTok{fill =} \NormalTok{Partic_Per),}
-               \DataTypeTok{alpha =} \FloatTok{0.5}\NormalTok{)}
+    \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \NormalTok{long, }\DataTypeTok{y =} \NormalTok{lat, }\DataTypeTok{group =} \NormalTok{group, }\DataTypeTok{fill =} \NormalTok{Partic_Per), }\DataTypeTok{alpha =} \FloatTok{0.5}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1582,9 +1581,8 @@ We can then produce the plot as before:
 \KeywordTok{library}\NormalTok{(mapproj) }\CommentTok{# mapproj library needed - install.packages("mapproj")}
 
 \NormalTok{lnd_b2 +}
-\StringTok{  }\KeywordTok{geom_polygon}\NormalTok{(}\DataTypeTok{data =} \NormalTok{lnd_wgs84_f,}
-               \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \NormalTok{long, }\DataTypeTok{y =} \NormalTok{lat, }\DataTypeTok{group =} \NormalTok{group, }\DataTypeTok{fill =} \NormalTok{Partic_Per),}
-               \DataTypeTok{alpha =} \FloatTok{0.5}\NormalTok{)}
+\StringTok{  }\KeywordTok{geom_polygon}\NormalTok{(}\DataTypeTok{data =} \NormalTok{lnd_wgs84_f, }
+    \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \NormalTok{long, }\DataTypeTok{y =} \NormalTok{lat, }\DataTypeTok{group =} \NormalTok{group, }\DataTypeTok{fill =} \NormalTok{Partic_Per), }\DataTypeTok{alpha =} \FloatTok{0.5}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1609,8 +1607,7 @@ Finally, to increase the detail of the base map, we can use
 \begin{Highlighting}[]
 \NormalTok{lnd_b3 +}
 \StringTok{  }\KeywordTok{geom_polygon}\NormalTok{(}\DataTypeTok{data =} \NormalTok{lnd_wgs84_f,}
-               \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \NormalTok{long, }\DataTypeTok{y =} \NormalTok{lat, }\DataTypeTok{group =} \NormalTok{group, }\DataTypeTok{fill =} \NormalTok{Partic_Per),}
-               \DataTypeTok{alpha =} \FloatTok{0.5}\NormalTok{)}
+    \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \NormalTok{long, }\DataTypeTok{y =} \NormalTok{lat, }\DataTypeTok{group =} \NormalTok{group, }\DataTypeTok{fill =} \NormalTok{Partic_Per), }\DataTypeTok{alpha =} \FloatTok{0.5}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1666,11 +1663,13 @@ function from the \textbf{dplyr} package:
 ## Joining by: "id"
 \end{verbatim}
 
-Reorder this data (ordering is important for plots).
+Reorder this data (ordering is important for plots) and rename the
+dates.
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{lnd_f <-}\StringTok{ }\NormalTok{lnd_f[}\KeywordTok{order}\NormalTok{(lnd_f$order), ]}
+\NormalTok{lnd_f$date <-}\StringTok{ }\KeywordTok{gsub}\NormalTok{(}\DataTypeTok{pattern =} \StringTok{"Pop_"}\NormalTok{, }\DataTypeTok{replacement =} \StringTok{""}\NormalTok{, lnd_f$date)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1680,11 +1679,16 @@ little while to appear as displayed in Figure 15).
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =} \NormalTok{lnd_f,}
-  \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \NormalTok{long, }\DataTypeTok{y =} \NormalTok{lat, }\DataTypeTok{fill =} \NormalTok{pop, }\DataTypeTok{group =} \NormalTok{group)) +}
+  \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \NormalTok{long, }\DataTypeTok{y =} \NormalTok{lat, }\DataTypeTok{fill =} \NormalTok{pop/}\DecValTok{1000}\NormalTok{, }\DataTypeTok{group =} \NormalTok{group)) +}
 \StringTok{  }\KeywordTok{geom_polygon}\NormalTok{() +}
-\StringTok{  }\KeywordTok{geom_path}\NormalTok{(}\DataTypeTok{colour=}\StringTok{"grey"}\NormalTok{, }\DataTypeTok{lwd=}\FloatTok{0.1}\NormalTok{) +}
+\StringTok{  }\KeywordTok{geom_path}\NormalTok{(}\DataTypeTok{colour=}\StringTok{"black"}\NormalTok{, }\DataTypeTok{lwd=}\FloatTok{0.05}\NormalTok{) +}
 \StringTok{  }\KeywordTok{coord_equal}\NormalTok{() +}
-\StringTok{  }\KeywordTok{facet_wrap}\NormalTok{(~}\StringTok{ }\NormalTok{date)}
+\StringTok{  }\KeywordTok{facet_wrap}\NormalTok{(~}\StringTok{ }\NormalTok{date) +}\StringTok{ }
+\StringTok{  }\KeywordTok{scale_fill_gradient2}\NormalTok{(}\DataTypeTok{low =} \StringTok{"green"}\NormalTok{, }\DataTypeTok{mid =} \StringTok{"grey"}\NormalTok{, }\DataTypeTok{high =} \StringTok{"red"}\NormalTok{,}
+    \DataTypeTok{midpoint =} \DecValTok{150}\NormalTok{, }\DataTypeTok{name =} \StringTok{"Population}\CharTok{\textbackslash{}n}\StringTok{(thousands)"}\NormalTok{) +}
+\StringTok{  }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{axis.text =} \KeywordTok{element_blank}\NormalTok{(), }\CommentTok{# change the theme options}
+    \DataTypeTok{axis.title =} \KeywordTok{element_blank}\NormalTok{(), }\CommentTok{# remove axis titles}
+    \DataTypeTok{axis.ticks =} \KeywordTok{element_blank}\NormalTok{()) }\CommentTok{# remove axis ticks}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1693,6 +1697,12 @@ little while to appear as displayed in Figure 15).
 \includegraphics{./intro-spatial_files/figure-latex/unnamed-chunk-68-1.pdf}
 \caption{Faceted map}
 \end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# ggsave("figure/facet_london.png", width = 9, height = 9)}
+\end{Highlighting}
+\end{Shaded}
 
 Again there is a lot going on here so explore the documentation to make
 sure you understand it. Try out different colour values as well.
