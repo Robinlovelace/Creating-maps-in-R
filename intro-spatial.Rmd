@@ -33,7 +33,7 @@ This tutorial is an introduction to spatial data in R and map making with
 R's 'base' graphics and the popular graphics package **ggplot2**.
 It assumes no prior knowledge of spatial data analysis but
 prior understanding of the R command line would be beneficial.
-For people new to R, we recommend working through an
+If you have not used R before, we recommend working through an
 'Introduction to R' type tutorial, such as
 "A (very) short introduction to R"
 ([Torfs and Brauer, 2012](http://cran.r-project.org/doc/contrib/Torfs+Brauer-Short-R-Intro.pdf))
@@ -41,27 +41,36 @@ or the more geographically inclined "Short introduction to R"
 ([Harris, 2012](http://www.social-statistics.org/wp-content/uploads/2012/12/intro_to_R1.pdf)).
 
 Building on such background material,
-the following set of exercises is concerned with specific functions for spatial data
+the following tutorial is concerned with specific functions for spatial data
 and visualisation. It is divided into five parts:
 
 - Introduction, which provides a guide to R's syntax and preparing for the tutorial
 - Spatial data in R, which describes basic spatial functions in R
 - Manipulating spatial data, which includes changing projection, clipping and spatial joins
-- Map making with **ggplot2**, a recent graphics package for producing beautiful maps quickly
+- Map making with **ggplot2**, a graphics package for producing beautiful maps quickly
 - Taking spatial analysis in R further, a compilation of resources for furthering your skills
 
-An up-to-date version of this tutorial is maintained at
-[https://github.com/Robinlovelace/Creating-maps-in-R](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial-rl.pdf). The source files used to create this tutorial, including
-the input data can be downloaded as a
-[zip file](https://github.com/Robinlovelace/Creating-maps-in-R/archive/master.zip),
-as described below. The entire tutorial was written in
-[RMarkdown](http://rmarkdown.rstudio.com/), which
-allows R code to run as the document compiles, ensuring reproducibility.
+## Prerequisites and packages
 
-Any suggested improvements or new
-[vignettes](https://github.com/Robinlovelace/Creating-maps-in-R/tree/master/vignettes) are welcome, via email
-to Robin or by [forking](https://help.github.com/articles/fork-a-repo)
-the [master version](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial.Rmd) of this document.
+For this tutorial you need a copy of R. If you need to install R, the latest version 
+can be downloaded from [http://cran.r-project.org/](http://cran.r-project.org/).
+We also suggest that you use an R editor, such as [RStudio](http://www.rstudio.com/), for this tutorial. R editors improve the user-experience and help with the learning process.     
+
+R has a huge and growing number of spatial data packages, some of which we will come across in this tutorial. 
+We recommend taking a quick browse on R's main website to see which other spatial packages are available:
+[http://cran.r-project.org/web/views/Spatial.html](http://cran.r-project.org/web/views/Spatial.html).
+
+The spatial packages we will use today are:
+**ggmap** (which extends **ggplot**), **rgdal**, **rgeos**, **maptools** and **dplyr**.
+
+To test whether a package is installed, **ggplot2** for example, enter `library(ggplot2)`.
+If there is no output from R, this is good news: it means that the library
+has already been installed on your computer.
+
+If you get an error message, it needs to be installed: `install.packages("ggplot2")`.
+The package will download from CRAN (the Comprehensive R Archive Network); if you are prompted
+to select a 'mirror', select one that is close to your home.
+Run the above commands to install these packages now.
 
 ## Typographic conventions and getting help
 
@@ -131,27 +140,6 @@ try typing `??regression`.
 For the most part, *learning by doing* is a good motto, so let's crack
 on and download some packages and then some data.
 
-## Prerequisites and packages
-
-For this tutorial you need to install R, if you haven't already done so, the latest version of which
-can be downloaded from [http://cran.r-project.org/](http://cran.r-project.org/).
-A number of R editors such as [RStudio](http://www.rstudio.com/)
-can be used to make R more user friendly,
-but these are not needed to complete the tutorial.
-
-R has a huge and growing number of spatial data packages.
-We recommend taking a quick browse on R's main website:
-[http://cran.r-project.org/web/views/Spatial.html](http://cran.r-project.org/web/views/Spatial.html).
-
-The packages we will be using are
-**ggmap** (which extends **ggplot**), **rgdal**, **rgeos**, **maptools** and **dplyr**.
-To test whether a package is installed, **ggplot2** for example, enter `library(ggplot2)`.
-If you get an error message, it needs to be installed: `install.packages("ggplot2")`.
-These will be downloaded from CRAN (the Comprehensive R Archive Network); if you are prompted
-to select a 'mirror', select one that is close to your home.
-If there is no output from R, this is good news: it means that the library
-has already been installed on your computer.
-Install these packages now.
 
 # Part II: Spatial data in R
 
@@ -1308,13 +1296,28 @@ Books: despite the strength of R's online community, nothing beats a physical bo
 
 `spTransform(df, CRS("+init=epsg:4326")`: reproject `df` object to WGS84
 
+#Further information
+
+An up-to-date version of this tutorial is maintained at
+[https://github.com/Robinlovelace/Creating-maps-in-R](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial-rl.pdf). The source files used to create this tutorial, including
+the input data can be downloaded as a
+[zip file](https://github.com/Robinlovelace/Creating-maps-in-R/archive/master.zip),
+as described below. The entire tutorial was written in
+[RMarkdown](http://rmarkdown.rstudio.com/), which
+allows R code to run as the document compiles, ensuring reproducibility.
+
+Any suggested improvements or new
+[vignettes](https://github.com/Robinlovelace/Creating-maps-in-R/tree/master/vignettes) are welcome, via email
+to Robin or by [forking](https://help.github.com/articles/fork-a-repo)
+the [master version](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial.Rmd) of this document.
+
 # Aknowledgements
 
 The tutorial was developed for
 a series of Short Courses funded by the National Centre for Research Methods (NCRM),
 via the TALISMAN node (see [geotalisman.org](http://www.geotalisman.org/)).
 Thanks to the [ESRC](http://www.esrc.ac.uk/) for funding applied methods research.
-Many thanks to Rachel Oldroyd and Alistair Leak who helped demonstrate
+Many thanks to Rachel Oldroyd, Alistair Leak and Phil Jones who helped demonstrate
 these materials on the NCRM short courses for which
 this tutorial was developed. Amy O'Neill organised the course
 and encouraged feedback from participants.
