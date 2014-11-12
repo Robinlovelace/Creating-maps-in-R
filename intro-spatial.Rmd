@@ -54,7 +54,7 @@ and visualisation. It is divided into five parts:
 
 For this tutorial you need a copy of R. If you need to install R, the latest version 
 can be downloaded from [http://cran.r-project.org/](http://cran.r-project.org/).
-We also suggest that you use an R editor, such as [RStudio](http://www.rstudio.com/), for this tutorial. R editors improve the user-experience and help with the learning process.     
+We also suggest that you use an R editor, such as [RStudio](http://www.rstudio.com/), for this tutorial as this will improve the user-experience and help with the learning process.     
 
 R has a huge and growing number of spatial data packages, some of which we will come across in this tutorial. 
 We recommend taking a quick browse on R's main website to see which other spatial packages are available:
