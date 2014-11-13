@@ -5,3 +5,94 @@ date: "11/10/2014"
 output: html_document
 ---
 
+```{r}
+library(reshape2)
+library(tidyr)
+```
+
+The dataset we'll be using to explore the similarities between
+**reshape2** and **tidyr** is taken from the excellent book
+*R in Action* @kabacoff2011r:
+
+```{r}
+df <- read.table(textConnection("1 1 5 6
+1 2 3 5
+2 1 6 1
+2 2 2 4"), sep = " ")
+names(df) <- c("id", "time", "X1", "X2")
+```
+
+## Reshaping data with reshape2
+
+To prevent `reshape` from using all column headings as variable names,
+id variables must be specified. In this case, we want 'time' and 'id'
+to act as the id variables, as each is a something that varies.
+The values stay the same, but are placed in a single column with a new
+column 'variable' replicating the original column names.
+
+```{r}
+dfm1 <- melt(df, id.vars = "id")
+head(dfm1)
+dfm2 <- melt(df, id.vars = c("id", "time"))
+dfm2
+```
+
+## Tidying the data with tidyr
+
+**tidyr** performs exactly the same reshaping tasks as **reshape2**,
+but contains less functionality for aggregating data.
+(Data aggregation functions are reserved for **dplyr**.)
+The syntax is different: being more concise means the `gather`
+function (analogous to `melt` in **reshape2**) can be tricky to learn.
+Let's start by replicating the analysis undertaken above.
+
+```{r}
+dfg1 <- gather(df, variable, value, -id)
+head(dfg1)
+dfg2 <- gather(df, variable, value, -id, -time)
+```
+
+The `gather` examples may seem strange at first because the syntax
+is so different. `gather` requires 4 and 5 arguments to reproduce `dfm1` and `dfm2`
+respectively, wheras `melt` requires only two. The extra arguments
+are needed because `gather` forces you to specify column names
+for the output data frame, rather than the default 'variable' and 'value'
+used by `melt`. Note that without new variable names specified, `gather` fails:
+
+```{r}
+gather(df, -id) # fail as no column names are specified
+gather(df, variable, -id) # fail as only one column name is provided
+```
+
+It is also strange that column names in the original dataset
+can only be referred to using the minus sign: when I first discovered
+`gather`, I kept trying to refer to existing columns, which of course fails.
+
+```{r}
+gather(df, time, id)
+```
+
+From the above we can deduce the following rule for using gather:
+
+    At least one id variable from the original dataset must be specified with a minus sign and two column names for the output data frame must be provided.
+    
+## Casting and spreading molten and tidy data
+
+To cast data in reshape2 `dcast` is used:
+
+```{r}
+dcast(dfm1, formula = )
+```
+
+```{r}
+spread(df, X1, X2)
+spread(dfg1, id, variable)
+```
+
+
+
+
+
+
+
+

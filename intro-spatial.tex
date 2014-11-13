@@ -119,16 +119,17 @@ Cheshire
 This tutorial is an introduction to spatial data in R and map making
 with R's `base' graphics and the popular graphics package
 \textbf{ggplot2}. It assumes no prior knowledge of spatial data analysis
-but prior understanding of the R command line would be beneficial. For
-people new to R, we recommend working through an `Introduction to R'
-type tutorial, such as ``A (very) short introduction to R''
+but prior understanding of the R command line would be beneficial. If
+you have not used R before, we recommend working through an
+`Introduction to R' type tutorial, such as ``A (very) short introduction
+to R''
 (\href{http://cran.r-project.org/doc/contrib/Torfs+Brauer-Short-R-Intro.pdf}{Torfs
 and Brauer, 2012}) or the more geographically inclined ``Short
 introduction to R''
 (\href{http://www.social-statistics.org/wp-content/uploads/2012/12/intro_to_R1.pdf}{Harris,
 2012}).
 
-Building on such background material, the following set of exercises is
+Building on such background material, the following tutorial is
 concerned with specific functions for spatial data and visualisation. It
 is divided into five parts:
 
@@ -143,46 +144,82 @@ is divided into five parts:
   Manipulating spatial data, which includes changing projection,
   clipping and spatial joins
 \item
-  Map making with \textbf{ggplot2}, a recent graphics package for
-  producing beautiful maps quickly
+  Map making with \textbf{ggplot2}, a graphics package for producing
+  beautiful maps quickly
 \item
   Taking spatial analysis in R further, a compilation of resources for
   furthering your skills
 \end{itemize}
 
-An up-to-date version of this tutorial is maintained at
-\href{https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial-rl.pdf}{\url{https://github.com/Robinlovelace/Creating-maps-in-R}}.
-The source files used to create this tutorial, including the input data
-can be downloaded as a
-\href{https://github.com/Robinlovelace/Creating-maps-in-R/archive/master.zip}{zip
-file}, as described below. The entire tutorial was written in
-\href{http://rmarkdown.rstudio.com/}{RMarkdown}, which allows R code to
-run as the document compiles, ensuring reproducibility.
+\subsection{Prerequisites and
+packages}\label{prerequisites-and-packages}
 
-Any suggested improvements or new
-\href{https://github.com/Robinlovelace/Creating-maps-in-R/tree/master/vignettes}{vignettes}
-are welcome, via email to Robin or by
-\href{https://help.github.com/articles/fork-a-repo}{forking} the
-\href{https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial.Rmd}{master
-version} of this document.
+For this tutorial you need a copy of R. If you need to install R, the
+latest version can be downloaded from
+\href{http://cran.r-project.org/}{\url{http://cran.r-project.org/}}. We
+also suggest that you use an R editor, such as
+\href{http://www.rstudio.com/}{RStudio}, for this tutorial as this will
+improve the user-experience and help with the learning process.
+
+R has a huge and growing number of spatial data packages, some of which
+we will come across in this tutorial. We recommend taking a quick browse
+on R's main website to see which other spatial packages are available:
+\href{http://cran.r-project.org/web/views/Spatial.html}{\url{http://cran.r-project.org/web/views/Spatial.html}}.
+
+The spatial packages we will use in the tutorial are:
+
+\begin{itemize}
+\itemsep1pt\parskip0pt\parsep0pt
+\item
+  \textbf{ggmap}: extends the plotting package \textbf{ggplot2} for maps
+\item
+  \textbf{rgdal}: R's interface to the popular C/C++ GIS library
+  \href{http://www.gdal.org/}{gdal}
+\item
+  \textbf{rgeos}: R's interface to the powerful vector processing
+  library \href{http://trac.osgeo.org/geos/}{geos}
+\item
+  \textbf{maptools}: provides various mapping functions
+\item
+  \href{http://cran.r-project.org/web/packages/dplyr/index.html}{\textbf{dplyr}}:
+  fast and concise data manipulation package
+\item
+  \href{http://blog.rstudio.org/2014/07/22/introducing-tidyr/}{\textbf{tidyr}}:
+  for creating `tidy' datasets
+\end{itemize}
+
+To test whether a package is installed, try to load it using
+\texttt{library}. To test if \textbf{ggplot2} is available, for example,
+enter \texttt{library(ggplot2)}. If there is no output from R, this is
+good news: it means that the library has already been installed on your
+computer.
+
+If you get an error message, it needs to be installed using
+\texttt{install.packages("ggplot2")}. The package will download from
+CRAN (the Comprehensive R Archive Network); if you are prompted to
+select a `mirror', select one that is close to your home. If you have
+not done so already, install these packages on your computer now. A
+\href{http://stackoverflow.com/questions/8175912/load-multiple-packages-at-once}{quick
+way} to do this in one go is to enter the following lines of code:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"ggmap"}\NormalTok{, }\StringTok{"rgdal"}\NormalTok{, }\StringTok{"rgeos"}\NormalTok{, }\StringTok{"maptools"}\NormalTok{, }\StringTok{"dplyr"}\NormalTok{, }\StringTok{"tidyr"}\NormalTok{)}
+\KeywordTok{install.packages}\NormalTok{(x)}
+\KeywordTok{lapply}\NormalTok{(x, library, }\DataTypeTok{character.only =} \OtherTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
 
 \subsection{Typographic conventions and getting
 help}\label{typographic-conventions-and-getting-help}
 
-The colourful syntax highlighting in this document is thanks to
-\href{http://rmarkdown.rstudio.com/}{RMarkdown}. We try to follow best
-practice in terms of style, roughly following Google's style guide, an
-in-depth guide written by
-\href{http://cran.r-project.org/web/packages/rockchalk/vignettes/Rstyle.pdf}{Johnson
-(2013)} and a \href{http://adv-r.had.co.nz/Style.html}{chapter} from
-\href{http://adv-r.had.co.nz/}{\emph{Advanced R}} (Wickham, in press).
 It is a good idea to get into the habit of consistent and clear writing
 in any language, and R is no exception. Adding comments to your code is
-also good practice, so you remember at a later date what you've done,
-aiding the learning process. There are two main ways of commenting code
-using the \texttt{\#} symbol: above a line of code or directly following
-it, as illustrated in the block of code presented below, which should
-create figure 1 if typed correctly into the R command line.
+good practice, so you remember at a later date what you've done, aiding
+the learning process. There are two main ways of commenting code using
+the \texttt{\#} symbol: above a line of code or directly following it,
+as illustrated in the block of code presented below, which should create
+figure 1 if typed correctly into the R command line.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -196,50 +233,40 @@ create figure 1 if typed correctly into the R command line.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics{./intro-spatial_files/figure-latex/unnamed-chunk-2-1.pdf}
+\includegraphics{./intro-spatial_files/figure-latex/unnamed-chunk-3-1.pdf}
 \caption{Basic plot of x and y}
 \end{figure}
 
-In the above code we first created a new \emph{object} that we have
-called \texttt{x}. Any name could have been used, like
-\texttt{x\_bumkin}, but \texttt{x} is concise and works just fine here.
-It is good practice to give your objects meaningful names. Note
-\texttt{\textless{}-}, the directional ``arrow'' assignment symbol. This
-creates new objects. We will be using this symbol a lot in the
-tutorial.\footnote{Tip: typing \texttt{Alt -} on the keyboard will
-  create it in RStudio. The equals sign \texttt{=} also works but is not
-  recommended by R developers.}
+In the first line of code a new \emph{object} called \texttt{x} is
+created. Any name could have been used, like \texttt{x\_bumkin}, but
+\texttt{x} is concise and works just fine here. It is good practice to
+give your objects meaningful names. Note \texttt{\textless{}-}, the
+directional ``arrow'' assignment symbol. This creates new objects. We
+will be using this symbol a lot in this tutorial.\footnote{Tip: typing
+  \texttt{Alt -} on the keyboard will create the arrow in RStudio. The
+  equals sign \texttt{=} also works but is not recommended by R
+  developers.}
 
 To distinguish between prose and code, please be aware of the following
-typographic conventions: R code (e.g. \texttt{plot(x, y)}) is written in
-a \texttt{monospace} font and package names (e.g. \textbf{rgdal}) are
-written in \textbf{bold}. Blocks of code such as:
+typographic conventions used in this document: R code (e.g.
+\texttt{plot(x, y)}) is written in a \texttt{monospace} font and package
+names (e.g. \textbf{rgdal}) are written in \textbf{bold}.
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{:}\DecValTok{3}\NormalTok{, }\DecValTok{5}\NormalTok{)^}\DecValTok{2}
-\end{Highlighting}
-\end{Shaded}
+A double hash, \texttt{\#\#}, at the start of a line of code indicates
+that this is an output from R. Lengthy outputs have been ommited from
+the document to save space, so do not be alarmed if R produces
+unexpected \texttt{warning} messages which are not mentioned. In a few
+cases images are also ommited to save space. This will be clear from the
+comments.
 
-\begin{verbatim}
-## [1]  1  4  9 25
-\end{verbatim}
-
-are compiled in-line: the \texttt{\#\#} indicates output from R.
-Sometimes output from code in this tutorial is reduced to save space, so
-do not be alarmed if R produces unexpected \texttt{warning} messages. In
-a few cases we omit images to save space. This will be clear from the
-comments. Images in this document are small and low-quality enable
-portability of the pdf. They should display better on your computer
-screen and can be saved at any resolution.
-
-The code presented here is not the only way to do things: we encourage
-you to play to gain a deeper understanding of R. Do not worry, you
-cannot `break' anything using R and all the input data can be re-loaded
-if things do go wrong. As with learning to skate, you learn by falling
-and, getting an \texttt{Error:} message in R is much less painful than
-landing on ones face on concrete! We encourage \texttt{Error:}s - it
-means you are trying new things.
+As with any programming language, there are many ways to produce the
+same output. The code presented in this document is not the only way to
+do things. We encourage you to play with the code to gain a deeper
+understanding of R. Do not worry, you cannot `break' anything using R
+and all the input data can be re-loaded if things do go wrong. As with
+learning to skate, you learn by falling and getting an \texttt{Error:}
+message in R is much less painful than landing on ones face on concrete!
+We encourage \texttt{Error:}s - it means you are trying new things.
 
 If you require help on any function, use the \texttt{help} command, e.g.
 \texttt{help(plot)}. Because R users love being concise, this can also
@@ -251,30 +278,7 @@ be found using the \texttt{??} symbol. To test this, try typing
 good motto, so let's crack on and download some packages and then some
 data.
 
-\subsection{Prerequisites and
-packages}\label{prerequisites-and-packages}
-
-For this tutorial you need to install R, if you haven't already done so,
-the latest version of which can be downloaded from
-\href{http://cran.r-project.org/}{\url{http://cran.r-project.org/}}. A
-number of R editors such as \href{http://www.rstudio.com/}{RStudio} can
-be used to make R more user friendly, but these are not needed to
-complete the tutorial.
-
-R has a huge and growing number of spatial data packages. We recommend
-taking a quick browse on R's main website:
-\href{http://cran.r-project.org/web/views/Spatial.html}{\url{http://cran.r-project.org/web/views/Spatial.html}}.
-
-The packages we will be using are \textbf{ggmap} (which extends
-\textbf{ggplot}), \textbf{rgdal}, \textbf{rgeos}, \textbf{maptools} and
-\textbf{dplyr}. To test whether a package is installed, \textbf{ggplot2}
-for example, enter \texttt{library(ggplot2)}. If you get an error
-message, it needs to be installed: \texttt{install.packages("ggplot2")}.
-These will be downloaded from CRAN (the Comprehensive R Archive
-Network); if you are prompted to select a `mirror', select one that is
-close to your home. If there is no output from R, this is good news: it
-means that the library has already been installed on your computer.
-Install these packages now.
+\clearpage
 
 \section{Part II: Spatial data in R}\label{part-ii-spatial-data-in-r}
 
@@ -290,22 +294,25 @@ Part IV.
 
 \subsection{Downloading the data}\label{downloading-the-data}
 
-Download the data for this tutorial from :
+Firstly, download the data for this tutorial from :
 \href{https://github.com/Robinlovelace/Creating-maps-in-R}{\url{https://github.com/Robinlovelace/Creating-maps-in-R}}.
-Click on the ``Download ZIP'' button on the right hand side and once it
-is downloaded unzip this to a new folder on your computer.
+Click on the ``Download ZIP'' button on the right hand side of the
+screen and once it is downloaded, unzip this to a new folder on your
+computer.
 
-If you are working in RStudio, you can create a project that will
-automatically set your working directory. To do this click on
-\texttt{File -\textgreater{} Open File...} in the top menu, navigate to
-unzipped \texttt{Creating-maps-in-R} folder and double click on the
-\texttt{Creating-maps-in-R.Rproj} project file. Alternatively, you can
-use the \emph{project menu} to open the project or create a new one. It
-is \emph{highly recommended} that you use RStudio's projects to organise
-your R work and that you organise your files into sub-folders (e.g.
-\texttt{code}, \texttt{input-data}, \texttt{figures}) to avoid digital
-clutter (Figure 2). The RStudio website contains an overview of the
-software:
+For this tutorial, we suggest working on the `Creating-maps-in-R'
+project which has already been created for you. To open this project,
+navigate to \texttt{File -\textgreater{} Open File...} in the top menu
+and navigate to the unzipped \texttt{Creating-maps-in-R} folder. Double
+click on the \texttt{Creating-maps-in-R.Rproj} project file to open this
+project.
+
+Alternatively, you can use the \emph{project menu} to open the project
+or create a new one. It is \emph{highly recommended} that you use
+RStudio's projects to organise your R work and that you organise your
+files into sub-folders (e.g. \texttt{code}, \texttt{input-data},
+\texttt{figures}) to avoid digital clutter (Figure 2). The RStudio
+website contains an overview of the software:
 \href{http://www.rstudio.com/products/rstudio/}{rstudio.com/products/rstudio/}.
 
 \begin{figure}[htbp]
@@ -315,7 +322,9 @@ software:
 Creating-maps-in-R project.}
 \end{figure}
 
-If you ever need to change the working directory of R, you can use the
+Opening a project sets the current working directory to the project's
+parent folder, the \texttt{Creating-maps-in-R} folder in this case. If
+you ever need to change your working directory, you can use the
 `Session' menu at the top of the page or use the
 \href{http://www.statmethods.net/interface/workspace.html}{\texttt{setwd}
 command}.
@@ -343,13 +352,13 @@ information about the projection and the attributes of data.
 \textbf{rgdal} is R's interface to the ``Geospatial Abstraction Library
 (GDAL)'' which is used by other open source GIS packages such as QGIS
 and enables R to handle a broader range of spatial data formats. If
-you've not already \emph{installed} and loaded the rgdal package (as
-described above for ggplot2) do so now:
+you've not already \emph{installed} and loaded the \textbf{rgdal}
+package (see the `prerequisites and packages' section) do so now:
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{library}\NormalTok{(rgdal)}
-\NormalTok{lnd_sport <-}\StringTok{ }\KeywordTok{readOGR}\NormalTok{(}\DataTypeTok{dsn =} \StringTok{"data"}\NormalTok{, }\StringTok{"london_sport"}\NormalTok{)}
+\NormalTok{lnd_sport <-}\StringTok{ }\KeywordTok{readOGR}\NormalTok{(}\DataTypeTok{dsn =} \StringTok{"data"}\NormalTok{, }\DataTypeTok{layer =} \StringTok{"london_sport"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -360,45 +369,45 @@ described above for ggplot2) do so now:
 ## Feature type: wkbPolygon with 2 dimensions
 \end{verbatim}
 
-In the code above \texttt{dsn} stands for ``data source name'' and is an
-\emph{argument} of the \emph{function} \texttt{readOGR}. Note that each
-new argument is separated by a comma. The \texttt{dsn} argument in this
-case is a \emph{character string} (indicated by quote marks like this
-one \texttt{"}) that specifies the directory where the data files are
-stored. R functions have a default order of arguments, so \texttt{dsn =}
-does not actually need to be typed for the command to run. If the data
-were stored in the current working directory, for example, one could use
-\texttt{readOGR(".", "london\_sport")}. For clarity, it is good practice
-to include argument names, such as \texttt{dsn} when learning new
-functions and we continue this tradition below.
-
-The next argument is another \emph{character string}: simply the name of
-the file required. There is no need to add a file extension (e.g.
-\texttt{.shp}) in this case.
+In the second line of code above the \texttt{readOGR} function is used
+to load a shapefile and assign it to a new object called ``lnd\_sport''.
+\texttt{readOGR} is a \emph{function} which accepts two \emph{arguments:
+\texttt{dsn} which stands for ``data source name'' and specifies the
+location where the file is stored, and \texttt{layer} which specifies
+the file name. Note that each new argument is separated by a comma and
+there is no need to specify the file extension (e.g. .shp) when
+providing the file name. Both arguments in this case are }character
+strings* (indicated by quote marks like this one \texttt{"}). R
+functions have a default order of arguments, so \texttt{dsn =} and
+\texttt{layer =} do not actually have to be typed for the command to
+run, for example, \texttt{readOGR("data", "london\_sport")} would work
+just as well. For clarity, it is good practice to include argument names
+such as \texttt{dsn} and \texttt{layer} when learning new functions and
+we continue this tradition below.
 
 The files beginning \texttt{london\_sport} in the \texttt{data/}
 \href{https://github.com/Robinlovelace/Creating-maps-in-R/tree/master/data}{directory}
-contain the 2001 borough population and percentage participating in
-sporting activities from the
+contain the population of London Boroughs in 2001 and the percentage of
+the population participating in sporting activities. This data
+originates from the
 \href{http://data.london.gov.uk/datastore/package/active-people-survey-kpi-data-borough}{active
 people survey}. The boundary data is from the
 \href{http://www.ordnancesurvey.co.uk/oswebsite/opendata/}{Ordnance
 Survey}.
 
-For information about how to load different types of spatial data, the
-help documentation for \texttt{readOGR} is a good place to start. This
-can be accessed from within R by typing \texttt{?readOGR}. For another
-worked example, in which a GPS trace is loaded, please see Cheshire and
-Lovelace (2014).
+For information about how to load different types of spatial data, see
+the help documentation for \texttt{readOGR}. This can be accessed by
+typing \texttt{?readOGR}. For another worked example, in which a GPS
+trace is loaded, please see Cheshire and Lovelace (2014).
 
 \subsection{Basic plotting}\label{basic-plotting}
 
-We have now created a new spatial object called ``sport'' from the
+We have now created a new spatial object called ``lnd\_sport'' from the
 ``london\_sport'' shapefile. Spatial objects are made up of a number of
 different \emph{slots}, mainly the attribute \emph{slot} and the
 geometry \emph{slot}. The attribute \emph{slot} can be thought of as an
 attribute table and the geometry \emph{slot} is where the spatial object
-(and it's attributes) lie in space. Lets now analyse the sport object
+(and its attributes) lie in space. Let's now analyse the sport object
 with some basic commands:
 
 \begin{Shaded}
@@ -585,6 +594,8 @@ the \texttt{Is projected} and \texttt{proj4string} lines. In this case,
 we have a projected system, which means it is a Cartesian reference
 system, relative to some point on the surface of the Earth. We will
 cover reprojecting data in the next part of the tutorial.
+
+\clearpage
 
 \section{Part III: Manipulating spatial
 data}\label{part-iii-manipulating-spatial-data}
@@ -827,7 +838,7 @@ the results (not shown here) on your computer.
 \begin{Highlighting}[]
 \CommentTok{# Select the problematic row - the one which *does not* (via the ! symbol) match }
 \NormalTok{sel <-}\StringTok{ }\NormalTok{!lnd$name %in%}\StringTok{ }\NormalTok{crime_ag$Borough }\CommentTok{# create selection}
-\CommentTok{# Rename row 25 in crime_ag to match row 25 in lnd, as suggested results form above}
+\CommentTok{# Rename row 25 in crime_ag to match row 25 in lnd}
 \KeywordTok{levels}\NormalTok{(crime_ag$Borough)[}\DecValTok{25}\NormalTok{] <-}\StringTok{ }\KeywordTok{as.character}\NormalTok{(lnd$name[sel])}
 \KeywordTok{summary}\NormalTok{(lnd$name %in%}\StringTok{ }\NormalTok{crime_ag$Borough) }\CommentTok{# now all columns match}
 \end{Highlighting}
@@ -843,14 +854,15 @@ then renamed the level to match the \texttt{lnd} dataset. Note that we
 could not rename the variable directly, as it is stored as a factor.
 
 We are now ready to join the datasets. It is recommended to use the
-\texttt{inner\_join} function \textbf{dplyr} but the \texttt{merge}
+\texttt{left\_join} function \textbf{dplyr} but the \texttt{merge}
 function could equally be used. Note that when we ask for help for a
 function that is not loaded, nothing happens, indicating we need to load
 it:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{help}\NormalTok{(inner_join) }\CommentTok{# error flagged}
+\NormalTok{?left_join }\CommentTok{# error flagged}
+\NormalTok{??left_join}
 \KeywordTok{library}\NormalTok{(dplyr) }\CommentTok{# load the powerful dplyr package (use plyr if unavailable)}
 \end{Highlighting}
 \end{Shaded}
@@ -870,25 +882,44 @@ it:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{help}\NormalTok{(inner_join) }\CommentTok{# should now be loaded (use join if unavailable)}
+\NormalTok{?left_join }\CommentTok{# should now be loaded (use join if unavailable)}
 \end{Highlighting}
 \end{Shaded}
 
-The documentation for join will be displayed if the \textbf{dplyr}
-package is loaded (if not, load or install and load it!). It requires
-all joining variables to have the same name, so we will rename the
-variable to make the join work:
+The above code demonstrates how to search for functions that are not
+currently loaded in R, using the \texttt{??} notation (short for
+\texttt{help.search} in the same way that \texttt{?} is short for
+\texttt{help}). Note, you will need to have the \textbf{dplyr} package,
+which provides fast and intuitive functions for processing data,
+installed for this to work. After \textbf{dplyr} is loaded, a single
+question mark is sufficient to load the associated help.
+
+The documentation for the \texttt{left\_join} function will be displayed
+if the plyr package is available (if not, use
+\texttt{install.packages()} to install it). We use \texttt{left\_join}
+because we want the length of the data frame to remane unchanged, with
+variables from new data appended in new columns. Or, in R's rather terse
+documentation: ``return all rows from x, and all columns from x and y.''
+The \texttt{*join} commands (including \texttt{inner\_join} and
+\texttt{anti\_join}) are more concise when joining variables have the
+same name across both datasets. \textbf{dplyr} is also helpful here as
+it contains a useful function to \texttt{rename} variables:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{head}\NormalTok{(lnd$name)}
+\KeywordTok{head}\NormalTok{(lnd$name) }\CommentTok{# dataset to add to (results not shown)}
 \KeywordTok{head}\NormalTok{(crime_ag$Borough) }\CommentTok{# the variables to join}
-\NormalTok{crime_ag <-}\StringTok{ }\KeywordTok{rename}\NormalTok{(crime_ag, }\DataTypeTok{name =} \NormalTok{Borough)}
-\NormalTok{lnd@data <-}\StringTok{ }\KeywordTok{inner_join}\NormalTok{(lnd@data, crime_ag)}
+\NormalTok{crime_ag <-}\StringTok{ }\KeywordTok{rename}\NormalTok{(crime_ag, }\DataTypeTok{name =} \NormalTok{Borough) }\CommentTok{# rename the Borough heading}
+\CommentTok{# head(join(lnd@data, crime_ag)) # test it works}
+\NormalTok{lnd@data <-}\StringTok{ }\KeywordTok{left_join}\NormalTok{(lnd@data, crime_ag)}
 \end{Highlighting}
 \end{Shaded}
 
-Take a look at the \texttt{lnd@data} object. You should see new
+\begin{verbatim}
+## Joining by: "name"
+\end{verbatim}
+
+Take a look at the new \texttt{lnd@data} object. You should see new
 variables added, meaning the attribute join was successful.
 
 \subsubsection{Challenge: create a map of additional variables in
@@ -1262,6 +1293,8 @@ this tutorial is concerned with \emph{visualisation} of the results. For
 this, we will use \textbf{ggplot2} and begin by looking at how it
 handles non-spatial data.
 
+\clearpage
+
 \section{Part IV: Map making with
 ggplot2}\label{part-iv-map-making-with-ggplot2}
 
@@ -1289,20 +1322,13 @@ out the examples on your own machines and play with them:
 Good examples of graphs can also be found on the website
 \href{http://www.cookbook-r.com/Graphs/}{cookbook-r.com}.
 
-Load the package:
+Load the package with
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(ggplot2)}
-\end{Highlighting}
-\end{Shaded}
-
-It is worth noting that the basic \texttt{plot()} function requires no
-data preparation but additional effort in colour selection/adding the
-map key etc. \texttt{qplot()} and \texttt{ggplot()} (from the
-\textbf{ggplot2} package) require some additional steps to format the
-spatial data but select colours and add keys etc. automatically. More on
-this later.
+It is worth noting that the base \texttt{plot()} function requires less
+data preparation but more effort in control of features.
+\texttt{qplot()} and \texttt{ggplot()} from \textbf{ggplot2} require
+some additional work to format the spatial data but select colours and
+legends automatically, with sensible defaults.
 
 As a first attempt with \textbf{ggplot2} we can create a scatter plot
 with the attribute data in the \texttt{lnd} object created above. Type:
@@ -1323,9 +1349,9 @@ that data frame you wish to use (the variables \texttt{Partic\_Per} and
 \texttt{aes()}, which means, roughly speaking `aesthetics that vary'.
 
 If you just type p and hit enter you get the error
-\texttt{No layers in plot}. This is because you have not told ggplot
-what you want to do with the data. We do this by adding so-called
-``geoms'', in this case \texttt{geom\_point()}.
+\texttt{No layers in plot}. This is because you have not told
+\texttt{ggplot} what you want to do with the data. We do this by adding
+so-called ``geoms'', in this case \texttt{geom\_point()}.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1335,8 +1361,8 @@ what you want to do with the data. We do this by adding so-called
 
 \begin{figure}[htbp]
 \centering
-\includegraphics{./intro-spatial_files/figure-latex/unnamed-chunk-41-1.pdf}
-\caption{A simple ggplot}
+\includegraphics{./intro-spatial_files/figure-latex/unnamed-chunk-40-1.pdf}
+\caption{A simple graphic produced with \textbf{ggplot2}}
 \end{figure}
 
 Within the brackets you can alter the nature of the points. Try
@@ -1349,7 +1375,7 @@ sports participation this is also fairly easy by adding another
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{p +}\StringTok{ }\KeywordTok{geom_point}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{colour=}\NormalTok{Partic_Per, }\DataTypeTok{size=}\NormalTok{Pop_2001))}
+\NormalTok{p +}\StringTok{ }\KeywordTok{geom_point}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{colour=}\NormalTok{Partic_Per, }\DataTypeTok{size=}\NormalTok{Pop_2001)) }\CommentTok{# not shown}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1358,13 +1384,14 @@ a plot. In this case we can add text to the plot.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{p +}\StringTok{ }\KeywordTok{geom_point}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{colour =} \NormalTok{Partic_Per, }\DataTypeTok{size =} \NormalTok{Pop_2001)) +}\StringTok{ }\KeywordTok{geom_text}\NormalTok{(}\DataTypeTok{size =} \DecValTok{2}\NormalTok{, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{label =} \NormalTok{name))}
+\NormalTok{p +}\StringTok{ }\KeywordTok{geom_point}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{colour =} \NormalTok{Partic_Per, }\DataTypeTok{size =} \NormalTok{Pop_2001)) +}
+\StringTok{  }\KeywordTok{geom_text}\NormalTok{(}\DataTypeTok{size =} \DecValTok{2}\NormalTok{, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{label =} \NormalTok{name))}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{figure}[htbp]
 \centering
-\includegraphics{./intro-spatial_files/figure-latex/unnamed-chunk-43-1.pdf}
+\includegraphics{./intro-spatial_files/figure-latex/unnamed-chunk-42-1.pdf}
 \caption{ggplot for text}
 \end{figure}
 
@@ -1400,13 +1427,13 @@ must be installed.
 \end{Shaded}
 
 This step has lost the attribute information associated with the lnd
-object. We can add it back using the \texttt{inner\_join} function (this
+object. We can add it back using the \texttt{left\_join} function (this
 performs a data join). To find out how this function works look at the
-output of typing \texttt{?inner\_join}.
+output of typing \texttt{?left\_join}.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{lnd_f <-}\StringTok{ }\KeywordTok{inner_join}\NormalTok{(lnd_f, lnd@data, }\DataTypeTok{by =} \KeywordTok{c}\NormalTok{(}\StringTok{"id"} \NormalTok{=}\StringTok{ "ons_label"}\NormalTok{))}
+\NormalTok{lnd_f <-}\StringTok{ }\KeywordTok{left_join}\NormalTok{(lnd_f, lnd@data, }\DataTypeTok{by =} \KeywordTok{c}\NormalTok{(}\StringTok{"id"} \NormalTok{=}\StringTok{ "ons_label"}\NormalTok{))}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1417,22 +1444,18 @@ Northing as the data are in British National Grid format) coordinates
 alongside the attribute information associated with each London Borough.
 If you type \texttt{print(lnd\_f)} you will see just how many coordinate
 pairs are required! To keep the output to a minimum, take a peek at the
-object using just the \texttt{head} command:
+first 2 lines of the object using just the \texttt{head} command:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{head}\NormalTok{(lnd_f[, }\DecValTok{1}\NormalTok{:}\DecValTok{8}\NormalTok{])}
+\NormalTok{lnd_f[}\DecValTok{1}\NormalTok{:}\DecValTok{2}\NormalTok{, }\DecValTok{1}\NormalTok{:}\DecValTok{8}\NormalTok{]}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
 ##     id     long      lat order  hole piece  group           name
-## 1 00AA 536757.1 193294.8     1 FALSE     1 00AA.1 City of London
-## 2 00AA 536139.7 192340.0     2 FALSE     1 00AA.1 City of London
-## 3 00AA 536213.8 191848.6     3 FALSE     1 00AA.1 City of London
-## 4 00AA 535728.4 191460.5     4 FALSE     1 00AA.1 City of London
-## 5 00AA 534823.5 191796.0     5 FALSE     1 00AA.1 City of London
-## 6 00AA 528975.4 191791.6     6 FALSE     1 00AA.1 City of London
+## 1 00AA 531026.9 181611.1     1 FALSE     1 00AA.1 City of London
+## 2 00AA 531554.9 181659.3     2 FALSE     1 00AA.1 City of London
 \end{verbatim}
 
 It is now straightforward to produce a map using all the built in tools
@@ -1473,7 +1496,7 @@ in black and white, which should produce a map like that shown below
 
 \begin{figure}[htbp]
 \centering
-\includegraphics{./intro-spatial_files/figure-latex/unnamed-chunk-48-1.pdf}
+\includegraphics{./intro-spatial_files/figure-latex/unnamed-chunk-47-1.pdf}
 \caption{Greyscale map}
 \end{figure}
 
@@ -1531,10 +1554,6 @@ required to produce the plot and provides the base map data.
 \end{Highlighting}
 \end{Shaded}
 
-\begin{verbatim}
-## Warning: bounding box given to google - spatial extent only approximate.
-\end{verbatim}
-
 In much the same way as we did above we can then layer the plot with
 different geoms.
 
@@ -1545,7 +1564,7 @@ the required attribute data (we already did this step to create the
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{lnd_wgs84_f <-}\StringTok{ }\KeywordTok{fortify}\NormalTok{(lnd_sport_wgs84, }\DataTypeTok{region =} \StringTok{"ons_label"}\NormalTok{)}
-\NormalTok{lnd_wgs84_f <-}\StringTok{ }\KeywordTok{inner_join}\NormalTok{(lnd_wgs84_f, lnd_sport_wgs84@data,}
+\NormalTok{lnd_wgs84_f <-}\StringTok{ }\KeywordTok{left_join}\NormalTok{(lnd_wgs84_f, lnd_sport_wgs84@data,}
   \DataTypeTok{by =} \KeywordTok{c}\NormalTok{(}\StringTok{"id"} \NormalTok{=}\StringTok{ "ons_label"}\NormalTok{))}
 \end{Highlighting}
 \end{Shaded}
@@ -1556,7 +1575,7 @@ We can now overlay this on our base map.
 \begin{Highlighting}[]
 \NormalTok{lnd_b1 +}
 \StringTok{  }\KeywordTok{geom_polygon}\NormalTok{(}\DataTypeTok{data =} \NormalTok{lnd_wgs84_f,}
-    \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \NormalTok{long, }\DataTypeTok{y =} \NormalTok{lat, }\DataTypeTok{group =} \NormalTok{group, }\DataTypeTok{fill =} \NormalTok{Partic_Per), }\DataTypeTok{alpha =} \FloatTok{0.5}\NormalTok{)}
+  \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \NormalTok{long, }\DataTypeTok{y =} \NormalTok{lat, }\DataTypeTok{group =} \NormalTok{group, }\DataTypeTok{fill =} \NormalTok{Partic_Per), }\DataTypeTok{alpha =} \FloatTok{0.5}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1579,7 +1598,15 @@ We can then produce the plot as before:
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{library}\NormalTok{(mapproj) }\CommentTok{# mapproj library needed - install.packages("mapproj")}
+\end{Highlighting}
+\end{Shaded}
 
+\begin{verbatim}
+## Loading required package: maps
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
 \NormalTok{lnd_b2 +}
 \StringTok{  }\KeywordTok{geom_polygon}\NormalTok{(}\DataTypeTok{data =} \NormalTok{lnd_wgs84_f, }
     \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \NormalTok{long, }\DataTypeTok{y =} \NormalTok{lat, }\DataTypeTok{group =} \NormalTok{group, }\DataTypeTok{fill =} \NormalTok{Partic_Per), }\DataTypeTok{alpha =} \FloatTok{0.5}\NormalTok{)}
@@ -1588,7 +1615,7 @@ We can then produce the plot as before:
 
 \begin{figure}[htbp]
 \centering
-\includegraphics{./intro-spatial_files/figure-latex/unnamed-chunk-58-1.pdf}
+\includegraphics{./intro-spatial_files/figure-latex/unnamed-chunk-57-1.pdf}
 \caption{Basemap 2}
 \end{figure}
 
@@ -1628,15 +1655,9 @@ strung-out over many columns.
 \NormalTok{london_data <-}\StringTok{ }\KeywordTok{read.csv}\NormalTok{(}\StringTok{"data/census-historic-population-borough.csv"}\NormalTok{)}
 \KeywordTok{library}\NormalTok{(tidyr) }\CommentTok{# if not install it, or skip the next two steps}
 \NormalTok{ltidy <-}\StringTok{ }\KeywordTok{gather}\NormalTok{(london_data, date, pop, -Area.Code, -Area.Name)}
-\KeywordTok{head}\NormalTok{(ltidy, }\DecValTok{2}\NormalTok{)}
+\KeywordTok{head}\NormalTok{(ltidy, }\DecValTok{2}\NormalTok{) }\CommentTok{# check the output (not shown)}
 \end{Highlighting}
 \end{Shaded}
-
-\begin{verbatim}
-##   Area.Code            Area.Name     date    pop
-## 1      00AA       City of London Pop_1801 129000
-## 2      00AB Barking and Dagenham Pop_1801   3000
-\end{verbatim}
 
 In the above code we take the \texttt{london\_data} object and create
 the column names `date' (the date of the record, previously spread over
@@ -1649,13 +1670,13 @@ subject: more can be read on the subject in Wickham (2014) or in a
 \texttt{vignette("tidy-data")}.
 
 Merge the population data with the London borough geometry contained
-within our \texttt{lnd\_f} object, using the \texttt{inner\_join}
+within our \texttt{lnd\_f} object, using the \texttt{left\_join}
 function from the \textbf{dplyr} package:
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{ltidy <-}\StringTok{ }\KeywordTok{rename}\NormalTok{(ltidy, }\DataTypeTok{id =} \NormalTok{Area.Code)}
-\NormalTok{lnd_f <-}\StringTok{ }\KeywordTok{inner_join}\NormalTok{(lnd_f, ltidy)}
+\NormalTok{lnd_f <-}\StringTok{ }\KeywordTok{left_join}\NormalTok{(lnd_f, ltidy)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1663,12 +1684,11 @@ function from the \textbf{dplyr} package:
 ## Joining by: "id"
 \end{verbatim}
 
-Reorder this data (ordering is important for plots) and rename the
-dates.
+Rename the date variable (use \texttt{?gsub} and google `regex' to find
+out more).
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{lnd_f <-}\StringTok{ }\NormalTok{lnd_f[}\KeywordTok{order}\NormalTok{(lnd_f$order), ]}
 \NormalTok{lnd_f$date <-}\StringTok{ }\KeywordTok{gsub}\NormalTok{(}\DataTypeTok{pattern =} \StringTok{"Pop_"}\NormalTok{, }\DataTypeTok{replacement =} \StringTok{""}\NormalTok{, lnd_f$date)}
 \end{Highlighting}
 \end{Shaded}
@@ -1678,14 +1698,14 @@ little while to appear as displayed in Figure 15).
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =} \NormalTok{lnd_f,}
-  \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \NormalTok{long, }\DataTypeTok{y =} \NormalTok{lat, }\DataTypeTok{fill =} \NormalTok{pop/}\DecValTok{1000}\NormalTok{, }\DataTypeTok{group =} \NormalTok{group)) +}
-\StringTok{  }\KeywordTok{geom_polygon}\NormalTok{() +}
-\StringTok{  }\KeywordTok{geom_path}\NormalTok{(}\DataTypeTok{colour=}\StringTok{"black"}\NormalTok{, }\DataTypeTok{lwd=}\FloatTok{0.05}\NormalTok{) +}
-\StringTok{  }\KeywordTok{coord_equal}\NormalTok{() +}
-\StringTok{  }\KeywordTok{facet_wrap}\NormalTok{(~}\StringTok{ }\NormalTok{date) +}\StringTok{ }
-\StringTok{  }\KeywordTok{scale_fill_gradient2}\NormalTok{(}\DataTypeTok{low =} \StringTok{"green"}\NormalTok{, }\DataTypeTok{mid =} \StringTok{"grey"}\NormalTok{, }\DataTypeTok{high =} \StringTok{"red"}\NormalTok{,}
-    \DataTypeTok{midpoint =} \DecValTok{150}\NormalTok{, }\DataTypeTok{name =} \StringTok{"Population}\CharTok{\textbackslash{}n}\StringTok{(thousands)"}\NormalTok{) +}
+\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =} \NormalTok{lnd_f, }\CommentTok{# the input data}
+  \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \NormalTok{long, }\DataTypeTok{y =} \NormalTok{lat, }\DataTypeTok{fill =} \NormalTok{pop/}\DecValTok{1000}\NormalTok{, }\DataTypeTok{group =} \NormalTok{group)) +}\StringTok{ }\CommentTok{# define variables}
+\StringTok{  }\KeywordTok{geom_polygon}\NormalTok{() +}\StringTok{ }\CommentTok{# plot the boroughs}
+\StringTok{  }\KeywordTok{geom_path}\NormalTok{(}\DataTypeTok{colour=}\StringTok{"black"}\NormalTok{, }\DataTypeTok{lwd=}\FloatTok{0.05}\NormalTok{) +}\StringTok{ }\CommentTok{# borough borders}
+\StringTok{  }\KeywordTok{coord_equal}\NormalTok{() +}\StringTok{ }\CommentTok{# fixed x and y scales}
+\StringTok{  }\KeywordTok{facet_wrap}\NormalTok{(~}\StringTok{ }\NormalTok{date) +}\StringTok{ }\CommentTok{# one plot per time slice}
+\StringTok{  }\KeywordTok{scale_fill_gradient2}\NormalTok{(}\DataTypeTok{low =} \StringTok{"green"}\NormalTok{, }\DataTypeTok{mid =} \StringTok{"grey"}\NormalTok{, }\DataTypeTok{high =} \StringTok{"red"}\NormalTok{, }\CommentTok{# colors}
+    \DataTypeTok{midpoint =} \DecValTok{150}\NormalTok{, }\DataTypeTok{name =} \StringTok{"Population}\CharTok{\textbackslash{}n}\StringTok{(thousands)"}\NormalTok{) +}\StringTok{ }\CommentTok{# legend options}
 \StringTok{  }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{axis.text =} \KeywordTok{element_blank}\NormalTok{(), }\CommentTok{# change the theme options}
     \DataTypeTok{axis.title =} \KeywordTok{element_blank}\NormalTok{(), }\CommentTok{# remove axis titles}
     \DataTypeTok{axis.ticks =} \KeywordTok{element_blank}\NormalTok{()) }\CommentTok{# remove axis ticks}
@@ -1694,21 +1714,26 @@ little while to appear as displayed in Figure 15).
 
 \begin{figure}[htbp]
 \centering
-\includegraphics{./intro-spatial_files/figure-latex/unnamed-chunk-68-1.pdf}
-\caption{Faceted map}
+\includegraphics{./intro-spatial_files/figure-latex/unnamed-chunk-67-1.pdf}
+\caption{Faceted plot of the distribution of London's population over
+time}
 \end{figure}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# ggsave("figure/facet_london.png", width = 9, height = 9)}
+\CommentTok{# ggsave("figure/facet_london.png", width = 9, height = 9) # save figure}
 \end{Highlighting}
 \end{Shaded}
 
 Again there is a lot going on here so explore the documentation to make
 sure you understand it. Try out different colour values as well.
 
-Add a title and replace the axes names with ``easting'' and ``northing''
-and save your map as a pdf.
+Try experimenting with the above code block to see what effects you can
+produce. For bonus points, try creating an animation of London's
+evolving population over time using the excellent
+\href{http://cran.r-project.org/web/packages/animation/index.html}{\textbf{animation}}
+package. Anyone able to do this and share the code will win a free book
+on GIS in R!
 
 \clearpage
 
@@ -1784,6 +1809,8 @@ the following:
   examples.
 \end{itemize}
 
+\clearpage
+
 \section{R quick reference}\label{r-quick-reference}
 
 \texttt{\#}: comments all text until line end
@@ -1823,18 +1850,58 @@ specified location
 \texttt{spTransform(df, CRS("+init=epsg:4326")}: reproject \texttt{df}
 object to WGS84
 
+\clearpage
+
+\section{Further information}\label{further-information}
+
+An up-to-date version of this tutorial is maintained at
+\href{https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial-rl.pdf}{\url{https://github.com/Robinlovelace/Creating-maps-in-R}}.
+The source files used to create this tutorial, including the input data
+can be downloaded as a
+\href{https://github.com/Robinlovelace/Creating-maps-in-R/archive/master.zip}{zip
+file}, as described below. The entire tutorial was written in
+\href{http://rmarkdown.rstudio.com/}{RMarkdown}, which allows R code to
+run as the document compiles, ensuring reproducibility.
+
+Any suggested improvements or new
+\href{https://github.com/Robinlovelace/Creating-maps-in-R/tree/master/vignettes}{vignettes}
+are welcome, via email to Robin or by
+\href{https://help.github.com/articles/fork-a-repo}{forking} the
+\href{https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial.Rmd}{master
+version} of this document.
+
+The colourful syntax highlighting in this document is thanks to
+\href{http://rmarkdown.rstudio.com/}{RMarkdown}. We try to follow best
+practice in terms of style, roughly following Google's style guide, an
+in-depth guide written by
+\href{http://cran.r-project.org/web/packages/rockchalk/vignettes/Rstyle.pdf}{Johnson
+(2013)} and a \href{http://adv-r.had.co.nz/Style.html}{chapter} from
+\href{http://adv-r.had.co.nz/}{\emph{Advanced R}} (Wickham, in press).
+
 \section{Aknowledgements}\label{aknowledgements}
 
 The tutorial was developed for a series of Short Courses funded by the
 National Centre for Research Methods (NCRM), via the TALISMAN node (see
 \href{http://www.geotalisman.org/}{geotalisman.org}). Thanks to the
 \href{http://www.esrc.ac.uk/}{ESRC} for funding applied methods
-research. Many thanks to Rachel Oldroyd and Alistair Leak who helped
-demonstrate these materials on the NCRM short courses for which this
-tutorial was developed. Amy O'Neill organised the course and encouraged
-feedback from participants. The final thanks is to all users and
-developers of open source software for making powerful tools such as R
-accessible and enjoyable to use.
+research. Many thanks to Rachel Oldroyd, Alistair Leak and Phil Jones
+who helped demonstrate these materials on the NCRM short courses for
+which this tutorial was developed. Amy O'Neill organised the course and
+encouraged feedback from participants. The final thanks is to all users
+and developers of open source software for making powerful tools such as
+R accessible and enjoyable to use.
+
+If you have found this tutorial useful in your work, please cite it:
+
+Lovelace, R., \& Cheshire, J. (2014). Introduction to visualising
+spatial data in R. National Centre for Research Methods Working Papers,
+14(03). Retrieved from
+\url{https://github.com/Robinlovelace/Creating-maps-in-R}
+
+The bibtex entry for this item can be downloaded from
+\href{https://raw.githubusercontent.com/Robinlovelace/Creating-maps-in-R/master/citation.bib}{here}.
+
+\clearpage
 
 \section{References}\label{references}
 
