@@ -22,6 +22,7 @@ output:
 # robinlovelace.net
 # TODO: add details for the ggplot2 section
 # TODO: create animation of population change over time
+# TODO: redo the changes that Rachel overwrote with her changes
 # dplyr + rename instead of merge
 ```
 
@@ -60,17 +61,33 @@ R has a huge and growing number of spatial data packages, some of which we will 
 We recommend taking a quick browse on R's main website to see which other spatial packages are available:
 [http://cran.r-project.org/web/views/Spatial.html](http://cran.r-project.org/web/views/Spatial.html).
 
-The spatial packages we will use today are:
-**ggmap** (which extends **ggplot**), **rgdal**, **rgeos**, **maptools** and **dplyr**.
+The spatial packages we will use in the tutorial are:
 
-To test whether a package is installed, **ggplot2** for example, enter `library(ggplot2)`.
+- **ggmap**: extends the plotting package **ggplot2** for maps
+- **rgdal**: R's interface to the popular C/C++ GIS library [gdal](http://www.gdal.org/)
+- **rgeos**: R's interface to the powerful vector processing library [geos](http://trac.osgeo.org/geos/)
+- **maptools**: provides various mapping functions
+- [**dplyr**](http://cran.r-project.org/web/packages/dplyr/index.html): fast and concise data manipulation package
+- [**tidyr**](http://blog.rstudio.org/2014/07/22/introducing-tidyr/): for creating 'tidy' datasets
+
+To test whether a package is installed, try to load it using `library`.
+To test if **ggplot2** is available, for example, enter `library(ggplot2)`.
 If there is no output from R, this is good news: it means that the library
 has already been installed on your computer.
 
-If you get an error message, it needs to be installed using `install.packages("ggplot2")`.
+If you get an error message,
+it needs to be installed using `install.packages("ggplot2")`.
 The package will download from CRAN (the Comprehensive R Archive Network); if you are prompted
 to select a 'mirror', select one that is close to your home.
-Run the above commands to install these packages now.
+If you have not done so already, install these packages on your computer now.
+A [quick way](http://stackoverflow.com/questions/8175912/load-multiple-packages-at-once) to do this in one go is to enter the following lines of code:
+
+```{r, eval=FALSE}
+x <- c("ggmap", "rgdal", "rgeos", "maptools", "dplyr", "tidyr")
+install.packages(x)
+lapply(x, library, character.only = TRUE)
+```
+
 
 ## Typographic conventions and getting help
 
@@ -125,6 +142,7 @@ try typing `??regression`.
 For the most part, *learning by doing* is a good motto, so let's crack
 on and download some packages and then some data.
 
+\clearpage
 
 # Part II: Spatial data in R
 
@@ -336,6 +354,8 @@ In this case, we have a projected system, which means it is a
 Cartesian reference system, relative to some point on the surface of the Earth.
 We will cover reprojecting data in the next part of the tutorial.
 
+\clearpage
+
 # Part III: Manipulating spatial data
 
 ```{r, echo=FALSE}
@@ -514,7 +534,7 @@ levels(crime_ag$Borough)
 
 # Select the problematic row - the one which *does not* (via the ! symbol) match 
 sel <- !lnd$name %in% crime_ag$Borough # create selection
-# Rename row 25 in crime_ag to match row 25 in lnd, as suggested results form above
+# Rename row 25 in crime_ag to match row 25 in lnd
 levels(crime_ag$Borough)[25] <- as.character(lnd$name[sel])
 summary(lnd$name %in% crime_ag$Borough) # now all columns match
 ```
@@ -524,19 +544,35 @@ then renamed the level to match the `lnd` dataset. Note that we could not
 rename the variable directly, as it is stored as a factor.
 
 We are now ready to join the datasets. It is recommended to use
-the `inner_join` function **dplyr** but the `merge` function
+the `left_join` function **dplyr** but the `merge` function
 could equally be used. Note that when we ask for help for a function
 that is not loaded, nothing happens, indicating we need to load it:
 
 ```{r, results='hide'}
-help(inner_join) # error flagged
+?left_join # error flagged
+??left_join
 library(dplyr) # load the powerful dplyr package (use plyr if unavailable)
-help(inner_join) # should now be loaded (use join if unavailable)
+?left_join # should now be loaded (use join if unavailable)
 ```
 
-The documentation for join will be displayed if the plyr package is loaded (if not,
-load or install and load it!). It requires all joining variables to have the
-same name, so we will rename the variable to make the join work:
+The above code demonstrates how to search for functions that are not currently
+loaded in R, using the `??` notation (short for `help.search` in the same way
+that `?` is short for `help`). Note, you will need to have the **dplyr** package,
+which provides fast and intuitive functions for processing data, installed for
+this to work. After **dplyr** is loaded, a single question mark is sufficient to 
+load the associated help.
+
+The documentation for the `left_join` function
+will be displayed if the plyr package is available (if not,
+use `install.packages()` to install it).
+We use `left_join` because we want the length of the data frame
+to remane unchanged, with variables from new data appended in
+new columns. Or, in R's rather terse documentation:
+"return all rows from x, and all columns from x and y."
+The `*join` commands (including `inner_join` and `anti_join`) are more
+concise when joining variables have the
+same name across both datasets. **dplyr** is also helpful here as it contains
+a useful function to `rename` variables:
 
 ```{r, echo=FALSE}
 # commented out: old version using plyr version of rename
@@ -545,14 +581,14 @@ same name, so we will rename the variable to make the join work:
 
 
 ```{r, results='hide'}
-head(lnd$name)
+head(lnd$name) # dataset to add to (results not shown)
 head(crime_ag$Borough) # the variables to join
-crime_ag <- rename(crime_ag, replace = c("Borough" = "name"))
+crime_ag <- rename(crime_ag, name = Borough) # rename the Borough heading
 # head(join(lnd@data, crime_ag)) # test it works
-lnd@data <- join(lnd@data, crime_ag)
+lnd@data <- left_join(lnd@data, crime_ag)
 ```
 
-Take a look at the `lnd@data` object. You should
+Take a look at the new `lnd@data` object. You should
 see new variables added, meaning the attribute join
 was successful.
 
@@ -858,6 +894,8 @@ We have now seen how to load, join and clip data. The second half of this tutori
 is concerned with *visualisation* of the results. For this, we will use
 **ggplot2** and begin by looking at how it handles non-spatial data.
 
+\clearpage
+
 # Part IV: Map making with ggplot2
 
 This third part introduces a slightly
@@ -883,17 +921,13 @@ http://docs.ggplot2.org/current/ .
 Good examples of graphs can also be found on the website
 [cookbook-r.com](http://www.cookbook-r.com/Graphs/).
 
-Load the package:
+Load the package with `r library(ggplot2)`
 
-```{r}
-library(ggplot2)
-```
-
-It is worth noting that the basic `plot()` function requires no
-data preparation but additional effort in colour selection/adding the map key etc.
-`qplot()` and `ggplot()` (from the **ggplot2** package)
-require some additional steps to format the spatial data but select
-colours and add keys etc. automatically. More on this later.
+It is worth noting that the base `plot()` function requires less
+data preparation but more effort in control of features.
+`qplot()` and `ggplot()` from **ggplot2**
+require some additional work to format the spatial data but select
+colours and legends automatically, with sensible defaults.
 
 As a first attempt with **ggplot2** we can create a scatter plot with the attribute data in the `lnd` object created above. Type:
 
@@ -911,11 +945,11 @@ This has to happen within the brackets of `aes()`, which means,
 roughly speaking 'aesthetics that vary'.
 
 If you just type p and hit enter you get the error `No layers in plot`.
-This is because you have not told ggplot what you want
+This is because you have not told `ggplot` what you want
 to do with the data. We do this by adding so-called "geoms",
 in this case `geom_point()`.
 
-```{r fig.cap="A simple ggplot"}
+```{r fig.cap="A simple graphic produced with **ggplot2**", fig.height=1.7, fig.width=3}
 p + geom_point()
 ```
 
@@ -924,13 +958,14 @@ Within the brackets you can alter the nature of the points. Try something like `
 If you want to scale the points by borough population and colour them by sports participation this is also fairly easy by adding another `aes()` argument.
 
 ```{r fig.cap="ggplot with aesthetics", eval=FALSE}
-p + geom_point(aes(colour=Partic_Per, size=Pop_2001))
+p + geom_point(aes(colour=Partic_Per, size=Pop_2001)) # not shown
 ```
 
 The real power of **ggplot2** lies in its ability to add layers to a plot. In this case we can add text to the plot.
 
-```{r fig.cap="ggplot for text"}
-p + geom_point(aes(colour = Partic_Per, size = Pop_2001)) + geom_text(size = 2, aes(label = name))
+```{r fig.cap="ggplot for text", fig.height=3, fig.width=4}
+p + geom_point(aes(colour = Partic_Per, size = Pop_2001)) +
+  geom_text(size = 2, aes(label = name))
 ```
 
 This idea of layers (or geoms) is quite different from the standard plot functions in R, but you will find that each of the functions does a lot of clever stuff to make plotting much easier (see the documentation for a full list).
@@ -946,20 +981,20 @@ For this to work, either **maptools** or **rgeos** packages must be installed.
 lnd_f <- fortify(lnd, region = "ons_label") # you may need to load maptools
 ```
 
-This step has lost the attribute information associated with the lnd object. We can add it back using the `inner_join`
+This step has lost the attribute information associated with the lnd object. We can add it back using the `left_join`
 function (this performs a data join).
 To find out how this function works look at
-the output of typing `?inner_join`.
+the output of typing `?left_join`.
 
 ```{r}
-lnd_f <- inner_join(lnd_f, lnd@data, by = c("id" = "ons_label"))
+lnd_f <- left_join(lnd_f, lnd@data, by = c("id" = "ons_label"))
 ```
 
 Take a look at the `lnd_f` object to see its contents (which stands for "London, fortified"). You should see a large data frame containing the latitude and longitude (they are actually Easting and Northing as the data are in British National Grid format) coordinates alongside the attribute information associated with each London Borough. If you type `print(lnd_f)` you will see just how many coordinate pairs are required!
-To keep the output to a minimum, take a peek at the object using just the `head` command:
+To keep the output to a minimum, take a peek at the first 2 lines of the object using just the `head` command:
 
 ```{r}
-head(lnd_f[, 1:8])
+lnd_f[1:2, 1:8]
 ```
 
 It is now straightforward to produce a map using all the built in tools
@@ -1029,13 +1064,13 @@ b[2, ] <- (b[2, ] - mean(b[2, ])) * 1.05 + mean(b[2, ])
 
 This is then fed into the `get_map` function as the location parameter. The syntax below contains 2 functions. **ggmap** is required to produce the plot and provides the base map data.
 
-```{r, message=FALSE}
+```{r, eval=FALSE, message=FALSE}
 lnd_b1 <- ggmap(get_map(location = b)) # create basemap for london
 ```
 
 ```{r, echo=FALSE}
 # save(lnd_b1, file = "data/lnd_b1.RData")
-# load("data/lnd_b1.RData") # load saved map
+load("data/lnd_b1.RData") # load saved map
 ```
 
 In much the same way as we did above we can then layer the plot with different geoms.
@@ -1043,9 +1078,9 @@ In much the same way as we did above we can then layer the plot with different g
 First fortify the `lnd_sport_wgs84` object and then merge with the required attribute
 data (we already did this step to create the `lnd_f` object).
 
-```{r}
+```{r, message=FALSE}
 lnd_wgs84_f <- fortify(lnd_sport_wgs84, region = "ons_label")
-lnd_wgs84_f <- inner_join(lnd_wgs84_f, lnd_sport_wgs84@data,
+lnd_wgs84_f <- left_join(lnd_wgs84_f, lnd_sport_wgs84@data,
   by = c("id" = "ons_label"))
 ```
 
@@ -1054,8 +1089,7 @@ We can now overlay this on our base map.
 ```{r, eval=FALSE}
 lnd_b1 +
   geom_polygon(data = lnd_wgs84_f,
-               aes(x = long, y = lat, group = group, fill = Partic_Per),
-               alpha = 0.5)
+  aes(x = long, y = lat, group = group, fill = Partic_Per), alpha = 0.5)
 ```
 
 The code above contains a lot of parameters. Use the **ggplot2** help pages to find out what they are.
@@ -1080,9 +1114,8 @@ We can then produce the plot as before:
 library(mapproj) # mapproj library needed - install.packages("mapproj")
 
 lnd_b2 +
-  geom_polygon(data = lnd_wgs84_f,
-               aes(x = long, y = lat, group = group, fill = Partic_Per),
-               alpha = 0.5)
+  geom_polygon(data = lnd_wgs84_f, 
+    aes(x = long, y = lat, group = group, fill = Partic_Per), alpha = 0.5)
 ```
 
 Finally, to increase the detail of the base map, we can use `get_map`'s `zoom` argument
@@ -1102,8 +1135,7 @@ lnd_b3 <- ggmap(get_map(location = b, source = "stamen",
 ```{r fig.cap="Basemap 3", eval=FALSE}
 lnd_b3 +
   geom_polygon(data = lnd_wgs84_f,
-               aes(x = long, y = lat, group = group, fill = Partic_Per),
-               alpha = 0.5)
+    aes(x = long, y = lat, group = group, fill = Partic_Per), alpha = 0.5)
 ```
 
 ## Advanced Task: Faceting for Maps
@@ -1122,11 +1154,11 @@ required by **ggplot2** for facetting graphics: the date of the
 population survey become a variable in its own right, rather than
 being strung-out over many columns.
 
-```{r}
+```{r, results='hide'}
 london_data <- read.csv("data/census-historic-population-borough.csv")
 library(tidyr) # if not install it, or skip the next two steps
 ltidy <- gather(london_data, date, pop, -Area.Code, -Area.Name)
-head(ltidy, 2)
+head(ltidy, 2) # check the output (not shown)
 ```
 
 In the above code we take the `london_data` object and create the
@@ -1141,16 +1173,18 @@ the package, accessed from within R by entering `vignette("tidy-data")`.
 
 ```{r, echo=FALSE, eval=FALSE}
 # lnd_molten <- melt(london_data, id = c("Area.Code", "Area.Name"))
-# lnd_molten <- read.csv("london_data_melt.csv")
+# lnd_molten <- read.csv("data/london_data_melt.csv")
+# head(lnd_molten)
+# names(lnd_molten)[3] <- "date"
 # Only do this step if reshape and melt failed
 ```
 
-Merge the population data with the London borough geometry contained within our `lnd_f` object, using the `inner_join` function from
+Merge the population data with the London borough geometry contained within our `lnd_f` object, using the `left_join` function from
 the **dplyr** package:
 
 ```{r}
 ltidy <- rename(ltidy, id = Area.Code)
-lnd_f <- inner_join(lnd_f, ltidy)
+lnd_f <- left_join(lnd_f, ltidy)
 ```
 
 ```{r, echo=FALSE}
@@ -1159,31 +1193,40 @@ lnd_f <- inner_join(lnd_f, ltidy)
 
 ```
 
-Reorder this data (ordering is important for plots).
+Rename the date variable (use `?gsub` and google 'regex' to find out more).
 
 ```{r}
-lnd_f <- lnd_f[order(lnd_f$order), ]
+lnd_f$date <- gsub(pattern = "Pop_", replacement = "", lnd_f$date)
 ```
 
 We can now use faceting to produce one map per year
 (this may take a little while to appear as displayed
 in Figure 15).
 
-```{r fig.cap="Faceted map", fig.height=6, fig.width=5}
-ggplot(data = lnd_f,
-  aes(x = long, y = lat, fill = pop, group = group)) +
-  geom_polygon() +
-  geom_path(colour="grey", lwd=0.1) +
-  coord_equal() +
-  facet_wrap(~ date)
-
+```{r fig.cap="Faceted plot of the distribution of London's population over time", fig.height=6, fig.width=6}
+ggplot(data = lnd_f, # the input data
+  aes(x = long, y = lat, fill = pop/1000, group = group)) + # define variables
+  geom_polygon() + # plot the boroughs
+  geom_path(colour="black", lwd=0.05) + # borough borders
+  coord_equal() + # fixed x and y scales
+  facet_wrap(~ date) + # one plot per time slice
+  scale_fill_gradient2(low = "green", mid = "grey", high = "red", # colors
+    midpoint = 150, name = "Population\n(thousands)") + # legend options
+  theme(axis.text = element_blank(), # change the theme options
+    axis.title = element_blank(), # remove axis titles
+    axis.ticks = element_blank()) # remove axis ticks
+# ggsave("figure/facet_london.png", width = 9, height = 9) # save figure
 ```
 
 Again there is a lot going on here so explore the documentation to make sure you understand it.
 Try out different colour values as well.
 
-Add a title and replace the axes names with "easting" and
-"northing" and save your map as a pdf.
+Try experimenting with the above code block to see what effects you can
+produce. For bonus points, try creating an animation of London's evolving
+population over time using the excellent
+[**animation**](http://cran.r-project.org/web/packages/animation/index.html)
+package. Anyone able to do this and share the code will win a free
+book on GIS in R!
 
 ```{r, echo=FALSE}
 # **Creating an animation of population change over time**
@@ -1240,6 +1283,8 @@ Books: despite the strength of R's online community, nothing beats a physical bo
  data analysis.
  * Kabacoff (2011) is a more general R book; it has many fun worked examples.
  
+ \clearpage
+ 
 # R quick reference
 
 `#`: comments all text until line end
@@ -1269,6 +1314,8 @@ Books: despite the strength of R's online community, nothing beats a physical bo
 `proj4string(df)`: query coordinate reference system of `df` object
 
 `spTransform(df, CRS("+init=epsg:4326")`: reproject `df` object to WGS84
+
+\clearpage
 
 #Further information
 
@@ -1305,6 +1352,14 @@ this tutorial was developed. Amy O'Neill organised the course
 and encouraged feedback from participants.
 The final thanks is to all users and developers of open source software
 for making powerful tools such as R accessible and enjoyable to use.
+
+If you have found this tutorial useful in your work, please cite it:
+
+Lovelace, R., & Cheshire, J. (2014). Introduction to visualising spatial data in R. National Centre for Research Methods Working Papers, 14(03). Retrieved from https://github.com/Robinlovelace/Creating-maps-in-R
+
+The bibtex entry for this item can be downloaded from [here](https://raw.githubusercontent.com/Robinlovelace/Creating-maps-in-R/master/citation.bib).
+
+\clearpage
 
 # References
 
