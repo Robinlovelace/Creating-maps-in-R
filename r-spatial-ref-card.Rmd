@@ -14,13 +14,14 @@ warning=FALSE, message=FALSE, results='hide')
 
 *Getting Started**
 
-R has a suite of powerful and effective spatial data processing tools. This reference card to summarises the fundamentals of R for geographical applications, in terms of packages and functions. The code has been tested on data from the
+R has a suite of powerful and effective spatial data processing tools. This reference card
+summarises the fundamentals of R for geographical applications, in terms of packages and functions. The code has been tested on data from the
 'Creating-maps-in-R' [GitHub repository](http://www.github.com/Robinovelace/Creating-maps-in-R). Run the commands from the [unzipped folder](https://github.com/Robinlovelace/Creating-maps-in-R/archive/master.zip) to see the commands in action!
 
-Using the example of the `help` command, type:
-`?help` (for information on a specific function),
-`??help` (to search for word in R's documentation)
-and `example(help)` (for pre-made examples of that function).
+Using the example of the `summary` command, type:
+`?summary` (for help on the summary function),
+`??summary` (to search for word in R's documentation)
+and `example(summary)` (for pre-made examples of the summary function).
 
 Set and check working directory:
 ```{r global_options, include=FALSE}
@@ -31,8 +32,13 @@ getwd()
 **Key packages**
 
 Additional packages must be installed (using `install.packages('packageName')`) on top of 
-R's [default packages](http://www.hep.by/gnu/r-patched/r-admin/R-admin_33.html) to utilise R's spatial 
-capabilities. Packages are loaded using `library(packageName)`. For example, `r library(rgdal)` will load the **rgdal** package which is R's interface to the 'Geospatial Abstraction Library' (GDAL). The most important and frequently used *general purpose* spatial packages are:
+R's [default packages](http://www.hep.by/gnu/r-patched/r-admin/R-admin_33.html) to utilise R's spatial capabilities. 
+
+To load a package: 
+```{r global_options, include=FALSE}
+library(package name)
+```
+For example, `r library(rgdal)` will load the **rgdal** package which is R's interface to the 'Geospatial Abstraction Library' (GDAL). The most important and frequently used *general purpose* spatial packages are:
 
 - **sp**: basis of most other spatial R packages - provides Spatial* classes
 - **rgdal**: R's interface to the GDAL data import library
