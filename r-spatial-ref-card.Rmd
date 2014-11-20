@@ -14,50 +14,61 @@ warning=FALSE, message=FALSE, results='hide')
 
 *Getting Started**
 
-R has a suite of powerful and effective spatial data processing tools. This reference card to summarises the fundamentals of R for geographical applications, in terms of packages and functions. The code has been tested on data from the
+R has a suite of powerful and effective spatial data processing tools. This reference card
+summarises the fundamentals of R for geographical applications, in terms of packages and functions. The code has been tested on data from the
 'Creating-maps-in-R' [GitHub repository](http://www.github.com/Robinovelace/Creating-maps-in-R). Run the commands from the [unzipped folder](https://github.com/Robinlovelace/Creating-maps-in-R/archive/master.zip) to see the commands in action!
 
-Using the example of the `help` command, type:
-`?help` (for information on a specific function),
-`??help` (to search for word in R's documentation)
-and `example(help)` (for pre-made examples of that function).
+R has extensive help documentation which can be utilised by using the `?` key; try:
+```{r}
+?summary #(for help on the summary function),
+??summary #(to search for word in R's documentation)
+example(summary) #(for pre-made examples of the summary function).
+```
 
-Set and check working directory:
+If you are working from within an R project, the working directory will be set automatically to the parent folder. Optionally, the working directory can be set using the `setwd` command:
 ```{r global_options, include=FALSE}
 setwd("C:/.../.../Creating-maps-in-R/data")
-getwd()
+
+To check the current working directory use `getwd`:
+getwd() #Returns path of working directory  
 ```
 
 **Key packages**
 
 Additional packages must be installed (using `install.packages('packageName')`) on top of 
-R's [default packages](http://www.hep.by/gnu/r-patched/r-admin/R-admin_33.html) to utilise R's spatial 
-capabilities. Packages are loaded using `library(packageName)`. For example, `r library(rgdal)` will load the **rgdal** package which is R's interface to the 'Geospatial Abstraction Library' (GDAL). The most important and frequently used *general purpose* spatial packages are:
+R's [default packages](http://www.hep.by/gnu/r-patched/r-admin/R-admin_33.html) to utilise R's spatial capabilities. 
+
+Load a package using the `library` function, for example, `library(rgdal)` will load the **rgdal** package which is R's interface to the 'Geospatial Abstraction Library' (GDAL): 
+```{r}
+library(rgdal)
+```
+
+The most important and frequently used *general purpose* spatial packages are: 
 
 - **sp**: basis of most other spatial R packages - provides Spatial* classes
 - **rgdal**: R's interface to the GDAL data import library
 - **rgeos**: provides a number of spatial functions
 - **maptools**: tools for handling spatial objects
+- **raster**: A matrue and extremely useful spatial package, providing functions for raster applications.
+- **spatstat**:  provides functions for point-pattern applications.
 
-**raster** and **spatstat** are mature and extremely useful spatial packages, providing functions for raster and point-pattern applications, respectively.
 There are hundreds of additional R packages described on the [CRAN website](http://cran.r-project.org) in the [*spatial view*](http://cran.r-project.org/web/views/Spatial.html).
 
 **R's Spatial* classes**
 
-To work with spatial data, R uses *classes* that are more complex
-than the default data classes in R's base package; *S3* `vector`, `list` and `data.frame` s. 
-Spatial object classes can be identified with the
-function `class(objectName)`. Each contains a number of different data
-*slots*: sub-classes of specific types. Some important
-spatial classes provided by the `sp` package include:
+To work with spatial data, R uses *classes* that are more complex than the default data classes 
+in R's base package; *S3* `vector`, `list` and `data.frame`. Spatial object classes can be 
+identified with the function `class(objectName)`. Each contains a number of different data
+*slots*: sub-classes of specific types. Some important spatial classes provided by the `sp` 
+package include:
 
 - `SpatialPoints`: point data, each point represented by an x and y coordinate
 - `SpatialLines`: line data, composed of lists of the `Lines` sub-class or *slot*
-- `SpatialPolygons`: polygon data, with `Polygons` and `Polygon` *slots* dewwed
+- `SpatialPolygons`: polygon data, with `Polygons` and `Polygon` *slots*
 - `SpatialPixels`: a spatial class for raster data comprised of pixels
 
-It is important to note that each of the above classes cannot contain non-spatial
-attribute data (like attribute tables in GIS softward like QGIS). Therefore, they must first be converted into a class of the same name but suffixed with `DataFrame`. Thus `london <- SpatialPointsDataFrame(sp, df)` will create a new object called london containing points with spatial and non-spatial information. Likewise `SlDf <- SpatialLinesDataFrame` will create a new object called SlDf containing lines with spatial and non-spatial information. 
+The above classes cannot contain non-spatial attribute data (for example, an attribute table in a 
+conventional GIS package). Therefore, they must first be converted into a class of the same name, but suffixed with `DataFrame`. Thus `london <- SpatialPointsDataFrame(sp, df)` will create a new object called london containing points with spatial and non-spatial information. Likewise `SlDf <- SpatialLinesDataFrame` will create a new object called SlDf containing lines with spatial and non-spatial information. 
 
 The attribute data of the london object can be accessed in this instance by using `london@data`. The `@data` notation refers to the `data` slot of the new object. More fundamental spatial classes, which
 are in fact subsets of the `Spatial*` type classes listed above, include `bbox` (the
@@ -65,51 +76,47 @@ object's bounding box) and `proj4string` (the projection of the object, which ma
 
 **Loading spatial data**
 
-`readOGR` from **rgdal** can load a wide variety of spatial data types. The following line loads spatial data representing London:
+The `readOGR` function from the **rgdal** packages can load a wide variety of spatial data types. The following line loads a shapefile of sports participation in London:
 
 ```{r, warning=FALSE, message=FALSE, results='hide'}
 london <- readOGR("data", "london_sport") 
 ```
 
-Plot the london object using the geometry slot:
+Plot the london object:
 
 plot(london)
 
 **Analysing Attribute Data**
 
-Print the column headings of the london object:
+Use the following functions to return basic attribute data: 
+
 ```{r}
-names(london)
+names(london) # Print column headings of the london object
+print(london) # Print the entire london object:
+head(london@data, n=2) # Print a defined number of rows from the london object (2 in this case):
 ```
 
-Print the entire london object:
-```{r}
-print(london)
-```
-
-Print a defined number of rows from the london object (2 in this case):
-```{r}
-head(london@data, n=2)
-```
-
-Some basic column statistics:
+Use the following functions to calculate some basic column statistics:
 ```{r}
 mean(london$Partic_Per) #calculate the mean value of the Partic_Per column (replace mean with other functions such as min, max and sum)
-
 nrow(london)  #Return the number of rows in the dataset
 ncol(london)  #Return the number of columns in the dataset 
 ```
 
-Additional information about the london object:
+Use the summary function to view additional information about the london object:
 ```{r}
 summary(london)
 ```
 
+Undertake attribute queries on the london object, note the use of the square brackets to select a subset of the data:
+```{r}
+london@data[london$Partic_Per < 15, ] # Select rows where sports participation is less than 15. 
+london@data[london$Pop_2001 > 250000, ] #Select rows where population exceeds 250000. 
+```
+
 **Allocating and changing projection**
 
-Before undertaking any further analysis it is useful to know the Coordinate Reference System(CRS) of the london object. 
-
-Query the current projection of an object: 
+Before undertaking any further analysis it is useful to know the Coordinate Reference System(CRS) of the london object: 
 ```{r}
 proj4string(london)
 ```
@@ -119,9 +126,7 @@ Change the Coordinate Reference System (CRS) if it has been incorrectly assigned
 proj4string(london) <-CRS("+init=epsg:27700")
 ```
 
-Note the warning above which states that the coordinate reference system has been changed but the data
-has not been transformed. To transform the data use:
-
+Note the warning above which states that the coordinate reference system has been changed but the data has not been transformed. To transform the data use:
 ```{r}
 london.wgs84 <-spTransform(london, CRS("+init=epsg:4326"))
 ```
@@ -132,30 +137,31 @@ Attribute joins are used to link additional pieces of information to pre-existin
 
 Load the additonal dataset and the 'plyr' package:
 ```{r}
-crime <-read.csv("data/mps-recordedcrime-borough.csv", fileEncoding = "UCS-2LE")
+crime <-read.csv("data/mps-recordedcrime-borough.csv") #Create an object named crime to store the data
 library(plyr)
 ```
 
 Extract the "Theft & Handling" crimes and save to new object (Note the use of square brackets to extract a subset of the crime dataset and the use of the $ to query a specific column):
 ```{r}
-crime_theft <- crime[crime$MajorText == "Theft & Handling", ]
+crime_theft <- crime[crime$CrimeType == "Theft & Handling", ]
 ```
 
 Calculate the sum of the crime count at district level and save to a new object (Note the use of ~ which means 'by'):
 ```{r}
-crime_ag<- aggregate(CrimeCount~ Spatial_DistrictName, FUN = sum, data = crime_theft)
+crime_ag<- aggregate(CrimeCount~ Borough, FUN = sum, data = crime_theft)
 ```
 
-Now the crime data is at the borough level (Spatial_DistrictName) it can be joined to the london object:
+Now the crime data is at the borough level it can be joined to the london object:
 
-Firstly check that the 'name' column in the london object matches the 'Spatial_DistrictName' column in the crime_ag column:
+Firstly check that the 'name' column in the london object matches the 'Borough' column in the crime_ag 
+object:
 ```{r}
-london$name %in% crime_ag$Spatial_DistrictName
+london$name %in% crime_ag$Borough
 ```
 
-Rename 'Spatial_DistrictName' to 'Name' so the two objects can be joined:
+Rename 'Borough' to 'Name' so the two objects can be joined:
 ```{r}
-crime_ag<- rename(crime_ag, replace = c("Spatial_DistrictName" = "name"))
+crime_ag<- rename(crime_ag, replace = c("Borough" = "name"))
 ```
 
 Join the datasets together:
@@ -165,16 +171,16 @@ london@data <- join(london@data, crime_ag)
 
 **Clipping and Spatial Joins**
 
-In addition to joining by attributes, it is also possible to undertake spatial joins in R. We are going to join transport infrastructure points (tube stations etc.) to the London object with the aim of finding how many fall within each London borough. 
+In addition to joining by attributes, it is also possible to undertake spatial joins in R. We are going to join transport infrastructure points (tube stations etc.) to the London object with the aim of finding how many points fall within each London borough. 
 
-Load the transport infrastructure points and created a new object to store these:
+Load the transport infrastructure points and create a new object called stations:
 ```{r}
 stations <- readOGR("data", "lnd-stns")
 ```
 
 Transform the stations coordinate system so it matches the London coordinate system:
 ```{r}
-stations1 <- spTransform(stations, CRSobj = CRS(proj4string(london)))
+stations <- spTransform(stations, CRSobj = CRS(proj4string(london)))
 ```
 
 Take a spatially determined subset of the stations object. This subset will only contain stations that are completely within the London object bounds:
@@ -184,8 +190,8 @@ stations <- stations[london, ] #Reassign the stations object to contain the next
 
 Alternatively complete the spatial join using the 'over' function which accepts two variable; the target layer (the layer to be altered) and the source layer (the reference layer). Over will assign a value of 'NA' to all points in the target which do not fall within the bounds of the refence object. The stations variable name is then reassigned so it contains only the points which do not have a value of 'NA':
 ```{r}
-selection <- over(stations, lnd) #Create a new object to store the output of the over function. 
-stations <- stations[!is.na(sel[,1]),] #Reassign the stations object to contain only points which do not have a value of NA. 
+selection <- over(stations, london) #Create a new object to store the output of the over function. 
+stations <- stations[!is.na(selection[,1]),] #Reassign the stations object to contain only points which do not have a value of NA. 
 ```
 
 **Spatial aggregation**
@@ -193,12 +199,35 @@ stations <- stations[!is.na(sel[,1]),] #Reassign the stations object to contain 
 R's base function `aggregate` provides summaries of variables based on a particular grouping variable, in this case how many stations lie in each London borough:
 
 ```{r}
-stations_agg<- aggregate(x=stations["code"], by = london, FUN = length)
+stations_agg<- aggregate(x=stations["CODE"], by = london, FUN = length)
 ```
 
 This will create a new object, if we simply want to append a variable which contained the station count data to the original london object we could use:
 ```{r}
-london$n_points <- stations_agg$CODE
+london$n_points <- stations_agg$CODE 
+```
+
+The spatial implementation of `aggregate` can also provide summary statistics of variables, as well as simple counts: 
+```{r}
+lnd_n <- aggregate(stations["NUMBER"] , by = london, FUN = mean) #Take the 'number' variable and find its mean value for the stations in each ward. 
+```
+
+Analyse and plot the results:
+```{r}
+q <- cut(lnd_n$NUMBER, breaks = c(quantile(lnd_n$NUMBER)), include.lowest=T)
+summary(q)
+clr <- as.character(factor(q, labels = paste0("grey", seq(from = 20, to =  80, by = 20))))
+plot(lnd_n, col = clr)
+legend(legend = paste0("q", 1:4), fill = paste0("grey", seq(from = 20,to = 80, by = 20)), "topright")
+```
+
+**Map Making with ggplot2**
+
+ggplot2 is one of the most well documented R packages, it is an implementation of the Grammar of Graphics scheme for data visualisation and can serve as an alternative to R's base graphics. 
+
+Load the ggplot2 library:
+```{r}
+library(ggplot2)
 ```
 
 
