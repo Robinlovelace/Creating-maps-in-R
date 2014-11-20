@@ -1,0 +1,10 @@
+---
+title: "R: a command-line GIS"
+author: "Robin Lovelace"
+date: "11/14/2014"
+output: word_document
+---
+
+As spatial datasets get larger and more sophisticated, new software tools are needed to enable analysis, modelling and visualisation. R is a widely used open source platform for statistical analysis with proven capabilities using its base functionality and 6000+ contributed packages. Less well known is that R increasingly popular for geographical applications. Through its links to mature GIS libraries such as gdal (via the **rgdal** package) and geos (via **rgeos**), R is now able to perform almost any conceivable GIS operation. Because R is a flexible programming language, it also enables operations that are impossible in conventional GIS software. Faceted plots, complex spatial models and interactive online maps are all possible in R, once you learn the language's unique syntax.
+
+This course introduces the basics of R and how it can be used for spatial data. No previous experience of computer programming is required but participants would benefit from some experience of GIS and spatial data formats. We will start at the beginning, by exploring **RStudio** and learning the fundamentals of R's concise syntax. We will cover loading, subsetting and manipulating spatial objects as a foundation for more advanced applications. The workshop is based on the tutorial "Introduction to visualising spatial data in R" (https://github.com/Robinlovelace/Creating-maps-in-R) which has been developed as an open source teaching resource. In summary, the workshop will teach the basics of the R language and how it can be used as a 'command-line GIS' par excellence.

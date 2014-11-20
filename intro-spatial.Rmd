@@ -83,9 +83,9 @@ If you have not done so already, install these packages on your computer now.
 A [quick way](http://stackoverflow.com/questions/8175912/load-multiple-packages-at-once) to do this in one go is to enter the following lines of code:
 
 ```{r, eval=FALSE}
-x <- c("ggmap", "rgdal", "rgeos", "maptools", "dplyr", "tidyr")
-install.packages(x)
-lapply(x, library, character.only = TRUE)
+x <- c("ggmap", "rgdal", "rgeos", "maptools", "dplyr", "tidyr") # the packages
+install.packages(x) # warning: this may take a number of minutes
+lapply(x, library, character.only = TRUE) # load the required packages
 ```
 
 

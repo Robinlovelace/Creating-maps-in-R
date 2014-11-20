@@ -204,9 +204,9 @@ way} to do this in one go is to enter the following lines of code:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{x <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"ggmap"}\NormalTok{, }\StringTok{"rgdal"}\NormalTok{, }\StringTok{"rgeos"}\NormalTok{, }\StringTok{"maptools"}\NormalTok{, }\StringTok{"dplyr"}\NormalTok{, }\StringTok{"tidyr"}\NormalTok{)}
-\KeywordTok{install.packages}\NormalTok{(x)}
-\KeywordTok{lapply}\NormalTok{(x, library, }\DataTypeTok{character.only =} \OtherTok{TRUE}\NormalTok{)}
+\NormalTok{x <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"ggmap"}\NormalTok{, }\StringTok{"rgdal"}\NormalTok{, }\StringTok{"rgeos"}\NormalTok{, }\StringTok{"maptools"}\NormalTok{, }\StringTok{"dplyr"}\NormalTok{, }\StringTok{"tidyr"}\NormalTok{) }\CommentTok{# the packages}
+\KeywordTok{install.packages}\NormalTok{(x) }\CommentTok{# warning: this may take a number of minutes}
+\KeywordTok{lapply}\NormalTok{(x, library, }\DataTypeTok{character.only =} \OtherTok{TRUE}\NormalTok{) }\CommentTok{# load the required packages}
 \end{Highlighting}
 \end{Shaded}
 
