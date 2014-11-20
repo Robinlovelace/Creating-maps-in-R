@@ -1,7 +1,6 @@
 ---
 title: "Joining datasets in R"
 author: "Robin Lovelace"
-date: "11/13/2014"
 output: html_document
 ---
 

@@ -15,15 +15,9 @@ output:
 \newpage
 
 ```{r, echo=FALSE}
-# rob00x-at-gmail-o-com
-# ~~~___~~The future ~
-# ~~/__/~|~~ is low ~
-# ~/~~|~~|_ energy.~
-# robinlovelace.net
 # TODO: add details for the ggplot2 section
 # TODO: create animation of population change over time
-# TODO: redo the changes that Rachel overwrote with her changes
-# dplyr + rename instead of merge
+# Add world mapping in ggplot2
 ```
 
 
