@@ -15,6 +15,7 @@ output:
 \newpage
 
 ```{r, echo=FALSE}
+# output: word_document
 # TODO: add details for the ggplot2 section
 # TODO: create animation of population change over time
 # Add world mapping in ggplot2
@@ -113,17 +114,15 @@ To distinguish between prose and code, please be aware of the following typograp
 written in a `monospace` font and package names (e.g. **rgdal**)
 are written in **bold**. 
 
-A double hash, `##`, at the start of a line of code indicates that this is an output from R. Lengthy outputs have been ommited from the document to save space, so do
-not be alarmed if R produces unexpected `warning` messages which are not mentioned.
-In a few cases images are also ommited to save space. This will be clear from
-the comments.
+A double hash (`##`) at the start of a line of code indicates that this is output from R. Lengthy outputs have been omitted from the document to save space, so do
+not be alarmed if R produces additional messages: you can always look up them up online.
 
-As with any programming language, there are many ways to produce the same output. The code presented in this document is not the only way to do things. We encourage you to
+As with any programming language, there are often many ways to produce the same output in R. The code presented in this document is not the only way to do things. We encourage you to
 play with the code to gain a deeper understanding of R.
 Do not worry, you cannot 'break' anything using R and all the input data
-can be re-loaded if things do go wrong. As with learning to skate, you learn
+can be re-loaded if things do go wrong. As with learning to skateboard, you learn
 by falling and getting an `Error:` message in R is much less
-painful than landing on ones face on concrete! We encourage `Error:`s - it
+painful than falling onto concrete! We encourage `Error:`s - it
 means you are trying new things.
 
 If you require help on any function, use the `help` command,
@@ -183,7 +182,8 @@ Opening a project sets the current working directory to the project's parent fol
 # setwd("C:/Users/username/Desktop/Creating-maps-in-R-master/")
 ```
 
-It is also worth taking a look at the input data in your file browser
+It is also worth taking a look at the input dataset
+in your file browser
 before opening them in R. You could try opening the
 file "london_sport.shp"(located within the "data" folder of the project), in a GIS program such as
 QGIS (which can be freely downloaded from the internet) to explore the attribute and geometry information in a familiar environment. 
@@ -266,7 +266,7 @@ R has powerful subsetting capabilities that can be accessed very concisely using
 as shown in the following example:
 
 ```{r}
-#select rows from attribute slot of lnd_sport object, where sports participation is less than 15.
+# select rows of lnd_sport@data where sports participation is less than 15
 lnd_sport@data[lnd_sport$Partic_Per < 15, ]
 ```
 
@@ -280,15 +280,15 @@ So far we have been interrogating only the attribute *slot* (`@data`) of the `ln
 to plot a subset of zones with high sports participation.
 
 ```{r, eval=FALSE}
-#plot zones from sports object where sports participation is greater than 25.
-plot(lnd_sport[lnd_sport$Partic_Per > 25, ]) # output not shown in tutorial
+# Plot zones where sports participation is greater than 25 %
+plot(lnd_sport[lnd_sport$Partic_Per > 25, ]) # output not shown here
 ```
 
 This plot is useful, but it only shows the areas which meet the criteria. To see the sporty areas in context with the other areas of the map simply use the `add = TRUE` argument after the initial plot.
 (`add = T` would also work, but we like to spell things out in this tutorial for clarity).
 What does the `col` argument refer to in the below block - it should be obvious (see figure 3).
 
-If you wish to experiment with mulitple criteria queries, use the '&' sign. 
+If you wish to experiment with multiple criteria queries, use the '&' sign. 
 
 ```{r fig.cap="Preliminary plot of London with areas of high sports participation highlighted in blue"}
 plot(lnd_sport) # plot the london_sport object
@@ -413,8 +413,8 @@ The different EPSG codes are a bit of hassle to remember but you can search for 
 
 Attribute joins are used to link additional pieces of information to our polygons.
 in the `lnd_sport` object, for example, we have 5 attribute variables - that can be
-found by typing `names(lnd_sport)`. But what happens when we want to add an additional
-variable from an external data table? We will use the example of recorded crimes by
+found by typing `names(lnd_sport)`. But what happens when we want to add more
+variables from an external source? We will use the example of recorded crimes by
 London boroughs to demonstrate this.
 
 To reaffirm our starting point, let's re-load the
@@ -496,7 +496,7 @@ head(crime_ag, 2)
 There is a lot going on in the above block of code and you should not expect
 to understand all of it upon first try: simply typing the commands and thinking
 briefly about the outputs is all that is needed at this stage to improve your
-intuitive understanding of R. It is worth pointing out a few things
+intuitive understanding of R. Here are a few things
 that you may not have seen before that will likely be useful in the future:
 
 - In the first line of code we specify the location of the file (check in your
@@ -523,8 +523,7 @@ that is named differently in the
 crime data. Look at the results (not shown here) on your computer.
 
 ```{r}
-# Discover the names of the names
-levels(crime_ag$Borough)
+levels(crime_ag$Borough)[1:2] # names of boroughs 
 
 # Select the problematic row - the one which *does not* (via the ! symbol) match 
 sel <- !lnd$name %in% crime_ag$Borough # create selection
@@ -542,7 +541,7 @@ the `left_join` function **dplyr** but the `merge` function
 could equally be used. Note that when we ask for help for a function
 that is not loaded, nothing happens, indicating we need to load it:
 
-```{r, results='hide'}
+```{r, results='hide', message=FALSE}
 ?left_join # error flagged
 ??left_join
 library(dplyr) # load the powerful dplyr package (use plyr if unavailable)
@@ -560,7 +559,7 @@ The documentation for the `left_join` function
 will be displayed if the plyr package is available (if not,
 use `install.packages()` to install it).
 We use `left_join` because we want the length of the data frame
-to remane unchanged, with variables from new data appended in
+to rename unchanged, with variables from new data appended in
 new columns. Or, in R's rather terse documentation:
 "return all rows from x, and all columns from x and y."
 The `*join` commands (including `inner_join` and `anti_join`) are more
@@ -626,7 +625,7 @@ lnd_f <- left_join(lnd_f, lnd@data)
 map <- ggplot(lnd_f, aes(long, lat, group = group, fill = conservative)) +
   geom_polygon() +
   coord_equal() +
-  labs(x = "Easting (m)", y = "Northing (m)", fill = "% who\nvoted\nConservative") +
+  labs(x = "Easting (m)", y = "Northing (m)", fill = "% Tory") +
   scale_fill_continuous(low = "grey", high = "blue") +
   theme_nothing(legend = T)
 map
@@ -646,14 +645,12 @@ with the aim of finding out about how many are found in each London borough.
 
 ```{r, results='hide'}
 library(rgdal)
-#create new stations object using the "lnd-stns" shapefile.
+# create new stations object using the "lnd-stns" shapefile.
 stations <- readOGR(dsn = "data", layer = "lnd-stns")
 proj4string(stations) # this is the full geographical detail.
-proj4string(lnd)
-#return the bounding box of the stations object
-bbox(stations)
-#return the bounding box of the lnd object
-bbox(lnd)
+proj4string(lnd) # what's the coordinate reference system (CRS)
+bbox(stations) # the extent, 'bounding box' of stations
+bbox(lnd) # return the bounding box of the lnd object
 ```
 
 The above code loads the data correctly, but also shows that
@@ -666,7 +663,7 @@ we will convert the object to this:
 ```{r fig.cap="Sampling and plotting stations"}
 # Create reprojected stations object
 stations27700 <- spTransform(stations, CRSobj = CRS(proj4string(lnd)))
-stations <- stations27700 # overwrite the stations object with stations27700
+stations <- stations27700 # overwrite the stations object 
 rm(stations27700) # remove the stations27700 object to clear up
 plot(lnd) # plot London for context (see Figure 6)
 points(stations) # overlay the station points
@@ -729,7 +726,7 @@ stations <- stations[!is.na(sel[,1]),]
 ```
 
 Typing `summary(sel)` should provide insight into how this
-worked: it is a dataframe with 1801 NA values, representing
+worked: it is a data frame with 1801 NA values, representing
 zones outside of the London polygon.
 Note that the preceding two lines of code is equivalent to the
 single line of code, `stations <- stations[lnd, ]`.
@@ -840,10 +837,10 @@ legend creation in R's base graphics.)
 
 This may seem a frustrating and un-intuitive way of altering
 map graphics compared with something like QGIS. That's because it is!
-It may not worth pulling too
-much hair out over R's base graphics because there is another
-option. Please skip to Section IV if you're itching to see this
-more intuitive alternative.
+It may not worth be stressing too
+much about base graphics because there is another
+option --- **ggplot**. Please skip to Section IV if you're itching to see this
+more intuitive alternative to graphics in R.
 
 ## Optional task: aggregation with gIntersects
 
@@ -852,7 +849,7 @@ more intuitive alternative.
 ```
 
 As with clipping, we can also do spatial aggregation with
-the rgeos package. In some ways, this method makes explicit
+the **rgeos** package. In some ways, this method makes explicit
 the steps taken in `aggregate` 'under the hood'.
 The code is quite involved and intimidating, so feel free to
 skip this stage. Working through and thinking about it this alternative method may, however,
@@ -1144,7 +1141,7 @@ for London, again from the London data store.
 
 `tidy` the data so that the columns become rows. In other words,
 convert the data from 'flat' to 'long' format, which is the form
-required by **ggplot2** for facetting graphics: the date of the
+required by **ggplot2** for faceting graphics: the date of the
 population survey become a variable in its own right, rather than
 being strung-out over many columns.
 
@@ -1187,7 +1184,7 @@ lnd_f <- left_join(lnd_f, ltidy)
 
 ```
 
-Rename the date variable (use `?gsub` and google 'regex' to find out more).
+Rename the date variable (use `?gsub` and Google 'regex' to find out more).
 
 ```{r}
 lnd_f$date <- gsub(pattern = "Pop_", replacement = "", lnd_f$date)
@@ -1252,8 +1249,10 @@ the present tutorial. These can be found on the
 Another advanced tutorial is "Using spatial data", which has example
 code and data that can be downloaded from the
 [useR 2013 conference page](http://www.edii.uclm.es/~useR-2013//Tutorials/Bivand.html).
-Such lengthy tutorials are worth doing to think about spatial data in R systematically,
-rather than seeing R as a discrete collection of functions. In R the whole is greater than
+Such tutorials are worth doing as they will help you
+understand R's spatial 'ecosystem' as a cohesive whole
+rather than as a collection of isolated functions.
+In R the whole is greater than
 the sum of its parts.
 
 The supportive online communities surrounding large open source programs such as R
@@ -1311,7 +1310,7 @@ Books: despite the strength of R's online community, nothing beats a physical bo
 
 \clearpage
 
-#Further information
+# Further information
 
 An up-to-date version of this tutorial is maintained at
 [https://github.com/Robinlovelace/Creating-maps-in-R](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial-rl.pdf). The source files used to create this tutorial, including
