@@ -1,0 +1,198 @@
+---
+title: "Reading and writing GeoJSON files in R"
+author: "Robin Lovelace"
+date: "11/26/2014"
+output: html_document
+---
+
+[GeoJSON](http://geojson.org/) is an open data format that
+extends [JSON](http://www.json.org/), the JavaScript Object Notation
+to encode spatial information.
+
+GeoJSON has the following advantages:
+
+- All the geographical information is self contained (unlike shapefiles, which have multiple files for one spatial object)
+- It is an open standard which is becoming increasingly popular
+- GeoJSON files display as maps on GitHub by default!
+
+The disadvantages are:
+
+- GeoJSON files are [quite large](http://zevross.com/blog/2014/04/22/spatial-data-on-a-diet-tips-for-file-size-reduction-using-topojson/) compared with non text formats such as shapefiles and
+spatial databases.
+- GeoJSON files can be slow to read/write and are not supported by
+all GIS software (yet!)
+
+As illustrated by this [post](http://www.jose-gonzalez.org/create-geojson-r/#.VHVoMY_6IrE), it is easy to read and write GeoJSON files
+in R, using the [**rgdal**](http://cran.r-project.org/web/packages/rgdal/index.html) package, which calls
+[gdal](http://www.gdal.org/) commands. Here's an example using
+publicly available GeoJSON file:
+
+```{r, echo=FALSE}
+system("rm /tmp/gas*")
+```
+
+
+```{r}
+library(rgdal) # the library we'll be using
+u <- "http://giscience.tw.rpi.edu/rpi_group_projects/watershedders/data/gas_station.geojson"
+download.file(url = u, destfile = "/tmp/gas.GeoJSON")
+gas <- readOGR(dsn = "/tmp/gas.GeoJSON", layer = "OGRGeoJSON")
+summary(gas)
+```
+
+Note that to test whether the GeoJSON driver works on your system,
+you can use the following [command](http://stackoverflow.com/questions/24183007/is-it-possible-to-read-geojson-or-topojson-file-in-r-to-draw-a-choropleth-map):
+
+```{r}
+"GeoJSON" %in% ogrDrivers()$name
+```
+
+As shown in the above example,
+GeoJSON files can have coordinate reference system (CRS)
+allocated to them through the `"crs"` 'member':
+
+```{r, engine='node', eval=FALSE}
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+      }
+    }
+```
+
+Note that we can see this definition in the `gas.GeoJSON` file:
+
+```{r}
+readLines("/tmp/gas.GeoJSON")[3]
+```
+
+
+This 'member' is defined in plain text in the GeoJSON file
+before the spatial `"features"` are defined. Please see this
+small example of [gas stations](http://giscience.tw.rpi.edu/rpi_group_projects/watershedders/data/gas_station.geojson) to see how the CRS
+is defined in the context of a complete GeoJSON file.
+
+To write GeoJSON files, the sensibly named corrollary of
+`readOGR` is used, `writeOGR`:
+
+```{r, echo=FALSE}
+file.remove("/tmp/gas2.GeoJSON")
+```
+
+
+```{r}
+writeOGR(gas, dsn = "/tmp/gas2.GeoJSON", layer = "u", driver = "GeoJSON")
+```
+
+Let's see what R has created:
+
+```{r}
+gas2 <- readLines("/tmp/gas2.GeoJSON")
+gas2[1:4]
+```
+
+Frustratingly, this fails to write the CRS into the file.
+**rgdal**'s ability to read a crs from a GeoJSON file is no
+guarantee of it's ability to then write it out again.
+**rgdal** has **lost the CRS in translation**.
+
+This can problem be caused by using an old version of
+`gdal`. Not in this case though: incomplete CRS values can
+lead `rgdal` to omit the `"crs"` in the file, as explained by
+Roger Bivand in a lengthy [conversation](http://r-sig-geo.2731867.n2.nabble.com/WriteOGR-to-GeoJSON-loses-CRS-td7586913.html)
+on the [R-sig-geo](https://stat.ethz.ch/mailman/listinfo/r-sig-geo)
+email list. To test that the problem is the fault of gdal and
+not R, we can use the `ogr2ogr` command line tool, supplied by
+gdal. 
+
+```{r, echo=FALSE}
+system("rm /tmp/gas3.*")
+```
+
+
+```{r}
+# use call gdal from the operating system to convert original GeoJSON:
+system("ogr2ogr -f 'ESRI Shapefile' /tmp/gas3.shp '/tmp/gas.GeoJSON' ")
+
+gas3 <- readOGR(dsn = "/tmp", layer = "gas3")
+proj4string(gas3)
+proj4string(gas)
+```
+
+The above code shows that gdal has successfully converted the
+original GeoJSON file to a shapefile, maintaining the CRS.
+(Note that the CRS is identical but its definition is slightly different.)
+Let's take a look at the `.proj` file that gdal created:
+
+```{r}
+gas3_proj <- readLines("/tmp/gas3.prj", skipNul = T)
+gas3_proj
+```
+
+# gdal fails to convert certain types of CRS
+
+There are various ways to solve the problem.
+The 'outside R' solution would be to write the file
+first as a shapefile, and then use `ogr2ogr` to convert
+it to a GeoJSON. But as shown in the code below, this fails:
+
+```{r}
+writeOGR(gas, "/tmp/", layer = "gas4", driver = "ESRI Shapefile")
+system("ogr2ogr -f 'GeoJSON' /tmp/gas5.GeoJSON '/tmp/gas4.shp' ")
+readLines("/tmp/gas4.prj")
+readLines("/tmp/gas5.GeoJSON")[1:3]
+```
+
+# CRS definitions
+
+As Roger Bivand shows, if the CRS is defined in certain
+ways, the `"crs"` member will be written to the GeoJSON file.
+But it is difficult to know how to define a CRS other than
+by its [EPSG name](http://spatialreference.org/ref/epsg/4283/):
+
+```{r}
+gas6 <- gas # duplicate the gas object
+proj4string(gas6) <- CRS("+init=epsg:4283")
+proj4string(gas6)
+# the below works, but incorrect CRS
+# proj4string(gas6) <- CRS("+proj=longlat +ellps=clrk66 +datum=NAD27")
+writeOGR(gas6, dsn = "/tmp/gas6.GeoJSON", layer = "gas", driver = "GeoJSON")
+readLines("/tmp/gas6.GeoJSON")[1:3]
+```
+
+# A manual solution
+
+To solve the problem manually, we can simply add the correct projection
+to the GeoJSON file that has been created. Thankfully this is straightforward, as line 3 of the files are left empty by gdal, presumably ready
+for such an eventuality:
+
+```{r}
+gas7 <- readLines("/tmp/gas2.GeoJSON")
+gas7[1:4]
+gas7[3] <- '"crs": {"type": "EPSG", "properties": {"code": 4283}},'
+writeLines(gas7, con = "/tmp/gas8.GeoJSON")
+gas8 <- readOGR(dsn = "/tmp/gas8.GeoJSON", layer = "OGRGeoJSON")
+proj4string(gas8)
+```
+
+This is a messy solution but it's the only one I could find to write
+GeoJSON files with a CRS defined for Australian data services' default CRS.
+
+
+
+
+
+
+
+
+
+
+```{r, echo=FALSE}
+# library(rgdal)
+# library(pryr)
+# pryr::show_c_source(readOGR)
+# showMethods(readOGR)
+# ??readOGR
+```
+
+
