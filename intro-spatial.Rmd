@@ -211,7 +211,7 @@ library(rgdal)
 lnd_sport <- readOGR(dsn = "data", layer = "london_sport")
 ```
 
-In the second line of code above the `readOGR` function is used to load a shapefile and assign it to a new object called "lnd_sport". `readOGR` is a *function* which accepts two *arguments: `dsn` which stands for "data source name" and specifies the location where the file is stored, and `layer` which specifies the file name. Note that each new argument is separated by a comma and there is no need to specify the file extension (e.g. .shp) when providing the file name.
+In the second line of code above the `readOGR` function is used to load a shapefile and assign it to a new object called "lnd_sport". `readOGR` is a *function* which accepts two *arguments*: `dsn` which stands for "data source name" and specifies the location where the file is stored, and `layer` which specifies the file name. Note that each new argument is separated by a comma and there is no need to specify the file extension (e.g. .shp) when providing the file name.
 Both arguments in this case are *character strings* (indicated by quote marks like this one `"`).
 R functions have a default order of arguments, so `dsn = ` and `layer =` do not
 actually have to be typed for the command to run, for example, `readOGR("data", "london_sport")` would work just as well. 
@@ -459,7 +459,7 @@ head(crime_data)
 
 The non-spatial data we are going to join to the `lnd` object
 contains records of crimes in London. This is stored in a comma separated values
-[(`.csv`)] file called "mps-recordedcrime-borough".
+[(`.csv`)](https://raw.githubusercontent.com/Robinlovelace/Creating-maps-in-R/master/data/mps-recordedcrime-borough.csv) file called "mps-recordedcrime-borough".
 Viewing the [file](https://raw.githubusercontent.com/Robinlovelace/Creating-maps-in-R/master/data/mps-recordedcrime-borough.csv)
 locally shows that each row represents a single reported crime.
 We are going to use a function called `aggregate`

@@ -1,0 +1,89 @@
+---
+title: "R for 'Big Data'"
+author: "Robin Lovelace"
+date: "12/05/2014"
+output: ioslides_presentation
+---
+
+## Prerequisites
+
+- R
+- RStudio
+- For some function: R packages (internet needed)
+
+
+## R Packages
+
+```{r, eval=FALSE}
+x <- c("dplyr", "tidyr", "ggmap", "jsonlite")
+install.packages(x)
+lapply(x, library, character.only = TRUE) # load all packages
+```
+
+## A bit about R
+
+- Named after S and its creators
+- De-facto standard for advanced statistical analysis
+- A programming language in its own right
+- The power of the command line
+- Used by an increasing number of organisations
+
+## Why R?
+
+- **Performace**: stable, light and fast
+- **Support network** 
+ - documentation, community, developers
+- **Reproducibility**
+ - anyone anywhere can reproduce results
+ - enables dissemination (RPubs, RMarkdown, .RPres) - this presentation is a .Rmd file!
+- **Versatility**: unified solution to *almost* any numerical problem, graphical capabilities
+- **Ethics** removes economic barrier to statistics, is open and democratic
+
+## R is up and coming I
+
+![scholar-searches1](figure/fig_7a.png) 
+
+Source: [r4stats.com](http://r4stats.com/articles/popularity/) 
+
+## II - Increasing popularity in academia
+
+
+![scholar-searches2](figure/fig_7b.png)
+
+Source: [r4stats.com](http://r4stats.com/articles/popularity/) 
+
+
+## Why R for spatial data?
+
+- Extensive and rapidly expanding spatial packages
+- Interface with 'conventional' GIS software
+- The advantages of the command-line:
+
+> "With the advent of “modern” GIS software, most people want 
+> to point and click their way through life.
+> That’s good, but there is a tremendous amount of 
+> flexibility and power waiting for you with the command
+> line. Many times you can do something on the command
+> line in a fraction of the time you can do it with
+> a GUI (Sherman 2008, p. 283)
+
+## Visualisation
+
+- R's visualisation capabilities have evolved over time
+- Used to create plots in the best academic journals
+- ggplot2 has **revolutionised** the visualisation of quantitative 
+information in R, and (possibly) overall
+- Thus there are different camps with different preferences when it comes to maps in R
+
+## Maps, the 'base graphics' way
+
+![base graphics](figure/Choropleth_map_of_number_of_transport_nodes_in_London_boroughs.png)
+
+Source: Cheshire and Lovelace (2014) - [available online](https://github.com/geocomPP/sdvwR)
+
+
+## R in the wild 2: Global shipping routes in the late 1700s
+
+![Dutch shipping routes](figure/dutch_shipping1750_1800.png)
+
+Source: [R-Bloggers](http://www.r-bloggers.com/mapped-british-and-spanish-shipping-1750-1800/)
