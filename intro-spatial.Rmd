@@ -95,12 +95,15 @@ above a line of code or directly following it, as illustrated in the block of
 code presented below, which should create figure 1
 if typed correctly into the R command line.
 
-```{r fig.cap="Basic plot of x and y"}
-# Generate data
-x <- 1:400
-y <- sin(x / 10) * exp(x * -0.01)
-
-plot(x, y) # plot the result
+```{r fig.cap="Basic plot of x and y", echo=FALSE, fig.width=16}
+# # Generate data
+# x <- 1:400
+# y <- sin(x / 10) * exp(x * -0.01)
+# 
+# plot(x, y) # plot the result
+library(png)
+library(grid)
+grid.raster(readPNG("figure/plot1.png"))
 ```
 
 In the first line of code a new *object* called `x` is created.
@@ -166,8 +169,6 @@ R work and that you organise your files into sub-folders (e.g. `code`, `input-da
 software: [rstudio.com/products/rstudio/](http://www.rstudio.com/products/rstudio/).
 
 ```{r, fig.cap="The RStudio environment with the project tab poised to open the Creating-maps-in-R project.", echo=FALSE}
-library(png)
-library(grid)
 grid.raster(readPNG("figure/rstudio-proj.png"))
 ```
 
@@ -1216,8 +1217,7 @@ Try experimenting with the above code block to see what effects you can
 produce. For bonus points, try creating an animation of London's evolving
 population over time using the excellent
 [**animation**](http://cran.r-project.org/web/packages/animation/index.html)
-package. Anyone able to do this and share the code will win a free
-book on GIS in R!
+package.
 
 ```{r, echo=FALSE}
 # **Creating an animation of population change over time**
