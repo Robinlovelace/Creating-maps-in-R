@@ -413,7 +413,7 @@ The different EPSG codes are a bit of hassle to remember but you can search for 
 ## Attribute joins
 
 Attribute joins are used to link additional pieces of information to our polygons.
-in the `lnd_sport` object, for example, we have 5 attribute variables - that can be
+In the `lnd_sport` object, for example, we have 4 attribute variables - that can be
 found by typing `names(lnd_sport)`. But what happens when we want to add more
 variables from an external source? We will use the example of recorded crimes by
 London boroughs to demonstrate this.
@@ -634,7 +634,8 @@ map
 
 ## Clipping and spatial joins
 
-In addition to joining by zone name, it is also possible to do
+In addition to joining by attribute (e.g. borough
+name), it is also possible to do
 [spatial joins](http://help.arcgis.com/en/arcgisdesktop/10.0/help/index.html#//00080000000q000000)
 in R. There are three main varieties: many-to-one, where
 the values of many intersecting objects contribute to a new variable in
@@ -913,8 +914,7 @@ http://docs.ggplot2.org/current/ .
 Good examples of graphs can also be found on the website
 [cookbook-r.com](http://www.cookbook-r.com/Graphs/).
 
-Load the package with `r library(ggplot2)`
-
+Load the package with `r library(ggplot2)`.
 It is worth noting that the base `plot()` function requires less
 data preparation but more effort in control of features.
 `qplot()` and `ggplot()` from **ggplot2**
@@ -970,16 +970,25 @@ To get the shapefiles into a format that can be plotted we have to use the `fort
 For this to work, either **maptools** or **rgeos** packages must be installed.
 
 ```{r, warning=FALSE}
-lnd_f <- fortify(lnd, region = "ons_label") # you may need to load maptools
+lnd_f <- fortify(lnd) # you may need to load maptools
 ```
 
 This step has lost the attribute information associated with the lnd object. We can add it back using the `left_join`
 function (this performs a data join).
 To find out how this function works look at
-the output of typing `?left_join`.
+the output of typing `?left_join`. As usual the help documentation
+is a little sparse here, so let's consider what it means in more
+detail. The help document explains that `left_join` retains all rows from the
+original dataset `x`, whereas `inner_join` only
+retains rows in `x` which have a match in `y`. If there is no match in the
+joining variable, `inner_join` simply adds an `NA` values for the new
+variables for the affect rows.
 
 ```{r}
-lnd_f <- left_join(lnd_f, lnd@data, by = c("id" = "ons_label"))
+head(lnd_f, n = 2) # peak at the fortified data
+lnd$id <- row.names(lnd) # allocate an id variable to the sp data
+head(lnd@data, n = 2) # final check before join (requires shared variable name)
+lnd_f <- left_join(lnd_f, lnd@data) # join the data
 ```
 
 Take a look at the `lnd_f` object to see its contents (which stands for "London, fortified"). You should see a large data frame containing the latitude and longitude (they are actually Easting and Northing as the data are in British National Grid format) coordinates alongside the attribute information associated with each London Borough. If you type `print(lnd_f)` you will see just how many coordinate pairs are required!
@@ -997,7 +1006,8 @@ It is now straightforward to produce a map using all the built in tools
 map <- ggplot(lnd_f, aes(long, lat, group = group, fill = Partic_Per)) +
   geom_polygon() +
   coord_equal() +
-  labs(x = "Easting (m)", y = "Northing (m)", fill = "% Sports\nParticipation") +
+  labs(x = "Easting (m)", y = "Northing (m)",
+    fill = "% Sports\nParticipation") +
   ggtitle("London Sports Participation")
 ```
 
@@ -1081,7 +1091,8 @@ We can now overlay this on our base map.
 ```{r, eval=FALSE}
 lnd_b1 +
   geom_polygon(data = lnd_wgs84_f,
-  aes(x = long, y = lat, group = group, fill = Partic_Per), alpha = 0.5)
+  aes(x = long, y = lat, group = group, fill = Partic_Per),
+    alpha = 0.5)
 ```
 
 The code above contains a lot of parameters. Use the **ggplot2** help pages to find out what they are.
@@ -1107,7 +1118,8 @@ library(mapproj) # mapproj library needed - install.packages("mapproj")
 
 lnd_b2 +
   geom_polygon(data = lnd_wgs84_f, 
-    aes(x = long, y = lat, group = group, fill = Partic_Per), alpha = 0.5)
+    aes(x = long, y = lat, group = group, fill = Partic_Per),
+    alpha = 0.5)
 ```
 
 Finally, to increase the detail of the base map, we can use `get_map`'s `zoom` argument
@@ -1127,7 +1139,8 @@ lnd_b3 <- ggmap(get_map(location = b, source = "stamen",
 ```{r fig.cap="Basemap 3", eval=FALSE}
 lnd_b3 +
   geom_polygon(data = lnd_wgs84_f,
-    aes(x = long, y = lat, group = group, fill = Partic_Per), alpha = 0.5)
+    aes(x = long, y = lat, group = group, fill = Partic_Per),
+    alpha = 0.5)
 ```
 
 ## Advanced Task: Faceting for Maps
@@ -1175,14 +1188,14 @@ Merge the population data with the London borough geometry contained within our 
 the **dplyr** package:
 
 ```{r}
-ltidy <- rename(ltidy, id = Area.Code)
+head(lnd_f, 2) # identify shared variables with ltidy 
+ltidy <- rename(ltidy, ons_label = Area.Code) # rename Area.code variable
 lnd_f <- left_join(lnd_f, ltidy)
 ```
 
 ```{r, echo=FALSE}
 # old way of doing it
 # lnd_f <- merge(lnd_f, ltidy, by.x = "id", by.y = "Area.Code")
-
 ```
 
 Rename the date variable (use `?gsub` and Google 'regex' to find out more).
