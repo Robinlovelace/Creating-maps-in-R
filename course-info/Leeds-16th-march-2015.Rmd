@@ -1,0 +1,71 @@
+---
+title: "Introduction to R for spatial data analysis"
+author: "Robin Lovelace"
+date: "01/29/2015"
+output: word_document
+---
+
+## Description
+
+R is one of the fastest growing languages for data analysis and is increasingly
+important in business, government and academia. Less well-known is that R has
+a diverse suite of geospatial tools and can function as a fully integrated
+Geographical Information System (GIS). Time-series maps, geographically
+weighted regression, animations and even online maps become possible when
+you understand R's unique language and approach to spatial objects.
+
+However, as with any language, it is important to gain a strong understanding
+of the underlying syntax and structure before moving on to complex uses. 
+This course therefore focuses on the foundations: how R can be used to load,
+manipulate, process, transform and visualise spatial data.
+Prior experience with R is not essential but is recommended;
+participants will also benefit from experience with GIS.
+
+
+```{r, echo=FALSE}
+# Attendees with a clearly
+# defined problem that R's spatial capabilities can solve will find the course
+# especially beneficial due to its applied and pragmatic nature.
+```
+
+## Further information
+
+Cost: TBA for UK registered postgraduate students; TBA for academics/staff at Institutes of Higher Education, public sector staff and staff at registered charity organisations. TBA others
+
+Fee includes lunch and refreshments.
+
+Course Contents
+
+- 9:00 - 9:30: Registration and refreshments
+
+During this course we will cover these topics
+
+- An introduction to R (9:30 - 10:30)
+
+- Loading and interrogating spatial data (10:30 - 11:30)
+
+- Manipulating spatial objects (11:30 - 12:30)
+
+**LUNCH**
+
+- Making maps with ggplot2 (13:30 - 14:30)
+
+- Basemaps (14:30 - 15:30)
+
+**15:30 - 15:45 Refreshments**
+
+- More advanced visuals (15:45 - 16:00)
+
+- Taking it further + Q & A (16:00 onwards)
+
+### Prerequisites
+
+No prior knowledge of R is required. However, participants are expected to
+be aquainted with the RStudio software.
+
+Background reading “A (very) short introduction to R”, Paul Torfs & Claudia Brauer
+http://cran.r-project.org/doc/contrib/Torfs+Brauer-Short-R-Intro.pdf
+
+### Course home-page
+
+For more information on the course, please see here: https://github.com/Robinlovelace/Creating-maps-in-R
