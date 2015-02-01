@@ -20,3 +20,5 @@ exclude/
 intro-spatial_files/
 spatial-data_files/
 *.docx
+shef*
+*.dcf
