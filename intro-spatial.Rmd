@@ -599,7 +599,7 @@ in the 2014 local elections. The **challenge** is to create
 a similar map of a different variable (you may need to skip to
 Part IV to plot continuous variables).
 
-```{r, echo=FALSE, results='hide', message=FALSE, warning=FALSE, fig.cap="Proportion of council seats won by conservatives in the 2014 local elections using data from data.london.gov and joined using the methods presented in this section"}
+```{r, echo=FALSE, results='hide', message=FALSE, warning=FALSE, fig.cap="Proportion of council seats won by Conservatives in the 2014 local elections using data from data.london.gov and joined using the methods presented in this section"}
 library(ggmap)
 borough_dat <- read.csv("data/london-borough-profiles-2014.csv")
 names(borough_dat)
@@ -631,14 +631,12 @@ map
 
 ## Clipping and spatial joins
 
-In addition to joining by attribute (e.g. borough
+In addition to joining by attribute (e.g. Borough
 name), it is also possible to do
 [spatial joins](http://help.arcgis.com/en/arcgisdesktop/10.0/help/index.html#//00080000000q000000)
-in R. There are three main varieties: many-to-one, where
+in R. There are three main types: many-to-one, where
 the values of many intersecting objects contribute to a new variable in
-the main table, one-to-many, or one-to-one. Because boroughs in London
-are quite large, we will conduct a many-to-one spatial join.
-We will be using transport infrastructure points such as
+the main table, one-to-many, or one-to-one. We will be conducting a many-to-one spatial join and using transport infrastructure points such as
 tube stations and roundabouts as the spatial data to join,
 with the aim of finding out about how many are found in each London borough.
 
@@ -657,7 +655,7 @@ there are problems with it: the Coordinate Reference System (CRS)
 of `stations` differs from that of our `lnd` object.
 OSGB 1936 (or [EPSG 27700](http://spatialreference.org/ref/epsg/27700/))
 is the official CRS for the UK, so
-we will convert the object to this:
+we will convert the 'stations' object to this:
  
 ```{r fig.cap="Sampling and plotting stations"}
 # Create reprojected stations object
@@ -671,7 +669,7 @@ points(stations) # overlay the station points
 Now we can clearly see that the `stations` points overlay the boroughs.
 The problem is that the spatial extent of `stations` is
 great than that of `lnd`.
-We will take a spatially determined subset of the
+We will create a spatially determined subset of the
 stations object that fall inside greater London. This is *clipping*.
 
 Two functions can be used to clip `stations`
@@ -789,7 +787,7 @@ mean value of `stations` points within it: `plot(lnd_n$NUMBER, areas)`.
 
 *Adding different symbols for tube stations and train stations*
 
-Imagine that we want to now display all tube and train stations
+Imagine now that we want to display all tube and train stations
 on top of the previously created choropleth map. How would we do this?
 The shape of points in R is determined by the `pch` argument, as demonstrated by the
 result of entering the following code: `plot(1:10, pch=1:10)`.
@@ -821,7 +819,7 @@ points are present in the map with `levels` (this command only works on
 factor data, and tells us the unique names of the factors that the vector can
 hold). Next we select a subset of `stations` using a new command, `grepl`, to
 determine which points we want to plot. Note that `grepl`'s first argument
-is a text string (hence the quote marks) and that the second is a factor
+is a text string (hence the quote marks) and the second is a factor
 (try typing `class(stations$LEGEND)` to test this).
 `grepl` uses *regular expressions* to match whether each element in a vector
 of text or factor names match the text pattern we want. In this case,
@@ -834,11 +832,11 @@ using the integer of their name to decide the symbol and add a legend.
 (See the documentation of `?legend` for detail on the complexities of
 legend creation in R's base graphics.)
 
-This may seem a frustrating and un-intuitive way of altering
+This may seem a frustrating and unintuitive way of altering
 map graphics compared with something like QGIS. That's because it is!
-It may not worth be stressing too
+It may not be worth stressing too
 much about base graphics because there is another
-option --- **ggplot**. Please skip to Section IV if you're itching to see this
+option --- **ggplot**. Please skip to Part IV if you're itching to see this
 more intuitive alternative to graphics in R.
 
 ## Optional task: aggregation with gIntersects
@@ -852,7 +850,7 @@ the **rgeos** package. In some ways, this method makes explicit
 the steps taken in `aggregate` 'under the hood'.
 The code is quite involved and intimidating, so feel free to
 skip this stage. Working through and thinking about it this alternative method may, however,
-yield dividends if you intend to perform more sophisticated spatial analysis in R.
+pay dividends if you intend to perform more sophisticated spatial analysis in R.
 
 ```{r, results='hide'}
 library(rgeos) 
@@ -870,7 +868,7 @@ which the corresponding column is true and then converts this into
 names. The final object created, `b.count` contains the number of station
 points in each zone. According to this, Barking and Dagenham should contain
 12 station points. It is important to check the output makes sense at
-every stage with R, so let's check to see this is indeed the case with
+every stage with R, so let's check to see if this is indeed the case with
 a quick plot:
 
 ```{r fig.cap="Transport points in Barking and Dagenham"}
