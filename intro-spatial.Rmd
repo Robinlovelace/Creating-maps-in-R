@@ -125,7 +125,7 @@ play with the code to gain a deeper understanding of R.
 Do not worry, you cannot 'break' anything using R and all the input data
 can be re-loaded if things do go wrong. As with learning to skateboard, you learn
 by falling and getting an `Error:` message in R is much less
-painful than falling onto concrete! We encourage `Error:`s - it
+painful than falling onto concrete! We encourage `Error:`s --- it
 means you are trying new things.
 
 If you require help on any function, use the `help` command,
@@ -287,7 +287,7 @@ plot(lnd_sport[lnd_sport$Partic_Per > 25, ]) # output not shown here
 
 This plot is useful, but it only shows the areas which meet the criteria. To see the sporty areas in context with the other areas of the map simply use the `add = TRUE` argument after the initial plot.
 (`add = T` would also work, but we like to spell things out in this tutorial for clarity).
-What does the `col` argument refer to in the below block - it should be obvious (see figure 3).
+What does the `col` argument refer to in the below block --- it should be obvious (see figure 3).
 
 If you wish to experiment with multiple criteria queries, use the '&' sign. 
 
@@ -413,7 +413,7 @@ The different EPSG codes are a bit of hassle to remember but you can search for 
 ## Attribute joins
 
 Attribute joins are used to link additional pieces of information to our polygons.
-In the `lnd_sport` object, for example, we have 4 attribute variables - that can be
+In the `lnd_sport` object, for example, we have 4 attribute variables --- that can be
 found by typing `names(lnd_sport)`. But what happens when we want to add more
 variables from an external source? We will use the example of recorded crimes by
 London boroughs to demonstrate this.
@@ -526,7 +526,7 @@ crime data. Look at the results (not shown here) on your computer.
 ```{r}
 levels(crime_ag$Borough)[1:2] # names of boroughs 
 
-# Select the problematic row - the one which *does not* (via the ! symbol) match 
+# Select the problematic row --- the one which *does not* (via the ! symbol) match 
 sel <- !lnd$name %in% crime_ag$Borough # create selection
 # Rename row 25 in crime_ag to match row 25 in lnd
 levels(crime_ag$Borough)[25] <- as.character(lnd$name[sel])
@@ -755,7 +755,7 @@ could have been used here as we are merely counting how many points exist).
 - A new spatial object is created, with the same geometry as `lnd`, and assigned the name `stations_agg`, the count of stations.
 
 It may seem confusing that the result of the aggregated function is a new shape,
-not a list of numbers - this is because values are assigned to the elements within
+not a list of numbers --- this is because values are assigned to the elements within
 the `lnd` object. To extract the raw count data, one could enter `stations_agg$CODE`.
 This variable could be added to the original `lnd` object as a new field, as follows:
 
@@ -1150,7 +1150,7 @@ lnd_b3 +
 # If not install it, or skip the next two steps
 ```
 
-Load the data - this shows historic population values between 1801 and 2001
+Load the data --- this shows historic population values between 1801 and 2001
 for London, again from the London data store.
 
 `tidy` the data so that the columns become rows. In other words,
@@ -1273,14 +1273,14 @@ are one of their greatest assets, so we recommend you become an active
 "[open source citizen](http://blog.cleverelephant.ca/2013/10/being-open-source-citizen.html)" rather than a passive consumer (Ramsey & Dubovsky, 2013).
 
 This does not necessarily mean writing a new package or contributing
-to R's 'Core Team' - it can simply involve helping
+to R's 'Core Team' --- it can simply involve helping
 others use R. We therefore conclude the tutorial with a list of resources
 that will help you further sharpen you R skills, find help and contribute
 to the growing online R community:
 
 * R's homepage hosts a wealth of [official](http://cran.r-project.org/manuals.html) and [contributed](http://cran.r-project.org/other-docs.html) guides.
-* Stack Exchange and GIS Stack Exchange groups - try searching for "[R]". If your issue has not been not been addressed yet, you could post a polite question.
-* R's [mailing lists](http://www.r-project.org/mail.html) - the R-sig-geo list may be of particular interest here.
+* Stack Exchange and GIS Stack Exchange groups --- try searching for "[R]". If your issue has not been not been addressed yet, you could post a polite question.
+* R's [mailing lists](http://www.r-project.org/mail.html) --- the R-sig-geo list may be of particular interest here.
 
 Books: despite the strength of R's online community, nothing beats a physical book for concentrated learning. We would particularly recommend the following:
 
@@ -1301,7 +1301,7 @@ Books: despite the strength of R's online community, nothing beats a physical bo
 
 `library(ggplot2)`: load a package (replace **ggplot2** with your package name)
 
-`install.packages("ggplot2")`: install package - note quotation marks
+`install.packages("ggplot2")`: install package --- note quotation marks
 
 `setwd("C:/Users/username/Desktop/")`: set R's *working directory* (set it to your project's folder)
 
