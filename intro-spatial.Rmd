@@ -1,15 +1,17 @@
 ---
 title: "Introduction to visualising spatial data in R"
-author: "Robin Lovelace (R.Lovelace@Leeds.ac.uk) and James Cheshire (james.cheshire@ucl.ac.uk)"
+author: "Robin Lovelace (R.Lovelace@leeds.ac.uk) and James Cheshire (james.cheshire@ucl.ac.uk)"
 date: "July, 2014"
 output:
+  html_document:
+    toc: yes
   pdf_document:
     fig_cap: yes
     fig_height: 3.5
     fig_width: 4.5
+    highlight: pygments
     keep_tex: yes
     toc: yes
-    highlight: pygments
 ---
 
 \newpage
@@ -20,17 +22,14 @@ output:
 # TODO: create animation of population change over time
 # Add world mapping in ggplot2
 ```
+## Preface
 
-
-Part I: Introduction
-========================================================
-
-This tutorial is an introduction to spatial data in R and map making with
-R's 'base' graphics and the popular graphics package **ggplot2**.
+This tutorial is an introduction to analysing spatial data in R, specifically through map-making with
+R's 'base' graphics and use of the popular graphics package **ggplot2**.
 It assumes no prior knowledge of spatial data analysis but
 prior understanding of the R command line would be beneficial.
 If you have not used R before, we recommend working through an
-'Introduction to R' type tutorial, such as
+introductory type tutorial, such as
 "A (very) short introduction to R"
 ([Torfs and Brauer, 2012](http://cran.r-project.org/doc/contrib/Torfs+Brauer-Short-R-Intro.pdf))
 or the more geographically inclined "Short introduction to R"
@@ -40,23 +39,27 @@ Building on such background material,
 the following tutorial is concerned with specific functions for spatial data
 and visualisation. It is divided into five parts:
 
-- Introduction, which provides a guide to R's syntax and preparing for the tutorial
-- Spatial data in R, which describes basic spatial functions in R
-- Manipulating spatial data, which includes changing projection, clipping and spatial joins
-- Map making with **ggplot2**, a graphics package for producing beautiful maps quickly
-- Taking spatial analysis in R further, a compilation of resources for furthering your skills
+I Introduction: provides a guide to R's syntax and preparing for the tutorial
+II Spatial data in R: describes basic spatial functions in R
+III Manipulating spatial data: includes changing projection, clipping and spatial joins
+IV Map making with **ggplot2**: a graphics package for producing beautiful maps quickly
+V Taking spatial analysis in R further: a compilation of resources for furthering your skills
+
+
+Part I: Introduction
+========================================================
 
 ## Prerequisites and packages
 
-For this tutorial you need a copy of R. If you need to install R, the latest version 
+For this tutorial you need a copy of R. The latest version 
 can be downloaded from [http://cran.r-project.org/](http://cran.r-project.org/).
-We also suggest that you use an R editor, such as [RStudio](http://www.rstudio.com/), for this tutorial as this will improve the user-experience and help with the learning process.     
 
-R has a huge and growing number of spatial data packages, some of which we will come across in this tutorial. 
-We recommend taking a quick browse on R's main website to see which other spatial packages are available:
+We also suggest that you use an R editor, such as [RStudio](http://www.rstudio.com/), as this will improve the user-experience and help with the learning process. This can be downloaded from http://www.rstudio.com.     
+
+R has a huge and growing number of spatial data packages. We recommend taking a quick browse on R's main website to see the spatial packages available:
 [http://cran.r-project.org/web/views/Spatial.html](http://cran.r-project.org/web/views/Spatial.html).
 
-The spatial packages we will use in the tutorial are:
+In this tutorial we will use:
 
 - **ggmap**: extends the plotting package **ggplot2** for maps
 - **rgdal**: R's interface to the popular C/C++ GIS library [gdal](http://www.gdal.org/)
@@ -66,7 +69,7 @@ The spatial packages we will use in the tutorial are:
 - [**tidyr**](http://blog.rstudio.org/2014/07/22/introducing-tidyr/): for creating 'tidy' datasets
 
 To test whether a package is installed, try to load it using `library`.
-To test if **ggplot2** is available, for example, enter `library(ggplot2)`.
+For example, to test if **ggplot2** is available, enter `library(ggplot2)`.
 If there is no output from R, this is good news: it means that the library
 has already been installed on your computer.
 
@@ -136,7 +139,7 @@ at any point you would like more detail on a specific function
 Help on more general terms can be found using the `??` symbol. To test this,
 try typing `??regression`.
 For the most part, *learning by doing* is a good motto, so let's crack
-on and download some packages and then some data.
+on and download some packages and data.
 
 \clearpage
 
@@ -183,15 +186,14 @@ Opening a project sets the current working directory to the project's parent fol
 # setwd("C:/Users/username/Desktop/Creating-maps-in-R-master/")
 ```
 
-It is also worth taking a look at the input dataset
+It is worth taking a look at the input dataset
 in your file browser
-before opening them in R. You could try opening the
-file "london_sport.shp"(located within the "data" folder of the project), in a GIS program such as
-QGIS (which can be freely downloaded from the internet) to explore the attribute and geometry information in a familiar environment. 
-Also note that .shp files are composed of several files for each object:
+before opening them in R. You could also try opening the
+file "london_sport.shp"(located within the "data" folder of the project), in mapping software such as
+QGIS, which can be freely downloaded from the internet.
+Note that .shp files are composed of several files for each object such as .prj, .sbn and .dbf files;
 you should be able to open "london_sport.dbf" in a spreadsheet program such as
-LibreOffice Calc. Once you've understood something of this input data
-and where it lives, it's time to open it in R.
+LibreOffice Calc. Once you think you understand the input data, it's time to open it in R.
 
 ## Loading the spatial data
 
@@ -200,8 +202,8 @@ is the ability to read in spatial data, such as
 [shapefiles](http://en.wikipedia.org/wiki/Shapefile)
 (a common geographical file format). There are a number of ways to do this,
 the most commonly used and versatile of which is `readOGR`.
-This function, from the **rgdal** package, automatically extracts information
-about the projection and the attributes of data.
+This function, from the **rgdal** package, automatically extracts the information regarding the data.
+
 **rgdal** is R’s interface to the "Geospatial Abstraction Library (GDAL)"
 which is used by other open source GIS packages such as QGIS and enables
 R to handle a broader range of spatial data formats. If you've not already
@@ -212,9 +214,9 @@ library(rgdal)
 lnd_sport <- readOGR(dsn = "data", layer = "london_sport")
 ```
 
-In the second line of code above the `readOGR` function is used to load a shapefile and assign it to a new object called "lnd_sport". `readOGR` is a *function* which accepts two *arguments*: `dsn` which stands for "data source name" and specifies the location where the file is stored, and `layer` which specifies the file name. Note that each new argument is separated by a comma and there is no need to specify the file extension (e.g. .shp) when providing the file name.
-Both arguments in this case are *character strings* (indicated by quote marks like this one `"`).
-R functions have a default order of arguments, so `dsn = ` and `layer =` do not
+In the second line of code above the `readOGR` function is used to load a shapefile and assign it to a new object called "lnd_sport". `readOGR` is a *function* which accepts two *arguments*: `dsn` which stands for "data source name" and specifies the location where the file is stored, and `layer` which specifies the file name. Note that each new argument is separated by a comma and there is no need to specify the file extension (e.g. .shp) when providing the file name. Both arguments in this case are *character strings* (indicated by quote marks like this one `"`).
+
+R functions have a default order for arguments, so `dsn = ` and `layer =` do not
 actually have to be typed for the command to run, for example, `readOGR("data", "london_sport")` would work just as well. 
 For clarity, it is good practice to include argument names such as `dsn` and `layer` when learning new functions and we continue this tradition below.
 
@@ -222,7 +224,7 @@ The files beginning `london_sport` in the `data/`
 [directory](https://github.com/Robinlovelace/Creating-maps-in-R/tree/master/data)
 contain the population of London Boroughs in 2001 and the percentage of the population 
 participating in sporting activities. This data originates from the
-[active people survey](http://data.london.gov.uk/datastore/package/active-people-survey-kpi-data-borough).
+[Active People Survey](http://data.london.gov.uk/datastore/package/active-people-survey-kpi-data-borough).
 The boundary data is from the [Ordnance Survey](http://www.ordnancesurvey.co.uk/oswebsite/opendata/).
 
 For information about how to load different types of spatial data,
@@ -274,7 +276,8 @@ lnd_sport@data[lnd_sport$Partic_Per < 15, ]
 The above line of code asked R to select rows from the `lnd_sport` object, where sports participation is lower than 15,
 in this case rows 17, 21 and 32, which are Harrow, Newham and the city centre respectively. The square brackets work as follows:
 anything before the comma refers to the rows that will be selected, anything after
-the comma refers to the number of columns that should be returned. For example if the data frame had 1000 columns and you were only interested in the first two columns you could specify `1:2` after the comma. The ":" symbol simply means "to", i.e. columns 1 to 2. Try experimenting with the square brackets notation
+the comma refers to the number of columns that should be returned. 
+For example if the data frame had 1000 columns and you were only interested in the first two columns you could specify `1:2` after the comma. The ":" symbol simply means "to", i.e. columns 1 to 2. Try experimenting with the square brackets notation
 (e.g. guess the result of `lnd_sport@data[1:2, 1:3]` and test it): it will be useful.
 
 So far we have been interrogating only the attribute *slot* (`@data`) of the `lnd_sport` object, but the square brackets can also be used to subset spatial objects, i.e. the geometry *slot*. Using the same logic as before try
@@ -287,7 +290,7 @@ plot(lnd_sport[lnd_sport$Partic_Per > 25, ]) # output not shown here
 
 This plot is useful, but it only shows the areas which meet the criteria. To see the sporty areas in context with the other areas of the map simply use the `add = TRUE` argument after the initial plot.
 (`add = T` would also work, but we like to spell things out in this tutorial for clarity).
-What does the `col` argument refer to in the below block - it should be obvious (see figure 3).
+What do you think the `col` argument refers to in the below block? (see figure 3).
 
 If you wish to experiment with multiple criteria queries, use the '&' sign. 
 
@@ -304,7 +307,7 @@ the intricacies of
 how this was achieved: you have learned vital basics of how R works as a language;
 we will cover this in more detail in subsequent sections.
 
-While we are on the topic of loading data, it is worth pointing out
+It is worth pointing out
 that R can save and load data efficiently into its own data format (`.RData`).
 Try `save(lnd_sport, file = "sport.RData")` and see what happens.
 If you type `rm(lnd_sport)` (which removes the object) and then `load("sport.RData")`
@@ -342,7 +345,7 @@ The above output tells us that `lnd_sport` is a special spatial class,
 in this case a `SpatialPolygonsDataFrame`, meaning it is composed of
 various polygons, each of which has attributes. This is the typical
 class of data found in administrative zones. The coordinates tell
-us what the maximum and minimum x and y values are, for plotting.
+us what the maximum and minimum x and y values are (for plotting).
 Finally, we are told something of the coordinate reference system
 with the `Is projected` and `proj4string` lines.
 In this case, we have a projected system, which means it is a
@@ -358,30 +361,28 @@ We will cover reprojecting data in the next part of the tutorial.
 ```
 
 
-It is all very well being able to load and interrogate spatial data
-in R, but to compete with modern GIS packages, R must also be able
-to modify these spatial objects
-(see '[using R as a GIS](https://github.com/Pakillo/R-GIS-tutorial)').
+To compete with modern GIS packages, R must also be able
+to modify spatial data and its associated objects
+(for more guidance see '[using R as a GIS](https://github.com/Pakillo/R-GIS-tutorial)' - available at https://github.com/Pakillo/R-GIS-tutorial).
 R has a wide range of very powerful
 functions for this, many of which reside in additional packages alluded
 to in the introduction.
 
-This course is introductory so only commonly required
-data manipulation tasks, *reprojecting* and *joining/clipping* are covered here.
-We will look at joining non-spatial
-data to our spatial object. We will then cover spatial joins, whereby
-data is joined to other dataset based on spatial location.
+This course is introductory so only two commonly required
+data manipulation tasks - *reprojecting* and *joining/clipping* - are covered here.
+First we will look at joining non-spatial
+data to our spatial object, and secondly look at spatial joins, whereby
+data is joined to another dataset based on spatial location.
 
-## Changing projection
+## Changing the projection
 
 Before undertaking spatial queries of an object, it is useful
 to know the *coordinate reference system* (CRS) it uses.
 You may have noticed the word `proj4string` in the
 summary of the `lnd_sport` object above.
-This represents it CRS mathematically.
-In some spatial data files, no CRS is specified or
-worse, an incorrect CRS value is given.
-Provided the correct CRS is known, this can be righted with a single line:
+This represents the CRS mathematically.
+In some spatial data files, no CRS is specified or an incorrect CRS value is given.
+Provided the correct CRS is known, this can be adjusted like so:
 
 ```{r, warning=FALSE}
 proj4string(lnd_sport) <- CRS("+init=epsg:27700")
@@ -391,7 +392,7 @@ R issues a warning when changing the CRS in this way to ensure the user
 knows that they are simply changing the CRS, not *reprojecting* the data.
 R uses [EPSG codes]() to refer to different coordinate reference systems.
 `27700` is the code for British National Grid.
-A commonly used geographical ('lat/lon')
+A commonly used geographical
 CRS is 'WGS84', whose EPSG code is `4326`.
 The following code shows how to search the list of available EPSG
 codes and create a new version of `lnd_sport` in WGS84:^[Note:
@@ -407,7 +408,7 @@ lnd_sport_wgs84 <- spTransform(lnd_sport, CRS("+init=epsg:4326")) # reproject
 The above code uses the function `spTransform`, from the **sp** package,
 to convert the `lnd_sport` object into a new form, with the Coordinate Reference System (CRS)
 specified as WGS84.
-The different EPSG codes are a bit of hassle to remember but you can search for them at
+You can search a list of EPSG codes at
 [spatialreference.org](http://spatialreference.org/).
 
 ## Attribute joins
@@ -461,8 +462,8 @@ head(crime_data)
 The non-spatial data we are going to join to the `lnd` object
 contains records of crimes in London. This is stored in a comma separated values
 [(`.csv`)](https://raw.githubusercontent.com/Robinlovelace/Creating-maps-in-R/master/data/mps-recordedcrime-borough.csv) file called "mps-recordedcrime-borough".
-Viewing the [file](https://raw.githubusercontent.com/Robinlovelace/Creating-maps-in-R/master/data/mps-recordedcrime-borough.csv)
-locally shows that each row represents a single reported crime.
+If you open the [file](https://raw.githubusercontent.com/Robinlovelace/Creating-maps-in-R/master/data/mps-recordedcrime-borough.csv)
+in a separate spreadsheet application first, we can see each row represents a single reported crime.
 We are going to use a function called `aggregate`
 to aggregate the crimes at the borough level, ready to join to our spatial
 `lnd` dataset. A new object called `crime_data` is created to store this data.
@@ -494,20 +495,16 @@ crime_ag <- aggregate(CrimeCount ~ Borough, FUN = sum, data = crime_theft)
 head(crime_ag, 2)
 ```
 
-There is a lot going on in the above block of code and you should not expect
-to understand all of it upon first try: simply typing the commands and thinking
-briefly about the outputs is all that is needed at this stage to improve your
-intuitive understanding of R. Here are a few things
-that you may not have seen before that will likely be useful in the future:
+You should not expect to understand all of this upon first try: simply typing the commands and thinking briefly about the outputs is all that is needed at this stage. Here are a few things that you may not have seen before that will likely be useful in the future:
 
-- In the first line of code we specify the location of the file (check in your
+- In the first line of code when we read in the file we specify its location (check in your
 file browser to be sure).
 - The `==` function is used to select only those observations that
-meet a specific condition, in this case all crimes involving "Theft and Handling".
+meet a specific condition i.e. where it is equal to, in this case all crimes involving "Theft and Handling".
 - The
 `~` symbol means "by": we aggregated the `CrimeCount` variable by the district name.
 
-Now that we have crime data at the borough level, the challenge is to join it to the `lnd` object. We will base our join on the `Borough` variable from the `crime_ag` object and the `name` variable from the `lnd` object. It is not always straight forward to join objects based on names as the names do not always match. Let us see which names in the `crime_ag` object match the spatial data object, `lnd`:
+Now that we have crime data at the borough level, the challenge is to join it to the `lnd` object. We will base our join on the `Borough` variable from the `crime_ag` object and the `name` variable from the `lnd` object. It is not always straight-forward to join objects based on names as the names do not always match. Let's see which names in the `crime_ag` object match the spatial data object, `lnd`:
 
 ```{r}
 # Compare the name column in lnd to Borough column in crime_ag to see which rows match.
@@ -517,10 +514,10 @@ lnd$name[!lnd$name %in% crime_ag$Borough]
 ```
 
 The first line of code above uses the `%in%` command to
-identify which values in `lnd$name` are also contained in the names of the
-crime data. The results indicate that all but one of the borough names matches.
-The second line of code tells us that it is City of London, row 25,
-that is named differently in the
+identify which values in `lnd$name` are also contained in the Borough names of the
+aggregated crime data. The results indicate that all but one of the borough names matches.
+The second line of code tells us that it is 'City of London', row 25,
+which is named differently in the
 crime data. Look at the results (not shown here) on your computer.
 
 ```{r}
@@ -538,7 +535,7 @@ then renamed the level to match the `lnd` dataset. Note that we could not
 rename the variable directly, as it is stored as a factor.
 
 We are now ready to join the datasets. It is recommended to use
-the `left_join` function **dplyr** but the `merge` function
+the `left_join` function from the **dplyr** package but the `merge` function
 could equally be used. Note that when we ask for help for a function
 that is not loaded, nothing happens, indicating we need to load it:
 
@@ -577,7 +574,7 @@ a useful function to `rename` variables:
 ```{r, results='hide'}
 head(lnd$name) # dataset to add to (results not shown)
 head(crime_ag$Borough) # the variables to join
-crime_ag <- rename(crime_ag, name = Borough) # rename the Borough heading
+crime_ag <- rename(crime_ag, name = Borough) # rename the 'Borough' heading to 'name'
 # head(join(lnd@data, crime_ag)) # test it works
 lnd@data <- left_join(lnd@data, crime_ag)
 ```
@@ -597,12 +594,12 @@ An excellent dataset on this can be found on the the
 website. 
 
 Using this dataset and the methods developed above, Figure 5 was
-created: the proportion of council seats won by conservatives
-in the 2014 local elections. **The challenge** is to create 
+created: the proportion of council seats won by the Conservatives
+in the 2014 local elections. The **challenge** is to create 
 a similar map of a different variable (you may need to skip to
 Part IV to plot continuous variables).
 
-```{r, echo=FALSE, results='hide', message=FALSE, warning=FALSE, fig.cap="Proportion of council seats won by conservatives in the 2014 local elections using data from data.london.gov and joined using the methods presented in this section"}
+```{r, echo=FALSE, results='hide', message=FALSE, warning=FALSE, fig.cap="Proportion of council seats won by Conservatives in the 2014 local elections using data from data.london.gov and joined using the methods presented in this section"}
 library(ggmap)
 borough_dat <- read.csv("data/london-borough-profiles-2014.csv")
 names(borough_dat)
@@ -634,14 +631,12 @@ map
 
 ## Clipping and spatial joins
 
-In addition to joining by attribute (e.g. borough
+In addition to joining by attribute (e.g. Borough
 name), it is also possible to do
 [spatial joins](http://help.arcgis.com/en/arcgisdesktop/10.0/help/index.html#//00080000000q000000)
-in R. There are three main varieties: many-to-one, where
+in R. There are three main types: many-to-one, where
 the values of many intersecting objects contribute to a new variable in
-the main table, one-to-many, or one-to-one. Because boroughs in London
-are quite large, we will conduct a many-to-one spatial join.
-We will be using transport infrastructure points such as
+the main table, one-to-many, or one-to-one. We will be conducting a many-to-one spatial join and using transport infrastructure points such as
 tube stations and roundabouts as the spatial data to join,
 with the aim of finding out about how many are found in each London borough.
 
@@ -660,7 +655,7 @@ there are problems with it: the Coordinate Reference System (CRS)
 of `stations` differs from that of our `lnd` object.
 OSGB 1936 (or [EPSG 27700](http://spatialreference.org/ref/epsg/27700/))
 is the official CRS for the UK, so
-we will convert the object to this:
+we will convert the 'stations' object to this:
  
 ```{r fig.cap="Sampling and plotting stations"}
 # Create reprojected stations object
@@ -674,7 +669,7 @@ points(stations) # overlay the station points
 Now we can clearly see that the `stations` points overlay the boroughs.
 The problem is that the spatial extent of `stations` is
 great than that of `lnd`.
-We will take a spatially determined subset of the
+We will create a spatially determined subset of the
 stations object that fall inside greater London. This is *clipping*.
 
 Two functions can be used to clip `stations`
@@ -792,7 +787,7 @@ mean value of `stations` points within it: `plot(lnd_n$NUMBER, areas)`.
 
 *Adding different symbols for tube stations and train stations*
 
-Imagine that we want to now display all tube and train stations
+Imagine now that we want to display all tube and train stations
 on top of the previously created choropleth map. How would we do this?
 The shape of points in R is determined by the `pch` argument, as demonstrated by the
 result of entering the following code: `plot(1:10, pch=1:10)`.
@@ -824,7 +819,7 @@ points are present in the map with `levels` (this command only works on
 factor data, and tells us the unique names of the factors that the vector can
 hold). Next we select a subset of `stations` using a new command, `grepl`, to
 determine which points we want to plot. Note that `grepl`'s first argument
-is a text string (hence the quote marks) and that the second is a factor
+is a text string (hence the quote marks) and the second is a factor
 (try typing `class(stations$LEGEND)` to test this).
 `grepl` uses *regular expressions* to match whether each element in a vector
 of text or factor names match the text pattern we want. In this case,
@@ -837,11 +832,11 @@ using the integer of their name to decide the symbol and add a legend.
 (See the documentation of `?legend` for detail on the complexities of
 legend creation in R's base graphics.)
 
-This may seem a frustrating and un-intuitive way of altering
+This may seem a frustrating and unintuitive way of altering
 map graphics compared with something like QGIS. That's because it is!
-It may not worth be stressing too
+It may not be worth stressing too
 much about base graphics because there is another
-option --- **ggplot**. Please skip to Section IV if you're itching to see this
+option --- **ggplot**. Please skip to Part IV if you're itching to see this
 more intuitive alternative to graphics in R.
 
 ## Optional task: aggregation with gIntersects
@@ -855,7 +850,7 @@ the **rgeos** package. In some ways, this method makes explicit
 the steps taken in `aggregate` 'under the hood'.
 The code is quite involved and intimidating, so feel free to
 skip this stage. Working through and thinking about it this alternative method may, however,
-yield dividends if you intend to perform more sophisticated spatial analysis in R.
+pay dividends if you intend to perform more sophisticated spatial analysis in R.
 
 ```{r, results='hide'}
 library(rgeos) 
@@ -873,7 +868,7 @@ which the corresponding column is true and then converts this into
 names. The final object created, `b.count` contains the number of station
 points in each zone. According to this, Barking and Dagenham should contain
 12 station points. It is important to check the output makes sense at
-every stage with R, so let's check to see this is indeed the case with
+every stage with R, so let's check to see if this is indeed the case with
 a quick plot:
 
 ```{r fig.cap="Transport points in Barking and Dagenham"}
@@ -1346,7 +1341,7 @@ Google's style guide, an in-depth guide written by
 and a [chapter](http://adv-r.had.co.nz/Style.html) from
 [*Advanced R*](http://adv-r.had.co.nz/) (Wickham, in press).
 
-# Aknowledgements
+# Acknowledgements
 
 The tutorial was developed for
 a series of Short Courses funded by the National Centre for Research Methods (NCRM),
