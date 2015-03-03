@@ -290,11 +290,7 @@ plot(lnd_sport[lnd_sport$Partic_Per > 25, ]) # output not shown here
 
 This plot is useful, but it only shows the areas which meet the criteria. To see the sporty areas in context with the other areas of the map simply use the `add = TRUE` argument after the initial plot.
 (`add = T` would also work, but we like to spell things out in this tutorial for clarity).
-<<<<<<< HEAD
-What does the `col` argument refer to in the below block --- it should be obvious (see figure 3).
-=======
 What do you think the `col` argument refers to in the below block? (see figure 3).
->>>>>>> 862d36a38f39bd0f97a9664e0e68f9038ed6864c
 
 If you wish to experiment with multiple criteria queries, use the '&' sign. 
 
@@ -890,15 +886,15 @@ is concerned with *visualisation* of the results. For this, we will use
 
 # Part IV: Map making with ggplot2
 
-This third part introduces a slightly
+This fourth part introduces a slightly
 different method of creating plots in R using the
 [ggplot2 package](http://ggplot2.org/), and explains how it can make maps.
 The package is an implementation of the Grammar of Graphics (Wilkinson 2005) -
 a general scheme for data visualisation that breaks up graphs
 into semantic components such as scales and layers.
-**ggplot2** can serve as a replacement for the base graphics in R (the functions you have been plotting with today) and contains a number of default options that match good visualisation practice.
+**ggplot2** can serve as a replacement for the base graphics in R (the functions you have been plotting with so far) and contains a number of default options that match good visualisation practice.
 
-The maps we produce will not be that meaningful -
+The maps we will be producing will not be that meaningful -
 the focus here is on sound visualisation with R and not sound analysis
 (obviously the value of the former diminished in the absence of the latter!)
 Whilst the instructions are step by step you are encouraged to deviate from them
@@ -920,7 +916,7 @@ data preparation but more effort in control of features.
 require some additional work to format the spatial data but select
 colours and legends automatically, with sensible defaults.
 
-As a first attempt with **ggplot2** we can create a scatter plot with the attribute data in the `lnd` object created above. Type:
+As a first attempt with **ggplot2** we can create a scatter plot with the attribute data in the `lnd` object created previously. Type:
 
 ```{r}
 p <- ggplot(lnd@data, aes(Partic_Per, Pop_2001))
@@ -961,26 +957,26 @@ p + geom_point(aes(colour = Partic_Per, size = Pop_2001)) +
 
 This idea of layers (or geoms) is quite different from the standard plot functions in R, but you will find that each of the functions does a lot of clever stuff to make plotting much easier (see the documentation for a full list).
  
-The following steps will create a map to show the percentage of the population in each London Borough who regularly participate in sports activities.
+In the following steps we will create a map to show the percentage of the population in each London Borough who regularly participate in sports activities.
 
 ## "Fortifying" spatial objects for ggplot2 maps
 
-To get the shapefiles into a format that can be plotted we have to use the `fortify()` function. Spatial objects in R have a number of slots containing the various items of data (polygon geometry, projection, attribute information) associated with a shapefile. Slots can be thought of as shelves within the data object that contain the different attributes. The "polygons" slot contains the geometry of the polygons in the form of the XY coordinates used to draw the polygon outline. The generic plot function can work out what to do with these, **ggplot2** cannot. We therefore need to extract them as a data frame. The fortify function was written specifically for this purpose.
-For this to work, either **maptools** or **rgeos** packages must be installed.
+To get the shapefiles into a format that can be plotted we have to use the `fortify()` function. Spatial objects in R have a number of slots containing the various items of data (polygon geometry, projection, attribute information) associated with a shapefile. Slots can be thought of as shelves within the data object that contain the different attributes. The "polygons" slot contains the geometry of the polygons in the form of the XY coordinates used to draw the polygon outline. The generic plot() function can work out what to do with these, whereas **ggplot2** cannot. Therefore we need to extract them as a data frame. The fortify function was written specifically for this purpose.
+For this to work, either the **maptools** or **rgeos** packages must be installed.
 
 ```{r, warning=FALSE}
 lnd_f <- fortify(lnd) # you may need to load maptools
 ```
 
 This step has lost the attribute information associated with the lnd object. We can add it back using the `left_join`
-function (this performs a data join).
-To find out how this function works look at
+function (this performs a data join). To use this function, ensure you have the dplyr package installed and loaded.
+To find out how it works look at
 the output of typing `?left_join`. As usual the help documentation
 is a little sparse here, so let's consider what it means in more
 detail. The help document explains that `left_join` retains all rows from the
 original dataset `x`, whereas `inner_join` only
 retains rows in `x` which have a match in `y`. If there is no match in the
-joining variable, `inner_join` simply adds an `NA` values for the new
+joining variable, `inner_join` simply adds `NA` values for the new
 variables for the affect rows.
 
 ```{r}
@@ -990,14 +986,14 @@ head(lnd@data, n = 2) # final check before join (requires shared variable name)
 lnd_f <- left_join(lnd_f, lnd@data) # join the data
 ```
 
-Take a look at the `lnd_f` object to see its contents (which stands for "London, fortified"). You should see a large data frame containing the latitude and longitude (they are actually Easting and Northing as the data are in British National Grid format) coordinates alongside the attribute information associated with each London Borough. If you type `print(lnd_f)` you will see just how many coordinate pairs are required!
+Take a look at the `lnd_f` object to see its contents (which stands for "London, fortified"). You should see a large data frame containing the coordinates (Easting and Northing points as the data are in British National Grid format) alongside the attribute information associated with each London Borough. If you type `print(lnd_f)` you will see just how many coordinate pairs are required!
 To keep the output to a minimum, take a peek at the first 2 lines of the object using just the `head` command:
 
 ```{r}
 lnd_f[1:2, 1:8]
 ```
 
-It is now straightforward to produce a map using all the built in tools
+It is now straightforward to produce a map using all the built-in tools
 (such as setting the breaks in the data) that **ggplot2** has to offer.
 `coord_equal()` is the equivalent of asp=T in regular plots with R:
 
@@ -1022,13 +1018,13 @@ The `group=group` points ggplot to the group column added by
 to individual polygons (in this case London Boroughs).
 
 The default colours are really nice but we may wish to produce the map in black and white,
-which should produce a map like that shown below (and try changing the colors):
+which should produce a map like the one shown below. Try changing the colours.
 
 ```{r fig.cap="Greyscale map"}
 map + scale_fill_gradient(low = "white", high = "black")
 ```
 
-Saving plot images is also easy. You just need to use `ggsave` after each plot, e.g.
+To save a plot image you just need to use `ggsave` after each plot, e.g.
 `ggsave("my_map.pdf")` will save the map as a pdf, with default settings. For
 a larger map, you could try the following:
 
@@ -1050,7 +1046,7 @@ library(ggmap) # install.packages("ggmap") if not installed
 
 The `lnd` object loaded previously is in British National Grid but the ggmap
 image tiles are in WGS84. We therefore need to use the `lnd_sport_wgs84`
-object created in the reprojection operation (see Section III).
+object created in the reprojection operation (see Part III).
 
 The first job is to calculate the bounding box (bb for short) of the
 `lnd_sport_wgs84` object to identify the geographic extent of the image tiles that we need.
@@ -1148,14 +1144,13 @@ lnd_b3 +
 # library(reshape2) # old way of doing
 # If not install it, or skip the next two steps
 ```
+The below code demonstrates how to read in the necessary data for 
+this task and 'tidy' it up. The data file contains historic population values between 1801 and 2001 for London, again from the London data store.
 
-Load the data --- this shows historic population values between 1801 and 2001
-for London, again from the London data store.
-
-`tidy` the data so that the columns become rows. In other words,
-convert the data from 'flat' to 'long' format, which is the form
+We `tidy` the data so that the columns become rows. In other words,
+we convert the data from 'flat' to 'long' format, which is the form
 required by **ggplot2** for faceting graphics: the date of the
-population survey become a variable in its own right, rather than
+population survey becomes a variable in its own right, rather than
 being strung-out over many columns.
 
 ```{r, results='hide'}
@@ -1222,7 +1217,7 @@ ggplot(data = lnd_f, # the input data
 # ggsave("figure/facet_london.png", width = 9, height = 9) # save figure
 ```
 
-Again there is a lot going on here so explore the documentation to make sure you understand it.
+There is a lot going on here so explore the documentation to make sure you understand it.
 Try out different colour values as well.
 
 Try experimenting with the above code block to see what effects you can
@@ -1260,7 +1255,7 @@ the present tutorial. These can be found on the
 
 Another advanced tutorial is "Using spatial data", which has example
 code and data that can be downloaded from the
-[useR 2013 conference page](http://www.edii.uclm.es/~useR-2013//Tutorials/Bivand.html).
+[useR 2013 conference page](http://www.edii.uclm.es/~useR-2013//Tutorials/Bivand.html), available here: http://www.edii.uclm.es/~useR-2013//Tutorials/Bivand.html.
 Such tutorials are worth doing as they will help you
 understand R's spatial 'ecosystem' as a cohesive whole
 rather than as a collection of isolated functions.
@@ -1278,15 +1273,16 @@ that will help you further sharpen you R skills, find help and contribute
 to the growing online R community:
 
 * R's homepage hosts a wealth of [official](http://cran.r-project.org/manuals.html) and [contributed](http://cran.r-project.org/other-docs.html) guides.
-* Stack Exchange and GIS Stack Exchange groups --- try searching for "[R]". If your issue has not been not been addressed yet, you could post a polite question.
-* R's [mailing lists](http://www.r-project.org/mail.html) --- the R-sig-geo list may be of particular interest here.
+http://cran.r-project.org
+* Stack Exchange and GIS Stack Exchange groups - try searching for "[R]". If your issue has not been not been addressed yet, you could post a polite question.
+* R's [mailing lists](http://www.r-project.org/mail.html) - the R-sig-geo list may be of particular interest here.
+http://www.r-project.org/mail.html
 
 Books: despite the strength of R's online community, nothing beats a physical book for concentrated learning. We would particularly recommend the following:
 
- * ggplot2: elegant graphics for data analysis (Wickham 2009).
- * Bivand et al. (2013) Provide a dense and detailed overview of spatial
- data analysis.
- * Kabacoff (2011) is a more general R book; it has many fun worked examples.
+ * Wickham (2009): 'ggplot2: elegant graphics for data analysis'
+ * Bivand et al. (2013) : 'Applied spatial data analysis with R' - provides a dense and detailed overview of spatial data analysis.
+ * Kabacoff (2011): 'R in action' - more general R book and has many fun worked examples.
  
  \clearpage
  
@@ -1362,13 +1358,13 @@ If you have found this tutorial useful in your work, please cite it:
 
 Lovelace, R., & Cheshire, J. (2014). Introduction to visualising spatial data in R. National Centre for Research Methods Working Papers, 14(03). Retrieved from https://github.com/Robinlovelace/Creating-maps-in-R
 
-The bibtex entry for this item can be downloaded from [here](https://raw.githubusercontent.com/Robinlovelace/Creating-maps-in-R/master/citation.bib).
+The bibtex entry for this item can be downloaded from https://raw.githubusercontent.com/Robinlovelace/Creating-maps-in-R/master/citation.bib or [here](https://raw.githubusercontent.com/Robinlovelace/Creating-maps-in-R/master/citation.bib).
 
 \clearpage
 
 # References
 
-Bivand, R. S., Pebesma, E. J., & Rubio, V. G. (2008). Applied spatial data: analysis with R. Springer.
+Bivand, R. S., Pebesma, E. J., & Rubio, V. G. (2013). Applied spatial data analysis with R. Springer. 2nd ed.
 
 Cheshire, J. & Lovelace, R. (2014). Manipulating and visualizing spatial data with R. Book chapter in Press.
 
