@@ -22,3 +22,4 @@ spatial-data_files/
 *.docx
 shef*
 *.dcf
+*shinyapp*
