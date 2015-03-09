@@ -3,14 +3,14 @@ title: "Introduction to visualising spatial data in R"
 author: "Robin Lovelace (R.Lovelace@leeds.ac.uk) and James Cheshire (james.cheshire@ucl.ac.uk)"
 date: "July, 2014"
 output:
-  html_document:
-    toc: yes
   pdf_document:
     fig_cap: yes
     fig_height: 3.5
     fig_width: 4.5
     highlight: pygments
     keep_tex: yes
+    toc: yes
+  html_document:
     toc: yes
 ---
 
@@ -98,7 +98,7 @@ above a line of code or directly following it, as illustrated in the block of
 code presented below, which should create figure 1
 if typed correctly into the R command line.
 
-```{r fig.cap="Basic plot of x and y", echo=FALSE, fig.width=16}
+```{r fig.cap="Basic plot of x and y (right) and code used to generate the plot (right).", echo=FALSE, fig.width=6, fig.height=3}
 # # Generate data
 # x <- 1:400
 # y <- sin(x / 10) * exp(x * -0.01)
@@ -1347,9 +1347,8 @@ The tutorial was developed for
 a series of Short Courses funded by the National Centre for Research Methods (NCRM),
 via the TALISMAN node (see [geotalisman.org](http://www.geotalisman.org/)).
 Thanks to the [ESRC](http://www.esrc.ac.uk/) for funding applied methods research.
-Many thanks to Rachel Oldroyd, Alistair Leak and Phil Jones who helped demonstrate
-these materials on the NCRM short courses for which
-this tutorial was developed. Amy O'Neill organised the course
+Many thanks to Rachel Oldroyd, Alistair Leak, Hannah Roberts and Phil Jones who helped develop and demonstrate
+these materials. Amy O'Neill organised the course
 and encouraged feedback from participants.
 The final thanks is to all users and developers of open source software
 for making powerful tools such as R accessible and enjoyable to use.
