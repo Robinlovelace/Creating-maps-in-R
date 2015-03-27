@@ -1,0 +1,215 @@
+---
+title: "A practical introduction to R"
+author: "Robin Lovelace"
+date: "March 27, 2015"
+output: ioslides_presentation
+---
+
+```{r, include=FALSE}
+pkgs <- c("png", "grid", "shiny", "knitr")
+lapply(pkgs, library, character.only = T)
+# opts_knit$set(root.dir = "~/repos/Creating-maps-in-R/")
+```
+
+# Installing and using the software
+
+## Installing and using R and RStudio
+
+- Install the latest version of R: http://cran.rstudio.com/ 
+- Install the latest version of RStudio for your system:
+http://www.rstudio.com/products/rstudio/download/
+- Get acquainted to RStudio and the panels - play around!
+http://dss.princeton.edu/training/RStudio101.pdf
+
+```{r, echo=FALSE}
+grid.raster(readPNG("figure/rstudio-proj.png"))
+```
+
+## Productivity with RStudio
+
+Key shortcuts in RStudio:
+
+```{r, echo=FALSE}
+shortcuts <- data.frame(Command = c(
+  "Alt + Shift + K", 
+  "Ctrl + Enter",
+  "Ctrl + R",
+  "Tab"),
+  Action = c("Show shortcuts",
+    "Run current line of code",
+    "Run all lines of code in the script",
+    "Autocomplete*"))
+kable(shortcuts)
+```
+
+## Code used to generate that table
+
+```{r, eval=FALSE}
+shortcuts <- data.frame(Command = c(
+  "Alt + Shift + K", 
+  "Ctrl + Enter",
+  "Ctrl + R",
+  "Tab"),
+  Action = c("Show shortcuts",
+    "Run current line of code",
+    "Run all lines of code in the script",
+    "Autocomplete*"))
+kable(shortcuts)
+```
+
+## R packages
+
+There are 7,000+ 'add-on' packages to 'supercharge' R.
+
+Easiest way to install them, from RStudio:
+
+```
+Tools -> Install Packages
+```
+
+or using keyboard shortcuts:
+
+```
+Alt + T ... then k
+```
+
+## Install packages for this tutorial
+
+Can be installed and loaded in 6 lines of code:
+
+```{r, eval=FALSE}
+pkgs <- c("devtools", "shiny", "rgdal", "rgeos", "ggmap", "raster")
+install.packages(pkgs) # install the official packages!
+library(devtools) # enables installation of leaflet
+gh_pkgs <- c("rstudio/leaflet", "robinlovelace/stplanr") 
+install_github(gh_pkgs) # install packages on github
+lapply(c(pkgs, "leaflet", "stplanr"), library, character.only = T)
+```
+
+```{r, include=FALSE}
+pkgs <- c("devtools", "shiny", "rgdal", "rgeos", "ggmap", "raster")
+library(devtools) # enables installation of leaflet
+lapply(c(pkgs, "leaflet", "stplanr"), library, character.only = T)
+```
+
+# Create and plot data
+
+## Basic data types
+
+Anything that exists in R is an object. Let's create some with the `<-` symbol (`=` does the same job, before you ask!)
+
+```{r}
+vector_logical <- c(TRUE, TRUE, FALSE)
+vector_character <- c("yes", "yes", "Hello!")
+vector_numeric <- c(1, 3, 9.9)
+
+class(vector_logical) # what are the other object classes?
+```
+
+Use the "Environment tab" (top right in RStudio) to see these
+
+## Automating things
+
+To ask R what objects it has, we can use `ls()`.
+
+(Anything that happens is a function)
+
+```{r}
+ls()
+```
+
+Now we can automate the question: what class?
+
+```{r}
+obs <- ls()[grep("ve", ls())]
+sapply(X = mget(obs), FUN = class)
+```
+
+## Getting help in R
+
+To find out what just happened, we can use R's internal help
+
+The most commonly used help functions are:
+
+```{r}
+help(apply) # get help on apply
+?apply 
+?sapply
+??apply
+```
+
+The `*apply` family of functions are R's internal `for` loops. What about `get()`
+
+```{r}
+?mget
+```
+
+
+## The data frame
+
+The fundamental data object in R. 
+
+Create them with `data.frame()`
+
+```{r}
+data.frame(vector_logical, vector_character, n = vector_numeric)
+```
+
+Oops - we forgot to assign that. Tap `UP` or `Ctl-UP` in the console, then enter:
+
+```{r}
+df <- data.frame(vector_logical, vector_character, n = vector_numeric)
+```
+
+## Plotting data in R
+
+`plot()` is polymorphic. Try `plot(df)` and `?plot`:
+
+```{r, echo=FALSE}
+plot(df) # note: now we can do things with the df
+?plot    # get help on plotting
+```
+
+## Subsetting data in R
+
+The `[]` brackets, appending the object name, subset data.
+
+A comma separates each dimension; nothing means everything:
+
+```{r}
+df[1,] # all of the the 1st line of df
+```
+
+In a 2d dataset, the following selects the 3rd line in the 3rd column:
+
+```{r}
+df[3,3]
+```
+
+## Making objects spatial
+
+There are 4 fundamental `Spatial*` data types in R, enabled by
+the foundational spatial package `sp`:
+
+```{r, eval=FALSE}
+SpatialPixels()
+SpatialPoints()
+SpatialLines()
+SpatialPolygons()
+```
+
+These are `S4` R objects, with strictly defined `slots`.
+All such `Spatial*` objects have `proj4string` and `bbox` slots.
+Each can be extended as a `Spatial*DataFrame` to include data.
+
+```{r}
+lnd <- shapefile("data/london_sport.shp")
+class(lnd)
+```
+
+
+
+
+
+
+

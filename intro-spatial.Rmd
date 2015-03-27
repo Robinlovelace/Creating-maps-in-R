@@ -232,7 +232,7 @@ see the help documentation for `readOGR`. This can be accessed by typing `?readO
 For another worked example, in which a GPS trace is loaded, 
 please see Cheshire and Lovelace (2014).
 
-## Basic plotting
+## The structure of spatial data in R
 
 We have now created a new spatial object called "lnd_sport" from the "london_sport" shapefile. Spatial objects are made up of a number of different *slots*, mainly the attribute *slot* and the geometry *slot*. The attribute *slot* can be thought of as an attribute table and the geometry *slot* is where the spatial object (and its attributes) lie in space. Let's now analyse the sport object with some basic commands:
 
@@ -243,17 +243,27 @@ mean(lnd_sport$Partic_Per)
 
 Take a look at this output and notice the table format of the data and the column names. There are two important symbols at work in the above block of code: the `@` symbol in the first line of code is used to refer to the attribute *slot* of the object. The `$` symbol refers to a specific attribute (a variable with a column name) in the `data` *slot*, which was identified from the result of running the first line of code. If you are using RStudio, test out the auto-completion functionality
 by hitting `tab` before completing the command -
-this can save you a lot of time in the long run.
+this can save you a lot of time in the long run, as
+shown in figure x.
+
+```{r}
+lnd_sport@polygons[[1]]@Polygons[[1]]@coords
+plot(lnd_sport@polygons[[1]]@Polygons[[1]]@coords)
+```
+
 
 The `head` function in the first line of the code above simply means "show the first few lines of data", i.e. the head. It's default is to output the first 6 rows of the dataset (try simply `head(lnd_sport@data)`),
 but we can specify the number of lines with `n = 2` after the comma.
 The second line of the code above calculates the mean value of the variable `Partic_Per` (sports participation per 100 people) for each of the zones in the `lnd_sport` object.
 To explore `lnd_sport` object further, try typing `nrow(lnd_sport)` and record how many zones the dataset contains. You can also try `ncol(lnd_sport)`.
 
-Now we have seen something of the attribute *slot* of the spatial object,
-let us look at its *geometry*, which describes where
-the polygons are located in space:
+## Basic plotting
 
+Now we have seen something of the structure of spatial objects in R,
+let us look at plotting them. Note, that plots
+use the *geometry* data, contained primarily in the `@polygons` slot in the above example, to draw
+the shape of the zones. The information in `@data` will typically be used to colour in the map. which describes where
+the polygons are located in space:
 
 ```{r, eval=FALSE}
 plot(lnd_sport) # not shown in tutorial - try it on your computer
@@ -1137,6 +1147,29 @@ lnd_b3 +
     aes(x = long, y = lat, group = group, fill = Partic_Per),
     alpha = 0.5)
 ```
+
+## Creating interactive maps with **leaflet**
+
+```{r}
+library(devtools)
+install_github("rstudio/leaflet")
+library(leaflet)
+
+leaflet() %>%
+  addTiles() %>%
+  addPolygons(data = lnd_sport_wgs84) 
+
+??random
+runif(n = 1, min = 0, max = 10)
+
+plot(lnd)
+class(lnd)
+
+object.size(lnd) / 1000
+
+save(lnd, file = "~/Desktop/lnd.Rda")
+```
+
 
 ## Advanced Task: Faceting for Maps
 

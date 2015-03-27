@@ -16,9 +16,9 @@ library(grid)
 #     logo: ~/Dropbox/Public/img/Leeds-logo.jpg
 ```
 
-```{r Halves, fig.height=2}
-img <- readPNG("figure/pitch.png")
- grid.raster(img) # this presentation: written in R(md)!
+```{r Halves, fig.height=2, echo=FALSE}
+# img <- readPNG("figure/pitch.png")
+#  grid.raster(img) # this presentation: written in R(md)!
 ```
 
 - Cutting edge research is nothing without communication
@@ -64,8 +64,6 @@ comfortable teaching bubble!
 
 Based largely on "visualising spatial data" tutorial, hosted on
 CRAN (contributed docs) and github: [**github.com/Robinlovelace/Creating-maps-in-R**](https://github.com/Robinlovelace/Creating-maps-in-R)
-
-![Talisman logo](http://talisman.blogweb.casa.ucl.ac.uk/files/2012/01/cropped-chess2.jpg)
 
 Courses delivered through [TALISMAN](http://geotalisman.org/), a
 project based at the University of Leeds and UCL. It is 
@@ -135,10 +133,6 @@ load("data/lnd_b1.RData") # load saved map
 - Details are important
 - Focus on software more than concepts
 - Simplicity
-
-```{r}
-plot( , )
-```
 
 
 ## Part II: Research and what R can do

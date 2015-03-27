@@ -1,0 +1,270 @@
+---
+title: "R as a command line GIS"
+author: "Robin Lovelace"
+date: "March 26, 2015"
+output:
+  slidy_presentation:
+    fig_height: 4
+    fig_retina: null
+    fig_width: 7
+bibliography: ~/Documents/R.bib
+---
+
+```{r, include=FALSE}
+pkgs <- c("png", "grid", "shiny", "knitr")
+lapply(pkgs, library, character.only = T)
+# opts_knit$set(root.dir = "~/repos/Creating-maps-in-R/")
+```
+
+# Welcome / Bienvenido / Benvinguda
+
+```{r, echo=FALSE}
+grid.raster(readPNG("~/Pictures/Selection_163.png"))
+```
+
+
+Introduction
+========================================================
+
+```{r, echo=FALSE, fig.height=2}
+grid.raster(readPNG("~/Dropbox/Public/img/logos/cdrc-logo_large.png"))
+```
+
+This course is brought to you the Consumer Data Research Centre
+([CDRC](http://geotalisman.org/)), a
+project based at the University of Leeds and UCL. It is 
+funded by the ESRC's ([Big Data Network](http://www.esrc.ac.uk/research/major-investments/Big-Data/BDN-Phase2.aspx)).
+
+The course is based on "Introduction to visualising spatial data in R"
+[[@lovelace2014introduction]](https://github.com/Robinlovelace/Creating-maps-in-R),
+a free, open source and *evolving* teaching resource. See [github.com/Robinlovelace/Creating-maps-in-R](https://github.com/Robinlovelace/Creating-maps-in-R).
+
+**Please contribute!**
+
+# Course agenda
+
+- An introduction to R (3:00 - 4:00)
+- R objects: creating, querying, *spatialising* (4:00 - 4:30)
+- Manipulating spatial objects (4:30 - ~5:00)
+
+**COFFEE**
+
+![](http://www.picgifs.com/graphics/c/coffee/graphics-coffee-427489.gif)
+
+- **ggplot2** and **ggmap** (~5:20 - 5:30)
+- Basemaps with ggmap (5:30 - 6:00)
+- R's **leaflet** package (6:00 - 6:30)
+- Interactive only maps with **shiny** (6:30 - 7:00)
+
+A bit about R
+========================================================
+
+- Named after S and its creators [[@Ihaka1996]](https://www.stat.auckland.ac.nz/~ihaka/downloads/R-paper.pdf)
+- De-facto standard for advanced statistical analysis
+- A programming language in its own right
+- The power of the command line
+- Used by an increasing number of organisations
+
+Why R?
+========================================================
+
+- **Performace**: stable, light and fast
+- **Support network** 
+ - documentation, community, developers
+- **Reproducibility**
+ - anyone anywhere can reproduce results
+ - enables dissemination (RPubs, RMarkdown, .RPres) - this presentation is a .Rmd file!
+- **Versatility**: unified solution to *almost* any numerical problem, graphical capabilities
+- **Ethics** removes economic barrier to statistics, is open and democratic
+
+R is up and coming I
+=====================
+![scholar-searches1](figure/fig_7a.png) 
+
+Source: [r4stats.com](http://r4stats.com/articles/popularity/) 
+
+II - Increasing popularity in academia
+========================
+
+![scholar-searches2](figure/fig_7b.png)
+
+Source: [r4stats.com](http://r4stats.com/articles/popularity/) 
+
+III - R vs Python
+====================
+
+```{r, echo=FALSE, fig.height=4}
+grid.raster(readPNG("figure/so-rel.png"))
+# ![rvpytho](figure/so-rel.png)
+```
+
+
+Source: [Hadley Wickham](https://github.com/hadley/r-python). Further information: see "R beats Python! R beats Julia! Anyone else wanna challenge R?" ([Matloff 2014](https://matloff.wordpress.com/2014/05/21/r-beats-python-r-beats-julia-anyone-else-wanna-challenge-r/))
+
+IV - employment market
+=====================
+
+![jobs](figure/jobs.png)
+
+Source: [revolution analytics](http://blog.revolutionanalytics.com/2013/08/job-trends-for-statistics-packages.html)
+
+
+Why R for spatial data?
+===================================================
+
+- Extensive and rapidly expanding spatial packages
+- Interface with 'conventional' GIS software
+- The advantages of the command-line:
+
+> "With the advent of “modern” GIS software, most people want 
+> to point and click their way through life.
+> That’s good, but there is a tremendous amount of 
+> flexibility and power waiting for you with the command
+> line. Many times you can do something on the command
+> line in a fraction of the time you can do it with
+> a GUI (Sherman 2008, p. 283)
+
+Why R for spatial data II
+=============================
+
+If you get stuck? Just ask! E.g. [stackoverflow.com/q/29066198/1694378](http://stackoverflow.com/q/29066198/1694378):
+
+[ \@robinlovelace ](https://twitter.com/robinlovelace) says:
+
+> I want to load only only the LineString, so this is what I do:
+
+```{r, eval=FALSE}
+library(RCurl)
+obj <- getURL("https://raw.githubusercontent.com/Robinlovelace/stplanr/master/inst/extdata/route_data.geojson")
+writeLines(obj, "/tmp/obj.geojson")
+obj <- readLines("/tmp/obj.geojson")
+just_lines <- obj[14:(length(obj) - 28)]
+just_lines[1] <- paste0("{",  just_lines[1])
+just_lines[length(just_lines)] <- "}"
+writeLines(just_lines, "/tmp/just_lines.geojson")
+```
+
+> How do I do this properly?
+
+[ \@geospacedman](https://twitter.com/geospacedman):
+
+> Read the data using jsonlite direct from the URL... 
+
+```{r, eval=FALSE}
+ obj <- jsonlite::fromJSON("https://raw.githubusercontent.com/Robinlovelace/stplanr/master/inst/extdata/route_data.geojson")
+```
+
+> Convert the first object in the collection to SpatialLines:
+
+```{r, eval=FALSE}
+sl = SpatialLines(list(Lines(list(Line(obj$features[1,]$geometry$coordinates[[1]])),ID=1)))
+```
+
+
+Visualisation
+===========================
+
+- R's visualisation capabilities have evolved over time
+- Used to create plots in the best academic journals
+- ggplot2 has **revolutionised** the visualisation of quantitative 
+information in R, and (possibly) overall
+- Thus there are different camps with different preferences when it comes to maps in R
+
+Why focus on visualisation?
+===============
+
+If you cannot visualise your data, it is very difficult to understand your data. 
+Conversely, visualisation will greatly aid in communicating your results.
+
+> Human beings are remarkably adept at discerning relationships from visual
+> representations. A well-crafted graph can help you make meaningful comparisons among thousands of pieces of information, extracting patterns not easily found through other methods. ... Data analysts need to look at their data, and this is one area where R shines.
+(Kabacoff, 2009, p. 45).
+
+Maps, the 'base graphics' way
+==========
+
+![base graphics](figure/Choropleth_map_of_number_of_transport_nodes_in_London_boroughs.png)
+
+Source: Cheshire and Lovelace (2014) - [available online](https://github.com/geocomPP/sdvwR)
+
+The 'ggplot2' way (source: [This tutorial](https://github.com/Robinlovelace/Creating-maps-in-R)!)
+===============
+
+```{r, echo=FALSE, fig.height=7, fig.cap="Source: [This tutorial](https://github.com/Robinlovelace/Creating-maps-in-R)!"}
+grid.raster(readPNG("figure/facet_london.png"))
+# ![ggplot2 way](figure/facet_london.png)
+```
+
+R in the wild 1: Maps of all census variables for local authorities
+===========
+
+![census](figure/single.png)
+
+R in the wild 2: Global shipping routes in the late 1700s
+===========
+
+```{r, echo=FALSE}
+grid.raster(readPNG("figure/dutch_shipping1750_1800.png"))
+# ![Dutch shipping routes](figure/dutch_shipping1750_1800.png)
+```
+
+
+Source: [R-Bloggers](http://www.r-bloggers.com/mapped-british-and-spanish-shipping-1750-1800/)
+
+R in the wild 3: The national propensity to cycle tool (NPCT)
+============
+
+```{r, echo=FALSE, fig.height=4}
+# runApp("~/other-repos/pct-shiny/master/")
+grid.raster(readPNG("~/Pictures/Selection_115.png"))
+```
+
+See https://github.com/npct/pct-shiny
+
+```{r, echo=FALSE}
+# Energy use of commuting - my [thesis](https://github.com/Robinlovelace/thesis-reproducible) and [RPubs](http://rpubs.com/RobinLovelace/7178)
+```
+
+# R in the wild 4: Mapping bike crashes in Yorkshire I ([Lovelace et al. 2015](http://www.sciencedirect.com/science/article/pii/S136984781500039X))
+
+```{r, fig.height=6, echo=FALSE}
+grid.raster(readPNG("~/repos/bikeR/figures/seriousWY.png"))
+```
+
+Source: [Lovelace, Roberts and Kellar (2015)](http://eprints.whiterose.ac.uk/83930/)
+
+# R vs QGIS ([Lovelace et al. 2015](http://www.sciencedirect.com/science/article/pii/S136984781500039X))
+
+```{r, fig.height=6, echo=FALSE}
+grid.raster(readPNG("~/repos/bikeR/figures/wy-overview.png"))
+```
+
+R in the wild 5: Infographic of housing project finances
+================
+
+```{r}
+grid.raster(readPNG("~/repos/robinlovelace.github.io/figure/unnamed-chunk-53.png"))
+```
+
+Flexibility of ggplot2 - see [robinlovelace.net](http://robinlovelace.net/r/2013/12/27/coxcomb-plots-spiecharts-R.html)
+
+
+Getting up-and-running for the tutorial
+===========
+Before progressing further: **Any questions?**
+
+**Course materials** are all available online from a [GitHub repository](https://github.com/Robinlovelace/Creating-maps-in-R). Click "Download ZIP" to download all the test data, ready to procede.
+
+The main document to accompany this tutorial is a [pdf](https://github.com/Robinlovelace/Creating-maps-in-R/raw/master/intro-spatial-rl.pdf) within the main repository. This is to be made available for free worldwide - any comments/corrections welcome.
+
+# Further R resources
+
+- 'ASDAR': the Bible for spatial data analysis with R [@bivand2008applied]
+- More advanced introduction to R for spatial data [[@Cheshire2015]](https://github.com/geocomPP/sdv)
+- http://gis.stackexchange.com/ and http://stackoverflow.com/
+- Cheat sheet on R for spatial data: http://www.maths.lancs.ac.uk/~rowlings/Teaching/UseR2012/cheatsheet.html
+
+# References
+
+
+
