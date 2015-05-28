@@ -1,4 +1,10 @@
-# Clipping with gIntersects
+# Clipping and aggregating with gIntersects
+
+```{r}
+library(sp)
+library(rgeos)
+```
+
 
 This short piece demonstrates how clipping spatial data can be done using the 
 rgeos package in R. A more common method is to use the sp::over function, 
@@ -12,7 +18,6 @@ following commands:
 ```{r}
 load("data/lnd.RData")
 load("data/stations.RData")
-library(rgeos)
 ```
 
 Here, we use `gIntersects`,
@@ -61,3 +66,47 @@ false. This creates the inverse selection that we want, hence the use of `!` to 
 We test that the function works on a new object (often a good idea, to avoid overwriting 
 useful data) with plots and, once content that the clip has worked, save the sample of 
 points to our main `stations` object and remove the now duplicated `stations.cl` object.
+
+
+
+## Optional task: aggregation with gIntersects
+
+```{r, echo=FALSE}
+# This should be a separate vignette/rpubs doc
+```
+
+As with clipping, we can also do spatial aggregation with
+the **rgeos** package. In some ways, this method makes explicit
+the steps taken in `aggregate` 'under the hood'.
+The code is quite involved and intimidating, so feel free to
+skip this stage. Working through and thinking about it this alternative method may, however,
+pay dividends if you intend to perform more sophisticated spatial analysis in R.
+
+```{r}
+int <- gIntersects(stations, lnd, byid = TRUE) # re-run the intersection query
+head(apply(int, MARGIN = 2, FUN = which))
+b.indexes <- which(int, arr.ind = TRUE) # indexes that intersect
+summary(b.indexes)
+b.names <- lnd$name[b.indexes[, 1]]
+b.count <- aggregate(b.indexes ~ b.names, FUN = length)
+head(b.count)
+```
+
+The above code first extracts the index of the row (borough) for
+which the corresponding column is true and then converts this into
+names. The final object created, `b.count` contains the number of station
+points in each zone. According to this, Barking and Dagenham should contain
+12 station points. It is important to check the output makes sense at
+every stage with R, so let's check to see if this is indeed the case with
+a quick plot:
+
+```{r fig.cap="Transport points in Barking and Dagenham"}
+plot(lnd[grepl("Barking", lnd$name),])
+points(stations)
+```
+
+Now the fun part: count the points in the polygon and report back how many there are!
+
+We have now seen how to load, join and clip data. The second half of this tutorial
+is concerned with *visualisation* of the results. For this, we will use
+**ggplot2** and begin by looking at how it handles non-spatial data.

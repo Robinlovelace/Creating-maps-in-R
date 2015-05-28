@@ -205,6 +205,8 @@ Each can be extended as a `Spatial*DataFrame` to include data.
 ```{r}
 lnd <- shapefile("data/london_sport.shp")
 class(lnd)
+
+leaflet() %>%  
 ```
 
 

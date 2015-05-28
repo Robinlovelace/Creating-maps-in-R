@@ -1,7 +1,7 @@
 ---
 title: "An introduction to R for Spatial data"
 author: "Robin Lovelace"
-date: "March 16, 2015"
+date: "Sheffield, May 15th 2015"
 output:
   slidy_presentation:
     fig_height: 4
@@ -16,7 +16,7 @@ lapply(pkgs, library, character.only = T)
 
 Introduction
 ========================================================
-![cdrc](http://cdrc.ac.uk/wordpress/wp-content/uploads/2014/06/logo_large.png)
+![cdrc](http://www.lida.leeds.ac.uk/img/cdrc.png)
 
 This course is brought to you the Consumer Data Research Centre
 ([CDRC](http://geotalisman.org/)), a
@@ -29,9 +29,12 @@ Course agenda
 
 During this course we will cover these topics
 
-- An introduction to R (9:30 - 10:30)
-- Loading and interrogating spatial data (10:30 - 11:30)
-- Manipulating spatial objects (11:30 - 12:30)
+- An introduction to R (14:00 - 15:00)
+- Loading, interrogating and manipulating spatial data (15:00 - 16:00)
+- Making maps with ggplot2 (16:00 - 16:30)
+- Questions, answers and experimenting with R
+
+<!--
 
 LUNCH
 
@@ -39,6 +42,7 @@ LUNCH
 - Basemaps (14:30 - 15:30)
 - More advanced visuals (15:30 - 16:00)
 - Taking it further + Q & A (16:00 onwards)
+-->
 
 ```{r, echo=FALSE}
 # During this course we will cover these topics
@@ -88,7 +92,7 @@ Source: [r4stats.com](http://r4stats.com/articles/popularity/)
 II - Increasing popularity in academia
 ========================
 
-![scholar-searches2](figure/fig_7b.png)
+![scholar-searches2](https://r4stats.files.wordpress.com/2012/04/fig_2f_scholarlyimpactallstat2.png)
 
 Source: [r4stats.com](http://r4stats.com/articles/popularity/) 
 
@@ -96,12 +100,12 @@ III - R vs Python
 ====================
 
 ```{r, echo=FALSE, fig.height=4}
-grid.raster(readPNG("figure/so-rel.png"))
+grid.raster(readPNG("~/Pictures/Selection_198.png"))
 # ![rvpytho](figure/so-rel.png)
 ```
 
 
-Source: [Hadley Wickham](https://github.com/hadley/r-python). Further information: see "R beats Python! R beats Julia! Anyone else wanna challenge R?" ([Matloff 2014](https://matloff.wordpress.com/2014/05/21/r-beats-python-r-beats-julia-anyone-else-wanna-challenge-r/))
+Source: [Data Camp](http://i0.wp.com/blog.datacamp.com/wp-content/uploads/2015/05/R-vs-Python-216-2.png)
 
 IV - employment market
 =====================
@@ -212,6 +216,9 @@ See https://github.com/npct/pct-shiny
 
 ```{r, echo=FALSE}
 # Energy use of commuting - my [thesis](https://github.com/Robinlovelace/thesis-reproducible) and [RPubs](http://rpubs.com/RobinLovelace/7178)
+# # Online planning tool built in R
+# 
+# <iframe src="http://geo8.webarch.net/master/"></iframe>
 ```
 
 # R in the wild 4: Mapping bicycle crashes in West Yorkshire I. | Source: [Lovelace, Roberts and Kellar](http://eprints.whiterose.ac.uk/83930/) (2015)
