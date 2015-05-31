@@ -20,6 +20,7 @@ output:
 # TODO: create animation of population change over time
 # Add world mapping in ggplot2
 ```
+
 ## Preface
 
 This tutorial is an introduction to analysing spatial data in R, specifically through map-making with
@@ -1142,10 +1143,14 @@ lnd_b1 +
     alpha = 0.5)
 ```
 
-The code above contains a lot of parameters. Use the **ggplot2** help pages to find out what they are.
-The resulting map looks okay, but it would be improved with a simpler base map in black and white.
-A design firm called stamen provide the tiles we need and they can be brought into the
-plot with the `get_map` function:
+The code above contains many parameters. Use the **ggplot2** help pages
+(e.g. `?geom_polygon`) to find out what they are.
+The resulting map could be improved with a simpler basemap in black and white.
+Stamen provide the tiles we need and they can be brought into the
+plot with the `get_map` function:^[Note that a wide range of customised
+on-line basemaps can be used, by modifying 'cloudmade' map styles or
+customised Google Maps - see [r-bloggers.com/creating-styled-google-maps-in-ggmap](http://www.r-bloggers.com/creating-styled-google-maps-in-ggmap/) for details on
+the latter.]
 
 ```{r, eval=FALSE}
 # download basemap (use load("data/lnd_b2.RData") if you have no internet)
