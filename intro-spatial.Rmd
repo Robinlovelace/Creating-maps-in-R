@@ -508,7 +508,8 @@ nrow(lnd) # return the number of rows
 # download.file("http://data.london.gov.uk/datafiles/crime-community-safety/mps-
 # recordedcrime-borough.csv", destfile = "mps-recordedcrime-borough.csv")
 # uncomment and join the above code to download the data
-crime_data <- read.csv("data/mps-recordedcrime-borough.csv", stringsAsFactors = FALSE)
+crime_data <- read.csv("data/mps-recordedcrime-borough.csv",
+  stringsAsFactors = FALSE)
 head(crime_data)
 
 # Initially, the `read.csv` may an error. If not the `head` command should show
@@ -552,7 +553,7 @@ head(crime_data$CrimeType) # information about crime type
 crime_theft <- crime_data[crime_data$CrimeType == "Theft & Handling", ]
 head(crime_theft, 2) # take a look at the result (replace 2 with 10 to see more rows)
 
-# Calculate the sum of the crime count for each district and save result as a new object
+# Calculate the sum of the crime count for each district, save result
 crime_ag <- aggregate(CrimeCount ~ Borough, FUN = sum, data = crime_theft)
 # Show the first two rows of the aggregated crime data
 head(crime_ag, 2)
@@ -579,26 +580,19 @@ lnd$name[!lnd$name %in% crime_ag$Borough]
 The first line of code above uses the `%in%` command to
 identify which values in `lnd$name` are also contained in the Borough names of the
 aggregated crime data. The results indicate that all but one of the borough names matches.
-The second line of code tells us that it is 'City of London', row 25,
-which is named differently in the
+The second line of code tells us that it is 'City of London'. This does not exist in the
 crime data. This may be because the City of London has it's own Police 
 Force.^[See [www.cityoflondon.police.uk/](https://www.cityoflondon.police.uk/).]
+(The borough name in the crime data does not
+match `lnd$name` is 'NULL'. Check this by typing 
+`crime_ag$Borough[!crime_ag$Borough %in% lnd$name]`.)
 
-```{r}
-factor(crime_ag$Borough) # names of boroughs 
+> **Challenge:** identify the number of
+crimes taking place in borough 'NULL', less than
+4,000.
 
-# Select the problematic row --- the one which *does not* (via the ! symbol) match 
-sel <- !lnd$name %in% crime_ag$Borough # create selection
-# Rename row 25 in crime_ag to match row 25 in lnd
-levels(crime_ag$Borough)[25] <- as.character(lnd$name[sel])
-summary(lnd$name %in% crime_ag$Borough) # now all columns match
-```
-
-The above code block first identified the row with the faulty name and
-then renamed the level to match the `lnd` dataset. Note that we could not
-rename the variable directly, as it is stored as a factor.
-
-We are now ready to join the datasets. It is recommended to use
+Having checked the data found that one
+borough does not match, we are now ready to join the spatial and non-spatial datasets. It is recommended to use
 the `left_join` function from the **dplyr** package but the `merge` function
 could equally be used. Note that when we ask for help for a function
 that is not loaded, nothing happens, indicating we need to load it:
@@ -645,9 +639,18 @@ lnd@data <- left_join(lnd@data, crime_ag)
 
 Take a look at the new `lnd@data` object. You should
 see new variables added, meaning the attribute join
-was successful.
+was successful. Congratulations! You
+can now plot the rate of theft crimes in London by borough 
+(see Fig 8).
 
-### Challenge: create a map of additional variables in London
+```{r, echo=FALSE, fig.cap="Number of thefts per borough."}
+library(tmap)
+lnd$Thefts <- lnd$CrimeCount / 10000
+qtm(lnd, "Thefts", fill.title = "Thefts\n(10000)", scale = 0.8) +
+  tm_layout(legend.position = c(0.89,0.02))
+```
+
+> **Challenge:** create a map of additional variables in London
 
 With the attribute joining skills you have learned in this section,
 you should now be able to take datasets from many sources and
@@ -661,7 +664,9 @@ Using this dataset and the methods developed above, Figure 7 was
 created: the proportion of council seats won by the Conservatives
 in the 2014 local elections. The **challenge** is to create 
 a similar map of a different variable (you may need to skip to
-Part IV to plot continuous variables).
+Part IV to plot continuous variables).^[To
+see how this map was created, see the code
+in [intro-spatial.Rmd]() on GitHub, at [github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial.Rmd](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial.Rmd).]
 
 ```{r, echo=FALSE, results='hide', message=FALSE, warning=FALSE, fig.cap="Proportion of council seats won by Conservatives in the 2014 local elections using data from data.london.gov and joined using the methods presented in this section"}
 library(ggmap)
@@ -747,7 +752,8 @@ In this tutorial we will use the `over` function as it is easiest to use.
 In fact, it can be called just by using square brackets:
 
 ```{r fig.cap="The clipped stations dataset"}
-stations <- stations[lnd, ]
+stations_backup <- stations # backup the stations object
+stations <- stations[lnd, ] 
 plot(stations) # test the clip succeeded (see Figure 9)
 ```
 
@@ -922,7 +928,8 @@ powerful **ggmap** paradigm before outlining **leaflet**.
 
 ## **tmap**
 
-**tmap** was created by 
+[**tmap**](https://github.com/mtennekes/tmap)
+was created
 to overcome some of the limitations of base graphics
 and **ggmap**. The focus is on
 generating 'thematic maps' (which show a variable change
@@ -945,7 +952,7 @@ qtm(shp = lnd, fill = "Partic_Per", fill.palette = "-Blues")
 ```
 
 ```{r, fig.cap="Side-by-side maps of crimes and % voting conservative"}
-qtm(shp = lnd, fill = c("CrimeCount", "conservative"), fill.palette = c("Reds"), scale = 12)
+qtm(shp = lnd, fill = c("Partic_Per", "Pop_2001"), fill.palette = c("Blues"))
 ```
 
 The plot above shows the ease with which tmap can create maps
@@ -956,7 +963,7 @@ the power of the `tm_facets` command.
 tm_shape(lnd) +
     tm_fill("Pop_2001", thres.poly = 0) +
 tm_facets("name", free.coords=TRUE, drop.shapes=TRUE) +
-    tm_layout(legend.show = FALSE, title.position = c("center", "center"), title.cex = 2)
+    tm_layout(legend.show = FALSE, title.position = c("center", "center"), title.size = 20)
 ```
 
 A more established plotting paradigm is **ggplot2**
@@ -1339,7 +1346,11 @@ There is a lot going on here so explore the documentation to make sure you under
 Try out different colour values as well.
 
 Try experimenting with the above code block to see what effects you can
-produce. For bonus points, try creating an animation of London's evolving
+produce. 
+
+> **Challenge 1:** Try creating this plot for the % of population instead of the absolute population.
+
+> **Challenge 2:** For bonus points, try creating an animation of London's evolving
 population over time using the excellent
 [**animation**](http://cran.r-project.org/web/packages/animation/index.html)
 package.
