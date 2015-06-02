@@ -1,0 +1,52 @@
+---
+title: "Spatial Data Analysis with R"
+author: "Robin Lovelace"
+date: "June 1, 2015"
+output: html_document
+---
+
+Structure: flexible
+
+- Introducing R as a GIS: Introduction and example with London (Part I handout), 09:00 - 11:00 am
+- The structure of spatial objects in R (Part II) 11:15 - lunch
+- Loading and interrogating spatial data (Part III) Day 1 14:00 - 15:15
+- Visualising spatial datasets (Part III) Day 1 15:30 - 11:00 Day 2
+
+- Acquiring external data with R Day 2 11:15 - lunch
+
+After that: you choose!
+- Point pattern analysis and spatial interpolation 
+- Geographical models in R
+- Webmaps
+
+```{r, echo=FALSE, eval=FALSE}
+Course outline:
+
+As spatial datasets get larger more sophisticated software needs to be harnessed for their analysis. R is now a widely used open source software platform for working with spatial data thanks to its powerful analysis and visualisation packages. The first day of the course introduces the basics of how R can be used for spatial data.
+
+The second day demonstrates the many useful features that are hidden away in package documentation. get_map and getData, from ggmap and raster packages, for example, allow users to download data from anywhere in the world into R directly. Participants will be introduced to functionality in R that is very difficult to achieve in other software, such as the clustering of points into polygons and geographically weighted regression. The focus is on the principles rather than the specific methods, providing participants with the understanding needed to apply R's powerful suite of geographical tools to their own problems.
+
+It is expected that participants have basic R experience, e.g. attending, Course 1, Introduction to R. The course will be hands-on and applied with short introductory lectures to each of the topics, followed by practical sessions loading and analysing real spatial datasets.
+Course structure:
+
+This course will be structured as follows:
+
+    Introducing R as a GIS
+    The structure of spatial objects in R
+    Loading and interrogating spatial data
+    Visualising spatial datasets
+    Acquiring external data with R
+    Point pattern analysis and spatial interpolation
+    Geographical models in R
+    Webmaps
+
+
+Presenters
+
+Dr Colin Gillespie, Statistics Lecturer in the School of Mathematics &Statistics.
+
+Dr Robin Lovelace, Leeds University.
+£360 for 2 days (180 / day)
+
+```
+

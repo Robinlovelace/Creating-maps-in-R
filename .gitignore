@@ -23,3 +23,5 @@ spatial-data_files/
 shef*
 *.dcf
 *shinyapp*
+intro-spatial.R
+test.Rmd

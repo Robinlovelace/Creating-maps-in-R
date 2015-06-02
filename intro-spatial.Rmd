@@ -114,7 +114,8 @@ Any name could have been used, like `x_bumkin`, but `x` is concise
 and works just fine here. It is good practice to give your objects meaningful names.
 Note `<-`, the directional "arrow" assignment symbol. This creates new objects.
 We will be using this symbol a lot in this tutorial.^[Tip: typing `Alt -` on the keyboard will create the arrow in RStudio.
-The equals sign `=` also works but is not recommended by R developers.]
+The equals sign `=` also works but is
+rarely used.]
 
 To distinguish between prose and code, please be aware of the following typographic conventions used in this document: R code (e.g. `plot(x, y)`) is
 written in a `monospace` font and package names (e.g. **rgdal**)
@@ -211,7 +212,7 @@ which is used by other open source GIS packages such as QGIS and enables
 R to handle a broader range of spatial data formats. If you've not already
 *installed* and loaded the **rgdal** package (see the 'prerequisites and packages' section) do so now:
 
-```{r, message=FALSE}
+```{r, message=FALSE, results='hide'}
 library(rgdal)
 lnd <- readOGR(dsn = "data", layer = "london_sport")
 ```
@@ -253,7 +254,7 @@ by hitting `tab` before completing the command ---
 this can save you a lot of time in the long run
 (see Figure 3).
 
-```{r, echo=FALSE, fig.cap="Tab-autocompletion after typing 'lnd@' to see which slots are contained within"}
+```{r, fig.height=1.3, echo=FALSE, fig.cap="Tab-autocompletion in action: display from RStudio after typing `lnd@` then `tab` to see which slots are in `lnd`"}
 grid.raster(readPNG("figure/tab-complete.png"))
 ```
 
@@ -313,20 +314,22 @@ So far we have been interrogating only the attribute *slot* (`@data`) of the `ln
 to plot a subset of zones with high sports participation.
 
 ```{r, eval=FALSE}
-# Plot zones where sports participation is greater than 25 %
-plot(lnd[lnd$Partic_Per > 25, ]) # output not shown here
+# Select zones where sports participation is between 20 and 25%
+sel <- lnd$Partic_Per > 20 & lnd$Partic_Per < 25
+plot(lnd[sel, ]) # output not shown here
+head(sel) # test output of previous selection (not shown)
 ```
 
-This plot is useful, but it only shows the areas which meet the criteria. To see the sporty areas in context with the other areas of the map simply use the `add = TRUE` argument after the initial plot.
+This plot is could be useful, but it only shows the areas which meet the criteria. To see the sporty areas in context with the other areas of the map simply use the `add = TRUE` argument after the initial plot.
 (`add = T` would also work, but we like to spell things out in this tutorial for clarity).
 What do you think the `col` argument refers to in the below block? (see Figure 5).
 
-If you wish to experiment with multiple criteria queries, use the '&' sign. 
+If you wish to experiment with multiple criteria queries, use `&`. 
 
-```{r fig.cap="Preliminary plot of London with areas of high sports participation highlighted in blue"}
-plot(lnd) # plot the london_sport object
-sel <- lnd$Partic_Per > 25 # select the zones with high sports participation
-plot(lnd[ sel , ], col = "blue", add = TRUE) # add selected zones to existing map
+```{r fig.cap="Simple plot of London with areas of high sports participation highlighted in blue"}
+plot(lnd, col = "lightgrey") # plot the london_sport object
+sel <- lnd$Partic_Per > 25
+plot(lnd[ sel, ], col = "turquoise", add = TRUE) # add selected zones to map
 ```
 
 Congratulations! You have just interrogated and visualised a
@@ -336,24 +339,33 @@ the intricacies of
 how this was achieved: you have learned vital basics of how R works as a language;
 we will cover this in more detail in subsequent sections.
 
-As a bonus stage, let's try to select only zones that are
-close to the centre of London. Programming encourages rigorous
-thinking, so we must first be more precise in our formulation
-of the problem:
+As a bonus stage, select and plot
+only zones that are
+close to the centre of London (see Fig. 6). Programming encourages rigorous
+thinking and it helps to define the problem
+more specifically:
 
-> **Challenge**: Select all zones whose geographic centroid lies within 10 km of the geographic centroid of inner London.
+> **Challenge**: Select all zones whose geographic centroid lies within 10 km of the geographic centroid of inner 
+London.^[To
+see how this map was created, see the code
+in intro-spatial.Rmd. This may be loaded by typing
+`file.edit("intro-spatial.Rmd")` or online at [github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial.Rmd](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial.Rmd).]
 
-```{r, echo=FALSE, fig.cap="Zones in London whose centroid lie within 10 km of the geographic centroid of inner London"}
+```{r, echo=FALSE, fig.cap="Zones in London whose centroid lie within 10 km of the geographic centroid of inner London", message=FALSE}
 library(rgeos)
-centlnd <- gCentroid(lnd)
-cbuf <- gBuffer(spgeom = centlnd, width = 5000)
-lnd_cent <- lnd[cbuf,]
 plot(lnd, col = "grey")
-plot(lnd_cent, col = "blue", add = T)
-text(coordinates(centlnd), "Central London", col = "white")
-
+cent_lnd <- gCentroid(lnd)
+points(cent_lnd, cex = 3)
+lnd_buffer <- gBuffer(spgeom = cent_lnd, width = 10000) # set 10 km buffer
+lnd_central <- lnd[lnd_buffer,]
+lnd_cents <- SpatialPoints(coordinates(lnd),  proj4string = CRS(proj4string(lnd)))
+sel <- lnd_cents[lnd_buffer,]
+lnd_central <- lnd[sel,]
+plot(lnd_central, add = T, col = "lightblue", 
+  border = "grey")
+plot(lnd_buffer, add = T, border = "blue", lwd = 2)
+text(coordinates(cent_lnd), "Central\nLondon")
 ```
-
 
 ## Attribute data
 
@@ -464,6 +476,7 @@ that R can save and load data efficiently into its own data formats
 name. We use the latter as it more flexible:
 
 ```{r}
+# Save lnd84 object (we will use it in Part IV)
 saveRDS(object = lnd84, file = "data/lnd84.Rds")
 ```
 
@@ -474,8 +487,6 @@ right panel.)
 ```{r}
 rm(lnd84) # remove the lnd object
 ```
-
-
 
 ## Attribute joins
 
@@ -488,13 +499,12 @@ London boroughs to demonstrate this.
 To reaffirm our starting point, let's re-load the
 "london_sport" shapefile as a new object and plot it:
 
-```{r fig.cap="Plot of London"}
+```{r, eval=FALSE}
 library(rgdal) # ensure rgdal is loaded
 # Create new object called "lnd" from "london_sport" shapefile
 lnd <- readOGR(dsn = "data", "london_sport")
-
-plot(lnd) # plot the lnd object
-nrow(lnd) # return the number of rows
+plot(lnd) # plot the lnd object (not shown)
+nrow(lnd) # return the number of rows (not shown)
 ```
 
 ```{r, eval=FALSE, echo=FALSE}
@@ -640,17 +650,27 @@ lnd@data <- left_join(lnd@data, crime_ag)
 Take a look at the new `lnd@data` object. You should
 see new variables added, meaning the attribute join
 was successful. Congratulations! You
-can now plot the rate of theft crimes in London by borough 
-(see Fig 8).
+can now plot the rate of theft crimes in London by borough (see Fig 8).
 
-```{r, echo=FALSE, fig.cap="Number of thefts per borough."}
-library(tmap)
-lnd$Thefts <- lnd$CrimeCount / 10000
+```{r, eval=FALSE}
+library(tmap) # load tmap package (see Section IV)
+qtm(lnd, "CrimeCount") # plot the basic map
+```
+
+
+```{r, echo=FALSE, eval=FALSE}
+# This is the modified version of the code, to create the map displayed
+library(tmap) 
+lnd$Thefts <- lnd$CrimeCount / 10000 
 qtm(lnd, "Thefts", fill.title = "Thefts\n(10000)", scale = 0.8) +
   tm_layout(legend.position = c(0.89,0.02))
 ```
 
-> **Challenge:** create a map of additional variables in London
+```{r, fig.cap="Number of thefts per borough."}
+grid.raster(readPNG("figure/lnd-crime.png"))
+```
+
+> **Optional challenge:** create a map of additional variables in London
 
 With the attribute joining skills you have learned in this section,
 you should now be able to take datasets from many sources and
@@ -660,13 +680,13 @@ An excellent dataset on this can be found on the the
 [data.london.gov.uk](http://data.london.gov.uk/dataset/london-borough-profiles)
 website. 
 
-Using this dataset and the methods developed above, Figure 7 was
+Using this dataset and the methods developed above, Figure 8 was
 created: the proportion of council seats won by the Conservatives
 in the 2014 local elections. The **challenge** is to create 
 a similar map of a different variable (you may need to skip to
 Part IV to plot continuous variables).^[To
 see how this map was created, see the code
-in [intro-spatial.Rmd]() on GitHub, at [github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial.Rmd](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial.Rmd).]
+in intro-spatial.Rmd at [github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial.Rmd](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial.Rmd).]
 
 ```{r, echo=FALSE, results='hide', message=FALSE, warning=FALSE, fig.cap="Proportion of council seats won by Conservatives in the 2014 local elections using data from data.london.gov and joined using the methods presented in this section"}
 library(ggmap)
@@ -731,7 +751,7 @@ we will convert the 'stations' object to this:
 stations27700 <- spTransform(stations, CRSobj = CRS(proj4string(lnd)))
 stations <- stations27700 # overwrite the stations object 
 rm(stations27700) # remove the stations27700 object to clear up
-plot(lnd) # plot London for context (see Figure 8)
+plot(lnd) # plot London for context (see Figure 9)
 points(stations) # overlay the station points
 ```
 
@@ -754,7 +774,7 @@ In fact, it can be called just by using square brackets:
 ```{r fig.cap="The clipped stations dataset"}
 stations_backup <- stations # backup the stations object
 stations <- stations[lnd, ] 
-plot(stations) # test the clip succeeded (see Figure 9)
+plot(stations) # test the clip succeeded (see Figure 10)
 ```
 
 ```{r, echo=F,eval=FALSE}
@@ -836,24 +856,26 @@ miniature Vignette 'Clipping and aggregating spatial data with
 gIntersects' for more information on this: http://rpubs.com/RobinLovelace/83834 .]
 
 ```{r}
-lnd_n <- aggregate(stations["NUMBER"] , by = lnd, FUN = mean)
+lnd_n <- aggregate(stations["NUMBER"], by = lnd, FUN = mean)
 ```
 
 For an optional advanced task, let us analyse and plot the result.
 
 ```{r fig.cap="Choropleth map of mean values of stations in each borough"}
-q <- cut(lnd_n$NUMBER, breaks= c(quantile(lnd_n$NUMBER)), include.lowest=T)
-
+brks <- quantile(lnd_n$NUMBER)
+labs <- grey.colors(n = 4)
+q <- cut(lnd_n$NUMBER, brks, labels = labs, 
+  include.lowest = T)
 summary(q) # check what we've created
-greys <- paste0("grey", seq(from = 20, to = 80, by = 20)) # create grey colours
-clr <- as.character(factor(q, labels = greys)) # convert output of qs to greys
-plot(lnd_n, col = clr) # plot (not shown in printed tutorial)
-legend(legend = paste0("q", 1:4), fill = greys, "topright")
+
+qc <- as.character(q) # convert to character class to plot
+plot(lnd_n, col = qc) # plot (not shown in printed tutorial)
+legend(legend = paste0("Q", 1:4), fill = levels(q), "topright")
 areas <- sapply(lnd_n@polygons, function(x) x@area)
 ```
 
 This results in a simple choropleth map and a new vector containing the area of each
-borough (the basis for Figure 10). As an additional step, try comparing the mean
+borough (the basis for Fig. 11). As an additional step, try comparing the mean
 area of each borough with the
 mean value of `stations` points within it: `plot(lnd_n$NUMBER, areas)`.
 
@@ -863,33 +885,32 @@ Imagine now that we want to display all tube and train stations
 on top of the previously created choropleth map. How would we do this?
 The shape of points in R is determined by the `pch` argument, as demonstrated by the
 result of entering the following code: `plot(1:10, pch=1:10)`.
-To apply this knowledge to our map, we could add the following
-code to the chunk added above (see Figure 11):
+To apply this knowledge to our map, try adding the following
+code to the chunk above (output not shown):
 
 ```{r, eval=F}
-levels(stations$LEGEND) # we want A roads and rapid transit stations (RTS)
+levels(stations$LEGEND) # see A roads and rapid transit stations (RTS) (not shown)
 sel <- grepl("A Road Sing|Rapid", stations$LEGEND) # selection for plotting 
 sym <- as.integer(stations$LEGEND[sel]) # symbols
 points(stations[sel,], pch = sym)
 legend(legend = c("A Road", "RTS"), "bottomright", pch = unique(sym))
 ```
 
-```{r fig.cap="Symbol levels for train station types in London", echo=FALSE}
+```{r , echo=FALSE, eval=FALSE}
+# , fig.cap="Symbol levels for train station types in London"
 q <- cut(lnd_n$NUMBER, breaks= c(quantile(lnd_n$NUMBER)), include.lowest=T)
 clr <- as.character(factor(q, labels = paste0("grey", seq(20, 80, 20))))
 plot(lnd_n, col = clr)
 legend(legend = paste0("q", 1:4), fill = paste0("grey", seq(20, 80, 20)), "topright")
-levels(stations$LEGEND)
 sel <- grepl("A Road Sing|Rapid", stations$LEGEND) # selection for plotting 
 sym <- as.integer(stations$LEGEND[sel]) # symbols
 points(stations[sel,], pch = sym)
 legend(legend = c("A Road", "RTS"), "bottomright", pch = unique(sym))
 ```
 
-In the above block of code, we first identified which types of transport
+The above block of code first identifies which types of transport
 points are present in the map with `levels` (this command only works on
-factor data, and tells us the unique names of the factors that the vector can
-hold). Next we select a subset of `stations` using a new command, `grepl`, to
+factor data). Next we select a subset of `stations` using a new command, `grepl`, to
 determine which points we want to plot. Note that `grepl`'s first argument
 is a text string (hence the quote marks) and the second is a factor
 (try typing `class(stations$LEGEND)` to test this).
@@ -1126,7 +1147,7 @@ object created in the reprojection operation (see Part III).
 Load this with `readRDS()`.
 
 ```{r}
-lnd84 <- readRDS("data/lnd84.Rds")
+lnd84 <- readRDS("data/lnd84.Rds") # load previously saved object
 ```
 
 The first job is to calculate the bounding box (bb for short) of the
@@ -1324,8 +1345,7 @@ lnd_f$date <- gsub(pattern = "Pop_", replacement = "", lnd_f$date)
 ```
 
 We can now use faceting to produce one map per year
-(this may take a little while to appear as displayed
-in Figure 17).
+(Fig. 19).
 
 ```{r fig.cap="Faceted plot of the distribution of London's population over time", fig.height=6, fig.width=6}
 ggplot(data = lnd_f, # the input data
