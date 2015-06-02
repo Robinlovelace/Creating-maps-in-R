@@ -336,6 +336,25 @@ the intricacies of
 how this was achieved: you have learned vital basics of how R works as a language;
 we will cover this in more detail in subsequent sections.
 
+As a bonus stage, let's try to select only zones that are
+close to the centre of London. Programming encourages rigorous
+thinking, so we must first be more precise in our formulation
+of the problem:
+
+> **Challenge**: Select all zones whose geographic centroid lies within 10 km of the geographic centroid of inner London.
+
+```{r, echo=FALSE, fig.cap="Zones in London whose centroid lie within 10 km of the geographic centroid of inner London"}
+library(rgeos)
+centlnd <- gCentroid(lnd)
+cbuf <- gBuffer(spgeom = centlnd, width = 5000)
+lnd_cent <- lnd[cbuf,]
+plot(lnd, col = "grey")
+plot(lnd_cent, col = "blue", add = T)
+text(coordinates(centlnd), "Central London", col = "white")
+
+```
+
+
 ## Attribute data
 
 All shapefiles have both attribute table and geometry data. These are automatically loaded with
@@ -362,12 +381,16 @@ summary(lnd)
 ## Is projected: TRUE
 ## proj4string :
 ## [+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 ....]
+
+...
 ```
 
-The above output tells us that `lnd` is a special spatial class,
-in this case a `SpatialPolygonsDataFrame`, meaning it is composed of
-various polygons, each of which has attributes. This is the typical
-class of data found in administrative zones. The coordinates tell
+The first line of the above output tells us that `lnd` is a special spatial class,
+in this case a `SpatialPolygonsDataFrame`.
+This means it is composed of
+various polygons, each of which has attributes.
+(Summaries of the attribute data are also provided, but are not printed above.) This is the ideal
+class of data to represent administrative zones. The coordinates tell
 us what the maximum and minimum x and y values are (for plotting).
 Finally, we are told something of the coordinate reference system
 with the `Is projected` and `proj4string` lines.
@@ -463,11 +486,7 @@ variables from an external source? We will use the example of recorded crimes by
 London boroughs to demonstrate this.
 
 To reaffirm our starting point, let's re-load the
-"london_sport" shapefile as a new object and plot it. This is identical to
-the `lnd` object in the first instance, but we will give it a new name,
-in case we ever need to re-use `lnd`.
-We will call this new object
-`lnd`, short for London:
+"london_sport" shapefile as a new object and plot it:
 
 ```{r fig.cap="Plot of London"}
 library(rgdal) # ensure rgdal is loaded
@@ -489,7 +508,7 @@ nrow(lnd) # return the number of rows
 # download.file("http://data.london.gov.uk/datafiles/crime-community-safety/mps-
 # recordedcrime-borough.csv", destfile = "mps-recordedcrime-borough.csv")
 # uncomment and join the above code to download the data
-crime_data <- read.csv("data/mps-recordedcrime-borough.csv")
+crime_data <- read.csv("data/mps-recordedcrime-borough.csv", stringsAsFactors = FALSE)
 head(crime_data)
 
 # Initially, the `read.csv` may an error. If not the `head` command should show
@@ -523,10 +542,11 @@ to aggregate the crimes at the borough level, ready to join to our spatial
 
 ```{r, results='hide'}
 # Create and look at new crime_data object
-crime_data <- read.csv("data/mps-recordedcrime-borough.csv")
+crime_data <- read.csv("data/mps-recordedcrime-borough.csv",
+  stringsAsFactors = FALSE)
 
 head(crime_data, 3) # display first 3 lines
-summary(crime_data$CrimeType) # summary of crime type
+head(crime_data$CrimeType) # information about crime type
 
 # Extract "Theft & Handling" crimes and save
 crime_theft <- crime_data[crime_data$CrimeType == "Theft & Handling", ]
@@ -561,10 +581,11 @@ identify which values in `lnd$name` are also contained in the Borough names of t
 aggregated crime data. The results indicate that all but one of the borough names matches.
 The second line of code tells us that it is 'City of London', row 25,
 which is named differently in the
-crime data. Look at the results (not shown here) on your computer.
+crime data. This may be because the City of London has it's own Police 
+Force.^[See [www.cityoflondon.police.uk/](https://www.cityoflondon.police.uk/).]
 
 ```{r}
-levels(crime_ag$Borough)[1:2] # names of boroughs 
+factor(crime_ag$Borough) # names of boroughs 
 
 # Select the problematic row --- the one which *does not* (via the ! symbol) match 
 sel <- !lnd$name %in% crime_ag$Borough # create selection
@@ -618,7 +639,7 @@ a useful function to `rename` variables:
 head(lnd$name) # dataset to add to (results not shown)
 head(crime_ag$Borough) # the variables to join
 crime_ag <- rename(crime_ag, name = Borough) # rename the 'Borough' heading to 'name'
-# head(join(lnd@data, crime_ag)) # test it works
+# head(left_join(lnd@data, crime_ag)) # test it works
 lnd@data <- left_join(lnd@data, crime_ag)
 ```
 
@@ -633,7 +654,7 @@ you should now be able to take datasets from many sources and
 join them to your geographical data. To test your skills, try to
 join additional borough-level variables to the `lnd` object.
 An excellent dataset on this can be found on the the 
-[data.gov.uk](http://data.london.gov.uk/dataset/london-borough-profiles)
+[data.london.gov.uk](http://data.london.gov.uk/dataset/london-borough-profiles)
 website. 
 
 Using this dataset and the methods developed above, Figure 7 was
