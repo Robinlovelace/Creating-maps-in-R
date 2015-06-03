@@ -1,7 +1,7 @@
 ---
 title: "Introduction to visualising spatial data in R"
-author: "Robin Lovelace (R.Lovelace@leeds.ac.uk) and James Cheshire (james.cheshire@ucl.ac.uk)"
-date: "July, 2014"
+author: "Robin Lovelace (R.Lovelace@leeds.ac.uk) and others"
+date: "June, 2015 (for latest version see [github.com/Robinlovelace/Creating-maps-in-R](https://github.com/Robinlovelace/Creating-maps-in-R))"
 output:
   pdf_document:
     fig_cap: yes
@@ -14,35 +14,50 @@ output:
 
 \newpage
 
-```{r, echo=FALSE}
+```{r, include=FALSE}
 # output: word_document
 # TODO: add details for the ggplot2 section
 # TODO: create animation of population change over time
 # Add world mapping in ggplot2
+library(knitr)
+library(methods)
+options(replace.assign=FALSE, width=80)
+
+opts_chunk$set(fig.path='knitr_figure/graphics-', 
+               cache.path='knitr_cache/graphics-', 
+               dev='pdf', fig.width=4, fig.height=3, 
+               fig.show='hold', cache=FALSE, par=TRUE)
+knit_hooks$set(crop=hook_pdfcrop)
+
+knit_hooks$set(par=function(before, options, envir){
+    if (before && options$fig.show!='none') {
+        par(mar=c(3,3,2,1),cex.lab=.95,cex.axis=.9,
+            mgp=c(2,.7,0),tcl=-.01, las=1)
+}}, crop=hook_pdfcrop)
 ```
 
 ## Preface
 
 This tutorial is an introduction to analysing spatial data in R, specifically through map-making with
-R's 'base' graphics and use of the popular graphics package **ggplot2**.
-It assumes no prior knowledge of spatial data analysis but
-prior understanding of the R command line would be beneficial.
-If you have not used R before, we recommend working through an
-introductory type tutorial, such as
+R's 'base' graphics and use of the popular graphics package **ggplot2**. It teaches the basics of using R as a
+fast, user-friendly and extremely powerful command-line
+Geographic Information System (GIS).
+
+The tutorial is practical in nature: you will load-in,
+visualise and manipulate spatial data.
+We assume no prior knowledge of spatial data analysis but some
+experience with R will help.
+If you have not used R before, it may be worth following an
+introductory tutorial, such as
 "A (very) short introduction to R"
-([Torfs and Brauer, 2012](http://cran.r-project.org/doc/contrib/Torfs+Brauer-Short-R-Intro.pdf))
-or the more geographically inclined "Short introduction to R"
-([Harris, 2012](http://www.social-statistics.org/wp-content/uploads/2012/12/intro_to_R1.pdf)).
+([Torfs and Brauer, 2012](http://cran.r-project.org/doc/contrib/Torfs+Brauer-Short-R-Intro.pdf)).
+This is how the tutorial is organised.
 
-Building on such background material,
-the following tutorial is concerned with specific functions for spatial data
-and visualisation. It is divided into five parts:
-
-I Introduction: provides a guide to R's syntax and preparing for the tutorial
-II Spatial data in R: describes basic spatial functions in R
-III Manipulating spatial data: includes changing projection, clipping and spatial joins
-IV Map making with **ggplot2**: a graphics package for producing beautiful maps quickly
-V Taking spatial analysis in R further: a compilation of resources for furthering your skills
+1. Introduction: provides a guide to R's syntax and preparing for the tutorial
+2. Spatial data in R: describes basic spatial functions in R
+3. Creating and manipulating spatial data: includes changing projection, clipping and spatial joins
+4. Map making with **ggplot2**: a graphics package for producing beautiful maps quickly
+5. Taking spatial analysis in R further: a compilation of resources for furthering your skills
 
 
 Part I: Introduction
@@ -61,7 +76,7 @@ R has a huge and growing number of spatial data packages. We recommend taking a 
 In this tutorial we will use:
 
 - **ggmap**: extends the plotting package **ggplot2** for maps
-- **rgdal**: R's interface to the popular C/C++ GIS library [gdal](http://www.gdal.org/)
+- **rgdal**: R's interface to the popular C/C++ spatial data processing library [gdal](http://www.gdal.org/)
 - **rgeos**: R's interface to the powerful vector processing library [geos](http://trac.osgeo.org/geos/)
 - **maptools**: provides various mapping functions
 - [**dplyr**](http://cran.r-project.org/web/packages/dplyr/index.html) and [**tidyr**](http://blog.rstudio.org/2014/07/22/introducing-tidyr/): fast and concise data manipulation packages
@@ -122,7 +137,7 @@ written in a `monospace` font and package names (e.g. **rgdal**)
 are written in **bold**. 
 
 A double hash (`##`) at the start of a line of code indicates that this is output from R. Lengthy outputs have been omitted from the document to save space, so do
-not be alarmed if R produces additional messages: you can always look up them up online.
+not be alarmed if R produces additional messages: you can always look up them up on-line.
 
 As with any programming language, there are often many ways to produce the same output in R. The code presented in this document is not the only way to do things. We encourage you to
 play with the code to gain a deeper understanding of R.
@@ -146,7 +161,7 @@ on and download some packages and data.
 
 # Part II: Spatial data in R
 
-## Starting the tutorial
+## Starting the tutorial and downloading the data
 
 Now that we have taken a look at R's syntax and installed the
 necessary packages,
@@ -156,12 +171,9 @@ and interrogating spatial objects are central spatial data
 analysis in R, so we will focus on these elements in the next two parts of the tutorial,
 before focussing on creating attractive maps in Part IV.
 
-## Downloading and loading spatial data
-
 ```{r, echo=FALSE}
 # TODO: add info about accessing online data from R
 ```
-
 
 Download the data for this tutorial from
 [https://github.com/Robinlovelace/Creating-maps-in-R](https://github.com/Robinlovelace/Creating-maps-in-R).
@@ -412,50 +424,111 @@ We will cover reprojecting data in the next part of the tutorial.
 
 \clearpage
 
-# Part III: Manipulating spatial data
+# Part III: Creating and manipulating spatial data
 
 ```{r, echo=FALSE}
 # should be manipulating and plotting. TODO: talk about base graphics
 ```
 
-To compete with modern GIS packages, R must also be able
-to modify spatial data and its associated objects
-(for more guidance see 
-'[using R as a GIS](https://github.com/Pakillo/R-GIS-tutorial)' - available at https://github.com/Pakillo/R-GIS-tutorial).
-R has a wide range of very powerful
-functions for this, many of which reside in additional packages alluded
-to in the introduction.
+Beyond visualisation and interogation GIS software must also
+be able to create and modify spatial data.
+R  excels in this regard. R's spatial packages
+provide a very wide and powerful suite of
+functionality for processing spatial data, and its
+strict class system make it easy to create new spatial datasets.
 
-This course is introductory so only two commonly required
-data manipulation tasks - *reprojecting* and *joining/clipping* - are covered here.
-First we will look at joining non-spatial
-data to our spatial object, and secondly look at spatial joins, whereby
-data is joined to another dataset based on spatial location.
+*Reprojecting* and *joining/clipping* 
+are fundamental operations in the GIS analyst's toolkit,
+so we introduce these, before
+looking at joining non-spatial
+data to spatial objects.
+Finally we cover spatial joins, whereby
+information from two spatial objects is
+combined based on spatial location.
 
-## Changing the projection
+## Creating new spatial data
 
-Before undertaking spatial queries of an object, it is useful
-to know the *coordinate reference system* (CRS) it uses.
-You may have noticed the word `proj4string` in the
-summary of the `lnd` object above.
-This represents the CRS mathematically.
-In some spatial data files, no CRS is specified or an incorrect CRS value is given.
-Provided the correct CRS is known, this can be adjusted like so:
+R objects can be created by entering the name of the
+class we want to make. `vector` and `data.frame`
+objects for example, can be
+created as follows:
 
-```{r, warning=FALSE}
-proj4string(lnd) <- CRS("+init=epsg:27700")
+```{r}
+vec <- vector(mode = "numeric", length = 3)
+df <- data.frame(x = 1:3, y = c(1/2, 2/3, 3/4))
 ```
 
-R issues a warning when changing the CRS in this way to ensure the user
+We can check the class of these new objects using `class()`:
+
+```{r}
+class(vec)
+class(df)
+```
+
+The same logic applies to spatial data, but the input requirements are stricter. To create a `SpatialPoints` object,
+for example, the input coordinates *must* be supplied in a matrix:
+
+```{r}
+mat <- as.matrix(df) # create matrix object with as.matrix
+sp1 <- SpatialPoints(coords = mat)
+```
+
+Note in the code above the use of `as.matrix()` to change
+the class of an existing object. 
+We then create a spatial points object,
+one of the fundamental data
+types for spatial data. (The others are lines, polygons
+and pixels, which can be created by `SpatialLines`,
+`SpatialPolygons` and `SpatialPixels`, respectively.)
+Each type of spatial data has a corrolary that can accepts
+non-spatial data, created by adding `DataFrame`.
+`SpatialPointsDataFrame()`, for example, creates points
+with an associated `data.frame`. The number of rows
+in this dataset must equal the number of features in the
+spatial object, which in the case of `sp1` is 3.
+
+```{r}
+class(sp1)
+spdf <- SpatialPointsDataFrame(sp1, data = df)
+class(spdf)
+```
+
+The above code extends the preexisting object `sp1` by adding
+data from `df`. To see how strinct spatial classes are,
+try replacing `df` with `mat` in the above code: it causes an error. All spatial data classes can be created in a similar way,
+although `SpatialLines` and `SpatialPolygons` are much more
+complicated (Bivand et al. 2013). More frequently your spatial
+data will be read-in from an externally-created file, e.g.
+using `readOGR()`. Unlike the spatial objects we created above,
+most spatial data comes with an associate 'CRS'.
+
+## Projections: setting and transforming CRS in R
+
+The *Coordinate Reference System* (CRS) of spatial objects
+defines where they are placed on the Earth's surface.
+You may have noticed '`proj4string` 'in the
+summary of `lnd` above:
+the information that follows represents its CRS.
+Spatial data should always have a CRS.
+If no CRS information is provided, and the correct CRS is known,
+it can be set as follow:
+
+```{r, warning=FALSE}
+proj4string(lnd) <- NA_character_ # remove CRS information from lnd
+proj4string(lnd) <- CRS("+init=epsg:27700") # assign a new CRS
+```
+
+R issues a warning when the CRS is changed. This is so the user
 knows that they are simply changing the CRS, not *reprojecting* the data.
-R uses [EPSG codes]() to refer to different coordinate reference systems.
-`27700` is the code for British National Grid.
-A commonly used geographical
-CRS is 'WGS84', whose EPSG code is `4326`.
+An easy way to refer to different projections
+is via [EPSG codes](http://www.epsg-registry.org/).
+
+Under this system `27700` represents the British National Grid.
+'WGS84' (`epsg:4326`) is a very commonly used CRS worldwide.
 The following code shows how to search the list of available EPSG
 codes and create a new version of `lnd` in WGS84:^[Note:
-entering `projInfo()` will provide additional CRS options
-available from **rgdal**.]
+entering `projInfo()` provides additional CRS options. [spatialreference.org](http://spatialreference.org/)
+provides more information about EPSG codes.]
 
 ```{r}
 EPSG <- make_EPSG() # create data frame of available EPSG codes
@@ -463,17 +536,14 @@ EPSG[grepl("WGS 84$", EPSG$note), ] # search for WGS 84 code
 lnd84 <- spTransform(lnd, CRS("+init=epsg:4326")) # reproject
 ```
 
-The above code uses the function `spTransform`, from the **sp** package,
-to convert the `lnd` object into a new form, with the Coordinate Reference System (CRS)
-specified as WGS84.
-You can search a list of EPSG codes at
-[spatialreference.org](http://spatialreference.org/).
-
-It is worth pointing out at this stage, after we've transformed `lnd` into
+Above, `spTransform` converts the coordinates of
+`lnd` into the widely used WGS84 CRS.
+Now we've transformed `lnd` into
 a more widely used CRS,
-that R can save and load data efficiently into its own data formats
-(`.RData` or `.Rds`). The former is more restrictive and maintains the object's
-name. We use the latter as it more flexible:
+it is worth saving it. R stores data efficiently in
+`.RData` or `.Rds` formats.
+The former is more restrictive and maintains the object's
+name, so we use the latter.
 
 ```{r}
 # Save lnd84 object (we will use it in Part IV)
@@ -625,7 +695,7 @@ The documentation for the `left_join` function
 will be displayed if the plyr package is available (if not,
 use `install.packages()` to install it).
 We use `left_join` because we want the length of the data frame
-to rename unchanged, with variables from new data appended in
+to remain unchanged, with variables from new data appended in
 new columns. Or, in R's rather terse documentation:
 "return all rows from x, and all columns from x and y."
 The `*join` commands (including `inner_join` and `anti_join`) are more
@@ -666,7 +736,7 @@ qtm(lnd, "Thefts", fill.title = "Thefts\n(10000)", scale = 0.8) +
   tm_layout(legend.position = c(0.89,0.02))
 ```
 
-```{r, fig.cap="Number of thefts per borough."}
+```{r, echo=FALSE, fig.cap="Number of thefts per borough."}
 grid.raster(readPNG("figure/lnd-crime.png"))
 ```
 
@@ -773,7 +843,7 @@ In fact, it can be called just by using square brackets:
 
 ```{r fig.cap="The clipped stations dataset"}
 stations_backup <- stations # backup the stations object
-stations <- stations[lnd, ] 
+stations <- stations_backup[lnd, ] 
 plot(stations) # test the clip succeeded (see Figure 10)
 ```
 
@@ -808,8 +878,8 @@ We create a new object, `sel` (short for "selection"),
 containing the indices of all relevant polygons:
 
 ```{r, eval=FALSE}
-sel <- over(stations, lnd)
-stations <- stations[!is.na(sel[,1]),]
+sel <- over(stations_backup, lnd)
+stations2 <- stations_backup[!is.na(sel[,1]),]
 ```
 
 Typing `summary(sel)` should provide insight into how this
@@ -973,7 +1043,7 @@ qtm(shp = lnd, fill = "Partic_Per", fill.palette = "-Blues")
 ```
 
 ```{r, fig.cap="Side-by-side maps of crimes and % voting conservative"}
-qtm(shp = lnd, fill = c("Partic_Per", "Pop_2001"), fill.palette = c("Blues"))
+qtm(shp = lnd, fill = c("Partic_Per", "Pop_2001"), fill.palette = c("Blues"), ncol = 2)
 ```
 
 The plot above shows the ease with which tmap can create maps
@@ -1000,7 +1070,7 @@ the base graphics in R (the functions you have been plotting with so far).
 It contains default options that match good visualisation practice.
 
 **ggplot2** is one of the best documented packages in R.
-This documentation can be found online and it is recommended you
+This documentation can be found on-line and it is recommended you
 test out the examples and play with them:
 http://docs.ggplot2.org/current/ .
 
@@ -1154,9 +1224,8 @@ The first job is to calculate the bounding box (bb for short) of the
 `lnd84` object to identify the geographic extent of the image tiles that we need.
 
 ```{r}
-b <- bbox(lnd84)
-b[1, ] <- (b[1, ] - mean(b[1, ])) * 1.05 + mean(b[1, ])
-b[2, ] <- (b[2, ] - mean(b[2, ])) * 1.05 + mean(b[2, ])
+bb <- bbox(lnd84)
+b <- (bb - rowMeans(bb)) * 1.05 + rowMeans(bb)
 # scale longitude and latitude (increase bb by 5% for plot)
 # replace 1.05 with 1.xx for an xx% increase in the plot size
 ```
@@ -1254,20 +1323,20 @@ has a strong user community. It is fast, powerful and easy to learn.
 
 A recent package developed by RStudio, called 
 **leaflet**^[We also refer to this as **rstudio/leaflet**, after the
-project's online home at 
+project's on-line home at 
 [github.com/rstudio/leaflet](https://github.com/rstudio/leaflet),
-to avoid confustion with the JavaScript library.]
+to avoid confusion with the JavaScript library.]
 provides R bindings to Leaflet.
 **rstudio/leaflet**
 allows the creation and deployment of interactive web maps in few
 lines of code. One of the exciting things about the package is
-its tight integration with the R package for interactive online
+its tight integration with the R package for interactive on-line
 visualisation, **shiny**.
 Used together, these allow R to act as a complete map-serving
 platform, to compete with the likes of GeoServer!
 For more information on **rstudio/leaflet**, see
 [rstudio.github.io/leaflet/](https://rstudio.github.io/leaflet/) and
-the following online tutorial:
+the following on-line tutorial:
 [robinlovelace.net/r/2015/02/01/leaflet-r-package.html](http://robinlovelace.net/r/2015/02/01/leaflet-r-package.html).
 
 ```{r, eval=FALSE}
@@ -1410,7 +1479,7 @@ rather than as a collection of isolated functions.
 In R the whole is greater than
 the sum of its parts.
 
-The supportive online communities surrounding large open source programs such as R
+The supportive on-line communities surrounding large open source programs such as R
 are one of their greatest assets, so we recommend you become an active
 "[open source citizen](http://blog.cleverelephant.ca/2013/10/being-open-source-citizen.html)" rather than a passive consumer (Ramsey & Dubovsky, 2013).
 
@@ -1418,19 +1487,18 @@ This does not necessarily mean writing a new package or contributing
 to R's 'Core Team' --- it can simply involve helping
 others use R. We therefore conclude the tutorial with a list of resources
 that will help you further sharpen you R skills, find help and contribute
-to the growing online R community:
+to the growing on-line R community:
 
 * R's homepage hosts a wealth of [official](http://cran.r-project.org/manuals.html) and [contributed](http://cran.r-project.org/other-docs.html) guides.
 http://cran.r-project.org
-* Stack Exchange and GIS Stack Exchange groups - try searching for "[R]". If your issue has not been not been addressed yet, you could post a polite question.
-* R's [mailing lists](http://www.r-project.org/mail.html) - the R-sig-geo list may be of particular interest here.
-http://www.r-project.org/mail.html
+* [StackOverflow](http://stackoverflow.com/search?q=[r]) and [GIS.StackExchange](http://gis.stackexchange.com/) groups (the "[R]" search term limits the results). If your question has not been answered yet, just ask, preferably with a reproducible example.
+* R's [mailing lists](http://www.r-project.org/mail.html), especially [R-sig-geo](https://stat.ethz.ch/pipermail/r-sig-geo/). See [r-project.org/mail.html](http://www.r-project.org/mail.html).
 
-Books: despite the strength of R's online community, nothing beats a physical book for concentrated learning. We would particularly recommend the following:
+Books: despite the strength of R's on-line community, nothing beats a physical book for concentrated learning. We recommend the following:
 
  * Wickham (2009): 'ggplot2: elegant graphics for data analysis'
  * Bivand et al. (2013) : 'Applied spatial data analysis with R' - provides a dense and detailed overview of spatial data analysis.
- * Kabacoff (2011): 'R in action' - more general R book and has many fun worked examples.
+ * Kabacoff (2011): 'R in action' - more general R book with many fun worked examples.
  
  \clearpage
  
@@ -1534,5 +1602,5 @@ Wickham, H. (2014). Tidy data. The Journal of Statistical Software, 14(5), Retri
 Wilkinson, L. (2005). The grammar of graphics. Springer.
 
 ```{r, echo=FALSE}
-# system("mv intro-spatial.pdf intro-spatial-rl.pdf") # change name
+system("mv intro-spatial.pdf intro-spatial-rl.pdf") # change name
 ```
