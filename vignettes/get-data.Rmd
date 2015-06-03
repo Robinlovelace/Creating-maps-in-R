@@ -1,0 +1,49 @@
+---
+title: "Geographical data out of R"
+author: "Robin Lovelace"
+date: "June 3, 2015"
+output: html_document
+---
+
+## Raster package
+
+```{r}
+lnd_raster <- raster::shapefile("data/")
+```
+
+
+```{r}
+library(raster)
+fr <- getData(name = "GADM", country = "FRA", level = 1)
+allcountries <- ccodes()
+allcountries[i,2]
+plot(fr)
+names(fr@data)
+fr$NAME_1
+
+world <- getData(name = "GADM")
+
+afg <- getData(country = "AFG", level = 1)
+?getData
+plot(cc)
+
+
+object.size(afg) / 1000000
+afgs <- rgeos::gSimplify(afg, tol = 0.01)
+afg <- SpatialPolygonsDataFrame(afgs, afg@data)
+object.size(afg) / 1000000
+
+# library(devtools)
+# install_github("rstudio/leaflet")
+library(leaflet)
+leaflet() %>% 
+  addTiles() %>% 
+  addPolygons(data = afg, popup = afg$NAME_1)
+```
+
+> **Challenge:** download data for 2 different countries and 2 different
+levels. 
+
+> **Challenge:** Try to merge some data you've found from the internet with this geographical data and plot the result using your prefered method out of tmap, base graphics, leaflet or ggmap.
+
+

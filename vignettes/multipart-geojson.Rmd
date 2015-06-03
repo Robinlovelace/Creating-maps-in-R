@@ -1,0 +1,45 @@
+---
+title: "Multipart polygons R"
+author: "Robin Lovelace"
+date: "June 2, 2015"
+output: html_document
+---
+
+Based on this:
+https://stackoverflow.com/questions/30583048/convert-features-of-a-multifeature-geojson-into-r-spatial-objects/30593077#30593077
+
+Normally you can read geojson files into R with trusty `readOGR`, as illustrated [here][1].
+
+However, this fails for multifeature geojsons.
+
+Reproducible example:
+
+```{r}
+downloader::download("https://github.com/Robinlovelace/Creating-maps-in-R/raw/master/data/test-multifeature.geojson", "test.geojson")
+try(test <- rgdal::readOGR("test.geojson", "OGRGeoJSON")) # fails with:
+```
+
+The error message is clear-enough and indicates a solution: split the features.
+Aside from doing this with regex, I don't know how, however.
+
+Any ideas very much welcome.
+
+The amazing thing: [GitHub displays the data natively on the browser][2], whereas R cannot even (seemingly) read it in!
+
+Alternative way to a solution:
+
+```{r}
+test <- geojsonio::geojson_read("test.geojson")
+```
+
+## Solution from Spacedman
+
+```{r}
+mess <- 'ogr2ogr -where "OGR_GEOMETRY=\'LINESTRING\'" -f "GeoJSON" lines.geojson  test.geojson'
+system(mess)
+testl <- rgdal::readOGR("lines.geojson")
+```
+
+
+  [1]: https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/vignettes/geoJSON.Rmd
+  [2]: https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/data/test-multifeature.geojson

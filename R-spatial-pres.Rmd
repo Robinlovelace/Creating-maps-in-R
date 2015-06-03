@@ -1,7 +1,7 @@
 ---
 title: "An introduction to R for Spatial data"
 author: "Robin Lovelace"
-date: "Sheffield, May 15th 2015"
+date: "Newcastle, June 2nd 2015"
 output:
   slidy_presentation:
     fig_height: 4
@@ -23,18 +23,36 @@ This course is brought to you the Consumer Data Research Centre
 project based at the University of Leeds and UCL. It is 
 funded by the ESRC's ([Big Data Network](http://www.esrc.ac.uk/research/major-investments/Big-Data/BDN-Phase2.aspx))
 
+Packages
+=================
+
+
+
+```{r, eval=FALSE}
+pkgs <- c("rgdal", # (can be tricky)
+  "rgeos",
+  "ggmap",
+  "tmap",)
+install.packages(pkgs)
+```
+
+
 Course agenda
 =======================================================
 
 
 During this course we will cover these topics
 
+- Introducing R as a GIS: Introduction and example with London (Part I handout), 09:00 - 11:00 am
+- The structure of spatial objects in R (Part II) 11:15 - lunch
+- Loading and interrogating spatial data (Part III) Day 1 14:00 - 15:15
+- Visualising spatial datasets (Part III) Day 1 15:30 - 11:00 Day 2
+
+<!--
 - An introduction to R (14:00 - 15:00)
 - Loading, interrogating and manipulating spatial data (15:00 - 16:00)
 - Making maps with ggplot2 (16:00 - 16:30)
 - Questions, answers and experimenting with R
-
-<!--
 
 LUNCH
 
@@ -43,6 +61,17 @@ LUNCH
 - More advanced visuals (15:30 - 16:00)
 - Taking it further + Q & A (16:00 onwards)
 -->
+
+Day 2
+==========
+
+- Acquiring external data with R Day 2 11:15 - lunch
+
+After that: you choose!
+
+- Point pattern analysis and spatial interpolation 
+- Geographical models in R
+- Webmaps
 
 ```{r, echo=FALSE}
 # During this course we will cover these topics

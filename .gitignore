@@ -25,3 +25,9 @@ shef*
 *shinyapp*
 intro-spatial.R
 test.Rmd
+test.geojson
+lines.geojson
+AFG_adm1.RData
+FRA_adm1.RData
+arast.*
+bikeWY.geojson

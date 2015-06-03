@@ -1,0 +1,68 @@
+---
+title: "Download LAs and point-pattern analysis"
+author: "Robin Lovelace"
+date: "June 3, 2015"
+output: html_document
+---
+
+```{r, eval=FALSE}
+downloader::download("https://geoportal.statistics.gov.uk/Docs/Boundaries/County_and_unitary_authorities_(E+W)_2012_Boundaries_(Generalised_Clipped).zip", "data/cuas.zip")
+unzip("data/cuas.zip", exdir = "data")
+cuas <- raster::shapefile("data/CTYUA_DEC_2012_EW_BGC.shp")
+plot(cuas)
+cuas@data$CTYUA12NM
+WY <- cuas[cuas$CTYUA12NM == "Surrey",]
+plot(WY)
+```
+
+Then follow this link to find out how to get data for road traffic
+'accidents': https://github.com/Robinlovelace/bikeR/blob/master/video-routes/load-stats19.R
+
+After running the code in this file, the
+challenge is to create a dataset of traffic
+casualties like this:
+
+```{r}
+library(spatstat)
+library(maptools)
+library(rgeos)
+library(raster)
+# downloader::download("https://github.com/Robinlovelace/bikeR/raw/master/geodata/bikeWY.geojson", "bikeWY.geojson")
+ac <- rgdal::readOGR("../bikeWY.geojson", "OGRGeoJSON")
+ac <- spTransform(ac, CRS("+init=epsg:27700"))
+
+# estimate 2d density
+acp <- as.ppp(ac)
+adens <- density.ppp(x = acp, sigma = 50, eps = 50)
+plot(adens)
+arast <- raster(adens)
+plot(arast)
+
+writeRaster(x = arast, filename = "arast.tif", overwrite = T)
+dsg <- as(arast, "SpatialGridDataFrame")
+dsg <- as.image.SpatialGridDataFrame(dsg)
+dcl <- contourLines(dsg, nlevels = 10)
+sldf <- ContourLines2SLDF(dcl)
+plot(sldf[8,]) # the most intense accident hotspot
+h1 <- gPolygonize(sldf[8,])
+spChFIDs(h1) <- 1
+h2 <- gPolygonize(sldf[7,])
+spChFIDs(h1) <- 2
+plot(h2)
+h3 <- gPolygonize(sldf[6,])
+spChFIDs(h3) <- seq(101, 100 + length(h3))
+hspots <- spRbind(h3, h2)
+h4 <- gPolygonize(sldf[5,])
+
+h5 <- gPolygonize(sldf[3,]) # the right contour to save
+length(h5)
+proj4string(h5) <- proj4string(ac)
+nacs <- aggregate(ac, h5, length)
+nacs <- spTransform(nacs, CRS("+init=epsg:27700"))
+nacs$area <- gArea(nacs, byid = T)
+plot(nacs)
+plot(adens, add = T)
+plot(nacs, add = T)
+```
+
+
