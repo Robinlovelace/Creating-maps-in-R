@@ -5,6 +5,8 @@ date: "11/26/2014"
 output: html_document
 ---
 
+## Introduction
+
 [GeoJSON](http://geojson.org/) is an open data format that
 extends [JSON](http://www.json.org/), the JavaScript Object Notation
 to encode spatial information.
@@ -20,7 +22,9 @@ The disadvantages are:
 - GeoJSON files are [quite large](http://zevross.com/blog/2014/04/22/spatial-data-on-a-diet-tips-for-file-size-reduction-using-topojson/) compared with non text formats such as shapefiles and
 spatial databases.
 - GeoJSON files can be slow to read/write and are not supported by
-all GIS software (yet!)
+all GIS software (yet!).
+
+## Reading GeoJSONs with readOGR
 
 As illustrated by this [post](http://www.jose-gonzalez.org/create-geojson-r/#.VHVoMY_6IrE), it is easy to read and write GeoJSON files
 in R, using the [**rgdal**](http://cran.r-project.org/web/packages/rgdal/index.html) package, which calls
@@ -34,8 +38,8 @@ system("rm /tmp/gas*")
 
 ```{r}
 library(rgdal) # the library we'll be using
-u <- "http://giscience.tw.rpi.edu/rpi_group_projects/watershedders/data/gas_station.geojson"
-download.file(url = u, destfile = "/tmp/gas.GeoJSON")
+u <- "https://raw.githubusercontent.com/codeforboston/open_data_cambridge/master/Infrastructure/UtilityFacilities.geojson"
+downloader::download(url = u, destfile = "/tmp/gas.GeoJSON")
 gas <- readOGR(dsn = "/tmp/gas.GeoJSON", layer = "OGRGeoJSON")
 summary(gas)
 ```
@@ -72,28 +76,166 @@ before the spatial `"features"` are defined. Please see this
 small example of [gas stations](http://giscience.tw.rpi.edu/rpi_group_projects/watershedders/data/gas_station.geojson) to see how the CRS
 is defined in the context of a complete GeoJSON file.
 
+## Writing GeoJSONs with writeOGR
+
 To write GeoJSON files, the sensibly named corrollary of
 `readOGR` is used, `writeOGR`:
 
-```{r, echo=FALSE}
-file.remove("/tmp/gas2.GeoJSON")
+```{r}
+if(file.exists("/tmp/gas2.geojson")){
+  file.remove("/tmp/gas2.geojson")
+}
 ```
 
 
 ```{r}
-writeOGR(gas, dsn = "/tmp/gas2.GeoJSON", layer = "u", driver = "GeoJSON")
+geojsonio::geojson_write(gas, file = "/tmp/gas2.geojson")
 ```
 
-Let's see what R has created:
+## Multifeature geojsons
+
+Based on [this](https://stackoverflow.com/questions/30583048/convert-features-of-a-multifeature-geojson-into-r-spatial-objects/30593077#30593077), geojson files can usually be loaded into R with `readOGR`, as illustrated above.
+
+However, this fails for multifeature geojsons.
+
+Reproducible example:
 
 ```{r}
-gas2 <- readLines("/tmp/gas2.GeoJSON")
+downloader::download("https://github.com/Robinlovelace/Creating-maps-in-R/raw/master/data/test-multifeature.geojson", "test.geojson")
+try(test <- rgdal::readOGR("test.geojson", "OGRGeoJSON")) # fails with:
+```
+
+There are 2 solutions. One uses rgdal and the gdal argument
+`require_geomType`. The other uses geojsonio.
+
+### Multifeature geojsons with rgdal
+
+The first solution uses new features introduced in gdal 0.9-3.
+It is worth checking (and maybe updating) your gdal version.
+(Thanks to [@hrbrmstr](https://stackoverflow.com/users/1457051/hrbrmstr) for this detailed information.)
+
+```{r}
+rgdal::getGDALVersionInfo() # check the version of gdal
+system("gdal-config --version") # asking gdal its version from bash
+```
+
+```
+Before update, this was:
+[1] "GDAL 1.11.1, released 2014/09/24"
+
+After updating gdal, e.g. like this (Ubuntu), it changed:
+$ sudo add-apt-repository ppa:ubuntugis/ubuntugis-unstable && sudo apt-get update
+$ sudo apt-get install gdal-bin
+```
+
+gdal can provide us with information about the layers in the
+multipart geojson.
+
+```{r}
+ogrListLayers("test.geojson")
+```
+
+It can also provide more general information about the object,
+if we ask it correctly.
+
+```{r}
+try(ogrInfo("test.geojson")) # no information on the file
+system("ogrinfo test.geojson ")
+try(ogrInfo("test.geojson", "OGRGeoJSON"))
+```
+
+The output from the previous lines indicates how we can
+access just one layer. We use the argument `require_geomType`
+to specify which of the geometries to load:
+
+```{r}
+testp_info <-
+  ogrInfo("test.geojson", "OGRGeoJSON", require_geomType="wkbPoint")
+testp_df <- as.data.frame(testp_info$iteminfo)
+head(testp_df)
+```
+
+Note we can use the same command for any of the geometries:
+
+```{r, eval=FALSE}
+ogrInfo("test.geojson", "OGRGeoJSON", require_geomType = "wkbPolygon")
+```
+```
+NOTE: keeping only 23 wkbPolygon of 781 features
+    note that extent applies to all features
+Source: "test.geojson", layer: "OGRGeoJSON"
+Driver: GeoJSON number of rows 781 
+  selected geometry type: wkbPolygon with 23 rows
+Feature type: wkbPolygon with 2 dimensions
+Extent: (12.48326 41.88355) - (12.5033 41.89629)
+CRS: +proj=longlat +datum=WGS84 +no_defs  
+Number of fields: 78 
+                       name type length typeName
+1                      area    4      0   String
+2                   bicycle    4      0   String
+3                   highway    4      0   String
+```
+
+Armed with this information, we can read in the features:
+
+```{r}
+points <- readOGR("test.geojson", "OGRGeoJSON", require_geomType="wkbPoint")
+
+lines <- readOGR("test.geojson", "OGRGeoJSON", require_geomType="wkbLineString")
+
+polygons <- readOGR("test.geojson", "OGRGeoJSON", require_geomType="wkbPolygon")
+```
+
+Let's plot the data (see https://stackoverflow.com/questions/30583048/ )
+
+```{r}
+plot(lines, col="#7f7f7f")
+plot(polygons, add=TRUE)
+plot(points, add=TRUE, col="red")
+```
+
+## Solution from geojsonio
+
+This is an alternative solution:
+
+```{r}
+test <- geojsonio::geojson_read("test.geojson")
+```
+
+Then we can filter out the feature types of interest:
+
+```{r}
+obj = Filter(
+    function(f){f$geometry$type=="LineString"},
+    test$features)
+```
+
+## Solution from Spacedman
+
+```{r}
+mess <- 'ogr2ogr -where "OGR_GEOMETRY=\'LINESTRING\'" -f "GeoJSON" lines.geojson  test.geojson'
+system(mess)
+testl <- rgdal::readOGR("lines.geojson", layer = "OGRGeoJSON")
+```
+
+
+  [1]: https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/vignettes/geoJSON.Rmd
+  [2]: https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/data/test-multifeature.geojson
+
+
+## gdal fails to convert certain types of CRS
+
+Let's see what R has created from writeOGR:
+
+```{r}
+gas2 <- readLines("/tmp/gas.GeoJSON")
 gas2[1:4]
 ```
 
 Frustratingly, this fails to write the CRS into the file.
 **rgdal**'s ability to read a crs from a GeoJSON file is no
 guarantee of it's ability to then write it out again.
+It seems
 **rgdal** has **lost the CRS in translation**.
 
 This can problem be caused by using an old version of
@@ -129,8 +271,6 @@ gas3_proj <- readLines("/tmp/gas3.prj", skipNul = T)
 gas3_proj
 ```
 
-# gdal fails to convert certain types of CRS
-
 There are various ways to solve the problem.
 The 'outside R' solution would be to write the file
 first as a shapefile, and then use `ogr2ogr` to convert
@@ -156,8 +296,8 @@ proj4string(gas6) <- CRS("+init=epsg:4283")
 proj4string(gas6)
 # the below works, but incorrect CRS
 # proj4string(gas6) <- CRS("+proj=longlat +ellps=clrk66 +datum=NAD27")
-writeOGR(gas6, dsn = "/tmp/gas6.GeoJSON", layer = "gas", driver = "GeoJSON")
-readLines("/tmp/gas6.GeoJSON")[1:3]
+geojsonio::geojson_write(gas6, file = "/tmp/gas6.geojson")
+readLines("/tmp/gas6.geojson")[1:4]
 ```
 
 # A manual solution
@@ -167,7 +307,7 @@ to the GeoJSON file that has been created. Thankfully this is straightforward, a
 for such an eventuality:
 
 ```{r}
-gas7 <- readLines("/tmp/gas2.GeoJSON")
+gas7 <- readLines("/tmp/gas2.geojson")
 gas7[1:4]
 gas7[3] <- '"crs": {"type": "EPSG", "properties": {"code": 4283}},'
 writeLines(gas7, con = "/tmp/gas8.GeoJSON")
