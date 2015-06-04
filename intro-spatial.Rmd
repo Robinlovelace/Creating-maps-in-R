@@ -1,7 +1,7 @@
 ---
 title: "Introduction to visualising spatial data in R"
-author: "Robin Lovelace (R.Lovelace@leeds.ac.uk) and others"
-date: "June, 2015 (for latest version see [github.com/Robinlovelace/Creating-maps-in-R](https://github.com/Robinlovelace/Creating-maps-in-R))"
+author: "Robin Lovelace (R.Lovelace@leeds.ac.uk), James Cheshire and others"
+date: "V. 1.2, June, 2015 --- see [github.com/Robinlovelace/Creating-maps-in-R](https://github.com/Robinlovelace/Creating-maps-in-R) for latest version"
 output:
   pdf_document:
     fig_cap: yes
@@ -1601,6 +1601,6 @@ Wickham, H. (2014). Tidy data. The Journal of Statistical Software, 14(5), Retri
 
 Wilkinson, L. (2005). The grammar of graphics. Springer.
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, eval=FALSE}
 system("mv intro-spatial.pdf intro-spatial-rl.pdf") # change name
 ```
