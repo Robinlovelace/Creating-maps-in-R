@@ -1353,7 +1353,7 @@ the following on-line tutorial:
 [robinlovelace.net/r/2015/02/01/leaflet-r-package.html](http://robinlovelace.net/r/2015/02/01/leaflet-r-package.html).
 
 ```{r, eval=FALSE}
-install.packages("rstudio/leaflet")
+install.packages("leaflet")
 library(leaflet)
 
 leaflet() %>%

@@ -1,7 +1,7 @@
 ---
 title: "An introduction to R for Spatial data"
-author: "Robin Lovelace"
-date: "Newcastle, June 2nd 2015"
+author: "Robin Lovelace and Rachel Oldroyd"
+date: "Como, Italy, July 14th 2015"
 output:
   slidy_presentation:
     fig_height: 4
@@ -19,59 +19,39 @@ Introduction
 ![cdrc](http://www.lida.leeds.ac.uk/img/cdrc.png)
 
 This course is brought to you the Consumer Data Research Centre
-([CDRC](http://geotalisman.org/)), a
-project based at the University of Leeds and UCL. It is 
-funded by the ESRC's ([Big Data Network](http://www.esrc.ac.uk/research/major-investments/Big-Data/BDN-Phase2.aspx))
+([CDRC](http://cdrc.ac.uk/)) and is 
+funded by the ESRC's ([Big Data Network](http://www.esrc.ac.uk/research/major-investments/Big-Data/BDN-Phase2.aspx)).
 
 Packages
 =================
 
+This R code installs and loads all the packages you need:
 
 
 ```{r, eval=FALSE}
-pkgs <- c("rgdal", # (can be tricky)
+pkgs <- c(
+  "sp", # R's base package
+  "rgdal", # (can be tricky)
   "rgeos",
   "ggmap",
-  "tmap",)
+  "tmap",
+  "leaflet",
+  "dplyr"
+  )
 install.packages(pkgs)
+lapply(pkgs, library, character.only = TRUE)
 ```
+
+R code = reproducible!
 
 
 Course agenda
-=======================================================
+==================================================
 
+- An introduction to R and RStudio     (9:00 - 10:00)
+- Loading, manipulating and interrogating spatial data (10:00 - 11:30)
+- Visualisation (11:30 - 13:00)
 
-During this course we will cover these topics
-
-- Introducing R as a GIS: Introduction and example with London (Part I handout), 09:00 - 11:00 am
-- The structure of spatial objects in R (Part II) 11:15 - lunch
-- Loading and interrogating spatial data (Part III) Day 1 14:00 - 15:15
-- Visualising spatial datasets (Part III) Day 1 15:30 - 11:00 Day 2
-
-<!--
-- An introduction to R (14:00 - 15:00)
-- Loading, interrogating and manipulating spatial data (15:00 - 16:00)
-- Making maps with ggplot2 (16:00 - 16:30)
-- Questions, answers and experimenting with R
-
-LUNCH
-
-- Making maps in ggplot2 (13:30 - 14:30)
-- Basemaps (14:30 - 15:30)
-- More advanced visuals (15:30 - 16:00)
-- Taking it further + Q & A (16:00 onwards)
--->
-
-Day 2
-==========
-
-- Acquiring external data with R Day 2 11:15 - lunch
-
-After that: you choose!
-
-- Point pattern analysis and spatial interpolation 
-- Geographical models in R
-- Webmaps
 
 ```{r, echo=FALSE}
 # During this course we will cover these topics
@@ -94,7 +74,7 @@ After that: you choose!
 A bit about R
 ========================================================
 
-- Named after S and its creators
+- Developed by statisticians Ross Ihaka and Robert Gentleman
 - De-facto standard for advanced statistical analysis
 - A programming language in its own right
 - The power of the command line
@@ -164,10 +144,10 @@ Why R for spatial data II
 It can take data in a wide range of formats.
 E.g. MySQL database dump gives you this:
 
-LINESTRING(-1.81 52.55,-1.81 52.55, … )  - solved:
+LINESTRING(-1.81 52.55,-1.81 52.55)
 
 
-```{r, eval=FALSE}
+```{r, eval=FALSE, echo=FALSE}
 ps <- as.list(ps) # make a list
 for(i in 1:length(ps)){
   ps[[i]] <- gsub("LINESTRING\\(", "", ps[[i]])
@@ -283,4 +263,40 @@ Before progressing further: **Any questions?**
 **Course materials** are all available online from a [GitHub repository](https://github.com/Robinlovelace/Creating-maps-in-R). Click "Download ZIP" to download all the test data, ready to procede.
 
 The main document to accompany this tutorial is a [pdf](https://github.com/Robinlovelace/Creating-maps-in-R/raw/master/intro-spatial-rl.pdf) within the main repository. This is to be made available for free worldwide - any comments/corrections welcome.
+
+<!--
+- Introducing R as a GIS: Introduction and example with London (Part I handout), 09:00 - 11:00 am
+- The structure of spatial objects in R (Part II) 11:15 - lunch
+- Loading and interrogating spatial data (Part III) Day 1 14:00 - 15:15
+- Visualising spatial datasets (Part III) Day 1 15:30 - 11:00
+
+Day 2
+
+During this course we will cover these topics
+
+Day 2
+==========
+
+- Acquiring external data with R Day 2 11:15 - lunch
+
+After that: you choose!
+
+- Point pattern analysis and spatial interpolation 
+- Geographical models in R
+- Webmaps
+-->
+
+<!--
+- An introduction to R (14:00 - 15:00)
+- Loading, interrogating and manipulating spatial data (15:00 - 16:00)
+- Making maps with ggplot2 (16:00 - 16:30)
+- Questions, answers and experimenting with R
+
+LUNCH
+
+- Making maps in ggplot2 (13:30 - 14:30)
+- Basemaps (14:30 - 15:30)
+- More advanced visuals (15:30 - 16:00)
+- Taking it further + Q & A (16:00 onwards)
+-->
 
