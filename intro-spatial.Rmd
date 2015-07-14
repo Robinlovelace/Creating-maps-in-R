@@ -363,19 +363,32 @@ see how this map was created, see the code
 in intro-spatial.Rmd. This may be loaded by typing
 `file.edit("intro-spatial.Rmd")` or online at [github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial.Rmd](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial.Rmd).]
 
-```{r, echo=FALSE, fig.cap="Zones in London whose centroid lie within 10 km of the geographic centroid of inner London", message=FALSE}
+```{r, echo=FALSE, fig.cap="Zones in London whose centroid lie within 10 km of the geographic centroid of the City of London. Note the distinction between zones which only touch or 'intersect' with the buffer (light blue) and zones whose centroid is within the buffer (darker blue).", message=FALSE}
 library(rgeos)
 plot(lnd, col = "grey")
-cent_lnd <- gCentroid(lnd)
+# find London's geographic centroid (add ", byid = T" for all)
+cent_lnd <- gCentroid(lnd[lnd$name == "City of London",]) 
 points(cent_lnd, cex = 3)
-lnd_buffer <- gBuffer(spgeom = cent_lnd, width = 10000) # set 10 km buffer
-lnd_central <- lnd[lnd_buffer,]
-lnd_cents <- SpatialPoints(coordinates(lnd),  proj4string = CRS(proj4string(lnd)))
-sel <- lnd_cents[lnd_buffer,]
-lnd_central <- lnd[sel,]
-plot(lnd_central, add = T, col = "lightblue", 
+# set 10 km buffer
+lnd_buffer <- gBuffer(spgeom = cent_lnd, width = 10000) 
+
+# method 1 of subsetting selects any intersecting zones
+lnd_central <- lnd[lnd_buffer,] # the selection is too big!
+# test the selection for the previous method - uncomment below
+plot(lnd_central, col = "lightblue", add = T)
+plot(lnd_buffer, add = T) # some areas just touch the buffer
+
+# method2 of subsetting selects only points within the buffer
+lnd_cents <- SpatialPoints(coordinates(lnd),
+  proj4string = CRS(proj4string(lnd))) # create spatialpoints
+sel <- lnd_cents[lnd_buffer,] # select points inside buffer
+points(sel) # show where the points are located
+lnd_central <- lnd[sel,] # select zones intersecting w. sel
+plot(lnd_central, add = T, col = "lightslateblue", 
   border = "grey")
-plot(lnd_buffer, add = T, border = "blue", lwd = 2)
+plot(lnd_buffer, add = T, border = "red", lwd = 2)
+
+# Add text to the plot!
 text(coordinates(cent_lnd), "Central\nLondon")
 ```
 
@@ -1340,8 +1353,7 @@ the following on-line tutorial:
 [robinlovelace.net/r/2015/02/01/leaflet-r-package.html](http://robinlovelace.net/r/2015/02/01/leaflet-r-package.html).
 
 ```{r, eval=FALSE}
-library(devtools)
-install_github("rstudio/leaflet")
+install.packages("rstudio/leaflet")
 library(leaflet)
 
 leaflet() %>%
