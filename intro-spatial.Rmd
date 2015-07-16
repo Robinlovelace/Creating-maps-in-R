@@ -39,7 +39,8 @@ knit_hooks$set(par=function(before, options, envir){
 ## Preface
 
 This tutorial is an introduction to analysing spatial data in R, specifically through map-making with
-R's 'base' graphics and use of the popular graphics package **ggplot2**. It teaches the basics of using R as a
+R's 'base' graphics and various dedicated map-making packages for R including
+**ggmap** and **leaflet**. It teaches the basics of using R as a
 fast, user-friendly and extremely powerful command-line
 Geographic Information System (GIS).
 
@@ -56,7 +57,8 @@ This is how the tutorial is organised.
 1. Introduction: provides a guide to R's syntax and preparing for the tutorial
 2. Spatial data in R: describes basic spatial functions in R
 3. Creating and manipulating spatial data: includes changing projection, clipping and spatial joins
-4. Map making with **ggplot2**: a graphics package for producing beautiful maps quickly
+4. Map making with **tmap**, **ggplot2** and **leaflet**: this section demonstrates map
+making with more advanced visualisation tools
 5. Taking spatial analysis in R further: a compilation of resources for furthering your skills
 
 
@@ -443,7 +445,7 @@ We will cover reprojecting data in the next part of the tutorial.
 # should be manipulating and plotting. TODO: talk about base graphics
 ```
 
-Beyond visualisation and interogation GIS software must also
+Beyond visualisation and interrogation GIS software must also
 be able to create and modify spatial data.
 R  excels in this regard. R's spatial packages
 provide a very wide and powerful suite of
@@ -451,7 +453,7 @@ functionality for processing spatial data, and its
 strict class system make it easy to create new spatial datasets.
 
 *Reprojecting* and *joining/clipping* 
-are fundamental operations in the GIS analyst's toolkit,
+are fundamental operations in the GIS analyst's tool-kit,
 so we introduce these, before
 looking at joining non-spatial
 data to spatial objects.
@@ -493,7 +495,7 @@ one of the fundamental data
 types for spatial data. (The others are lines, polygons
 and pixels, which can be created by `SpatialLines`,
 `SpatialPolygons` and `SpatialPixels`, respectively.)
-Each type of spatial data has a corrolary that can accepts
+Each type of spatial data has a corollary that can accepts
 non-spatial data, created by adding `DataFrame`.
 `SpatialPointsDataFrame()`, for example, creates points
 with an associated `data.frame`. The number of rows
@@ -506,8 +508,8 @@ spdf <- SpatialPointsDataFrame(sp1, data = df)
 class(spdf)
 ```
 
-The above code extends the preexisting object `sp1` by adding
-data from `df`. To see how strinct spatial classes are,
+The above code extends the pre-existing object `sp1` by adding
+data from `df`. To see how strict spatial classes are,
 try replacing `df` with `mat` in the above code: it causes an error. All spatial data classes can be created in a similar way,
 although `SpatialLines` and `SpatialPolygons` are much more
 complicated (Bivand et al. 2013). More frequently your spatial
@@ -767,7 +769,8 @@ Using this dataset and the methods developed above, Figure 8 was
 created: the proportion of council seats won by the Conservatives
 in the 2014 local elections. The **challenge** is to create 
 a similar map of a different variable (you may need to skip to
-Part IV to plot continuous variables).^[To
+Part IV to plot continuous variables).^[Hint: the solution relies on the
+**rgeos** function `gCentroid()`. To
 see how this map was created, see the code
 in intro-spatial.Rmd at [github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial.Rmd](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial.Rmd).]
 
