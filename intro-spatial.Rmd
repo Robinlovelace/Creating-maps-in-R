@@ -99,7 +99,7 @@ A [quick way](http://stackoverflow.com/questions/8175912/load-multiple-packages-
 
 ```{r, eval=FALSE}
 x <- c("ggmap", "rgdal", "rgeos", "maptools", "dplyr", "tidyr", "tmap")
-install.packages(x) # warning: this may take a number of minutes
+# install.packages(x) # warning: uncommenting this may take a number of minutes
 lapply(x, library, character.only = TRUE) # load the required packages
 ```
 
@@ -1438,7 +1438,7 @@ ggplot(data = lnd_f, # the input data
   geom_path(colour="black", lwd=0.05) + # borough borders
   coord_equal() + # fixed x and y scales
   facet_wrap(~ date) + # one plot per time slice
-  scale_fill_gradient2(low = "green", mid = "grey", high = "red", # colors
+  scale_fill_gradient2(low = "blue", mid = "grey", high = "red", # colors
     midpoint = 150, name = "Population\n(thousands)") + # legend options
   theme(axis.text = element_blank(), # change the theme options
     axis.title = element_blank(), # remove axis titles
@@ -1471,23 +1471,32 @@ package.
 The skills taught in this tutorial are applicable to a very wide
 range of situations, spatial or not. Often experimentation is the
 most rewarding learning method, rather than just searching for the
-'best' way of doing something (Kabakoff, 2011). We recommend you play around with your data.
+'best' way of doing something (Kabakoff, 2011).
+We recommend you play around with your data.
 
-If you would like to learn more about R's spatial functionalities,
-including more exercises on loading, saving and manipulating data,
-we recommend a slightly longer and
-more advanced tutorial (Cheshire and Lovelace, 2014).
-An up-to-date repository of this project,
-including example data and all the code used,
+If you enjoyed this tutorial, you may find the
+book chapter "Spatial Data Visualisation with R" of interest
+(Cheshire and Lovelace, 2014). The project's repository
 can be found on its GitHub page:
 [github.com/geocomPP/sdvwR](https://github.com/geocomPP/sdvwR).
 There are also a number of bonus 'vignettes' associated with
 the present tutorial. These can be found on the
 [vignettes page](https://github.com/Robinlovelace/Creating-maps-in-R/tree/master/vignettes) of the project's repository.
 
-Another advanced tutorial is "Using spatial data", which has example
-code and data that can be downloaded from the
-[useR 2013 conference page](http://www.edii.uclm.es/~useR-2013//Tutorials/Bivand.html), available here: http://www.edii.uclm.es/~useR-2013//Tutorials/Bivand.html.
+Other advanced tutorials include
+
+- "Using spatial data" from the
+[useR 2013 conference page](http://www.edii.uclm.es/~useR-2013//Tutorials/Bivand.html)
+- "Geographically Weighted PCA", an in-depth and advanced tutorial by
+[Chris Brunsdon](https://rpubs.com/chrisbrunsdon/99675)
+-"The Spatial Autoregression Regression Model and Correlation", another advanced
+tutorial, also by [Chris Brunsdon](https://rpubs.com/chrisbrunsdon/sarcorr)
+- "Using R as a GIS", a long and detailed online tutorial by [Francisco Rodriguez-Sanchez](https://pakillo.github.io/R-GIS-tutorial/).
+- "solaR: Solar Radiation and Photovoltaic Systems with R", a [technical
+academic paper](http://www.jstatsoft.org/v50/i09/paper)
+on the solaR package which contains a number of spatial
+function (.
+
 Such tutorials are worth doing as they will help you
 understand R's spatial 'ecosystem' as a cohesive whole
 rather than as a collection of isolated functions.
@@ -1511,9 +1520,12 @@ http://cran.r-project.org
 
 Books: despite the strength of R's on-line community, nothing beats a physical book for concentrated learning. We recommend the following:
 
+ * Everitt and Hothorn (updated 2015): This handbook of statistical analyses is
+ available online as an [R package](https://cran.r-project.org/web/packages/HSAUR/).
+ * Dorman (2014): detailed exposition of spatial data in R, with a focus on raster data. A [free sample](https://www.packtpub.com/packtlib/book/Big%20Data%20&%20Business%20Intelligence/9781783984367/4) of this book is available online.
  * Wickham (2009): 'ggplot2: elegant graphics for data analysis'
  * Bivand et al. (2013) : 'Applied spatial data analysis with R' - provides a dense and detailed overview of spatial data analysis.
- * Kabacoff (2011): 'R in action' - more general R book with many fun worked examples.
+ * Kabacoff (2011): 'R in action' is a general R book with many fun worked examples.
  
  \clearpage
  
@@ -1596,12 +1608,18 @@ Bivand, R. S., Pebesma, E. J., & Rubio, V. G. (2013). Applied spatial data analy
 Cheshire, J., & Lovelace, R. (2015). Spatial data visualisation with R. In C. Brunsdon & A. Singleton (Eds.), Geocomputation (pp. 1–14). SAGE Publications. Retrieved from https://github.com/geocomPP/sdv . Full chapter available from
 https://www.researchgate.net/publication/274697165_Spatial_data_visualisation_with_R
 
+Dorman, M. (2014). Learning R for Geospatial Analysis. Packt Publishing Ltd.
+
+Everitt, B. S., & Hothorn, T. (2015). HSAUR: A Handbook of Statistical Analyses Using R. Retrieved from http://cran.r-project.org/package=HSAUR
+
 Harris, R. (2012). A Short Introduction to R.
 [social-statistics.org](http://www.social-statistics.org/).
 
 Johnson, P. E. (2013). R Style. An Rchaeological Commentary. The Comprehensive R Archive Network.
 
 Kabacoff, R. (2011). R in Action. Manning Publications Co.
+
+Lamigueiro, O. P. (2012). solaR: Solar Radiation and Photovoltaic Systems with R. Journal of Statistical Software, 50(9), 1–32. Retrieved from http://www.jstatsoft.org/v50/i09
 
 Ramsey, P., & Dubovsky, D. (2013). Geospatial Software's Open Future.
 GeoInformatics, 16(4).
