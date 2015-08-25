@@ -1,6 +1,6 @@
 ---
 title: "Introduction to visualising spatial data in R"
-author: "Robin Lovelace (R.Lovelace@leeds.ac.uk), James Cheshire and others"
+author: "Robin Lovelace (R.Lovelace@leeds.ac.uk), James Cheshire, Rachel Oldroyd and others"
 date: "V. 1.2, June, 2015 --- see [github.com/Robinlovelace/Creating-maps-in-R](https://github.com/Robinlovelace/Creating-maps-in-R) for latest version"
 output:
   pdf_document:
@@ -38,11 +38,10 @@ knit_hooks$set(par=function(before, options, envir){
 
 ## Preface
 
-This tutorial is an introduction to analysing spatial data in R, specifically through map-making with
-R's 'base' graphics and various dedicated map-making packages for R including
-**ggmap** and **leaflet**. It teaches the basics of using R as a
-fast, user-friendly and extremely powerful command-line
-Geographic Information System (GIS).
+This tutorial provides an introduction to analysing spatial data in R, specifically creating maps using
+R's 'base' graphics and various dedicated map-making packages including
+**ggmap** and **leaflet**. It covers the basics of using R as a
+fast, user-friendly and extremely powerful Geographic Information System (GIS).
 
 The tutorial is practical in nature: you will load-in,
 visualise and manipulate spatial data.
@@ -52,7 +51,7 @@ If you have not used R before, it may be worth following an
 introductory tutorial, such as
 "A (very) short introduction to R"
 ([Torfs and Brauer, 2012](http://cran.r-project.org/doc/contrib/Torfs+Brauer-Short-R-Intro.pdf)).
-This is how the tutorial is organised.
+This is how the tutorial is organised:
 
 1. Introduction: provides a guide to R's syntax and preparing for the tutorial
 2. Spatial data in R: describes basic spatial functions in R
@@ -61,59 +60,36 @@ This is how the tutorial is organised.
 making with more advanced visualisation tools
 5. Taking spatial analysis in R further: a compilation of resources for furthering your skills
 
+To distinguish between prose and code, please be aware of the following typographic conventions used in this document: R code (e.g. `plot(x, y)`) is
+written in a `monospace` font and package names (e.g. **rgdal**)
+are written in **bold**. 
+A double hash (`##`) at the start of a line of code indicates that this is output from R. Lengthy outputs have been omitted from the document to save space, so do
+not be alarmed if R produces additional messages: you can always look up them up on-line.
+
+As with any programming language, there are often many ways to produce the same output in R. The code presented in this document is not the only way to do things. We encourage you to
+play with the code to gain a deeper understanding of R.
+Do not worry, you cannot 'break' anything using R and all the input data
+can be re-loaded if things do go wrong. As with learning to skateboard, you learn
+by falling and getting an `Error:` message in R is much less
+painful than falling onto concrete! We encourage `Error:`s --- it
+means you are trying new things.
+
 
 Part I: Introduction
 ========================================================
 
-## Prerequisites and packages
+## Prerequisites
 
 For this tutorial you need a copy of R. The latest version 
 can be downloaded from [http://cran.r-project.org/](http://cran.r-project.org/).
 
-We also suggest that you use an R editor, such as [RStudio](http://www.rstudio.com/), as this will improve the user-experience and help with the learning process. This can be downloaded from http://www.rstudio.com.     
+We also suggest that you use an R editor, such as [RStudio](http://www.rstudio.com/), as this will improve the user-experience and help with the learning process. This can be downloaded from http://www.rstudio.com. The R Studio interface is comprised of a number of windows, the most important being the console window and the script window. Anything you type directly into the console window will not be saved, so use the script window to create scripts which you can save for later use. There is also a Data environment window which lists the dataframes and objects being used. Familiarise yourself with the R Studio interface before getting started on the tutorial.       
 
-R has a huge and growing number of spatial data packages. We recommend taking a quick browse on R's main website to see the spatial packages available:
-[http://cran.r-project.org/web/views/Spatial.html](http://cran.r-project.org/web/views/Spatial.html).
+## Basic Syntax and Getting Help
 
-In this tutorial we will use:
-
-- **ggmap**: extends the plotting package **ggplot2** for maps
-- **rgdal**: R's interface to the popular C/C++ spatial data processing library [gdal](http://www.gdal.org/)
-- **rgeos**: R's interface to the powerful vector processing library [geos](http://trac.osgeo.org/geos/)
-- **maptools**: provides various mapping functions
-- [**dplyr**](http://cran.r-project.org/web/packages/dplyr/index.html) and [**tidyr**](http://blog.rstudio.org/2014/07/22/introducing-tidyr/): fast and concise data manipulation packages
-- **tmap**: a new packages for rapidly creating beautiful maps
-
-
-To test whether a package is installed, try to load it using `library`.
-For example, to test if **ggplot2** is available, enter `library(ggplot2)`.
-If there is no output from R, this is good news: it means that the library
-has already been installed on your computer.
-
-If you get an error message,
-it needs to be installed using `install.packages("ggplot2")`.
-The package will download from CRAN (the Comprehensive R Archive Network); if you are prompted
-to select a 'mirror', select one that is close to your home.
-If you have not done so already, install these packages on your computer now.
-A [quick way](http://stackoverflow.com/questions/8175912/load-multiple-packages-at-once) to do this in one go is to enter the following lines of code:
-
-```{r, eval=FALSE}
-x <- c("ggmap", "rgdal", "rgeos", "maptools", "dplyr", "tidyr", "tmap")
-# install.packages(x) # warning: uncommenting this may take a number of minutes
-lapply(x, library, character.only = TRUE) # load the required packages
-```
-
-
-## Typographic conventions and getting help
-
-It is a good idea to get into the habit of consistent and clear writing in
-any language, and R is no exception. 
-Adding comments to your code is
-good practice, so you remember at a later date what you've done, aiding the
-learning process. There are two main ways of commenting code using the `#` symbol:
-above a line of code or directly following it, as illustrated in the block of
-code presented below, which should create Figure 1
-if typed correctly into the R command line.
+When writing code in any language, it is good practice to use consistent and clear conventions, and R is no exception. 
+Adding comments to your code is also useful; make these meaningful so you remember what the code is doing when you revisit it at a later date. 
+You can add a comment by using the `#` symbol before or after a line of code, as illustrated in the block of code below. This code should create Figure 1 if typed correctly into the Console window: 
 
 ```{r fig.cap="Basic plot of x and y (right) and code used to generate the plot (right).", echo=FALSE, fig.width=6, fig.height=3}
 # # Generate data
@@ -126,28 +102,10 @@ library(grid)
 grid.raster(readPNG("figure/plot1.png"))
 ```
 
-In the first line of code a new *object* called `x` is created.
-Any name could have been used, like `x_bumkin`, but `x` is concise
-and works just fine here. It is good practice to give your objects meaningful names.
-Note `<-`, the directional "arrow" assignment symbol. This creates new objects.
-We will be using this symbol a lot in this tutorial.^[Tip: typing `Alt -` on the keyboard will create the arrow in RStudio.
-The equals sign `=` also works but is
-rarely used.]
+This first line in this block of code creates a new *object* called `x` and assigns it to a range of integers between 1 and 400. The second line creates another object called `y` which is assigned to a mathematical formula, and the third line plots the two together to create the plot shown. 
 
-To distinguish between prose and code, please be aware of the following typographic conventions used in this document: R code (e.g. `plot(x, y)`) is
-written in a `monospace` font and package names (e.g. **rgdal**)
-are written in **bold**. 
-
-A double hash (`##`) at the start of a line of code indicates that this is output from R. Lengthy outputs have been omitted from the document to save space, so do
-not be alarmed if R produces additional messages: you can always look up them up on-line.
-
-As with any programming language, there are often many ways to produce the same output in R. The code presented in this document is not the only way to do things. We encourage you to
-play with the code to gain a deeper understanding of R.
-Do not worry, you cannot 'break' anything using R and all the input data
-can be re-loaded if things do go wrong. As with learning to skateboard, you learn
-by falling and getting an `Error:` message in R is much less
-painful than falling onto concrete! We encourage `Error:`s --- it
-means you are trying new things.
+Note `<-`, the directional "arrow" assignment symbol which creates a new object and assigns it to the value you have given.^[Tip: typing `Alt -` on the keyboard will create the arrow in RStudio.
+The equals sign `=` also works but is rarely used.]
 
 If you require help on any function, use the `help` command,
 e.g. `help(plot)`. Because R users love being concise,
@@ -159,35 +117,59 @@ try typing `??regression`.
 For the most part, *learning by doing* is a good motto, so let's crack
 on and download some packages and data.
 
+## R Packages
+
+R has a huge and growing number of spatial data packages. We recommend taking a quick browse on R's main website to see the spatial packages available:
+[http://cran.r-project.org/web/views/Spatial.html](http://cran.r-project.org/web/views/Spatial.html).
+
+In this tutorial we will use the following packages:
+
+- **ggmap**: extends the plotting package **ggplot2** for maps
+- **rgdal**: R's interface to the popular C/C++ spatial data processing library [gdal](http://www.gdal.org/)
+- **rgeos**: R's interface to the powerful vector processing library [geos](http://trac.osgeo.org/geos/)
+- **maptools**: provides various mapping functions
+- [**dplyr**](http://cran.r-project.org/web/packages/dplyr/index.html) and [**tidyr**](http://blog.rstudio.org/2014/07/22/introducing-tidyr/): fast and concise data manipulation packages
+- **tmap**: a new packages for rapidly creating beautiful maps
+
+
+Some packages may already be installed on your computer. To test if a package is installed, try to load it using the `library` function; for example, to test if **ggplot2** is installed, type `library(ggplot2)` into the console window. 
+If there is no output from R, this is good news: it means that the library
+has already been installed on your computer.
+
+If you get an error message,you will need to install the package using 
+`install.packages("ggplot2")`. The package will download from the Comprehensive R Archive Network (CRAN); if you are prompted
+to select a 'mirror', select one that is close to current location.
+If you have not done so already, install these packages on your computer now.
+A [quick way](http://stackoverflow.com/questions/8175912/load-multiple-packages-at-once) to do this in one go is to enter the following lines of code:
+
+```{r, eval=FALSE}
+x <- c("ggmap", "rgdal", "rgeos", "maptools", "dplyr", "tidyr", "tmap")
+# install.packages(x) # warning: uncommenting this may take a number of minutes
+lapply(x, library, character.only = TRUE) # load the required packages
+```
+
 \clearpage
 
 # Part II: Spatial data in R
 
 ## Starting the tutorial and downloading the data
 
-Now that we have taken a look at R's syntax and installed the
-necessary packages,
-we can start looking at some real spatial data. This second part introduces some
-spatial files that we will download from the internet. Plotting
-and interrogating spatial objects are central spatial data
-analysis in R, so we will focus on these elements in the next two parts of the tutorial,
-before focussing on creating attractive maps in Part IV.
+Now that we have looked at R's basic syntax and installed the
+necessary packages,let's load some real spatial data. 
+The next part of the tutorial will focus on plotting and interrogating 
+spatial objects.
 
 ```{r, echo=FALSE}
 # TODO: add info about accessing online data from R
 ```
 
-Download the data for this tutorial from
+The data used for this tutorial can be downloaded from:
 [https://github.com/Robinlovelace/Creating-maps-in-R](https://github.com/Robinlovelace/Creating-maps-in-R).
-Click on the "Download ZIP" button on the right hand side of the screen and once
-it is downloaded, unzip this to a new folder on your computer.
+Click on the "Download ZIP" button on the right hand side of the screen and once downloaded, unzip this to a new folder on your computer.
 
-For this tutorial, we suggest working on the 'Creating-maps-in-R' project which has already been created for you. To open this project, navigate to `File -> Open File...` in the top
-menu and navigate to the unzipped `Creating-maps-in-R` folder. Double click
-on the `Creating-maps-in-R.Rproj` project file to open this project. 
+Open the existing 'Creating-maps-in-R' project using `File -> Open File...` on the top menu.
 
-Alternatively, you can use the *project menu* to open the project or create a new one. It is 
-*highly recommended* that you use RStudio's projects to organise your
+Alternatively, use the *project menu* to open the project or create a new one. It is *highly recommended* that you use RStudio's projects to organise your
 R work and that you organise your files into sub-folders (e.g. `code`, `input-data`, `figures`) to avoid digital clutter (Figure 2). The RStudio website contains an overview of the 
 software: [rstudio.com/products/rstudio/](http://www.rstudio.com/products/rstudio/).
 
@@ -205,19 +187,12 @@ Opening a project sets the current working directory to the project's parent fol
 # setwd("C:/Users/username/Desktop/Creating-maps-in-R-master/")
 ```
 
-It is worth taking a look at the input dataset
-in your file browser
-before opening them in R. You could also try opening the
-file "london_sport.shp"(located within the "data" folder of the project), in mapping software such as
-QGIS, which can be freely downloaded from the internet.
-Note that .shp files are composed of several files for each object such as .prj, .sbn and .dbf files;
-you should be able to open "london_sport.dbf" in a spreadsheet program such as
-LibreOffice Calc. Once you think you understand the input data, it's time to open it in R.
+The first file we are going to load into R Studio is the "london_sport" [shapefile](http://en.wikipedia.org/wiki/Shapefile) located in the 'data' folder of the project. It is worth looking at this input dataset in your file browser before opening it in R. You will notice that there are several files named "london_sport", all with different file extensions. This is because a shapefile is actually made up of a number of different files, such as .prj, .dbf and .shp. 
 
-One of the most important steps in handling spatial data with R
-is the ability to read in spatial data, such as
-[shapefiles](http://en.wikipedia.org/wiki/Shapefile)
-(a common geographical file format). There are a number of ways to do this,
+You could also try opening the file "london_sport.shp" file in a conventional GIS such as QGIS to see what a shapefile contains. 
+
+You should also open "london_sport.dbf" in a spreadsheet program such as
+LibreOffice Calc. to see what this file contains. Once you think you understand the input data, it's time to open it in R. There are a number of ways to do this,
 the most commonly used and versatile of which is `readOGR`.
 This function, from the **rgdal** package, automatically extracts the information regarding the data.
 
