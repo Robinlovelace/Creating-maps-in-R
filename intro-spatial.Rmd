@@ -83,7 +83,7 @@ Part I: Introduction
 For this tutorial you need a copy of R. The latest version 
 can be downloaded from [http://cran.r-project.org/](http://cran.r-project.org/).
 
-We also suggest that you use an R editor, such as [RStudio](http://www.rstudio.com/), as this will improve the user-experience and help with the learning process. This can be downloaded from http://www.rstudio.com. The R Studio interface is comprised of a number of windows, the most important being the console window and the script window. Anything you type directly into the console window will not be saved, so use the script window to create scripts which you can save for later use. There is also a Data environment window which lists the dataframes and objects being used. Familiarise yourself with the R Studio interface before getting started on the tutorial.       
+We also suggest that you use an R editor, such as [RStudio](http://www.rstudio.com/), as this will improve the user-experience and help with the learning process. This can be downloaded from http://www.rstudio.com. The R Studio interface is comprised of a number of windows, the most important being the console window and the script window. Anything you type directly into the console window will not be saved, so use the script window to create scripts which you can save for later use. There is also a Data Environment window which lists the dataframes and objects being used. Familiarise yourself with the R Studio interface before getting started on the tutorial.       
 
 ## Basic Syntax and Getting Help
 
@@ -206,16 +206,10 @@ library(rgdal)
 lnd <- readOGR(dsn = "data", layer = "london_sport")
 ```
 
-In the second line of code above the `readOGR` function is used to load a shapefile and assign it to a new object called "lnd". `readOGR` is a *function* which accepts two *arguments*: `dsn` which stands for "data source name" and specifies the location where the file is stored, and `layer` which specifies the file name. Note that each new argument is separated by a comma and there is no need to specify the file extension (e.g. .shp) when providing the file name. Both arguments in this case are *character strings* (indicated by quote marks like this one `"`).
+In the second line of code above the `readOGR` function is used to load a shapefile and assign it to a new spatial object called "lnd"; short for London. `readOGR` is a *function* which accepts two *arguments*: `dsn` which stands for "data source name" and specifies the directory in which the file is stored, and `layer` which specifies the file name (note that there is no need to include the file extention .shp). The *arguments* are separated by a comma and the order in which they are specified is important. You do not have to explicitly type `dsn=` or `layer=` as R knows which order they appear, so `readOGR("data", "london_sport")` would work just as well. For clarity, it is good practice to include argument names when learning new functions so we will continue to do so.
 
-R functions have a default order for arguments, so `dsn = ` and `layer =` do not
-actually have to be typed for the command to run, for example, `readOGR("data", "london_sport")` would work just as well. 
-For clarity, it is good practice to include argument names such as `dsn` and `layer` when learning new functions and we continue this tradition below.
-
-The files beginning `london_sport` in the `data/`
-[directory](https://github.com/Robinlovelace/Creating-maps-in-R/tree/master/data)
-contain the population of London Boroughs in 2001 and the percentage of the population 
-participating in sporting activities. This data originates from the
+The file we assigned to the `lnd` object contains the population of London Boroughs in 2001 and the percentage of the population participating in sporting activities. 
+This data originates from the
 [Active People Survey](http://data.london.gov.uk/datastore/package/active-people-survey-kpi-data-borough).
 The boundary data is from the [Ordnance Survey](http://www.ordnancesurvey.co.uk/oswebsite/opendata/).
 
@@ -226,20 +220,22 @@ please see Cheshire and Lovelace (2014).
 
 ## The structure of spatial data in R
 
-We have now created a new spatial object called `lnd` from the "london_sport" shapefile. 
-Spatial objects are made up of a number of different *slots*, 
-the key ones being `@data` and `@polygons` (or `@lines` for line data)
-geometry data. The data *slot* can be thought of as an attribute table and the geometry *slot* is where the vertices
-of the object lie in space.
-Let's now analyse the sport object with some basic commands:
+Spatial objects like the `lnd` object are made up of a number of different *slots*, the key *slots* being `@data` and `@polygons` (or `@lines` for line data). The data *slot* can be thought of as an attribute table and the geometry *slot* is the polygons that make up the physcial boundaries. Specific *slots*
+are accessed using the @ symbol. Let's now analyse the sport object with some basic commands:
 
 ```{r}
 head(lnd@data, n = 2)
 mean(lnd$Partic_Per)
 ```
 
-Take a look at this output and notice the table format of the data and the column names. There are two important symbols at work in the above block of code: the `@` symbol in the first line of code is used to refer to the attribute *slot* of the object. The `$` symbol refers to a specific attribute (a variable with a column name) in the `data` *slot*, which was identified from the result of running the first line of code. If you are using RStudio, test out the auto-completion functionality
-by hitting `tab` before completing the command ---
+Take a look at the output created (note the table format of the data and the column names). There are two important symbols at work in the above block of code: the `@` symbol in the first line of code is used to refer to the data *slot* of the `lnd` object. The `$` symbol refers to the `Partic_Per` column (a variable within the table) in the `data` *slot*, which was identified from the result of running the first line of code. 
+
+The `head` function in the first line of the code above simply means "show the first few lines of data", i.e. the head. It's default is to output the first 6 rows of the dataset (try simply `head(lnd@data)`),
+but we can specify the number of lines with `n = 2` after the comma.
+The second line of the code above calculates the mean value of the variable `Partic_Per` (sports participation per 100 people) for each of the zones in the `lnd` object.
+
+Type the function again but this time hit `tab` before completing the command. RStudio has auto-complete functionality.
+---
 this can save you a lot of time in the long run
 (see Figure 3).
 
@@ -247,32 +243,13 @@ this can save you a lot of time in the long run
 grid.raster(readPNG("figure/tab-complete.png"))
 ```
 
-To display the raw coordinates of the first polygon,
-for example, we must select a slot within a slot
-within a slot. The following code, for example,
-selects the first polygon of `lnd` and then
-selects the first Polygon within this spatial
-unit (there is usually only one) and then
-returns the coordinates of this. Note the
-plot in Figure 4 has an incorrect projection.
-
-```{r, fig.cap="Raw coordinate data displayed and plotted in R."}
-head(lnd@polygons[[1]]@Polygons[[1]]@coords, 3)
-plot(lnd@polygons[[1]]@Polygons[[1]]@coords)
-```
-
-The `head` function in the first line of the code above simply means "show the first few lines of data", i.e. the head. It's default is to output the first 6 rows of the dataset (try simply `head(lnd@data)`),
-but we can specify the number of lines with `n = 2` after the comma.
-The second line of the code above calculates the mean value of the variable `Partic_Per` (sports participation per 100 people) for each of the zones in the `lnd` object.
-To explore `lnd` object further, try typing `nrow(lnd)` and record how many zones the dataset contains. You can also try `ncol(lnd)`.
+To explore `lnd` object further, try typing `nrow(lnd)` (display number of rows) and record how many zones the dataset contains. You can also try `ncol(lnd)`.
 
 ## Basic plotting
 
 Now we have seen something of the structure of spatial objects in R,
 let us look at plotting them. Note, that plots
-use the *geometry* data, contained primarily in the `@polygons` slot in the above example, to draw
-the shape of the zones. The information in `@data` will typically be used to colour in the map. which describes where
-the polygons are located in space:
+use the *geometry* data, contained primarily in the `@polygons` slot.
 
 ```{r, eval=FALSE}
 plot(lnd) # not shown in tutorial - try it on your computer
@@ -281,25 +258,23 @@ plot(lnd) # not shown in tutorial - try it on your computer
 `plot` is one of the most useful functions in R, as it changes its behaviour
 depending on the input data (this is called *polymorphism* by computer scientists).
 Inputting another object such as `plot(lnd@data)` will generate
-an entirely different type of plot. Thus R is intelligent at guessing what you want to
-do with the data you provide it with.
+an entirely different type of plot. Thus R is intelligent at guessing what you want to do with the data you provide it with.
 
-R has powerful subsetting capabilities that can be accessed very concisely using square brackets,
-as shown in the following example:
+R has powerful subsetting capabilities that can be accessed very concisely using square brackets,as shown in the following example:
 
 ```{r}
 # select rows of lnd@data where sports participation is less than 15
 lnd@data[lnd$Partic_Per < 15, ]
 ```
 
-The above line of code asked R to select rows from the `lnd` object, where sports participation is lower than 15,
+The above line of code asked R to select onlt the rows from the `lnd` object, where sports participation is lower than 15,
 in this case rows 17, 21 and 32, which are Harrow, Newham and the city centre respectively. The square brackets work as follows:
 anything before the comma refers to the rows that will be selected, anything after
 the comma refers to the number of columns that should be returned. 
 For example if the data frame had 1000 columns and you were only interested in the first two columns you could specify `1:2` after the comma. The ":" symbol simply means "to", i.e. columns 1 to 2. Try experimenting with the square brackets notation
-(e.g. guess the result of `lnd@data[1:2, 1:3]` and test it): it will be useful.
+(e.g. guess the result of `lnd@data[1:2, 1:3]` and test it).
 
-So far we have been interrogating only the attribute *slot* (`@data`) of the `lnd` object, but the square brackets can also be used to subset spatial objects, i.e. the geometry *slot*. Using the same logic as before try
+So far we have been interrogating only the attribute data *slot* (`@data`) of the `lnd` object, but the square brackets can also be used to subset spatial objects, i.e. the geometry *slot*. Using the same logic as before try
 to plot a subset of zones with high sports participation.
 
 ```{r, eval=FALSE}
@@ -309,7 +284,7 @@ plot(lnd[sel, ]) # output not shown here
 head(sel) # test output of previous selection (not shown)
 ```
 
-This plot is could be useful, but it only shows the areas which meet the criteria. To see the sporty areas in context with the other areas of the map simply use the `add = TRUE` argument after the initial plot.
+This plot is quite useful, but it only displays the areas which meet the criteria. To see the sporty areas in context with the other areas of the map simply use the `add = TRUE` argument after the initial plot.
 (`add = T` would also work, but we like to spell things out in this tutorial for clarity).
 What do you think the `col` argument refers to in the below block? (see Figure 5).
 
@@ -327,12 +302,6 @@ participation in London? The map tells us. Do not worry for now about
 the intricacies of
 how this was achieved: you have learned vital basics of how R works as a language;
 we will cover this in more detail in subsequent sections.
-
-As a bonus stage, select and plot
-only zones that are
-close to the centre of London (see Fig. 6). Programming encourages rigorous
-thinking and it helps to define the problem
-more specifically:
 
 > **Challenge**: Select all zones whose geographic centroid lies within 10 km of the geographic centroid of inner 
 London.^[To
@@ -371,14 +340,9 @@ text(coordinates(cent_lnd), "Central\nLondon")
 
 ## Attribute data
 
-All shapefiles have both attribute table and geometry data. These are automatically loaded with
-`readOGR`. The loaded attribute data can be treated the same as an R
-[data frame](http://www.statmethods.net/input/datatypes.html).
-
-R deliberately hides the geometry of spatial data unless you print
-the entire object (try typing `print(lnd)`).
-Let's take a look at the headings of sport, using the following command: `names(lnd)`
-Remember, the attribute data contained in spatial objects are kept in a 'slot' that can be accessed using the `@` symbol: `lnd@data`. This is useful if you do not wish to work with the spatial components of the data at all times.
+As we discovered in the previous section, shapefiles contain both attribute data and geometry data, both of which are automatically loaded into R when the 
+`readOGR` function is used. Let's look again at the attribute data of the `lnd` object by looking at the headings contained within it: `names(lnd)`
+Remember, the attribute data is contained in the `data` *slot* that can be accessed using the `@` symbol: `lnd@data`. This is useful if you do not wish to work with the spatial components of the data at all times.
 
 Type `summary(lnd)` to get some additional information about the
 data object. Spatial objects in R contain
@@ -399,17 +363,15 @@ summary(lnd)
 ...
 ```
 
-The first line of the above output tells us that `lnd` is a special spatial class,
-in this case a `SpatialPolygonsDataFrame`.
+The first line of the above output tells us that `lnd` is a special spatial class: a `SpatialPolygonsDataFrame`.
 This means it is composed of
-various polygons, each of which has attributes.
+various polygons, each of which has a number of attributes.
 (Summaries of the attribute data are also provided, but are not printed above.) This is the ideal
 class of data to represent administrative zones. The coordinates tell
-us what the maximum and minimum x and y values are (for plotting).
+us what the maximum and minimum x and y values are (the spatial extent of the data - useful for plotting).
 Finally, we are told something of the coordinate reference system
 with the `Is projected` and `proj4string` lines.
-In this case, we have a projected system, which means it is a
-Cartesian reference system, relative to some point on the surface of the Earth.
+In this case, we have a projected system, which means the data is relative to some point on the Earth's surface.
 We will cover reprojecting data in the next part of the tutorial.
 
 \clearpage
@@ -420,19 +382,14 @@ We will cover reprojecting data in the next part of the tutorial.
 # should be manipulating and plotting. TODO: talk about base graphics
 ```
 
-Beyond visualisation and interrogation GIS software must also
-be able to create and modify spatial data.
-R  excels in this regard. R's spatial packages
+Alongside visualisation and interrogation, a GIS must also
+be able to create and modify spatial data. R's spatial packages
 provide a very wide and powerful suite of
-functionality for processing spatial data, and its
-strict class system make it easy to create new spatial datasets.
+functionality for processing and creating spatial data.
 
 *Reprojecting* and *joining/clipping* 
-are fundamental operations in the GIS analyst's tool-kit,
-so we introduce these, before
-looking at joining non-spatial
-data to spatial objects.
-Finally we cover spatial joins, whereby
+are fundamental GIS operations, so in this section we will explore how these operations can be undertaken in R. Firstly We will join non-spatial data to spatial data so it can be mapped.
+Finally we will cover spatial joins, whereby
 information from two spatial objects is
 combined based on spatial location.
 
