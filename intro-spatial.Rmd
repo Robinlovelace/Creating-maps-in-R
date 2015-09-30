@@ -1,7 +1,7 @@
 ---
 title: "Introduction to visualising spatial data in R"
 author: "Robin Lovelace (R.Lovelace@leeds.ac.uk), James Cheshire and others"
-date: "V. 1.2, June, 2015 --- see [github.com/Robinlovelace/Creating-maps-in-R](https://github.com/Robinlovelace/Creating-maps-in-R) for latest version"
+date: "V. 1.3, September 2015 --- see [github.com/Robinlovelace/Creating-maps-in-R](https://github.com/Robinlovelace/Creating-maps-in-R) for latest version"
 output:
   pdf_document:
     fig_cap: yes
@@ -40,7 +40,7 @@ knit_hooks$set(par=function(before, options, envir){
 
 This tutorial is an introduction to analysing spatial data in R, specifically through map-making with
 R's 'base' graphics and various dedicated map-making packages for R including
-**ggmap** and **leaflet**. It teaches the basics of using R as a
+**tmap** and **leaflet**. It teaches the basics of using R as a
 fast, user-friendly and extremely powerful command-line
 Geographic Information System (GIS).
 
@@ -77,7 +77,7 @@ R has a huge and growing number of spatial data packages. We recommend taking a 
 
 In this tutorial we will use:
 
-- **ggmap**: extends the plotting package **ggplot2** for maps
+- **ggplot2**: a popular and powerful visualisation package which links to **ggmap**
 - **rgdal**: R's interface to the popular C/C++ spatial data processing library [gdal](http://www.gdal.org/)
 - **rgeos**: R's interface to the powerful vector processing library [geos](http://trac.osgeo.org/geos/)
 - **maptools**: provides various mapping functions
@@ -778,7 +778,8 @@ in intro-spatial.Rmd at [github.com/Robinlovelace/Creating-maps-in-R/blob/master
 library(ggmap)
 borough_dat <- read.csv("data/london-borough-profiles-2014.csv")
 names(borough_dat)
-borough_dat <- rename(borough_dat, conservative = Proportion.of.seats.won.by.Conservatives.in.2014.election)
+borough_dat <- rename(borough_dat, conservative =
+    Proportion.of.seats.won.by.Conservatives.in.2014.election)
 borough_dat$conservative <- as.numeric(as.character(borough_dat$conservative))
 summary(borough_dat$conservative)
 head(lnd$ons_label)
@@ -790,8 +791,11 @@ borough_dat <- rename(borough_dat, ons_label = Code)
 to_join <- select(borough_dat, ons_label, conservative)
 lnd@data <- left_join(lnd@data, to_join)
 
+library(maptools)
 lnd_f <- fortify(lnd, region = "ons_label") # you may need to load maptools
 lnd_f <- rename(lnd_f, ons_label = id)
+head(lnd_f$ons_label)
+head(lnd$ons_label)
 
 lnd_f <- left_join(lnd_f, lnd@data)
 
@@ -843,7 +847,7 @@ points(stations) # overlay the station points
 
 Now we can clearly see that the `stations` points overlay the boroughs.
 The problem is that the spatial extent of `stations` is
-great than that of `lnd`.
+greater than that of `lnd`.
 We will create a spatially determined subset of the
 stations object that fall inside greater London. This is *clipping*.
 
@@ -1031,20 +1035,23 @@ and, in the case of **leaflet**, interactively.
 
 We try the newest of the three packages, **tmap**, first
 as it is the easiest to use. Then we progress to explore the
-powerful **ggmap** paradigm before outlining **leaflet**.
+powerful **ggplot2** paradigm before outlining **leaflet**.
 
 ## **tmap**
 
 [**tmap**](https://github.com/mtennekes/tmap)
 was created
 to overcome some of the limitations of base graphics
-and **ggmap**. The focus is on
+and **ggmap/ggplot2**. The focus is on
 generating 'thematic maps' (which show a variable change
 over space) quickly and easily. A concise introduction to
 **tmap** can be accessed (after the package is installed)
 by using the vignette function:
 
 ```{r}
+# install.packages("tmap") # install the CRAN version
+# to download the development version, use the devtools package
+# devtools::install_github("mtennekes/tmap", subdir = "pkg", build_vignette = TRUE)
 library(tmap)
 vignette(package = "tmap") # available vignettes in tmap
 vignette("tmap-nutshell")
@@ -1081,6 +1088,10 @@ adapted to maps thank to **ggmap**, as described below.
 
 **ggmap** is based on the **ggplot2** package,
 an implementation of the Grammar of Graphics (Wilkinson 2005).
+This section focusses primarily on **ggplot2**. More on **ggmap** 
+can be found in the vignettes accompanying this tutorial:
+https://github.com/Robinlovelace/Creating-maps-in-R/tree/master/vignettes
+
 **ggplot2** can replace
 the base graphics in R (the functions you have been plotting with so far).
 It contains default options that match good visualisation practice.
@@ -1093,7 +1104,7 @@ http://docs.ggplot2.org/current/ .
 Good examples of graphs can also be found on the website
 [cookbook-r.com](http://www.cookbook-r.com/Graphs/).
 
-Load the package with `r library(ggplot2)`.
+Load the package with `library(ggplot2)`.
 It is worth noting that the base `plot()` function requires less
 data preparation but more effort in control of features.
 `qplot()` and `ggplot()` from **ggplot2**
@@ -1148,6 +1159,7 @@ In the following steps we will create a map to show the percentage of the popula
 For this to work, either the **maptools** or **rgeos** packages must be installed.
 
 ```{r, warning=FALSE}
+library(rgeos)
 lnd_f <- fortify(lnd) # you may need to load maptools
 ```
 
@@ -1215,119 +1227,7 @@ a larger map, you could try the following:
 ggsave("large_plot.png", scale = 3, dpi = 400)
 ```
 
-## Adding base maps to ggplot2 with ggmap
 
-[ggmap](http://journal.r-project.org/archive/2013-1/kahle-wickham.pdf)
-is a package that uses the **ggplot2** syntax as a
-template to create maps with image tiles taken from map servers
-such as Google and
-[OpenStreetMap](http://www.openstreetmap.org/):
-
-```{r}
-library(ggmap) # install.packages("ggmap") if not installed
-```
-
-The `lnd` object loaded previously is in British National Grid but the ggmap
-image tiles are in WGS84. We therefore need to use the `lnd84`
-object created in the reprojection operation (see Part III).
-Load this with `readRDS()`.
-
-```{r}
-lnd84 <- readRDS("data/lnd84.Rds") # load previously saved object
-```
-
-The first job is to calculate the bounding box (bb for short) of the
-`lnd84` object to identify the geographic extent of the image tiles that we need.
-
-```{r}
-bb <- bbox(lnd84)
-b <- (bb - rowMeans(bb)) * 1.05 + rowMeans(bb)
-# scale longitude and latitude (increase bb by 5% for plot)
-# replace 1.05 with 1.xx for an xx% increase in the plot size
-```
-
-This is then fed into the `get_map` function as the location parameter. The syntax below contains 2 functions. **ggmap** is required to produce the plot and provides the base map data.
-
-```{r, eval=FALSE, message=FALSE}
-lnd_b1 <- ggmap(get_map(location = b)) # create basemap for london
-```
-
-```{r, echo=FALSE}
-# save(lnd_b1, file = "data/lnd_b1.RData")
-load("data/lnd_b1.RData") # load saved map
-```
-
-In much the same way as we did above we can then layer the plot with different geoms.
-
-First fortify the `lnd84` object and then merge with the required attribute
-data (we already did this step to create the `lnd_f` object).
-
-```{r, message=FALSE}
-lnd_wgs84_f <- fortify(lnd84, region = "ons_label")
-lnd_wgs84_f <- left_join(lnd_wgs84_f, lnd84@data,
-  by = c("id" = "ons_label"))
-```
-
-We can now overlay this on our base map.
-
-```{r, eval=FALSE}
-lnd_b1 +
-  geom_polygon(data = lnd_wgs84_f,
-  aes(x = long, y = lat, group = group, fill = Partic_Per),
-    alpha = 0.5)
-```
-
-The code above contains many parameters. Use the **ggplot2** help pages
-(e.g. `?geom_polygon`) to find out what they are.
-The resulting map could be improved with a simpler basemap in black and white.
-Stamen provide the tiles we need and they can be brought into the
-plot with the `get_map` function:^[Note that a wide range of customised
-on-line basemaps can be used, by modifying 'cloudmade' map styles or
-customised Google Maps - see [r-bloggers.com/creating-styled-google-maps-in-ggmap](http://www.r-bloggers.com/creating-styled-google-maps-in-ggmap/) for details on
-the latter.]
-
-```{r, eval=FALSE}
-# download basemap (use load("data/lnd_b2.RData") if you have no internet)
-lnd_b2 <- ggmap(get_map(location = b, source = "stamen",
-          maptype = "toner", crop = TRUE))
-```
-
-```{r, echo=FALSE}
-# save(lnd_b2, file = "data/lnd_b2.RData")
-load("data/lnd_b2.RData") # load saved map
-```
-
-We can then produce the plot as before:
-
-```{r fig.cap="Basemap 2"}
-library(mapproj) # mapproj library needed - install.packages("mapproj")
-
-lnd_b2 +
-  geom_polygon(data = lnd_wgs84_f, 
-    aes(x = long, y = lat, group = group, fill = Partic_Per),
-    alpha = 0.5)
-```
-
-Finally, to increase the detail of the base map, we can use `get_map`'s `zoom` argument
-(result not shown)
-
-```{r, eval=FALSE}
-# download basemap (try load("data/lnd_b3.RData") if you lack internet)
-lnd_b3 <- ggmap(get_map(location = b, source = "stamen",
-  maptype = "toner", crop = TRUE, zoom = 11))
-```
-
-```{r, eval=F, echo=FALSE}
-# save(lnd_b3, file = "data/lnd_b3.RData")
-# load("data/lnd_b3.RData") # load saved map
-```
-
-```{r fig.cap="Basemap 3", eval=FALSE}
-lnd_b3 +
-  geom_polygon(data = lnd_wgs84_f,
-    aes(x = long, y = lat, group = group, fill = Partic_Per),
-    alpha = 0.5)
-```
 
 ## Creating interactive maps with **leaflet**
 
