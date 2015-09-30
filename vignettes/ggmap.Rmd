@@ -1,0 +1,122 @@
+---
+title: "ggmap"
+author: "Robin Lovelace"
+date: "September 30, 2015"
+output: html_document
+---
+
+This vignette presents additional mapping options with ggmap.
+The content was removed from the main tutorial when the code stopped working.
+
+## Adding base maps to ggplot2 with ggmap
+
+[ggmap](http://journal.r-project.org/archive/2013-1/kahle-wickham.pdf)
+is a package that uses the **ggplot2** syntax as a
+template to create maps with image tiles taken from map servers
+such as Google and
+[OpenStreetMap](http://www.openstreetmap.org/):
+
+```{r}
+library(ggmap) # install.packages("ggmap") if not installed
+```
+
+The `lnd` object loaded previously is in British National Grid but the ggmap
+image tiles are in WGS84. We therefore need to use the `lnd84`
+object created in the reprojection operation (see Part III).
+Load this with `readRDS()`.
+
+```{r}
+lnd84 <- readRDS("data/lnd84.Rds") # load previously saved object
+```
+
+The first job is to calculate the bounding box (bb for short) of the
+`lnd84` object to identify the geographic extent of the image tiles that we need.
+
+```{r}
+bb <- bbox(lnd84)
+b <- (bb - rowMeans(bb)) * 1.05 + rowMeans(bb)
+# scale longitude and latitude (increase bb by 5% for plot)
+# replace 1.05 with 1.xx for an xx% increase in the plot size
+```
+
+This is then fed into the `get_map` function as the location parameter. The syntax below contains 2 functions. **ggmap** is required to produce the plot and provides the base map data.
+
+```{r, eval=FALSE, message=FALSE}
+lnd_b1 <- ggmap(get_map(location = b)) # create basemap for london
+```
+
+```{r, echo=FALSE}
+# save(lnd_b1, file = "data/lnd_b1.RData")
+load("data/lnd_b1.RData") # load saved map
+```
+
+In much the same way as we did above we can then layer the plot with different geoms.
+
+First fortify the `lnd84` object and then merge with the required attribute
+data (we already did this step to create the `lnd_f` object).
+
+```{r, message=FALSE}
+lnd_wgs84_f <- fortify(lnd84, region = "ons_label")
+lnd_wgs84_f <- left_join(lnd_wgs84_f, lnd84@data,
+  by = c("id" = "ons_label"))
+```
+
+We can now overlay this on our base map.
+
+```{r, eval=FALSE}
+lnd_b1 +
+  geom_polygon(data = lnd_wgs84_f,
+  aes(x = long, y = lat, group = group, fill = Partic_Per),
+    alpha = 0.5)
+```
+
+The code above contains many parameters. Use the **ggplot2** help pages
+(e.g. `?geom_polygon`) to find out what they are.
+The resulting map could be improved with a simpler basemap in black and white.
+Stamen provide the tiles we need and they can be brought into the
+plot with the `get_map` function:^[Note that a wide range of customised
+on-line basemaps can be used, by modifying 'cloudmade' map styles or
+customised Google Maps - see [r-bloggers.com/creating-styled-google-maps-in-ggmap](http://www.r-bloggers.com/creating-styled-google-maps-in-ggmap/) for details on
+the latter.]
+
+```{r, eval=FALSE}
+# download basemap (use load("data/lnd_b2.RData") if you have no internet)
+lnd_b2 <- ggmap(get_map(location = b))
+```
+
+```{r, echo=FALSE}
+# save(lnd_b2, file = "data/lnd_b2.RData")
+load("data/lnd_b2.RData") # load saved map
+```
+
+We can then produce the plot as before:
+
+```{r fig.cap="Basemap 2"}
+library(mapproj) # mapproj library needed - install.packages("mapproj")
+
+lnd_b2 +
+  geom_polygon(data = lnd_wgs84_f, 
+    aes(x = long, y = lat, group = group, fill = Partic_Per),
+    alpha = 0.5)
+```
+
+Finally, to increase the detail of the base map, we can use `get_map`'s `zoom` argument
+(result not shown)
+
+```{r, eval=FALSE}
+# download basemap (try load("data/lnd_b3.RData") if you lack internet)
+lnd_b3 <- ggmap(get_map(location = b, source = "stamen",
+  maptype = "toner", crop = TRUE, zoom = 11))
+```
+
+```{r, eval=F, echo=FALSE}
+# save(lnd_b3, file = "data/lnd_b3.RData")
+# load("data/lnd_b3.RData") # load saved map
+```
+
+```{r fig.cap="Basemap 3", eval=FALSE}
+lnd_b3 +
+  geom_polygon(data = lnd_wgs84_f,
+    aes(x = long, y = lat, group = group, fill = Partic_Per),
+    alpha = 0.5)
+```
