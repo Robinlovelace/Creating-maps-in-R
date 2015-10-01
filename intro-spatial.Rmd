@@ -235,10 +235,7 @@ The `head` function in the first line of the code above simply means "show the f
 but we can specify the number of lines with `n = 2` after the comma.
 The second line of the code above calculates the mean value of the variable `Partic_Per` (sports participation per 100 people) for each of the zones in the `lnd` object.
 
-Type the function again but this time hit `tab` before completing the command. RStudio has auto-complete functionality.
----
-this can save you a lot of time in the long run
-(see Figure 3).
+Type the function again but this time hit `tab` before completing the command. RStudio has auto-complete functionality which can save you a lot of time in the long run (see Figure 3).
 
 ```{r, fig.height=1.3, echo=FALSE, fig.cap="Tab-autocompletion in action: display from RStudio after typing `lnd@` then `tab` to see which slots are in `lnd`"}
 grid.raster(readPNG("figure/tab-complete.png"))
