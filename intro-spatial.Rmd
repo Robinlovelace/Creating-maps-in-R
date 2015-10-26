@@ -654,9 +654,9 @@ concise when joining variables have the
 same name across both datasets. **dplyr** is also helpful here as it contains
 a useful function to `rename` variables:
 
-```{r, echo=FALSE}
-# commented out: old version using plyr version of rename
-# crime_ag <- rename(crime_ag, replace = c("DName" = "name"))
+```{r, echo=FALSE, message=FALSE}
+# Load dplyr package
+library(dplyr)
 ```
 
 
@@ -991,13 +991,18 @@ by using the vignette function:
 library(tmap)
 vignette(package = "tmap") # available vignettes in tmap
 vignette("tmap-nutshell")
-
 ```
+
+```{r, echo=FALSE, message=FALSE}
+library(tmap)
+```
+
+
 
 A couple of basic plots show the package's intuitive
 syntax and attractive default parameters.
 
-```{r, eval=FALSE}
+```{r, eval=FALSE, message=FALSE}
 # Create our first tmap map (not shown)
 qtm(shp = lnd, fill = "Partic_Per", fill.palette = "-Blues")
 ```
