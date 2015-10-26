@@ -5,7 +5,8 @@ author: Robin Lovelace (R.Lovelace@leeds.ac.uk), James Cheshire, Rachel Oldroyd 
 date: V. 1.3, September 2015 --- see [github.com/Robinlovelace/Creating-maps-in-R](https://github.com/Robinlovelace/Creating-maps-in-R)
   for latest version
 output:
-  word_document: default
+  html_document:
+    toc: yes
   pdf_document:
     fig_cap: yes
     fig_height: 3.5
@@ -13,8 +14,7 @@ output:
     highlight: pygments
     keep_tex: yes
     toc: yes
-  html_document:
-    toc: yes
+  word_document: default
 ---
 
 \newpage
@@ -325,21 +325,70 @@ plot(lnd_buffer, add = T, border = "red", lwd = 2)
 # Add text to the plot!
 text(coordinates(cent_lnd), "Central\nLondon")
 ```
-### Selecting quadrants
 
+## Selecting quadrants
+
+In this example we will now interrogate the shapefile for London and split it into quadrants using lines of latitude and longitude. This will work in a similar way to the previous example, however once we have the centre point we will then use this create the lines of latitude and longitude on which the centre of the wards will be tested against. 
 ```{r}
-england = gUnaryUnion(lnd, lnd$dummy)
-england = SpatialPolygonsDataFrame(england, data.frame(dummy = c("England")), match.ID = FALSE)
+# Create an outline of the London area by merging all of the polyogns in the lnd object
+london = gUnaryUnion(lnd, lnd$dummy)
+london = SpatialPolygonsDataFrame(london, data.frame(dummy = c("london")), match.ID = FALSE)
 
-centreEngland = gCentroid(england, byid = TRUE)
+# Find the centre of the london area
+centrelondon = gCentroid(london, byid = TRUE)
 
-centreLEP = gCentroid(lnd, byid = TRUE)
-coords <- cbind(centreEngland$y)
-
-c1 = c(centreEngland$x, centreEngland$x)
+# create coordinates to store the start and end points of the lines
+c1 = c(centrelondon$x, centrelondon$x)
 c2 = c(90, -90)
 c3 = c(90, -90)
-c4 = c(centreEngland$y,centreEngland$y)
+c4 = c(centrelondon$y,centrelondon$y)
+
+# simple line strings using the created coordinates
+L1 = Line(cbind(c1, c2))
+L2 = Line(cbind(c3, c4))
+
+# create the lines
+Ls1 = Lines(list(L1), ID = "a")
+Ls2 = Lines(list(L2), ID = "b")
+
+# convert the lines into SpatialLines
+Ls1 <- SpatialLines(LinesList = list(Ls1))
+Ls2 <- SpatialLines(LinesList = list(Ls2))
+
+# convert again into SpatialLinesDataFrame
+Longitude = SpatialLinesDataFrame(Ls1, data.frame(Z = c("1", "2"), row.names = c("a","b")))
+Latitude = SpatialLinesDataFrame(Ls2, data.frame(Z = c("1", "2"), row.names = c("a","b")))
+
+# arguments to test whether or not a coordinate is east or north of the centre
+east <- coordinates(lnd)[,1] > Longitude@lines[[1]]@Lines[[1]]@coords[,1][1]
+north <- coordinates(lnd)[,2] > Latitude@lines[[1]]@Lines[[1]]@coords[,2][1]
+
+# test if the coordinate is east and north of the centre
+lnd@data$quadrant[east & north] <- "northeast"
+
+#plot the results
+plot(london)
+plot(lnd[east & north,],add = TRUE, col = "red" )
+
+# place a grid over the object
+llgridlines(lnd, lty= 3, side ="EN", offset = -0.5)
+```
+
+Using the above code as refrence try and find the remaining 3 quadrants and colour them the same as the map below.For bonus points try to desolve the quadrants so the map is left with only 4 polygons.  
+
+```{r, , echo=FALSE}
+london = gUnaryUnion(lnd, lnd$dummy)
+london = SpatialPolygonsDataFrame(london, data.frame(dummy = c("london")), match.ID = FALSE)
+
+centrelondon = gCentroid(london, byid = TRUE)
+
+centreLEP = gCentroid(lnd, byid = TRUE)
+coords <- cbind(centrelondon$y)
+
+c1 = c(centrelondon$x, centrelondon$x)
+c2 = c(90, -90)
+c3 = c(90, -90)
+c4 = c(centrelondon$y,centrelondon$y)
 
 # simple line strings
 L1 = Line(cbind(c1, c2))
@@ -354,41 +403,30 @@ Ls2 <- SpatialLines(LinesList = list(Ls2))
 Longitude = SpatialLinesDataFrame(Ls1, data.frame(Z = c("1", "2"), row.names = c("a","b")))
 Latitude = SpatialLinesDataFrame(Ls2, data.frame(Z = c("1", "2"), row.names = c("a","b")))
 
-mask <- gUnion(Longitude, Latitude, byid=FALSE, id=NULL, drop_lower_td=FALSE)
-
-# plot(england)
-# plot(centreEngland,col='red',add=TRUE)
-# plot(centreLEP, col= "blue", add=TRUE)
-
-# plot(mask, col = 'red', add =TRUE)
-
-proj4string(mask) <- proj4string(england)
-
-# intersect <- gIntersection(mask, england,  byid=FALSE, id=NULL, unaryUnion_if_byid_false=FALSE)
-
-# plot(intersect)
-# plot(england, add = TRUE)
-
-
-# plot(lnd)
-# plot(intersect, add = TRUE)
-
-lnd$quadrant <- NA
 
 east <- coordinates(lnd)[,1] > Longitude@lines[[1]]@Lines[[1]]@coords[,1][1]
 north <- coordinates(lnd)[,2] > Latitude@lines[[1]]@Lines[[1]]@coords[,2][1]
+west <- coordinates(lnd)[,1] < Longitude@lines[[1]]@Lines[[1]]@coords[,1][1]
+south <-coordinates(lnd)[,2] < Latitude@lines[[1]]@Lines[[1]]@coords[,2][1]
+
+
 
 lnd@data$quadrant[east & north] <- "northeast"
+lnd@data$quadrant[west & north] <- "northwest"
+lnd@data$quadrant[east & south] <- "southeast"
+lnd@data$quadrant[west & south] <- "southwest"
 
 plot(lnd)
 plot(lnd[east & north,],add = TRUE, col = "red" )
- llgridlines(england, lty= 3, side ="WS", offset = 0.1)
+plot(lnd[west & north,],add = TRUE, col = "blue" )
+plot(lnd[east & south,],add = TRUE, col = "green" )
+plot(lnd[west & south,],add = TRUE, col = "yellow" )
+
+
+llgridlines(lnd, lty= 3, side ="EN", offset = -0.5)
 
 
 ```
-
-
-
 
 
 
