@@ -145,7 +145,7 @@ A [quick way](http://stackoverflow.com/questions/8175912/load-multiple-packages-
 
 ```{r, eval=FALSE}
 x <- c("ggmap", "rgdal", "rgeos", "maptools", "dplyr", "tidyr", "tmap")
-# install.packages(x) # warning: uncommenting this may take a number of minutes
+ # install.packages(x) # warning: uncommenting this may take a number of minutes
 lapply(x, library, character.only = TRUE) # load the required packages
 ```
 
@@ -628,7 +628,7 @@ the `left_join` function from the **dplyr** package but the `merge` function
 could equally be used. Note that when we ask for help for a function
 that is not loaded, nothing happens, indicating we need to load it:
 
-```{r, results='hide', message=FALSE}
+```{r, results='hide', eval=FALSE}
 ?left_join # error flagged
 ??left_join
 library(dplyr) # load the powerful dplyr package (use plyr if unavailable)
@@ -711,6 +711,7 @@ see how this map was created, see the code
 in intro-spatial.Rmd at [github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial.Rmd](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial.Rmd).]
 
 ```{r, echo=FALSE, results='hide', message=FALSE, warning=FALSE, fig.cap="Proportion of council seats won by Conservatives in the 2014 local elections using data from data.london.gov and joined using the methods presented in this section"}
+# install.packages("ggmap")
 library(ggmap)
 borough_dat <- read.csv("data/london-borough-profiles-2014.csv")
 names(borough_dat)
@@ -983,13 +984,14 @@ over space) quickly and easily. A concise introduction to
 **tmap** can be accessed (after the package is installed)
 by using the vignette function:
 
-```{r}
+```{r, eval=FALSE}
 # install.packages("tmap") # install the CRAN version
 # to download the development version, use the devtools package
 # devtools::install_github("mtennekes/tmap", subdir = "pkg", build_vignette = TRUE)
 library(tmap)
 vignette(package = "tmap") # available vignettes in tmap
 vignette("tmap-nutshell")
+
 ```
 
 A couple of basic plots show the package's intuitive
@@ -1220,6 +1222,7 @@ being strung-out over many columns.
 
 ```{r, results='hide'}
 london_data <- read.csv("data/census-historic-population-borough.csv")
+# install.packages("tidyr")
 library(tidyr) # if not install it, or skip the next two steps
 ltidy <- gather(london_data, date, pop, -Area.Code, -Area.Name)
 head(ltidy, 2) # check the output (not shown)
