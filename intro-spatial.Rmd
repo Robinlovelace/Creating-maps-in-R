@@ -1,8 +1,11 @@
 ---
 title: "Introduction to visualising spatial data in R"
-author: "Robin Lovelace (R.Lovelace@leeds.ac.uk), James Cheshire, Rachel Oldroyd and others"
-date: "V. 1.3, September 2015 --- see [github.com/Robinlovelace/Creating-maps-in-R](https://github.com/Robinlovelace/Creating-maps-in-R) for latest version"
+author: Robin Lovelace (R.Lovelace@leeds.ac.uk), James Cheshire, Rachel Oldroyd and
+  others
+date: V. 1.3, September 2015 --- see [github.com/Robinlovelace/Creating-maps-in-R](https://github.com/Robinlovelace/Creating-maps-in-R)
+  for latest version
 output:
+  word_document: default
   pdf_document:
     fig_cap: yes
     fig_height: 3.5
@@ -10,31 +13,12 @@ output:
     highlight: pygments
     keep_tex: yes
     toc: yes
+  html_document:
+    toc: yes
 ---
 
 \newpage
 
-```{r, include=FALSE}
-# output: word_document
-# TODO: add details for the ggplot2 section
-# TODO: create animation of population change over time
-# Add world mapping in ggplot2
-library(knitr)
-library(methods)
-options(replace.assign=FALSE, width=80)
-
-opts_chunk$set(fig.path='knitr_figure/graphics-', 
-               cache.path='knitr_cache/graphics-', 
-               dev='pdf', fig.width=4, fig.height=3, 
-               fig.show='hold', cache=FALSE, par=TRUE)
-knit_hooks$set(crop=hook_pdfcrop)
-
-knit_hooks$set(par=function(before, options, envir){
-    if (before && options$fig.show!='none') {
-        par(mar=c(3,3,2,1),cex.lab=.95,cex.axis=.9,
-            mgp=c(2,.7,0),tcl=-.01, las=1)
-}}, crop=hook_pdfcrop)
-```
 
 ## Preface
 
@@ -341,6 +325,72 @@ plot(lnd_buffer, add = T, border = "red", lwd = 2)
 # Add text to the plot!
 text(coordinates(cent_lnd), "Central\nLondon")
 ```
+### Selecting quadrants
+
+```{r}
+england = gUnaryUnion(lnd, lnd$dummy)
+england = SpatialPolygonsDataFrame(england, data.frame(dummy = c("England")), match.ID = FALSE)
+
+centreEngland = gCentroid(england, byid = TRUE)
+
+centreLEP = gCentroid(lnd, byid = TRUE)
+coords <- cbind(centreEngland$y)
+
+c1 = c(centreEngland$x, centreEngland$x)
+c2 = c(90, -90)
+c3 = c(90, -90)
+c4 = c(centreEngland$y,centreEngland$y)
+
+# simple line strings
+L1 = Line(cbind(c1, c2))
+L2 = Line(cbind(c3, c4))
+
+Ls1 = Lines(list(L1), ID = "a")
+Ls2 = Lines(list(L2), ID = "b")
+
+Ls1 <- SpatialLines(LinesList = list(Ls1))
+Ls2 <- SpatialLines(LinesList = list(Ls2))
+
+Longitude = SpatialLinesDataFrame(Ls1, data.frame(Z = c("1", "2"), row.names = c("a","b")))
+Latitude = SpatialLinesDataFrame(Ls2, data.frame(Z = c("1", "2"), row.names = c("a","b")))
+
+mask <- gUnion(Longitude, Latitude, byid=FALSE, id=NULL, drop_lower_td=FALSE)
+
+# plot(england)
+# plot(centreEngland,col='red',add=TRUE)
+# plot(centreLEP, col= "blue", add=TRUE)
+
+# plot(mask, col = 'red', add =TRUE)
+
+proj4string(mask) <- proj4string(england)
+
+# intersect <- gIntersection(mask, england,  byid=FALSE, id=NULL, unaryUnion_if_byid_false=FALSE)
+
+# plot(intersect)
+# plot(england, add = TRUE)
+
+
+# plot(lnd)
+# plot(intersect, add = TRUE)
+
+lnd$quadrant <- NA
+
+east <- coordinates(lnd)[,1] > Longitude@lines[[1]]@Lines[[1]]@coords[,1][1]
+north <- coordinates(lnd)[,2] > Latitude@lines[[1]]@Lines[[1]]@coords[,2][1]
+
+lnd@data$quadrant[east & north] <- "northeast"
+
+plot(lnd)
+plot(lnd[east & north,],add = TRUE, col = "red" )
+ llgridlines(england, lty= 3, side ="WS", offset = 0.1)
+
+
+```
+
+
+
+
+
 
 ## Attribute data
 
