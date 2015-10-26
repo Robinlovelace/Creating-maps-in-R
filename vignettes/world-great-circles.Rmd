@@ -40,6 +40,7 @@ the **rworldmap** function `getMap`:
 
 ```{r Basic plot, fig.keep='none'}
 library(ggmap)
+library(rworldmap)
 s <- getMap() # load the map data
 class(s) # what type of are we dealing with?
 nrow(s) # n. polygons
@@ -183,7 +184,8 @@ The iterate for all zones and use `rbind` to place one data frame on
 top of the next:
 
 ```{r ggpaths}
-paths <- gcIntermediate(p[5,], p[1,])
+library(geosphere)
+paths <- geosphere::gcIntermediate(p[5,], p[1,])
 paths <- data.frame(paths)
 paths$group <- 1
 

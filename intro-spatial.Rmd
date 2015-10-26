@@ -5,8 +5,6 @@ author: Robin Lovelace (R.Lovelace@leeds.ac.uk), James Cheshire, Rachel Oldroyd 
 date: V. 1.3, September 2015 --- see [github.com/Robinlovelace/Creating-maps-in-R](https://github.com/Robinlovelace/Creating-maps-in-R)
   for latest version
 output:
-  html_document:
-    toc: yes
   pdf_document:
     fig_cap: yes
     fig_height: 3.5
@@ -14,10 +12,34 @@ output:
     highlight: pygments
     keep_tex: yes
     toc: yes
+  html_document:
+    toc: yes
   word_document: default
 ---
 
 \newpage
+
+```{r, include=FALSE}
+# output: word_document
+# TODO: add details for the ggplot2 section
+# TODO: create animation of population change over time
+# Add world mapping in ggplot2
+library(knitr)
+library(methods)
+options(replace.assign=FALSE, width=80)
+
+opts_chunk$set(fig.path='knitr_figure/graphics-', 
+               cache.path='knitr_cache/graphics-', 
+               dev='pdf', fig.width=4, fig.height=3, 
+               fig.show='hold', cache=FALSE, par=TRUE)
+knit_hooks$set(crop=hook_pdfcrop)
+
+knit_hooks$set(par=function(before, options, envir){
+    if (before && options$fig.show!='none') {
+        par(mar=c(3,3,2,1),cex.lab=.95,cex.axis=.9,
+            mgp=c(2,.7,0),tcl=-.01, las=1)
+}}, crop=hook_pdfcrop)
+```
 
 
 ## Preface
@@ -328,7 +350,10 @@ text(coordinates(cent_lnd), "Central\nLondon")
 
 ## Selecting quadrants
 
-In this example we will now interrogate the shapefile for London and split it into quadrants using lines of latitude and longitude. This will work in a similar way to the previous example, however once we have the centre point we will then use this create the lines of latitude and longitude on which the centre of the wards will be tested against. 
+In this example we will now interrogate the shapefile for London and split it into quadrants using lines of latitude and longitude. This will work in a similar way to the previous example. Once we have the centre point we will then use this create the lines of latitude and longitude on which the centre of the wards will be tested against.
+The code below should help understand the way spatial data work in R.
+
+
 ```{r}
 # Create an outline of the London area by merging all of the polyogns in the lnd object
 london = gUnaryUnion(lnd, lnd$dummy)
@@ -365,18 +390,20 @@ north <- coordinates(lnd)[,2] > Latitude@lines[[1]]@Lines[[1]]@coords[,2][1]
 
 # test if the coordinate is east and north of the centre
 lnd@data$quadrant[east & north] <- "northeast"
-
-#plot the results
-plot(london)
-plot(lnd[east & north,],add = TRUE, col = "red" )
-
-# place a grid over the object
-llgridlines(lnd, lty= 3, side ="EN", offset = -0.5)
 ```
 
-Using the above code as refrence try and find the remaining 3 quadrants and colour them the same as the map below.For bonus points try to desolve the quadrants so the map is left with only 4 polygons.  
+> **Challenge**: Based on the the above code as refrence try and find the remaining 3 quadrants and colour them as per Figure 6 below. For bonus points try to desolve the quadrants so the map is left with only 4 polygons.  
 
-```{r, , echo=FALSE}
+```{r, echo=FALSE, fig.cap="The 4 quadrants of London"}
+grid.raster(readPNG("figure/lnd-quads.png"))
+par(mfrow = c(1,2))
+#plot the results
+# plot(london)
+# plot(lnd[east & north,],add = TRUE, col = "red" )
+
+# place a grid over the object
+# llgridlines(lnd, lty= 3, side ="EN", offset = -0.5)
+
 london = gUnaryUnion(lnd, lnd$dummy)
 london = SpatialPolygonsDataFrame(london, data.frame(dummy = c("london")), match.ID = FALSE)
 
@@ -403,29 +430,24 @@ Ls2 <- SpatialLines(LinesList = list(Ls2))
 Longitude = SpatialLinesDataFrame(Ls1, data.frame(Z = c("1", "2"), row.names = c("a","b")))
 Latitude = SpatialLinesDataFrame(Ls2, data.frame(Z = c("1", "2"), row.names = c("a","b")))
 
-
 east <- coordinates(lnd)[,1] > Longitude@lines[[1]]@Lines[[1]]@coords[,1][1]
 north <- coordinates(lnd)[,2] > Latitude@lines[[1]]@Lines[[1]]@coords[,2][1]
 west <- coordinates(lnd)[,1] < Longitude@lines[[1]]@Lines[[1]]@coords[,1][1]
 south <-coordinates(lnd)[,2] < Latitude@lines[[1]]@Lines[[1]]@coords[,2][1]
-
-
 
 lnd@data$quadrant[east & north] <- "northeast"
 lnd@data$quadrant[west & north] <- "northwest"
 lnd@data$quadrant[east & south] <- "southeast"
 lnd@data$quadrant[west & south] <- "southwest"
 
-plot(lnd)
-plot(lnd[east & north,],add = TRUE, col = "red" )
-plot(lnd[west & north,],add = TRUE, col = "blue" )
-plot(lnd[east & south,],add = TRUE, col = "green" )
-plot(lnd[west & south,],add = TRUE, col = "yellow" )
+# plot(lnd)
+# plot(lnd[east & north,],add = TRUE, col = "red" )
+# plot(lnd[west & north,],add = TRUE, col = "blue" )
+# plot(lnd[east & south,],add = TRUE, col = "green" )
+# plot(lnd[west & south,],add = TRUE, col = "yellow" )
 
-
-llgridlines(lnd, lty= 3, side ="EN", offset = -0.5)
-
-
+# llgridlines(lnd, lty= 3, side ="EN", offset = -0.5)
+par(mfrow=c(1,1)) # return to default par
 ```
 
 
@@ -1520,7 +1542,7 @@ The tutorial was developed for
 a series of Short Courses funded by the National Centre for Research Methods (NCRM),
 via the TALISMAN node (see [geotalisman.org](http://www.geotalisman.org/)).
 Thanks to the [ESRC](http://www.esrc.ac.uk/) for funding applied methods research.
-Many thanks to Rachel Oldroyd, Alistair Leak, Hannah Roberts and Phil Jones who helped develop and demonstrate
+Many thanks to Matt Whittle, Alistair Leak, Hannah Roberts and Phil Jones who helped develop and demonstrate
 these materials. Amy O'Neill organised the course
 and encouraged feedback from participants.
 The final thanks is to all users and developers of open source software
