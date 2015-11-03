@@ -761,8 +761,13 @@ new columns. Or, in R's rather terse documentation:
 "return all rows from x, and all columns from x and y."
 The `*join` commands (including `inner_join` and `anti_join`) are more
 concise when joining variables have the
-same name across both datasets. **dplyr** is also helpful here as it contains
-a useful function to `rename` variables:
+same name across both datasets. If they do not, there are two options: 
+1) rename one of them to match the other; 
+2) specify the association within the `*join` function.
+Renaming is not always convinient, sometimes it is better not to change the
+original data set. If you want to rename one of the variables, **dplyr** is 
+also helpful here as it contains a useful function `rename` (see `?rename`). 
+Here we will specify teh association between variables in the two data sets:
 
 ```{r, echo=FALSE, message=FALSE}
 # Load dplyr package
@@ -773,9 +778,13 @@ library(dplyr)
 ```{r, results='hide'}
 head(lnd$name) # dataset to add to (results not shown)
 head(crime_ag$Borough) # the variables to join
-crime_ag <- rename(crime_ag, name = Borough) # rename the 'Borough' heading to 'name'
+
 # head(left_join(lnd@data, crime_ag)) # test it works
-lnd@data <- left_join(lnd@data, crime_ag)
+lnd@data <- left_join(lnd@data, crime_ag, by = c('name' = 'Borough'))
+
+# the renaming option (uncomment to try it out)
+# crime_ag <- rename(crime_ag, name = Borough) # rename the 'Borough' heading to 'name'
+# lnd@data <- left_join(lnd@data, crime_ag)
 ```
 
 Take a look at the new `lnd@data` object. You should
@@ -832,18 +841,12 @@ head(lnd$ons_label)
 head(borough_dat$Code)
 # check the joining variables work
 summary(borough_dat$Code %in% lnd$ons_label)
-# rename the linking variable
-borough_dat <- rename(borough_dat, ons_label = Code)
-to_join <- select(borough_dat, ons_label, conservative)
-lnd@data <- left_join(lnd@data, to_join)
+# select the data to join
+to_join <- select(borough_dat, Code, conservative)
+lnd@data <- left_join(lnd@data, to_join, by = c('ons_label' = 'Code'))
 
-library(maptools)
-lnd_f <- fortify(lnd, region = "ons_label") # you may need to load maptools
-lnd_f <- rename(lnd_f, ons_label = id)
-head(lnd_f$ons_label)
-head(lnd$ons_label)
-
-lnd_f <- left_join(lnd_f, lnd@data)
+lnd_f <- fortify(lnd, region = "ons_label")
+lnd_f <- left_join(lnd_f, to_join, by = c('id' = 'Code'))
 
 map <- ggplot(lnd_f, aes(long, lat, group = group, fill = conservative)) +
   geom_polygon() +
@@ -998,10 +1001,8 @@ lnd_n <- aggregate(stations["NUMBER"], by = lnd, FUN = mean)
 For an optional advanced task, let us analyse and plot the result.
 
 ```{r fig.cap="Choropleth map of mean values of stations in each borough"}
-brks <- quantile(lnd_n$NUMBER)
-labs <- grey.colors(n = 4)
-q <- cut(lnd_n$NUMBER, brks, labels = labs, 
-  include.lowest = T)
+q <- cut_number(lnd_n$NUMBER,4) # a nice little function from ggplot2
+q <- factor(test, labels = grey.colors(n = 4))
 summary(q) # check what we've created
 
 qc <- as.character(q) # convert to character class to plot
@@ -1310,6 +1311,8 @@ the following on-line tutorial:
 ```{r, eval=FALSE}
 install.packages("leaflet")
 library(leaflet)
+
+lnd48 <- readRDS('data/lnd84.Rds')
 
 leaflet() %>%
   addTiles() %>%
