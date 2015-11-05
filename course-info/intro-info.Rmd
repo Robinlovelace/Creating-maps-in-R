@@ -1,0 +1,61 @@
+---
+title: "Introduction to R and RStudio"
+output: word_document
+---
+
+## Description
+
+This one day course will get you up-to-speed with using R and RStudio for daily data processing, analysis and visualisation tasks.
+It is practical, so you'll 'learn by doing'.
+Based on material produced by
+[Colin Gillespie](http://www.mas.ncl.ac.uk/~ncsg3/)
+at the [University of Newcastle](http://www.ncl.ac.uk/maths/rcourse/), with
+additional detail on data manipulation.
+
+## Learning outcomes
+
+By the end of the course participants will:
+
+- Understand the syntax of the R language
+- Be able to use RStudio for productively working on R projects
+- Be able to read in data into R from a variety of sources
+- Be confident in how R works to create attractive and insightful graphical outputs
+
+## Further information
+
+Course agenda
+
+- 9:00 - 9:30: Registration and refreshments
+
+- An introduction to R and RStudio (9:30 - 10:30)
+
+- Basic R functions and behaviour (10:30 - 11:30)
+
+- Practical 1 (11:30 - 12:30)
+
+**LUNCH**
+
+- Reading and writing data (13:30 - 14:30)
+
+- Data manipulation (14:30 - 15:00)
+
+- Summary statistics (15:00 - 15:30)
+
+**15:30 - 15:45 Refreshments**
+
+- Plotting with R (15:45 - 16:15)
+
+- Taking it further + Q & A (16:15 onwards)
+
+```{r, echo=FALSE}
+# The package used for this course can be installed with the following:
+# devtools::install_github("rcourses/nclRintroduction", build_vignettes = T)
+library(nclRintroduction)
+vignette(package = "nclRintroduction")
+```
+
+## Prerequisites
+
+No knowledge of R and RStudio is assumed.
+
+
