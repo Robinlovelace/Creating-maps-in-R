@@ -1,0 +1,41 @@
+---
+title: "review"
+author: "Robin Lovelace"
+date: "December 15, 2015"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+A number of packages provide geographic data, but none has yet made the high quality datasets within the naturalearth project easily available to R users. rnaturalearth does this with a user-friendly command-line interface, which encourages exploration of what the collection has to offer, in addition to 'simply' providing country and 'state' outlines at various level of geographical resolution. The package will very useful for anyone wanting to make simple yet accurate maps quickly.
+
+ROpenSci, with its emphasis on data access, is an ideal community space to host this package.
+
+In-line with the previous reviewer I think the size of the package is problematic. I think the suggestion of splitting it into other packages is a good one. An alternative would be to provide a default destination within the package for data download. That way the data can be downloaded once and once only for each install (to the same destinations where the data is currently saved, in `data/`). Then `if(file.exists(...))` can be used to decide whether the data should be downloaded or not. An illustrative example for what the call could look like something like this, for `ne_countries()`:
+
+```{r}
+ne_countries_10 <- function(){
+  file_path <- file.path(system.file("data", package = "rnaturalearth"), "countries10.rda")
+  if(file.exists(file_path)){
+    x <- readRDS(file_path)
+  }else{
+    x <- ne_download()
+    saveRDS(x, file_path)
+  }
+  x
+}
+ne_download(10, "countries")
+```
+
+
+I'm not sure about specifying a function to generate data `ne_countries()` while
+providing the same data with `data(countries110)`, and the `type` argument is necessary
+given that ...
+
+Minor comments/suggestions:
+
+- `sp` is a dependency but I think the package would benefit from making it a dependency: all the data loaded by the package that I've seen is in an sp S4 object. Yet these will not work (e.g. plot) properly unless sp is loaded, as illustrated in the vignette.
+
+- `scale = 10` isn't listed as an argument of `ne_countries`("scale of map to return, one of 110, 50, 'small', 'medium'") but it works so should be added.

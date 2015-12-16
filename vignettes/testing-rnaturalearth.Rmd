@@ -1,0 +1,62 @@
+---
+title: "Testing rnaturalearth"
+author: "Robin Lovelace"
+date: "December 15, 2015"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+[rnaturalearth](https://github.com/AndySouth/rnaturalearth) is an R package for accessing a sample of the world's geographic data. It allows quick access to the data stored at [naturalearthdata.com](http://www.naturalearthdata.com/).
+
+It's not yet on CRAN, so you need to install the devtools package to install it easily from github, via:
+
+```{r, eval=FALSE}
+install.packages("devtools") # install devtools if not already on your system
+devtools::install_github("andysouth/rnaturalearth", build_vignettes=TRUE)
+```
+
+`vignette('rnaturalearth')` provides an introduction to its functionality, outlined below.
+
+The functions provided to access data all begin with `ne_`, making it intuitive to use.
+Some examples are provided below:
+
+```{r, fig.keep='none'}
+library(rnaturalearth) # load the package
+greece <- ne_countries(country = "Greece")
+library(sp) # load the sp library for plotting
+plot(greece)
+```
+
+The data that is pulled in varies depending on various arguments:
+
+```{r, fig.keep='none'}
+greece2 <- ne_countries(scale = 50, country = "greece")
+plot(greece2)
+```
+
+This second plot shows that the 50m resolution data is much more detailed and recommended for plotting individual countries. Even higher resolution is available with the 10m dataset.
+
+```{r, fig.keep='none'}
+greece3 <- ne_countries(scale = 10, country = "greece")
+plot(greece3)
+```
+
+These plots are compared in the following plot:
+
+```{r}
+par(mfrow = c(1, 1))
+plot(greece)
+plot(greece2, border = "red", add = T, lwd = 3)
+plot(greece3, border = "blue", add = T)
+```
+
+Sub-country data is provided by `ne_states`:
+
+
+
+
+
+
