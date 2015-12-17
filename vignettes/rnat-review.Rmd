@@ -2,18 +2,52 @@
 title: "review"
 author: "Robin Lovelace"
 date: "December 15, 2015"
-output: html_document
+output: 
+  html_document: 
+    keep_md: yes
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(rnaturalearth)
 ```
 
 A number of packages provide geographic data, but none has yet made the high quality datasets within the naturalearth project easily available to R users. rnaturalearth does this with a user-friendly command-line interface, which encourages exploration of what the collection has to offer, in addition to 'simply' providing country and 'state' outlines at various level of geographical resolution. The package will very useful for anyone wanting to make simple yet accurate maps quickly.
 
 ROpenSci, with its emphasis on data access, is an ideal community space to host this package.
 
-In-line with the previous reviewer I think the size of the package is problematic. I think the suggestion of splitting it into other packages is a good one. An alternative would be to provide a default destination within the package for data download. That way the data can be downloaded once and once only for each install (to the same destinations where the data is currently saved, in `data/`). Then `if(file.exists(...))` can be used to decide whether the data should be downloaded or not. An illustrative example for what the call could look like something like this, for `ne_countries()`:
+## Useability of the functions
+
+Overall I found the package intuitive and easy to use. The preface of `ne_` is useful for quickly accessing the package's functions (in a similar way that stringr functions begin with `st_`) and I think the order and description of the function arguments makes sense, given the structure of the data on the naturalearth data repository.
+
+The main [vignette](https://github.com/AndySouth/rnaturalearth/blob/master/vignettes/rnaturalearth.Rmd) succintly describes the core purpose and functions of the package, although I think more on what extra can be downloaded via `ne_download()` would be interesting here. The `what-is-a-country` vignette provides a useful discussion of the subtleties surrounding up how to divide up geographical space along national, state and regional borders.
+
+Minor comments/suggestions:
+
+- I think the description of the `@param` `type` in `ne_download` could be better at conveying to the user what datasets are available. It is not clear from the function documentation, for example, that lakes can be downloaded with `ne_download(type = 'lakes', category = 'physical')`. To resolve this issue I suggest that a link to the dataset types is make more explicit (e.g. "see [naturalearthdata.com/downloads/110m-cultural-vectors/](http://www.naturalearthdata.com/downloads/110m-cultural-vectors/) for the types of data that can be downloaded for cultural 110 m resolution data.")
+
+- To assist with the 'making it clear what data is available' issue, I think that `ne_download` could usefully be split into `ne_download10`, `ne_download50` and `ne_download110`, while keeping the generic `ne_download` function intact. The data available varies depending on scale, so `ne_download10`, for example, could provide descriptions of the very useful roads and railways datasets. It was not immediately obvious that these very interesting datasets were made available with - this could usefully be better documented.
+
+```{r, eval=FALSE}
+roads <- ne_download(scale = 10, type = "railroads", category = "cultural")
+railroads <- ne_download(scale = 10, type = "railroads", category = "cultural")
+```
+
+- `sp` is a dependency but I think the package would benefit from making it a dependency: all the data loaded by the package that I've seen is in an sp S4 object. Yet these will not work (e.g. plot) properly unless sp is loaded, as illustrated in the vignette. This would also make the plot commands in the vignette simpler.
+
+- `scale = 10` isn't listed as an argument of `ne_countries`("scale of map to return, one of 110, 50, 'small', 'medium'") but it works so should be added.
+
+- It is not clear that `category` is a needed argument. `airports <- ne_download(scale = 10, type = "airports")`, for example, works the same as `airports <- ne_download(scale = 10, type = "airports")` - there are no types I can see that duplicate names between categories.
+
+- I couldn't see how to download ice shelf data succesfully. I was expecting `ne_download(scale = 10, type = "antarctic_ice_shelves", category = "physical")` or `ne_download(scale = 10, type = "antarctic ice shelves", category = "physical")` to work but neither seemed to...
+
+- Links to other data sources such as the SRTM (some of which can be accessed through the raster package) would be useful, perhaps in the vignette.
+
+## Thoughts on reducing the package size
+
+In-line with the previous reviewer I think the size of the package could be problematic. I think the suggestion of splitting it into other packages is a good one. An alternative would be to provide a default destination within the package for data download, not host any data on the package itself directly, and simply use the package to access the data hosted on rnaturalearth. Other than package install requirements, the clear advantage of that is that the data won't have to be updated. The disadvantage is that the user would need internet access the first time they accessed many datasets and possible complexities surrounding fresh installs wiping previously downloaded data.
+
+`if(file.exists(...))` could be used to decide whether the data should be downloaded or not. Below is an illustrative example for what the call could look like something like this, for `ne_countries()`:
 
 ```{r}
 ne_countries_10 <- function(){
@@ -26,16 +60,11 @@ ne_countries_10 <- function(){
   }
   x
 }
-ne_download(10, "countries")
 ```
 
+Note that `data` may need to change to `exdata` in the above code and that this is just a preliminary idea - would be interested to hear thoughts from others. In any case I can see a disadvantage of hosting raw data on CRAN or ROpenSci in terms of the DRY principle.
 
 I'm not sure about specifying a function to generate data `ne_countries()` while
-providing the same data with `data(countries110)`, and the `type` argument is necessary
-given that ...
+providing the same data with `data(countries110)`, and the `type` argument is necessary, especially given the suggestion above of a way to reduce the package's size whilst maintaining the downloaded data in a default and accessible location.
 
-Minor comments/suggestions:
-
-- `sp` is a dependency but I think the package would benefit from making it a dependency: all the data loaded by the package that I've seen is in an sp S4 object. Yet these will not work (e.g. plot) properly unless sp is loaded, as illustrated in the vignette.
-
-- `scale = 10` isn't listed as an argument of `ne_countries`("scale of map to return, one of 110, 50, 'small', 'medium'") but it works so should be added.
+I'd like to point out that I'm not an expert in this area, think the previous reviewers' suggestions in relation to package size is also another viable option and would be interested in hearing views from others, especially in relation to the DRY principle as it applies to data.

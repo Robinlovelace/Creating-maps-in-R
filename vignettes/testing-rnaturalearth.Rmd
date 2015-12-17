@@ -55,6 +55,20 @@ plot(greece3, border = "blue", add = T)
 
 Sub-country data is provided by `ne_states`:
 
+```{r}
+ukstates <- ne_states(country = "United Kingdom")
+plot(ukstates)
+```
+
+Additional data can be downloaded with `ne_download`:
+
+```{r}
+airports <- ne_download(scale = 10, type = "airports")
+roads <- ne_download(scale = 10, type = "railroads", category = "cultural")
+railroads <- ne_download(scale = 10, type = "railroads", category = "cultural")
+```
+
+
 
 
 
