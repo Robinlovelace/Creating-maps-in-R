@@ -1,0 +1,111 @@
+---
+title: "osmar vignette"
+author: "Robin Lovelace"
+date: "December 18, 2015"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+# devtools::install_github("robinlovelace/overpass")
+pkgs <- c("osmar", "tmap", "overpass")
+lapply(pkgs, library, character.only = T)
+```
+
+This is the area we're interested in:
+
+```{r, eval=FALSE}
+bb_leeds <- bb("Leeds")
+osm_tiles <- read_osm(bb_leeds)
+tm_shape(osm_tiles) + tm_raster()
+```
+
+To download the data, we can use overpass:
+
+```{r}
+bb_leeds <- bb("Leeds")
+ldat <- opq(bb_leeds) %>%
+  add_feature("highway", "primary") %>% issue_query()
+plot(ldat)
+```
+
+or osmar:
+
+```{r}
+src <- osmsource_api()
+bb <- center_bbox(-1.53492, 53.81934, 1000, 1000)
+ctown <- get_osm(bb, source = src)
+plot(ctown)
+```
+
+Convert to an igraph network
+
+```{r}
+hways_ctown <- subset(ctown, way_ids = find(ctown, way(tags(k == "highway"))))
+hways <- find(hways_ctown, way(tags(k == "name")))
+hways <- find_down(ctown, way(hways))
+hways_ctown <- subset(ctown, ids = hways)
+hways_ctown
+```
+
+navigate:
+
+```{r}
+hway_start_node <- local({
+   id <- find(ctown, node(tags(v == "Sholebroke Mount")))[1]
+   find_nearest_node(ctown, id, way(tags(k == "highway")))
+})
+
+hway_start <- subset(ctown, node(hway_start_node))
+
+hway_end_node <- local({
+  id <- find(ctown, node(tags(v == "Fforde Greene Junction")))[1]
+  find_nearest_node(ctown, id, way(tags(k == "highway")))
+})
+hway_end <- subset(ctown, node(hway_end_node))
+```
+
+
+```{r}
+plot(ctown)
+plot_nodes(ctown, col = "gray", add = T)
+plot_ways(hways_ctown, add = TRUE)
+# plot_nodes(hways_ctown, add = TRUE, col = "black")
+plot_nodes(hway_start, add = TRUE, col = "red")
+plot_nodes(hway_end, add = TRUE, col = "blue")
+```
+
+```{r}
+library("igraph")
+gr_ctown <- as_igraph(hways_ctown)
+summary(gr_ctown)
+```
+
+
+```{r}
+route <- get.shortest.paths(gr_ctown,
+  from = as.character(hway_start_node),
+  to = as.character(hway_end_node))[[1]]
+route_nodes <- as.numeric(V(gr_ctown)[route[[1]]]$name)
+```
+
+```{r}
+
+route_ids <- find_up(hways_ctown, node(route_nodes))
+route_ctown <- subset(hways_ctown, ids = route_ids)
+route_ctown
+plot(ctown)
+plot_nodes(ctown, col = "gray", add = T)
+plot_ways(hways_ctown, add = TRUE)
+plot_nodes(route_ctown, add = TRUE, col = "green")
+plot_ways(route_ctown, add = TRUE, col = "red", lwd = 3)
+```
+
+
+
+
+
+
