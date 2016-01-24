@@ -1,0 +1,216 @@
+---
+title: "Introduction to R and RStudio"
+author: "Robin Lovelace, University of Leeds, \n `r as.character(strptime(Sys.time(), format = '%d'))`"
+date: "Slides: [rpubs.com/RobinLovelace](http://rpubs.com/RobinLovelace)"
+output:
+  ioslides_presentation:
+    transition: slower
+logo: /home/robin/Dropbox/Public/img/logos/cdrc-square.png
+---
+
+```{r, echo=FALSE}
+library(grid)
+library(png)
+```
+
+# Introduction
+
+## Course structure
+
+## Description
+
+This one day course will get you **up-to-speed** with using R and **RStudio** for daily data processing, analysis and visualisation tasks.
+It is **practical**, so you'll 'learn by doing'.
+Based on material produced by
+[Colin Gillespie](http://www.mas.ncl.ac.uk/~ncsg3/)
+at the [University of Newcastle](http://www.ncl.ac.uk/maths/rcourse/), with
+additional detail on data manipulation.
+
+## Introduction
+
+![cdrc](http://www.lida.leeds.ac.uk/img/cdrc.png)
+
+This course is brought to you the Consumer Data Research Centre
+([CDRC](http://cdrc.ac.uk/)) and is 
+funded by the ESRC's ([Big Data Network](http://www.esrc.ac.uk/research/major-investments/Big-Data/BDN-Phase2.aspx)).
+
+## What R can do - Propensity to Cycle
+
+See here: [geo8.webarch.net/master](http://geo8.webarch.net/manchester/)
+
+```{r, echo=FALSE}
+# file.copy("~/npct/pct/figures/coventry-centroids-4pres.png", "../figure/coventry-centroids.png") # copy file
+grid.raster(readPNG("../figure/coventry-centroids.png"))
+```
+
+## A bit about R
+
+- Developed by statisticians Ross Ihaka and Robert Gentleman
+- De-facto standard for advanced statistical analysis
+- A programming language in its own right
+- The power of the command line
+- Used by an increasing number of organisations
+
+## Why R?
+
+- **Performace**: stable, light and fast
+- **Support network** 
+ - documentation, community, developers
+- **Reproducibility**
+ - anyone anywhere can reproduce results
+ - enables dissemination (RPubs, RMarkdown, .RPres) - this presentation is a .Rmd file!
+- **Versatility**: unified solution to *almost* any numerical problem, graphical capabilities
+- **Ethics** removes economic barrier to statistics, is open and democratic
+
+## R is up and coming I
+
+![scholar-searches1](figure/fig_7a.png) 
+
+Source: [r4stats.com](http://r4stats.com/articles/popularity/) 
+
+## II - Increasing popularity in academia
+
+![scholar-searches2](https://r4stats.files.wordpress.com/2012/04/fig_2f_scholarlyimpactallstat2.png)
+
+Source: [r4stats.com](http://r4stats.com/articles/popularity/) 
+
+## III - R vs Python
+
+```{r, echo=FALSE, fig.height=4}
+grid.raster(readPNG("~/Pictures/Selection_198.png"))
+# ![rvpytho](figure/so-rel.png)
+```
+
+
+Source: [Data Camp](http://i0.wp.com/blog.datacamp.com/wp-content/uploads/2015/05/R-vs-Python-216-2.png)
+
+## IV - employment market
+
+![jobs](figure/jobs.png)
+
+Source: [revolution analytics](http://blog.revolutionanalytics.com/2013/08/job-trends-for-statistics-packages.html)
+
+## Visualisation
+
+- R's visualisation capabilities have evolved over time
+- Used to create plots in the best academic journals
+- ggplot2 has **revolutionised** the visualisation of quantitative 
+information in R, and (possibly) overall
+- Thus there are different camps with different preferences when it comes to maps in R
+
+## Learning outcomes
+
+By the end of the course you will:
+
+- Understand the syntax of the R language
+- Be able to use RStudio for productively working on R projects
+- Be able to read in data into R from a variety of sources
+- Be confident in how R works to create attractive and insightful graphical outputs
+
+## Agenda - before lunch
+
+Course agenda
+
+- 9:00 - 9:30: Registration and refreshments
+
+- An introduction to R and RStudio (9:30 - 10:30)
+
+> - Practical 1 (Chapter 1)
+
+- Basic R functions and behaviour (10:30 - 12:30)
+
+> - Practical 2 (Chapter 2)
+
+**LUNCH: 12:30 - 13:30**
+
+## Agenda - after lunch
+
+- Reading and writing data (13:30 - 14:30)
+
+> - Practical 3
+
+- Data manipulation (14:30 - 15:00)
+
+- Summary statistics (15:00 - 15:30)
+
+> - Practical 4
+
+**15:30 - 15:45 Refreshments**
+
+- Plotting with R (15:45 - 16:15)
+
+> - Practical 5
+
+- Taking it further + Q & A (16:15 onwards)
+
+```{r, echo=FALSE}
+# The package used for this course can be installed with the following:
+# devtools::install_github("rcourses/nclRintroduction", build_vignettes = T)
+library(nclRintroduction)
+vignette(package = "nclRintroduction")
+```
+
+## Demonstration 1: The RStudio IDE
+
+![](https://support.rstudio.com/hc/en-us/article_attachments/202195467/Screen_Shot_2015-06-25_at_4.57.29_PM.png)
+
+## Practical 1: Getting used to RStudio and R
+
+> - Open RStudio and have a look around
+> - Create a new project
+> - Create a new R Script: pass code to the console with `Ctl-Enter`
+> - Use R as a calculator: what is:
+
+$$
+\pi * 9.15^2
+$$
+
+> - Explore each of the 'panes'
+> - Find write down some useful shortcuts (`Alt-Shift-K` on Windows/Linux)
+
+# Basic R functions and behaviour
+
+## R is vector based
+
+```{r}
+x <- c(1, 2, 5)
+for(i in x){
+  print(i^2)
+}
+```
+
+Creating a new vector based on `x`
+
+```{r}
+for(i in 1:length(x)){
+  if(i == 1) x2 <- x[i]^2
+  else x2 <- c(x2, x[i]^2)
+}
+x2
+```
+
+## Practical 2
+
+- Work through Chapter 2 in Colin Gillespie's Introduction to R handout
+
+> - Optional: install the R package
+
+```{r, eval=FALSE}
+install.packages("drat")
+drat::addRepo("rcourses")
+install.packages("nclRintroduction", type="source")
+library(nclRintroduction)
+vignette(package = "nclRintroduction", "practical1")
+```
+
+# Reading and writing data (13:30 - 14:30)
+
+## Practical 3
+
+# Data manipulation (14:30 - 15:00)
+
+# Summary statistics (15:00 - 15:30)
+
+## Practical 4
+
+# Plotting with R (15:45 - 16:15)

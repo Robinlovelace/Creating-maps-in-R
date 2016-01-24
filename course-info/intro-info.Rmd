@@ -21,29 +21,35 @@ By the end of the course participants will:
 - Be able to read in data into R from a variety of sources
 - Be confident in how R works to create attractive and insightful graphical outputs
 
-## Further information
-
-Course agenda
+## Agenda 
 
 - 9:00 - 9:30: Registration and refreshments
 
 - An introduction to R and RStudio (9:30 - 10:30)
 
-- Basic R functions and behaviour (10:30 - 11:30)
+> - Practical 1 (Chapter 1)
 
-- Practical 1 (11:30 - 12:30)
+- Basic R functions and behaviour (10:30 - 12:30)
 
-**LUNCH**
+> - Practical 2 (Chapter 2)
+
+**LUNCH: 12:30 - 13:30**
 
 - Reading and writing data (13:30 - 14:30)
+
+> - Practical 3
 
 - Data manipulation (14:30 - 15:00)
 
 - Summary statistics (15:00 - 15:30)
 
+> - Practical 4
+
 **15:30 - 15:45 Refreshments**
 
 - Plotting with R (15:45 - 16:15)
+
+> - Practical 5
 
 - Taking it further + Q & A (16:15 onwards)
 
