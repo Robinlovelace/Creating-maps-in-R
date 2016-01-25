@@ -154,6 +154,68 @@ vignette(package = "nclRintroduction")
 
 ![](https://support.rstudio.com/hc/en-us/article_attachments/202195467/Screen_Shot_2015-06-25_at_4.57.29_PM.png)
 
+## R as a giant calculator
+
+```{r, eval=FALSE}
+5 * 5
+```
+
+```{r, eval=FALSE}
+1 + 4 * 5
+```
+
+```{r, eval=FALSE}
+4 * 5 ^ 2
+```
+
+```{r, eval=FALSE}
+sin(90)
+```
+
+```{r, eval=FALSE}
+sin(0.5 * pi)
+```
+
+```{r, eval=FALSE, echo=FALSE}
+sin(90 * pi / 180)
+```
+
+## Objects
+
+```{r}
+a <- 1
+b <- 2
+c <- "c"
+x_thingy <- 4
+```
+
+```{r, eval=FALSE}
+a + b
+a * b
+a + c
+a / x_thingy
+```
+
+## Adding and removing objects
+
+```{r}
+ls()
+x <- x_thingy
+rm(x_thingy)
+x
+ls()
+```
+
+
+## Harmonograph example
+
+```{r, echo=FALSE, warning=FALSE}
+t <- 1:1000 / 10
+x <- sin(t) * exp(t * - 0.01)
+y <- sin(pi / 2 + t / 3) * exp(t * -0.01)
+plot(x, y, "lines")
+```
+
 ## Practical 1: Getting used to RStudio and R
 
 > - Open RStudio and have a look around
@@ -166,11 +228,64 @@ $$
 $$
 
 > - Explore each of the 'panes'
-> - Find write down some useful shortcuts (`Alt-Shift-K` on Windows/Linux)
+> - Find and write down some useful shortcuts (`Alt-Shift-K` on Windows/Linux)
 
 # Basic R functions and behaviour
 
+## Functions and objects
+
+**In R:**
+
+- Everything that exists is an object
+- Everything that happens is a function
+
+```{r}
+# Assignment of x
+x <- 5
+x
+```
+
+```{r, eval=FALSE}
+# A trick to print x
+(x <- 5)
+```
+
+```{r, eval=FALSE}
+(y <- x)
+```
+
+## Functions
+
+```{r}
+sin(x)
+exp(x)
+factorial(x)
+sinx <- sin(x)
+```
+
+## Assignment
+
+```{r}
+x = 5 # the same as x <- 5
+(x = x + 1)
+```
+
+
+
 ## R is vector based
+
+```{r}
+x <- c(1, 2, 5)
+x
+x^2
+x + 2
+```
+
+```{r, eval=FALSE}
+x + rev(x)
+```
+
+## The classic programming way: verbose
 
 ```{r}
 x <- c(1, 2, 5)
@@ -189,6 +304,48 @@ for(i in 1:length(x)){
 x2
 ```
 
+## Data types
+
+R has a hierarchy of data classes, tending to the lowest:
+
+- Binary
+- Integer (numeric)
+- Double (numeric)
+- Character
+
+## Examples of data types
+
+```{r}
+a <- TRUE
+b <- 1:5
+c <- pi
+d <- "Hello Leeds"
+```
+
+```{r, eval=FALSE}
+class(a)
+class(b)
+class(c)
+class(d)
+```
+
+## Data type switching
+
+```{r}
+ab <- c(a, b)
+ab
+class(ab)
+```
+
+
+## Test on data types
+
+```{r}
+class(c(a, b))
+class(c(a, c))
+class(c(b, d))
+```
+
 ## Practical 2
 
 - Work through Chapter 2 in Colin Gillespie's Introduction to R handout
@@ -204,6 +361,8 @@ vignette(package = "nclRintroduction", "practical1")
 ```
 
 # Reading and writing data (13:30 - 14:30)
+
+
 
 ## Practical 3
 
