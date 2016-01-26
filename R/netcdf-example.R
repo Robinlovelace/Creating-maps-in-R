@@ -9,3 +9,4 @@
 # load the data
 r <- raster("data/nc_3B42.20060101.03.7A.HDF.Z.ncml.nc")
 plot(r)
+plot(r, ylim = c(100, 150))
