@@ -48,6 +48,8 @@ tm_shape(shp = World) + tm_fill("value")
 
 World@data <- rename(World@data, `Road deaths\nper 100,000` = value)
 
+# plot the result - thanks to tmap: 
+# https://github.com/mtennekes/tmap
 world_eck <- set_projection(World, "eck4")
 x <- tm_shape(world_eck) +
   tm_borders("grey20") +
