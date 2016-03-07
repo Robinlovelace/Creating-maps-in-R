@@ -1,9 +1,12 @@
 # Aim: test osmplotr's capabilities
 # devtools::install_github("mpadge/osmplotr")
 library(osmplotr)
+# withr::with_libpaths("D:/R/Rlibs",
+#                      devtools::install_github("hrbrmstr/overpass"))
+library(overpass)
 library(tmap)
 
-b = bb("Hackney, London")
+b = bb("Hackney, London", ext = 2)
 b = as.vector(b)
 class(b)
 
@@ -13,7 +16,17 @@ summary(h)
 # download the cycleways/cyclable routes
 hc = extract_osm_objects(key = "highway", value = "cycleway", bbox = b)
 hb = extract_osm_objects(key = "bicycle", value = "yes", bbox = b)
-hlcn = extract_osm_objects(key = "highway", bbox =  b, extra_pairs = c("lcn", "yes"))
+# hlcn = extract_osm_objects(bbox =  b, extra_pairs = c("network", "ncn")) # failed
+?opq
+overpass::opq()
+q <- '[out:xml];
+ (node["network"="lcn"](51.523240,-0.069362,51.563240,-0.029362);
+  way["network"="lcn"](51.523240,-0.069362,51.563240,-0.029362);
+  relation["network"="lcn"](51.523240,-0.069362,51.563240,-0.029362););
+(._;>;);
+out;'
+lnd <- overpass_query(q)
+
 hlcn9 = extract_osm_objects(key = "highway", bbox =  b, extra_pairs = c("lcn_ref", "9"))
 hlcna = extract_osm_objects(key = "highway", bbox =  b, extra_pairs = c("Cycle Route", "London Cycle Network Route 9"))
 
@@ -21,10 +34,11 @@ plot(h)
 plot(hb, add = T, col = "red", lwd = 1)
 plot(hc, add = T, col = "red", lwd = 2)
 plot(hlcn, add = T, col = "green", lwd = 3)
-plot(hlcn9, add = T, col = "green", lwd = 3)
+plot(lnd, add = T, col = "green", lwd = 3)
 
 library(geojsonio)
 geojson_write(hc, file = "data/hackney-cycleway.geojson")
+geojson_write(lnd, file = "data/lcn-cycleway.geojson")
 
 # # Example from GitHub
 # bbox <- c(-0.15,51.5,-0.1,51.52) 

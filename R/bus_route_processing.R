@@ -88,7 +88,7 @@ qtm(z3, fill = "num_bus_routes", line.col = NULL)
 df1 <- z3@data
 newdata <- inner_join(df1, z2@data)
 
-shapefile(z3, file = "F://2015/output_bus_data_from_robin2")
+shapefile(z3, file = "D://buenos-aires/output")
 
 
 
