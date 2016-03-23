@@ -1,0 +1,112 @@
+---
+title: "Intermediate and advanced R for spatial data"
+author: "Robin Lovelace"
+date: "March 23, 2016"
+output: word_document
+---
+---
+title: "Introduction to R for spatial data analysis"
+author: "Robin Lovelace"
+date: "01/29/2015"
+output: word_document
+---
+
+## Description
+
+R is one of the fastest growing languages for data analysis and is increasingly
+important in business, government and academia. Less well-known is that R has
+a diverse suite of geospatial tools and can function as a fully integrated
+Geographical Information System (GIS). Time-series maps, geographically
+weighted regression, animations and even online maps become possible when
+you understand R's unique language and approach to spatial objects.
+
+However, as with any language, it is important to gain a strong understanding
+of the underlying syntax and structure before moving on to complex uses. 
+This course therefore focuses on the foundations: how R can be used to load,
+manipulate, process, transform and visualise spatial data.
+
+Prior experience with R is highly recommended;
+participants will also benefit from experience with GIS.
+
+In the first day we will cover general concepts in efficient R programming and the basics of spatial data classes in R. Building on this strong foundation the second day will cover advanced topics including raster data and the creation of interactive web-based maps using R.
+
+
+```{r, echo=FALSE}
+# Attendees with a clearly
+# defined problem that R's spatial capabilities can solve will find the course
+# especially beneficial due to its applied and pragmatic nature.
+```
+
+## Learning outcomes
+
+By the end of the course participants will:
+
+- Be more efficient general R programmers
+- Understand the structure of spatial data in R
+- Be able to query, subset and analyse spatial objects
+- Have a working knowledge of fundamental GIS functions such as changing projections
+- Be proficient in the use of R to create maps using add-on packages such as tmap
+- Have some experience with advanced functionality such as raster data and interactive maps
+
+## Further information
+
+Cost: TBA for UK registered postgraduate students; TBA for academics/staff at Institutes of Higher Education, public sector staff and staff at registered charity organisations. TBA others
+
+Fee includes lunch and refreshments.
+
+## Agenda
+
+### Day 1: Intermediate R and the basics of R as a GIS
+
+- Registration and refreshments (9:00 - 9:30)
+
+- An introduction to RStudio (9:30 - 10:30)
+
+- Efficient programming with R (10:30 - 11:30)
+
+- Data manipulation and plotting paradigms (11:30 - 12:30)
+
+**LUNCH: 12:30 - 13:30**
+
+- The structure of spatial data in R (13:30 - 14:30)
+
+- Loading, plotting and interrogating spatial data (14:30 - 15:30)
+
+**15:30 - 15:45 Refreshments**
+
+- Manipulating spatial objects (15:45 - 16:00)
+
+- Making maps with ggmap and tmap (16:00 onwards)
+
+### Day 2: Advanced R for spatial data analysis
+
+- Registration and refreshments (9:00 - 9:30)
+
+- Recap on R as a GIS: a worked example (9:30 - 10:30)
+
+- Online, interactive maps (10:30 - 11:30)
+
+- Raster data with R (11:30 - 12:30)
+
+**LUNCH: 12:30 - 13:30**
+
+- Spatio-temporal data with **spacetime** (13:30 - 14:30)
+
+- Transport data with **stplanr** (14:30 - 15:30)
+
+**15:30 - 15:45 Refreshments**
+
+- Advanced graphics with **tmap** (15:45 - 16:00)
+
+- Taking it further + Q & A (16:00 onwards)
+
+### Prerequisites
+
+Working knowledge of R and RStudio is assumed.
+
+Background reading “A (very) short introduction to R”, Paul Torfs & Claudia Brauer
+http://cran.r-project.org/doc/contrib/Torfs+Brauer-Short-R-Intro.pdf
+
+### Course home-page
+
+For more information on the course, please see here: https://github.com/Robinlovelace/Creating-maps-in-R
