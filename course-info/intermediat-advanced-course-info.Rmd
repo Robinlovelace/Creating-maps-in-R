@@ -62,19 +62,19 @@ Fee includes lunch and refreshments.
 
 - An introduction to RStudio (9:30 - 10:30)
 
-- Efficient programming with R (10:30 - 11:30)
+- Objects, functions and concepts for efficient R programming (10:30 - 11:30)
 
 - Data manipulation and plotting paradigms (11:30 - 12:30)
 
 **LUNCH: 12:30 - 13:30**
 
-- The structure of spatial data in R (13:30 - 14:30)
+- Spatial data in R, sp classes and projections (13:30 - 14:30)
 
-- Loading, plotting and interrogating spatial data (14:30 - 15:30)
+-Loading, plotting and interrogating spatial data, including shapefiles, xy and spatial queries (14:30 - 15:30) 
 
 **15:30 - 15:45 Refreshments**
 
-- Manipulating spatial objects (15:45 - 16:00)
+- Manipulating spatial objects with a focus on rgeos (15:45 - 16:00)
 
 - Making maps with ggmap and tmap (16:00 onwards)
 
@@ -84,21 +84,25 @@ Fee includes lunch and refreshments.
 
 - Recap on R as a GIS: a worked example (9:30 - 10:30)
 
-- Online, interactive maps (10:30 - 11:30)
+- Introduction raster data with R (10:30 - 11:30)
 
-- Raster data with R (11:30 - 12:30)
+- Raster/vector operations with R - class conversions and aggregation with raster (11:30 - 12:30)
 
 **LUNCH: 12:30 - 13:30**
 
 - Spatio-temporal data with **spacetime** (13:30 - 14:30)
 
-- Transport data with **stplanr** (14:30 - 15:30)
+- Points pattern analysis - points to surfaces by IDW, Kriging (14:30 - 15:30)
+
+```{r, echo=FALSE}
+# - Transport data with **stplanr** (14:30 - 15:30)
+```
 
 **15:30 - 15:45 Refreshments**
 
-- Advanced graphics with **tmap** (15:45 - 16:00)
+- Advanced graphics: online mapping with **mapview** and leaflet and static maps with **tmap** (15:45 - 16:00)
 
-- Taking it further + Q & A (16:00 onwards)
+- Taking it further, applications and Q & A (16:00 onwards)
 
 ### Prerequisites
 
