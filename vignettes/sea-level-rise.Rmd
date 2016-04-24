@@ -1,0 +1,29 @@
+---
+title: "Sea level rise visualisation"
+author: "Robin Lovelace"
+date: "`r Sys.Date()`"
+output: html_document
+bibliography: slr-refs.bib
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r bibliography, echo=FALSE, eval=FALSE}
+# Get bibliography - run this once (remove eval=FALSE) to get the bibliography
+library(RefManageR)
+key = Sys.getenv("ZOTERO")
+bib = ReadZotero(user = 216746, .params = list(collection = 'UIDD2AP6', key = key, limit = 20))
+WriteBib(bib = bib, file = "slr-refs.bib")
+```
+
+Sea level rise is probably the most damaging and scary impact of climate change. It is one of the greatest threats to civilisation. This case study explores the issue of sea level rise from a geographical perspective. We will learn how to download geographical data from the internet, combine different layers on the map, and visualise the results.
+
+## Motivation
+
+Perhaps the key question is 'where will get flooded?' The answer is highly dependendent on elevation, with the obvious result that low lying lands are usually (but not always) far more likely to be inundated than high areas. Over time, more places will increase as the sea level is projected to rise long into the future. Recent research suggests the sea could rise by around 2 metres by 2100 and 15 m by 2500 [@deconto_contribution_2016]. In the longer term, over thousands of years, rises of up to 50 m can be expected [@clark_consequences_2016].
+
+## Downloading the data
+
