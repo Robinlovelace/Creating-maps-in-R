@@ -70,15 +70,15 @@ Fee includes lunch and refreshments.
 - Spatial data in R, sp classes and projections (13:30 - 14:30) - LC
     - SpatialPoints
     - SpatialPointsDataFrame
+    - Using `spTransform()`
 
 - Loading, plotting and interrogating spatial data, including shapefiles, xy and spatial queries (14:30 - 15:30) - RL
     - Importance of geographic vs projected CRSs
-    - Using `spTransform()`
 
 **15:30 - 15:45 Refreshments**
 
 - Manipulating spatial objects with a focus on rgeos (15:45 - 16:00) - LC
-    - `gDifference()`
+    - `gDifference()` and friends
 
 - Making maps with **tmap** (16:00 onwards) - RL
 
