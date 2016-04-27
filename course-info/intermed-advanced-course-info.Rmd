@@ -4,12 +4,6 @@ author: "Robin Lovelace"
 date: "March 23, 2016"
 output: word_document
 ---
----
-title: "Introduction to R for spatial data analysis"
-author: "Robin Lovelace"
-date: "01/29/2015"
-output: word_document
----
 
 ## Description
 
@@ -29,6 +23,8 @@ Prior experience with R is highly recommended;
 participants will also benefit from experience with GIS.
 
 In the first day we will cover general concepts in efficient R programming and the basics of spatial data classes in R. Building on this strong foundation the second day will cover advanced topics including raster data and the creation of interactive web-based maps using R.
+
+A common thread throughout the course will be plotting geographic data to boost understanding.
 
 
 ```{r, echo=FALSE}
@@ -60,39 +56,49 @@ Fee includes lunch and refreshments.
 
 - Registration and refreshments (9:00 - 9:30)
 
-- An introduction to RStudio (9:30 - 10:30)
+- An introduction to RStudio (9:30 - 10:30) - RL
 
-- Objects, functions and concepts for efficient R programming (10:30 - 11:30)
+- Objects, functions and concepts for efficient R programming (10:30 - 11:30) - LC
+    - 15 minutes intro, 45 minutes hands on
 
-- Data manipulation and plotting paradigms (11:30 - 12:30)
+- Data manipulation and plotting paradigms (11:30 - 12:30) - RL
+    - 20 minutes lecture, 40 minutes hands on
+    - 
 
 **LUNCH: 12:30 - 13:30**
 
-- Spatial data in R, sp classes and projections (13:30 - 14:30)
+- Spatial data in R, sp classes and projections (13:30 - 14:30) - LC
+    - SpatialPoints
+    - SpatialPointsDataFrame
 
--Loading, plotting and interrogating spatial data, including shapefiles, xy and spatial queries (14:30 - 15:30) 
+- Loading, plotting and interrogating spatial data, including shapefiles, xy and spatial queries (14:30 - 15:30) - RL
+    - Importance of geographic vs projected CRSs
+    - Using `spTransform()`
 
 **15:30 - 15:45 Refreshments**
 
-- Manipulating spatial objects with a focus on rgeos (15:45 - 16:00)
+- Manipulating spatial objects with a focus on rgeos (15:45 - 16:00) - LC
+    - `gDifference()`
 
-- Making maps with ggmap and tmap (16:00 onwards)
+- Making maps with **tmap** (16:00 onwards) - RL
 
 ### Day 2: Advanced R for spatial data analysis
 
 - Registration and refreshments (9:00 - 9:30)
 
-- Recap on R as a GIS: a worked example (9:30 - 10:30)
+- Recap on R as a GIS: a worked example (9:30 - 10:30) - RL
+    - Sea Level Rise example 
 
-- Introduction raster data with R (10:30 - 11:30)
+- Introduction raster data with R (10:30 - 11:30) - LC
+    - From first principles
 
-- Raster/vector operations with R - class conversions and aggregation with raster (11:30 - 12:30)
+- Raster/vector operations with R - class conversions and aggregation with raster (11:30 - 12:30) - LC
 
 **LUNCH: 12:30 - 13:30**
 
-- Spatio-temporal data with **spacetime** (13:30 - 14:30)
+- Spatio-temporal data with **spacetime** (13:30 - 14:30) - RL
 
-- Points pattern analysis - points to surfaces by IDW, Kriging (14:30 - 15:30)
+- Points pattern analysis - points to surfaces by IDW, Kriging (14:30 - 15:30) - LC
 
 ```{r, echo=FALSE}
 # - Transport data with **stplanr** (14:30 - 15:30)
@@ -100,7 +106,7 @@ Fee includes lunch and refreshments.
 
 **15:30 - 15:45 Refreshments**
 
-- Advanced graphics: online mapping with **mapview** and leaflet and static maps with **tmap** (15:45 - 16:00)
+- Advanced graphics: online mapping with **mapview** and leaflet and static maps with **tmap** (15:45 - 16:00) - RL
 
 - Taking it further, applications and Q & A (16:00 onwards)
 
