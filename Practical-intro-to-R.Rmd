@@ -1,8 +1,9 @@
 ---
-title: "A practical introduction to R"
+title: "A practical introduction to R and RStudio"
 author: "Robin Lovelace"
-date: "March 27, 2015"
+date: "`r Sys.Date()`"
 output: ioslides_presentation
+bibliography: creating-maps.bib
 ---
 
 ```{r, include=FALSE}
@@ -11,7 +12,17 @@ lapply(pkgs, library, character.only = T)
 # opts_knit$set(root.dir = "~/repos/Creating-maps-in-R/")
 ```
 
-# Installing and using the software
+# An introduction to RStudio | Pages 1:5 of Introduction to visualising spatial data in R
+
+## What is RStudio and and why use it?
+
+What is RStudio?
+
+- An IDE
+- A project management system
+- A document preparation system
+- An online publication portal
+
 
 ## Installing and using R and RStudio
 
@@ -25,7 +36,7 @@ http://dss.princeton.edu/training/RStudio101.pdf
 grid.raster(readPNG("figure/rstudio-proj.png"))
 ```
 
-## Productivity with RStudio
+## Productivity with RStudio 
 
 Key shortcuts in RStudio:
 
@@ -42,7 +53,9 @@ shortcuts <- data.frame(Command = c(
 kable(shortcuts)
 ```
 
-## Code used to generate that table
+## Code used to generate that table | a mini demo of RMarkdown
+
+RStudio is not just about R - it's a productivity suite!
 
 ```{r, eval=FALSE}
 shortcuts <- data.frame(Command = c(
@@ -92,7 +105,80 @@ library(devtools) # enables installation of leaflet
 lapply(c(pkgs, "leaflet", "stplanr"), library, character.only = T)
 ```
 
-# Create and plot data
+## Features of RStudio
+
+> - Flexible window pane layouts to optimise use of screen space and enable fast interactive visual feed-back.
+> - Intelligent auto-completion of function names, packages and R objects.
+> - A wide range of keyboard shortcuts.
+> - Visual display of objects, including a searchable data display table.
+> - Real-time code checking and error detection.
+> - Menus to install and update packages.
+> - Project management and integration with version control.
+
+## RStudio panes
+
+RStudio has four main window 'panes':
+
+ - The **Source pane**, for editing, saving, and dispatching R code to the console (top left). 
+ 
+ - The **Console pane**. Any code entered here is processed by R, line by line (bottom left).
+ 
+ - The **Environment pane** (top right) contains information about the current objects loaded in the workspace including their class, dimension (if they are a data frame) and name. 
+ 
+ - The **Files pane** (bottom right) contains a simple file browser, a Plots tab, Help and Package tabs and a Viewer.
+ 
+### Exercises
+
+You are developing a project to visualise data.
+Test out the multi-panel RStudio workflow by following the steps below:
+
+1. Create a new folder for the input data using the **Files pane**.
+
+2. Type in `downl` in the **Source pane** and hit `Enter` to make the function `download.file()` autocomplete. Then type `"`, which will autocomplete to `""`.
+
+3. Execute the full command with `Ctrl-Enter`:
+
+    ```{r, eval=FALSE}
+    download.file("https://www.census.gov/2010census/csv/pop_change.csv",
+                  "data/pop_change.csv")
+    ```
+
+3. Write and execute a command to read-in the data, such as
+
+    ```{r}
+    pop_change = read.csv("https://www.census.gov/2010census/csv/pop_change.csv", skip = 2)
+    ```
+
+    ```{r, echo=FALSE}
+    # question: complete example with plots and all here?
+    ```
+
+4. Use the **Environment pane** to click on the data object `pop_change`. 
+
+5. Use the **Console** to test different plot commands to visualise the data, saving the code you want to keep back into the **Source pane**, as `pop_change.R`.
+
+6. Use the **Plots tab** in the Files pane to scroll through past plots. Save the best using the Export dropdown button.
+
+## Project management
+
+In the far top-right of RStudio there is a diminutive drop-down menu illustrated with R inside a transparent box.
+
+Projects
+
+- Set the working directory automatically. `setwd()`, a common source of error for R users, is rarely if ever needed.
+
+- The last previously open file is loaded into the Source pane. 
+
+- The `File` tab displays the associated files and folders in the project, allowing you to quickly find your previous work.
+
+- Any settings associated with the project, such as Git settings, are loaded. This assists with collaboration and project-specific set-up.
+
+## Setting up a project for the remainder of this course
+
+- Go to https://github.com/Robinlovelace/Creating-maps-in-R
+
+# Objects, functions and concepts for efficient R programming 
+
 
 ## Basic data types
 
@@ -107,6 +193,154 @@ class(vector_logical) # what are the other object classes?
 ```
 
 Use the "Environment tab" (top right in RStudio) to see these
+
+## Intermediate data types
+
+R has a hierarchy of data classes, tending to the lowest:
+
+- Binary
+- Integer (numeric)
+- Double (numeric)
+- Character
+
+## Examples of data types
+
+```{r}
+a <- TRUE
+b <- 1:5
+c <- pi
+d <- "Hello Leeds"
+```
+
+```{r, eval=FALSE}
+class(a)
+class(b)
+class(c)
+class(d)
+```
+
+## Class coercion I
+
+```{r}
+ab <- c(a, b)
+ab
+class(ab)
+```
+
+## Class coercion II
+
+- R automatically forces some objects into the class it thinks it is best
+- Demo:
+
+```{r}
+x = 1:5
+class(x)
+x = c(x, 6.1)
+class(x)
+```
+
+> - Test: what is the class of `x = c(x, "hello")`?
+
+## Dimensions of objects
+
+- Dimensionality is key to understanding R data
+- You cannot do the same thing with a square as you can a line
+- R is 'vectorised', meaning it deals with many numbers at once
+
+Test: what is the dimension of objects we created in the last slide?
+
+## Vectorised code I
+
+Python is not vectorised by default, hence:
+
+```{r, engine='python'}
+a = [1,2,3]
+b = [9,8,6]
+print(a + b)
+```
+
+## Vectorised code II
+
+R is vectorised, meaning that it adds each element automatically
+
+```{r}
+a = c(1,2,3)
+b = c(9,8,6)
+a + b
+```
+
+- The same applies to matrices - R understands matrix algebra
+- See `?matmult` for more on matrix multiplication
+
+## Vectorised code III
+
+```{r}
+x <- c(1, 2, 5)
+for(i in x){
+  print(i^2)
+}
+```
+
+Creating a new vector based on `x`
+
+```{r}
+for(i in 1:length(x)){
+  if(i == 1) x2 <- x[i]^2
+  else x2 <- c(x2, x[i]^2)
+}
+x2
+```
+
+## Test on data types
+
+```{r}
+class(c(a, b))
+class(c(a, c))
+class(c(b, d))
+```
+
+## Sequences
+
+```{r}
+x <- 1:5
+y <- 2:6
+plot(x, y)
+```
+
+## Sequences with seq
+
+```{r}
+x <- seq(1,2, by = 0.2)
+length(x)
+x <- seq(1, 2, length.out = 5)
+length(x)
+```
+
+## The data frame
+
+The fundamental data object in R. 
+
+Create them with `data.frame()`
+
+```{r}
+data.frame(vector_logical, vector_character, n = vector_numeric)
+```
+
+Oops - we forgot to assign that. Tap `UP` or `Ctl-UP` in the console, then enter:
+
+```{r}
+df <- data.frame(vector_logical, vector_character, n = vector_numeric)
+```
+
+## Common dimensions
+
+|    | Homogeneous   | Heterogeneous |
+|----|---------------|---------------|
+| 1d | Atomic vector | List          |
+| 2d | Matrix        | Data frame    |
+| nd | Array         |               |
+
+Source: @wickham_advanced_2014
 
 ## Automating things
 
@@ -141,24 +375,7 @@ help(apply) # get help on apply
 The `*apply` family of functions are R's internal `for` loops. What about `get()`
 
 ```{r}
-?mget
-```
-
-
-## The data frame
-
-The fundamental data object in R. 
-
-Create them with `data.frame()`
-
-```{r}
-data.frame(vector_logical, vector_character, n = vector_numeric)
-```
-
-Oops - we forgot to assign that. Tap `UP` or `Ctl-UP` in the console, then enter:
-
-```{r}
-df <- data.frame(vector_logical, vector_character, n = vector_numeric)
+?get
 ```
 
 ## Plotting data in R
@@ -169,6 +386,8 @@ df <- data.frame(vector_logical, vector_character, n = vector_numeric)
 plot(df) # note: now we can do things with the df
 ?plot    # get help on plotting
 ```
+
+# Data manipulation and plotting paradigms
 
 ## Subsetting data in R
 
@@ -186,32 +405,20 @@ In a 2d dataset, the following selects the 3rd line in the 3rd column:
 df[3,3]
 ```
 
-## Making objects spatial
+## Manipulating columns
 
-There are 4 fundamental `Spatial*` data types in R, enabled by
-the foundational spatial package `sp`:
-
-```{r, eval=FALSE}
-SpatialPixels()
-SpatialPoints()
-SpatialLines()
-SpatialPolygons()
-```
-
-These are `S4` R objects, with strictly defined `slots`.
-All such `Spatial*` objects have `proj4string` and `bbox` slots.
-Each can be extended as a `Spatial*DataFrame` to include data.
+New columns can be created as follows:
 
 ```{r}
-lnd <- shapefile("data/london_sport.shp")
-class(lnd)
-
-leaflet() %>%  
+df$new_col = NA
 ```
 
+Or as a function of old ones:
 
+```{r}
+df$new_col = df$vector_logical + df$n
+```
 
-
-
+## Exercise: manipulate and plot the pop_change dataset
 
 
