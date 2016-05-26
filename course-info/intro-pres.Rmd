@@ -15,18 +15,22 @@ library(png)
 
 # Introduction
 
-## Course structure
+```{r, echo=FALSE}
+# ## Course structure
+# 
+# ## Description
+# 
+# This one day course will get you **up-to-speed** with using R and **RStudio** for daily data processing, analysis and visualisation tasks.
+# It is **practical**, so you'll 'learn by doing'.
+# Based on material produced by
+# [Colin Gillespie](http://www.mas.ncl.ac.uk/~ncsg3/)
+# at the [University of Newcastle](http://www.ncl.ac.uk/maths/rcourse/), with
+# additional detail on data manipulation.
+# 
+# ## Introduction
+```
 
-## Description
-
-This one day course will get you **up-to-speed** with using R and **RStudio** for daily data processing, analysis and visualisation tasks.
-It is **practical**, so you'll 'learn by doing'.
-Based on material produced by
-[Colin Gillespie](http://www.mas.ncl.ac.uk/~ncsg3/)
-at the [University of Newcastle](http://www.ncl.ac.uk/maths/rcourse/), with
-additional detail on data manipulation.
-
-## Introduction
+## Context
 
 ![cdrc](http://www.lida.leeds.ac.uk/img/cdrc.png)
 
@@ -98,6 +102,7 @@ Source: [revolution analytics](http://blog.revolutionanalytics.com/2013/08/job-t
 information in R, and (possibly) overall
 - Thus there are different camps with different preferences when it comes to maps in R
 
+```{r, echo=FALSE, eval=FALSE}
 ## Learning outcomes
 
 By the end of the course you will:
@@ -148,6 +153,7 @@ Course agenda
 # devtools::install_github("rcourses/nclRintroduction", build_vignettes = T)
 library(nclRintroduction)
 vignette(package = "nclRintroduction")
+```
 ```
 
 ## Demonstration 1: The RStudio IDE
@@ -346,6 +352,25 @@ class(c(a, c))
 class(c(b, d))
 ```
 
+## Sequences
+
+```{r}
+x <- 1:5
+y <- 2:6
+plot(x, y)
+```
+
+## Sequences with seq
+
+```{r}
+x <- seq(1,2, by = 0.2)
+length(x)
+x <- seq(1, 2, length.out = 5)
+length(x)
+```
+
+
+
 ## Practical 2
 
 - Work through Chapter 2 in Colin Gillespie's Introduction to R handout
@@ -362,14 +387,106 @@ vignette(package = "nclRintroduction", "practical1")
 
 # Reading and writing data (13:30 - 14:30)
 
+## Reading data into R can tricky
 
+- There are dozens of data formats
+- Some data formats require additional packages
+- Text encoding can cause additional problems
 
-## Practical 3
+## Inequality data from the world bank
+
+- Download data from http://www.mas.ncl.ac.uk/~ncsg3/Rcourse/movie.txt
+- Open the file with Notepad++
+- Read it in with `read.csv(ineq.csv)`.
+
+```{r, echo=FALSE}
+# url <- "http://www.metoffice.gov.uk/pub/data/weather/uk/climate/stationdata/bradforddata.txt"
+# download.file("http://www.metoffice.gov.uk/pub/data/weather/uk/climate/stationdata/bradforddata.txt", "bradforddata.txt")
+# df <- read.table("bradforddata.txt", skip = 5, as.is = T)
+# df <- read.fwf("bradforddata.txt", widths = 5, skip = 5)
+```
+
+## Importing a simple .csv
+
+```{r}
+# Download from the internet:
+# url <- "http://www.mas.ncl.ac.uk/~ncsg3/Rcourse/movie.txt"
+# download.file(url, "movie.txt")
+movie <- read.csv("../movie.txt", header=TRUE, stringsAsFactors=FALSE)
+```
+
+## Practical 3: work through Chapter 3
+
+> - What is the size of the data saved as a .csv?
+> - How big is the data save as .Rds?
+> - What about if you save it as .xlsx?
+
+## Practical 3 - Reading R in the wild
+
+> - Identify a medium/large dataset of interest
+> - Read it into R
+> - If you finish early: go back to the subsetting stage
+> - If you finish that: find more datasets!
+> - Try saving the data with different file formats
 
 # Data manipulation (14:30 - 15:00)
+
+## An example dataset
+
+- It's good to start small before going BIG
+- A quick exploration with the diamonds dataset:
+
+```{r}
+library(ggplot2)
+diamonds[1:3,]
+```
+
+## Selecting rows
+
+The base R way
+
+```{r}
+summary(diamonds$color)
+head(diamonds[diamonds$color == "I",])
+```
+
+The dplyr way
+
+```{r}
+library(dplyr)
+filter(diamonds, color == "I")
+```
+
+## dplyr is clever
+
+```{r}
+sum(diamonds$color == "I" | diamonds$color == "J")
+dfs <- filter(diamonds, color == "I" | color == "J")
+nrow(dfs)
+```
+
+```{r}
+arrange(diamonds, desc(z))
+```
+
+
+
+## Work using the dplyr package data processing
+
+Work through the worked example here:
+
+http://r4ds.had.co.nz/transform.html
 
 # Summary statistics (15:00 - 15:30)
 
 ## Practical 4
 
 # Plotting with R (15:45 - 16:15)
+
+## Feedback
+
+Your feedback is greatly appreciated.
+
+Please complete the online form here:
+
+ https://leeds.onlinesurveys.ac.uk/rstudiojan16
