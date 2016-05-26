@@ -1,0 +1,28 @@
+---
+title: "Introduction to Spatial Data in R"
+author: "Robin Lovelace"
+date: "May 26, 2016"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+library(sp)
+library(raster)
+```
+
+# Spatial data in R, sp classes and projections | Pages 6 - 7
+
+# Loading, plotting and interrogating spatial data | Pages 8 - 10
+
+## Transformations
+
+```{r}
+lnd = raster::shapefile("../data/lnd-stns.shp")
+proj4string(lnd)
+bbox(lnd)
+lnd_osgb = spTransform(lnd, CRSobj = "+init=epsg:27700")
+bbox(lnd_osgb)
+```
+
+# Manipulating spatial objects with a focus on rgeos | Pages 11 - 17
+

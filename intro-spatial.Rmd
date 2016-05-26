@@ -1312,7 +1312,7 @@ the following on-line tutorial:
 install.packages("leaflet")
 library(leaflet)
 
-lnd48 <- readRDS('data/lnd84.Rds')
+lnd84 <- readRDS('data/lnd84.Rds')
 
 leaflet() %>%
   addTiles() %>%
