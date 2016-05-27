@@ -17,16 +17,16 @@ mapshape_available() # is mapshaper available to system()?
 # data to simplify  #
 # # # # # # # # # # #
 
-rnet <- overline(routes_fast)
-rnet <- overline(routes_fast, attrib = "All")
+rnet = overline(routes_fast)
+rnet = overline(routes_fast, attrib = "All")
 
 # # # # # # #
 # simplify  #
 # # # # # # #
 
-rnet5 <- mapshape(rnet, percent = 5)
-rnet1 <- mapshape(rnet, percent = 1)
-rnets <- mapshape(rnet, ms_options = "snap-interval=0.001")
+rnet5 = mapshape(rnet, percent = 5)
+rnet1 = mapshape(rnet, percent = 1)
+rnets = mapshape(rnet, ms_options = "snap-interval=0.001")
 
 # # # # #
 # plot  #

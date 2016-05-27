@@ -4,7 +4,7 @@ vignette(package = "ggplot2")
 
 head(crime_ag)
 
-df <- lnd@data
+df = lnd@data
 
 head(df)
 

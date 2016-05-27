@@ -1,4 +1,4 @@
-ppl_cities <- c(
+ppl_cities = c(
   "Leeds",
   "Namur",
   "Harrogate",
@@ -11,16 +11,16 @@ ppl_cities <- c(
   "Chilumba Malawi"
 )
 
-coords <- ggmap::geocode(ppl_cities)
+coords = ggmap::geocode(ppl_cities)
 
-dfh <- data.frame(city = ppl_cities, coords)
-dfhsp <- SpatialPointsDataFrame(coords = coords, data = dfh)
+dfh = data.frame(city = ppl_cities, coords)
+dfhsp = SpatialPointsDataFrame(coords = coords, data = dfh)
 plot(dfhsp)
 bbox(dfhsp)
 head(dfh)
 class(dfh)
 
-bb <- ggmap::make_bbox(lon, lat, dfh)
+bb = ggmap::make_bbox(lon, lat, dfh)
 
 ggmap(ggmap = get_map(bb, zoom = 3)) +
   geom_point(aes(lon, lat), data = dfh)

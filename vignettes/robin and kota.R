@@ -16,27 +16,27 @@ library(dplyr)
 
 ### Step 1: Get longitude and latitude for destinations using ggmap
 
-cities <- c("Wellington", "Briasbaine", "Melbourne", "Adelaide", "Perth",
+cities = c("Wellington", "Briasbaine", "Melbourne", "Adelaide", "Perth",
 		    "Santiago", "Bogota", "Sao Paulo", "Cape Town",
 		    "Seattle", "Vancouver", "Dallas", "Houston", "Atlanta", "Chicago", "New York",
 		    "Tokyo", "Osaka", "Fukuoka", "Singapore", "Manila", "Chennai",
 		    "Helsinki", "Rome", "Paris", "Berlin", "London", "Copenhargen", "Stockholm")
 
-destinations <- geocode(cities)
-destinations$cities <- cities
+destinations = geocode(cities)
+destinations$cities = cities
 
 ### Change column names
-colnames(destinations) <- c("arr_lon", "arr_lat", "cities")
+colnames(destinations) = c("arr_lon", "arr_lat", "cities")
 
 
 ### Step 2: Get longitude and latitude for the departure city (i.e., Sydney)
 
-sydney <- geocode("sydney")
+sydney = geocode("sydney")
 
 
 ### Step 3: Create a data frame with destinations and sydney
 
-mydf <- mutate(destinations,
+mydf = mutate(destinations,
 			   dep_lon = sydney$lon,
 			   dep_lat = sydney$lat)
 
@@ -44,21 +44,21 @@ mydf <- mutate(destinations,
 ### Step 4: Calculate routes
 ### gcIntermediate() returns class SpatialLines.
 
-rts <- gcIntermediate(mydf[,c('dep_lon', 'dep_lat')], mydf[,c('arr_lon', 'arr_lat')],
+rts = gcIntermediate(mydf[,c('dep_lon', 'dep_lat')], mydf[,c('arr_lon', 'arr_lat')],
 					  100, breakAtDateLine = FALSE, addStartEnd = TRUE, sp = TRUE)
 
 
 ### Create a SpatialLinesDataFrame and convert it to data.frame using fortify().
 ### In order to use ggplot2, I need to have a data.frame object.
 
-rts <- as(rts, "SpatialLinesDataFrame")
-rts.2 <- fortify(rts)
+rts = as(rts, "SpatialLinesDataFrame")
+rts.2 = fortify(rts)
 
 ### Add cities in this data frame. This will help us specify line colors later.
 ### For each route, there are 102 dots. We repeat each destination 102 times and
 ### create a new column.
 
-rts.2 <- mutate(rts.2, destination = rep(cities, each = 102))
+rts.2 = mutate(rts.2, destination = rep(cities, each = 102))
 
 
 ### Step 5: Split lines
@@ -89,14 +89,14 @@ rts.2$segment = 100 * rts.2$id + cumsum(rts.2$split)
 
 ### Step 6: Get a world map
 
-worldmap <- map_data ("world")
+worldmap = map_data ("world")
 
 
 ### Step 7: Draw the flight map
 
-base <- ggplot()
+base = ggplot()
 
-map <- geom_polygon(data = worldmap, aes(x = long, y = lat, group = group),
+map = geom_polygon(data = worldmap, aes(x = long, y = lat, group = group),
 				    size = 0.1, color = "#090D2A", fill = "#090D2A", alpha = 1)
 
 #png("Robin2.png", width = 12, height = 9, units="in", res = 500)
