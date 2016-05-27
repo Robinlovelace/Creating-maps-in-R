@@ -1,0 +1,143 @@
+---
+title: "Spatio-temporal data with R"
+author: "Robin Lovelace"
+date: "May 27, 2016"
+output: pdf_document
+bibliography: ../creating-maps.bib
+---
+
+```{r, echo=FALSE}
+knitr::opts_knit$set(root.dir = "../")
+```
+
+
+The most mature package for working with spatio-temporal data in R is probably **spacetime**, which was developed by Edzer Pebesmer, who also developed **sp*:
+
+```{r}
+library(spacetime)
+```
+
+There are fantastic tutorials on spatio-temporal data in this package, as can be revealed by the `vignettes()` command. Take a browse of these and open
+
+```{r, eval=FALSE}
+vignette(package = "spacetime")
+vignette("jss816")
+```
+
+## The structure of spatial-temporal data
+
+Regardless of software, spatio-temporal data is usually represented in one of three ways [pebesma_spacetime:_2012]:
+
+- Time-wide, where each column is a date.
+- Space-wide, where each column is a place
+- Long, where each place is repeated for each time
+
+## Example with air quality data
+
+To understand spatio-temporal data in **spacetime**, let's look at an air quality dataset:
+
+```{r}
+data(package = "spacetime")
+```
+
+```{r}
+library(maptools)
+fname = system.file("shapes/sids.shp", package="maptools")[1]
+nc = readShapePoly(fname,
+                   proj4string = CRS("+proj=longlat +datum=NAD27 +ellps=clrk66"))
+time = as.POSIXct(c("1974-07-01", "1979-07-01"), tz = "GMT")
+endTime = as.POSIXct(c("1978-06-30", "1984-06-30"), tz = "GMT")
+data = data.frame(
+  BIR = c(nc$BIR74, nc$BIR79),
+  NWBIR = c(nc$NWBIR74, nc$NWBIR79),
+  SID = c(nc$SID74, nc$SID79))
+nct = STFDF(sp = as(nc, "SpatialPolygons"), time, data, endTime)
+class(nct)
+```
+
+We have created a spacio-temporal datset. Let's look at its componenets:
+
+```{r}
+plot(nct@sp) # the spatial component
+head(nct@data) # the data with the first 100 rows being for time period 1, etc
+nct@time # the time snapshots in there
+```
+
+**spacetime** has native methods for natively plotting spatio-temporal data:
+
+```{r}
+stplot(nct)
+```
+
+### Subsetting spacetime objects
+
+Remember that spatial data can be subsetted using the square brackets:
+
+```
+[object_element, column_name]
+```
+
+Spatio-temporal data has an extra dimension, so we add another comma:
+
+```
+[, time]
+```
+
+```{r}
+n74 = nct[, "1974-07-01"]
+class(n74)
+spplot(n74)
+```
+
+```{r}
+stplot(nct[1:2,]) # select by area
+```
+
+## Example with Irish Windspeed data
+
+Let's load the data:
+
+```{r}
+library(gstat)
+data("wind")
+wind.loc$y = as.numeric(char2dms(as.character(wind.loc[["Latitude"]])))
+wind.loc$x = as.numeric(char2dms(as.character(wind.loc[["Longitude"]])))
+coordinates(wind.loc) = ~x+y
+proj4string(wind.loc) = "+proj=longlat +datum=WGS84"
+library(tmap)
+qtm(wind.loc)
+```
+
+Before this is can be a **spacetime** class, we need to update the time variable and perform some more data manipulation:
+
+```{r}
+wind$time = ISOdate(wind$year+1900, wind$month, wind$day)
+wind$jday = as.numeric(format(wind$time, '%j'))
+wind.loc = wind.loc[match(names(wind[4:15]), wind.loc$Code),]
+stations = 4:15
+windsqrt = sqrt(0.5148 * as.matrix(wind[stations])) # knots -> m/s
+Jday = 1:366
+windsqrt = windsqrt - mean(windsqrt)
+daymeans = sapply(split(windsqrt, wind$jday), mean)
+meanwind = lowess(daymeans ~ Jday, f = 0.1)$y[wind$jday]
+velocities = apply(windsqrt, 2, function(x) { x - meanwind })
+pts = coordinates(wind.loc[match(names(wind[4:15]), wind.loc$Code),])
+rownames(pts) = wind.loc$Station
+pts = SpatialPoints(pts, CRS("+proj=longlat +datum=WGS84 +ellps=WGS84"))
+library(rgdal)
+utm29 = CRS("+proj=utm +zone=29 +datum=WGS84 +ellps=WGS84")
+pts = spTransform(pts, utm29)
+wind.data = stConstruct(velocities, space = list(values = 1:ncol(velocities)),
+                        time = wind$time, SpatialObj = pts, interval = TRUE)
+class(wind.data)
+```
+
+
+
+## Exercise
+
+Work through the contents of @pebesma_spacetime:_2012 and generate maps of shifts in wind speed in Ireland.
+
+## References
+
+
