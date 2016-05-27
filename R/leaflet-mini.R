@@ -1,5 +1,5 @@
 library(raster)
-lnd <- shapefile("data/london_sport.shp")
+lnd = shapefile("data/london_sport.shp")
 plot(lnd)
 
 # library(devtools)
@@ -8,7 +8,7 @@ library(leaflet)
 
 summary(lnd)
 
-lnd84 <- spTransform(lnd, CRSobj = CRS("+init=epsg:4326"))
+lnd84 = spTransform(lnd, CRSobj = CRS("+init=epsg:4326"))
 
 leaflet() %>%
   addTiles() %>%

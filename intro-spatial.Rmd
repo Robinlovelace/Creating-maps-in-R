@@ -525,17 +525,13 @@ class(vec)
 class(df)
 ```
 
-The same logic applies to spatial data, but the input requirements are stricter. To create a `SpatialPoints` object,
-for example, the input coordinates *must* be supplied in a matrix:
+The same logic applies to spatial data.  The input must be a numeric matrix or data.frame:
 
 ```{r}
-mat <- as.matrix(df) # create matrix object with as.matrix
-sp1 <- SpatialPoints(coords = mat)
+sp1 <- SpatialPoints(coords = df)
 ```
 
-Note in the code above the use of `as.matrix()` to change
-the class of an existing object. 
-We then create a spatial points object,
+We have just created a spatial points object,
 one of the fundamental data
 types for spatial data. (The others are lines, polygons
 and pixels, which can be created by `SpatialLines`,

@@ -12,6 +12,6 @@ unzip("here.zip")
 
 ??csv
 library(readr)
-df <- readr::read_csv("ag.lnd.agri.zs_Indicator_en_csv_v2.csv")
+df = readr::read_csv("ag.lnd.agri.zs_Indicator_en_csv_v2.csv")
 class(df)
 names(w)

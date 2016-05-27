@@ -14,7 +14,7 @@ library(stplanr)
 # Run example code
 plot(zones)
 plot(routes_fast, col = "yellow", lwd = 5, add = T)
-r_anon <- toptail_buff(l = routes_fast, buff = zones)
+r_anon = toptail_buff(l = routes_fast, buff = zones)
 plot(r_anon, add = T)
 
 # compile this code to html
