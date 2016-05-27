@@ -354,38 +354,13 @@ The code below should help understand the way spatial data work in R.
 
 
 ```{r}
-# Create an outline of the London area by merging all of the polyogns in the lnd object
-london = gUnaryUnion(lnd, lnd$dummy)
-london = SpatialPolygonsDataFrame(london, data.frame(dummy = c("london")), match.ID = FALSE)
-
 # Find the centre of the london area
-centrelondon = gCentroid(london, byid = TRUE)
-
-# create coordinates to store the start and end points of the lines
-c1 = c(centrelondon$x, centrelondon$x)
-c2 = c(90, -90)
-c3 = c(90, -90)
-c4 = c(centrelondon$y,centrelondon$y)
-
-# simple line strings using the created coordinates
-L1 = Line(cbind(c1, c2))
-L2 = Line(cbind(c3, c4))
-
-# create the lines
-Ls1 = Lines(list(L1), ID = "a")
-Ls2 = Lines(list(L2), ID = "b")
-
-# convert the lines into SpatialLines
-Ls1 <- SpatialLines(LinesList = list(Ls1))
-Ls2 <- SpatialLines(LinesList = list(Ls2))
-
-# convert again into SpatialLinesDataFrame
-Longitude = SpatialLinesDataFrame(Ls1, data.frame(Z = c("1", "2"), row.names = c("a","b")))
-Latitude = SpatialLinesDataFrame(Ls2, data.frame(Z = c("1", "2"), row.names = c("a","b")))
+lat <- coordinates(gCentroid(lnd))[[1]]
+lng <- coordinates(gCentroid(lnd))[[2]]
 
 # arguments to test whether or not a coordinate is east or north of the centre
-east <- coordinates(lnd)[,1] > Longitude@lines[[1]]@Lines[[1]]@coords[,1][1]
-north <- coordinates(lnd)[,2] > Latitude@lines[[1]]@Lines[[1]]@coords[,2][1]
+east <- sapply(coordinates(lnd)[,1], function(x) x > lat)
+north <- sapply(coordinates(lnd)[,2], function(x) x > lng)
 
 # test if the coordinate is east and north of the centre
 lnd@data$quadrant[east & north] <- "northeast"
