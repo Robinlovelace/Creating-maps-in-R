@@ -17,7 +17,6 @@ output:
   word_document: default
 ---
 
-\newpage
 
 ```{r, include=FALSE}
 # output: word_document
@@ -831,10 +830,11 @@ in intro-spatial.Rmd at [github.com/Robinlovelace/Creating-maps-in-R/blob/master
 
 ```{r, echo=FALSE, results='hide', message=FALSE, warning=FALSE, fig.cap="Proportion of council seats won by Conservatives in the 2014 local elections using data from data.london.gov and joined using the methods presented in this section"}
 # install.packages("ggmap")
+library(maptools)
 library(ggmap)
 borough_dat <- read.csv("data/london-borough-profiles-2014.csv")
 names(borough_dat)
-borough_dat <- rename(borough_dat, conservative = Proportion.of.seats.won.by.Conservatives.in.2014.election)
+borough_dat <- dplyr::rename(borough_dat, conservative = Proportion.of.seats.won.by.Conservatives.in.2014.election)
 borough_dat$conservative <- as.numeric(as.character(borough_dat$conservative))
 summary(borough_dat$conservative)
 head(lnd$ons_label)
@@ -1002,7 +1002,7 @@ For an optional advanced task, let us analyse and plot the result.
 
 ```{r fig.cap="Choropleth map of mean values of stations in each borough"}
 q <- cut_number(lnd_n$NUMBER,4) # a nice little function from ggplot2
-q <- factor(test, labels = grey.colors(n = 4))
+q <- factor(q, labels = grey.colors(n = 4))
 summary(q) # check what we've created
 
 qc <- as.character(q) # convert to character class to plot
