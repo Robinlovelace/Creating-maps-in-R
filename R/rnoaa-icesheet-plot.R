@@ -4,7 +4,7 @@ yrs = seq(1985, 2015, by = 10)
 urls = sapply(yrs, function(x)
   seaiceeurls(yr = x, mo = 'Sep', pole = 'N'))
 out = lapply(urls, seaice)
-names(out) <- yrs
+names(out) = yrs
 # saveRDS(out, "data/out-ice.Rds")
 df = dplyr::rbind_all(out, id = "Year")
 xlims = quantile(df$lat, probs = c(0.01, 0.90))
