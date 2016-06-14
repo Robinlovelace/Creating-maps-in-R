@@ -10,4 +10,8 @@ By the end of the tutorial you should have the confidence and skills needed to c
 
 ![image-lnd](https://raw.githubusercontent.com/Robinlovelace/Creating-maps-in-R/master/figure/facet_london.png)
 
+The course will even show you how to make your maps animated:
+
+![](https://raw.githubusercontent.com/Robinlovelace/Creating-maps-in-R/master/figure/lnd-animated.gif)
+
 If you have any feedback on this tutorial please let us know via email or via this repository. Contibutions to the `.Rmd` file ([intro-spatial.Rmd](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial.Rmd)) are welcome. Happy mapping!
