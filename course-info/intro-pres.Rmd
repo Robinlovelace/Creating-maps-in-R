@@ -1,6 +1,6 @@
 ---
 title: "Introduction to R and RStudio"
-author: "Robin Lovelace, University of Leeds, \n `r as.character(strptime(Sys.time(), format = '%d'))`"
+author: "Robin Lovelace, University of Leeds, \n `r Sys.Date()`"
 date: "Slides: [rpubs.com/RobinLovelace](http://rpubs.com/RobinLovelace)"
 output:
   ioslides_presentation:
@@ -30,17 +30,22 @@ library(png)
 # ## Introduction
 ```
 
-## Context
+## Context | See the [thesis-reproducible](https://github.com/Robinlovelace/thesis-reproducible/) repo
 
-![cdrc](http://www.lida.leeds.ac.uk/img/cdrc.png)
+<!-- ![cdrc](http://www.lida.leeds.ac.uk/img/cdrc.png) -->
 
-This course is brought to you the Consumer Data Research Centre
-([CDRC](http://cdrc.ac.uk/)) and is 
-funded by the ESRC's ([Big Data Network](http://www.esrc.ac.uk/research/major-investments/Big-Data/BDN-Phase2.aspx)).
+<!-- This course is brought to you the Consumer Data Research Centre -->
+<!-- ([CDRC](http://cdrc.ac.uk/)) and is  -->
+<!-- funded by the ESRC's ([Big Data Network](http://www.esrc.ac.uk/research/major-investments/Big-Data/BDN-Phase2.aspx)). -->
 
-## What R can do - Propensity to Cycle
+```{r, echo=FALSE, out.width="70%", fig.cap="One of the first maps I made for my thesis"}
+knitr::include_graphics("../figure/engenergy.png")
+```
 
-See here: [geo8.webarch.net/master](http://geo8.webarch.net/manchester/)
+
+## What R can do - Propensity to Cycle Tool
+
+See [pct.bike](http://pct.bike/)
 
 ```{r, echo=FALSE}
 # file.copy("~/npct/pct/figures/coventry-centroids-4pres.png", "../figure/coventry-centroids.png") # copy file
@@ -150,10 +155,12 @@ Course agenda
 
 ```{r, echo=FALSE}
 # The package used for this course can be installed with the following:
-# devtools::install_github("rcourses/nclRintroduction", build_vignettes = T)
+if(!require(devtools))
+  install.packages("devtools")
+if(!require(nclRintroduction))
+  devtools::install_github("rcourses/nclRintroduction", build_vignettes = T)
 library(nclRintroduction)
 vignette(package = "nclRintroduction")
-```
 ```
 
 ## Demonstration 1: The RStudio IDE
