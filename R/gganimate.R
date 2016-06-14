@@ -3,7 +3,7 @@
 pkgs = c("ggmap", "sp", "tmap", "rgeos", "maptools", "dplyr")
 lapply(pkgs, library, character.only = TRUE)
 lnd = read_shape("data/london_sport.shp")
-lnd_f <- fortify(lnd, region = "ons_label") # pnly for visualisation
+lnd_f <- fortify(lnd, region = "ons_label") # only for visualisation
 lnd_f = rename(lnd_f, ons_label = id)
 lnd_f = left_join(lnd_f, lnd@data)
 
@@ -36,4 +36,17 @@ p = ggplot(data = lnd_f, # the input data
 pa = gganimate::gg_animate(p)
 gganimate::gg_animate_save(pa,
                            filename = "figure/lnd-animated.gif",
-                           saver = "gif")
+                           saver = "mp4")
+
+# without imagemagick
+dates = unique(lnd_f$date)
+i = dates[1]
+for(i in dates){
+  lnd_tmp = lnd_f[lnd_f$date == i,]
+  p = ggplot(data = lnd_tmp, # the input data
+             aes(x = long, y = lat, fill = pop/1000, group = group, frame = date)) + # define variables
+    geom_polygon() + # plot the boroughs
+    geom_path(colour="black", lwd=0.05) + # borough borders
+    coord_equal() 
+  ggsave(paste0("ggplots-", i, ".png"), p)
+}
