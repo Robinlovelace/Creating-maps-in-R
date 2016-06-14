@@ -1,8 +1,9 @@
 # Aim: create animated map
+# devtools::install_github("dgrtwo/gganimate")
 pkgs = c("ggmap", "sp", "tmap", "rgeos", "maptools", "dplyr")
 lapply(pkgs, library, character.only = TRUE)
 lnd = read_shape("data/london_sport.shp")
-lnd_f <- fortify(lnd, region = "ons_label")
+lnd_f <- fortify(lnd, region = "ons_label") # pnly for visualisation
 lnd_f = rename(lnd_f, ons_label = id)
 lnd_f = left_join(lnd_f, lnd@data)
 
@@ -31,6 +32,8 @@ p = ggplot(data = lnd_f, # the input data
         axis.title = element_blank(), # remove axis titles
         axis.ticks = element_blank()) # remove axis ticks
 
-
-devtools::install_github("dgrtwo/gganimate")
-gganimate::gg_animate(p)
+# needs gganimate package
+pa = gganimate::gg_animate(p)
+gganimate::gg_animate_save(pa,
+                           filename = "figure/lnd-animated.gif",
+                           saver = "gif")
