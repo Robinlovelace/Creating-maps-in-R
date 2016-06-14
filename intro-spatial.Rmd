@@ -18,7 +18,7 @@ output:
 ---
 
 
-```{r, include=FALSE}
+```{r, include=FALSE, eval=FALSE}
 # output: word_document
 # TODO: add details for the ggplot2 section
 # TODO: create animation of population change over time
@@ -771,8 +771,13 @@ qtm(lnd, "CrimeCount") # plot the basic map
 ```{r, echo=FALSE, eval=FALSE}
 # This is the modified version of the code, to create the map displayed
 library(tmap) 
-lnd$Thefts <- lnd$CrimeCount / 10000 
-qtm(lnd, "Thefts", fill.title = "Thefts\n(10000)", scale = 0.8) +
+lnd_wgs = spTransform(lnd, CRS("+init=epsg:4326"))
+osm_tiles = read_osm(bbox(lnd_wgs))
+lnd_wgs$Thefts <- lnd$CrimeCount / 10000 
+tm_shape(osm_tiles) +
+  tm_raster() +
+  tm_shape(lnd_wgs) +
+  tm_fill("Thefts", fill.title = "Thefts\n(10000)", scale = 0.8, alpha = 0.5) +
   tm_layout(legend.position = c(0.89,0.02))
 ```
 
@@ -843,6 +848,7 @@ with the aim of finding out about how many are found in each London borough.
 library(rgdal)
 # create new stations object using the "lnd-stns" shapefile.
 stations <- readOGR(dsn = "data", layer = "lnd-stns")
+# stations = read_shape("data/lnd-stns.shp") # from tmap
 proj4string(stations) # this is the full geographical detail.
 proj4string(lnd) # what's the coordinate reference system (CRS)
 bbox(stations) # the extent, 'bounding box' of stations
@@ -1079,8 +1085,6 @@ vignette("tmap-nutshell")
 library(tmap)
 ```
 
-
-
 A couple of basic plots show the package's intuitive
 syntax and attractive default parameters.
 
@@ -1095,7 +1099,7 @@ qtm(shp = lnd, fill = c("Partic_Per", "Pop_2001"), fill.palette = c("Blues"), nc
 
 The plot above shows the ease with which tmap can create maps
 next to each other for different variables. Figure 13 illustrates
-the power of the `tm_facets` command.
+the power of the `tm_facets` command. Note that all the maps created with the `qtm` function can also be created with `tm_shape`, followed by `tm_fill` (or another `tm_` function).
 
 ```{r, fig.cap="Facetted map of London Boroughs created by tmap"}
 tm_shape(lnd) +
@@ -1103,6 +1107,28 @@ tm_shape(lnd) +
 tm_facets("name", free.coords=TRUE, drop.shapes=TRUE) +
     tm_layout(legend.show = FALSE, title.position = c("center", "center"), title.size = 20)
 ```
+
+To create a basemap with tmap, you can use the `read_osm` function as follows. Note that you must first transform the data into a *geographical* CRS:
+
+```{r, fig.cap="London's population in 2001."}
+# Transform the coordinate reference system
+lnd_wgs = spTransform(lnd, CRS("+init=epsg:4326"))
+osm_tiles = read_osm(bbox(lnd_wgs))
+tm_shape(osm_tiles) + # download images from OSM
+  tm_raster() +
+  tm_shape(lnd_wgs) +
+  tm_fill("Pop_2001", fill.title = "Population, 2001", scale = 0.8, alpha = 0.5) +
+  tm_layout(legend.position = c(0.89,0.02))
+```
+
+Note that another way to make **tmap** maps have a basemap is by entering `tmap_mode("view")`. This will make the maps appear on a zoomable webmap powered by **leaflet**.
+There are many other intuitive and powerful functions in **tmap**. Check the documentation to find out more:
+
+```{r, eval=FALSE}
+?tmap # get more info on tmap
+```
+
+
 
 A more established plotting paradigm is **ggplot2**
 package. This has been subsequently
