@@ -1381,10 +1381,7 @@ produce.
 
 > **Challenge 1:** Try creating this plot for the % of population instead of the absolute population.
 
-> **Challenge 2:** For bonus points, try creating an animation of London's evolving
-population over time using the excellent
-[**animation**](http://cran.r-project.org/web/packages/animation/index.html)
-package.
+> **Challenge 2:** For bonus points, try creating an animation of London's evolving population over time (hint: a file called ggnaminate.R may help).
 
 ```{r, echo=FALSE}
 # **Creating an animation of population change over time**
