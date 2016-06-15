@@ -495,5 +495,3 @@ http://r4ds.had.co.nz/transform.html
 Your feedback is greatly appreciated.
 
 Please complete the online form here:
-
- https://leeds.onlinesurveys.ac.uk/rstudiojan16

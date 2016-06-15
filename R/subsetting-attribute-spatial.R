@@ -25,7 +25,7 @@ lnd_central = lnd[lnd_cent,]
 plot(lnd_central, add = T, col = "black")
 points(lnd_cent, col = "blue")
 
-cent_buffer = gBuffer(lnd_cent, width = 5000)
+cent_buffer = gBuffer(lnd_cent, width = 10000)
 plot(cent_buffer)
 
 plot(lnd, add = T)
@@ -38,5 +38,6 @@ cents_central = lnd_cents[cent_buffer,]
 plot(cents_central)
 
 lnd_near_cent = lnd[cents_central,]
-plot(cent_buffer)
+plot(lnd)
+plot(cent_buffer, add = T)
 plot(lnd_near_cent, add = T, col = "black")

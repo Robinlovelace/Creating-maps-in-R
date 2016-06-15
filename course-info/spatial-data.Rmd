@@ -12,6 +12,79 @@ library(raster)
 
 # Spatial data in R, sp classes and projections | Pages 6 - 7
 
+## The slots of spatial data
+
+```{r}
+load("../data/lnd.RData")
+slotNames(lnd)
+lnd@bbox
+```
+
+## Seeing the geometry
+
+```{r}
+lnd@polygons[[1]]@Polygons[[1]]@coords[1:5,]
+plot(lnd@polygons[[1]]@Polygons[[1]]@coords)
+```
+
+## Seeing the data
+
+```{r}
+head(lnd@data[1:2,1:3])
+```
+
+## Subsetting spatial objects
+
+```{r}
+lnd5 = lnd[5,]
+plot(lnd5)
+```
+
+## What just happened?
+
+A new object was created, a subset of `lnd`, with the same class.
+
+```{r}
+class(lnd)
+class(lnd5)
+nrow(lnd)
+nrow(lnd5)
+```
+
+## Subsetting based on attributes
+
+We can select spatial objects based on their attributes. Sometimes it can help to first create a selection object:
+
+```{r}
+sel = lnd$Pop_2001 > median(lnd$Pop_2001)
+lnd_highpop = lnd[sel,]
+plot(lnd_highpop)
+```
+
+## Adding together different selections
+
+```{r}
+plot(lnd)
+plot(lnd_highpop, add = TRUE, col = "red")
+```
+
+Note: it would be better to do this with **tmap**.
+
+## Illustration with tmap
+
+```{r}
+library(tmap)
+lnd$colour = "white"
+lnd$colour[sel] = "black"
+qtm(lnd, fill = "colour")
+```
+
+
+
+
+
+
+
 # Loading, plotting and interrogating spatial data | Pages 8 - 10
 
 ## Transformations
@@ -24,5 +97,5 @@ lnd_osgb = spTransform(lnd, CRSobj = "+init=epsg:27700")
 bbox(lnd_osgb)
 ```
 
-# Manipulating spatial objects with a focus on rgeos | Pages 11 - 17
+# Manipulating spatial objects | Pages 11 - 17
 

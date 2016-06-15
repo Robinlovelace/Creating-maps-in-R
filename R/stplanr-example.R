@@ -5,7 +5,17 @@
 
 # Install and load development version of stplanr package (uncomment)
 # devtools::install_github("ropensci/stplanr")
+# install.packages("stplanr")
 library(stplanr)
+
+# od data
+head(flow[c(1:3, 12)])
+head(cents)
+plot(cents)
+l = od2line(flow, zones)
+plot(l, add = T)
+plot(l, lwd = l$All / 10)
+mapview(l)
 
 # Look at the help for the function
 # ?toptail_buff
