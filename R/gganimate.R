@@ -89,5 +89,6 @@ names(lnd)[grep("Pop", names(lnd))] = popvars
 m = tm_shape(lnd) +
   tm_borders() +
   tm_fill(popvars, breaks = seq(0, 5e5, by = 1e5)) +
-  tm_facets(ncol = 1, nrow = 1)
+  tm_facets(ncol = 1, nrow = 1) +
+  tm_layout(legend.outside = TRUE)
 animation_tmap(m, filename = "figure/tmap_animation.gif", width=1200, delay=100)
