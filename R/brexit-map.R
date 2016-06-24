@@ -4,6 +4,10 @@ library(purrr)
 # Packages we'll use
 pkgs = c("rvest", "geojsonio", "tmap", "dplyr",
          "stringdist")
+
+# @hrbrmstr note
+# walk() has no output side effects, so it's like a true list version
+# of a for loop
 walk(pkgs, library, character.only = T)
 
 # 1: Get local authority data
