@@ -1,30 +1,42 @@
 # Aim: create regional map of election results
+library(purrr)
 
 # Packages we'll use
 pkgs = c("rvest", "geojsonio", "tmap", "dplyr",
          "stringdist")
-lapply(pkgs, library, character.only = T)
+walk(pkgs, library, character.only = T)
 
 # 1: Get local authority data
-url = "https://github.com/npct/pct-bigdata/raw/master/las-dbands.geojson"
-download.file(url, "las.geojson")
-las = geojson_read("las.geojson", what = "sp")
+
+# @hrbrmstr note
+# with url() being a function, many new folks to R have trouble
+# debugging errors when they've mistakenly used it in the wrong
+# context, so this helps provide a better practice for them
+# i also "if" the download as it's both bandwidth friendly for the server
+# and helps those R stats folks who aren't on speedy connections
+# (like some countries and even half of the state I live in)
+URL = "https://github.com/npct/pct-bigdata/raw/master/las-dbands.geojson"
+fil = "las.geojson"
+if (!file.exists(fil)) download.file(URL, fil)
+las = geojson_read(fil, what = "sp")
 
 # 2: Get and test results data
-url = "http://www.bbc.co.uk/news/politics/eu_referendum/results/local/a"
-bbc = read_html(url)
+URL = "http://www.bbc.co.uk/news/politics/eu_referendum/results/local/a"
+bbc = read_html(URL)
 
 la_name = bbc %>%
-  html_nodes(".eu-ref-result-bar__title") %>% 
+  html_nodes(".eu-ref-result-bar__title") %>%
   html_text()
 vote_leave = bbc %>%
-  html_nodes(".eu-ref-result-bar__party-votes--percentage") %>% 
-  html_text() %>% 
-  gsub(pattern = " |%", replacement = "") %>% 
-  as.numeric() %>% 
+  html_nodes(".eu-ref-result-bar__party-votes--percentage") %>%
+  html_text() %>%
+  gsub(pattern = " |%", replacement = "") %>%
+  as.numeric()
 vote_leave = vote_leave[(1:length(la_name)) * 2 - 1]
 
 ref_result = data_frame(geo_label = la_name, `% vote leave` = vote_leave)
+
+# @hrbrmstr note: `local_authority` is not defined
 
 summary(local_authority %in% las$geo_label) # looks good
 las@data = left_join(las@data, ref_result)
@@ -32,25 +44,37 @@ summary(las$vote_leave)
 qtm(las, "% vote leave")
 
 # 3: Run for all data points
-i = "b"
-for(i in letters[-1]){
-  url = "http://www.bbc.co.uk/news/politics/eu_referendum/results/local/"
-  url = paste0(url, i)
-  url_exists = RCurl::url.exists(url)
-  if(!url_exists) next
-  bbc = read_html(url)
+
+# @hrbrmstr note
+# avoids the need for RCurl URL check (see use inside map_df below)
+S_read_html <- safely(read_html)
+
+# @hrbrmstr note
+# this doesn't take too long but progress bars are always nice
+p <- progress_estimated(length(letters))
+
+# @hrbrmstr note
+# map_df() will let you return data[_.]frames and it will
+# efficiently do the rbinding. Also, since the BBC shows the
+# letters j, q, x & z grayed out, we can just not use them which
+# shld avoid any errant URL grabs.
+map_df(setdiff(letters, c("j", "q", "x", "z")), function(i) {
+  p$tick()$print()
+  URL = sprintf("http://www.bbc.co.uk/news/politics/eu_referendum/results/local/%s", i)
+  bbc = S_read_html(URL)
+  if (is.null(bbc$result)) return(data_frame(geo_label = NULL, `% vote leave` = NULL))
+  bbc <- bbc$result
   la_name = bbc %>%
-    html_nodes(".eu-ref-result-bar__title") %>% 
+    html_nodes(".eu-ref-result-bar__title") %>%
     html_text()
   vote_leave = bbc %>%
-    html_nodes(".eu-ref-result-bar__party-votes--percentage") %>% 
-    html_text() %>% 
-    gsub(pattern = " |%", replacement = "") %>% 
-    as.numeric() 
+    html_nodes(".eu-ref-result-bar__party-votes--percentage") %>%
+    html_text() %>%
+    gsub(pattern = " |%", replacement = "") %>%
+    as.numeric()
     vote_leave = vote_leave[(1:length(la_name)) * 2 - 1]
-  ref_res_tmp = data_frame(geo_label = la_name, `% vote leave` = vote_leave)
-  ref_result = bind_rows(ref_result, ref_res_tmp)
-}
+  data_frame(geo_label = la_name, `% vote leave` = vote_leave)
+}) -> ref_result
 ref_result_orig = ref_result
 las = geojson_read("las.geojson", what = "sp")
 las$geo_label = as.character(las$geo_label)
@@ -60,6 +84,8 @@ ref_result$geo_label[grep("Corn", ref_result$geo_label)] =
   las$geo_label[grep("Corn", las$geo_label)]
 ref_result$geo_label[grep("Heref", ref_result$geo_label)] =
   las$geo_label[grep("Heref", las$geo_label)]
+
+# @hrbrmstr note: ams isn't defined yet
 ref_result$geo_label[msel] = las$geo_label[ams]
 
 # Auto fixes
@@ -73,7 +99,7 @@ pmatches = cbind(as.character(las$geo_label[ams]),
 las$geo_label[grep("and", las$geo_label)]
 
 las@data = left_join(las@data, ref_result)
- 
+
 summary(las$`% vote leave`)
 las$`% vote leave` = las$`% vote leave` - 50
 tm_shape(las) +
