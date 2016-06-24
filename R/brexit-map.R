@@ -15,10 +15,11 @@ walk(pkgs, library, character.only = T)
 # @hrbrmstr note
 # with url() being a function, many new folks to R have trouble
 # debugging errors when they've mistakenly used it in the wrong
-# context, so this helps provide a better practice for them
-# i also "if" the download as it's both bandwidth friendly for the server
-# and helps those R stats folks who aren't on speedy connections
-# (like some countries and even half of the state I live in)
+# context, so this helps provide a better practice for them.
+# also adding the "if" for the download as it's both bandwidth
+# friendly for the server and helps those R stats folks who aren't
+# on speedy connections (like some entire countries and even half of the
+# U.S. state I live in)
 URL = "https://github.com/npct/pct-bigdata/raw/master/las-dbands.geojson"
 fil = "las.geojson"
 if (!file.exists(fil)) download.file(URL, fil)
@@ -89,7 +90,7 @@ ref_result$geo_label[grep("Corn", ref_result$geo_label)] =
 ref_result$geo_label[grep("Heref", ref_result$geo_label)] =
   las$geo_label[grep("Heref", las$geo_label)]
 
-# @hrbrmstr note: ams isn't defined yet
+# @hrbrmstr note: `ams`` isn't defined yet
 ref_result$geo_label[msel] = las$geo_label[ams]
 
 # Auto fixes
