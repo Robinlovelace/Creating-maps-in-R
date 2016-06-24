@@ -1,7 +1,8 @@
 # Aim: create regional map of election results
 
 # Packages we'll use
-pkgs = c("rvest", "geojsonio", "tmap", "dplyr", "fuzzyjoin")
+pkgs = c("rvest", "geojsonio", "tmap", "dplyr",
+         "stringdist")
 lapply(pkgs, library, character.only = T)
 
 # 1: Get local authority data
@@ -50,12 +51,33 @@ for(i in letters[-1]){
   ref_res_tmp = data_frame(geo_label = la_name, `% vote leave` = vote_leave)
   ref_result = bind_rows(ref_result, ref_res_tmp)
 }
+ref_result_orig = ref_result
 las = geojson_read("las.geojson", what = "sp")
-las@data =
-  left_join(las@data, ref_result)
+las$geo_label = as.character(las$geo_label)
+
+# Manual fixes
+ref_result$geo_label[grep("Corn", ref_result$geo_label)] =
+  las$geo_label[grep("Corn", las$geo_label)]
+ref_result$geo_label[grep("Heref", ref_result$geo_label)] =
+  las$geo_label[grep("Heref", las$geo_label)]
+ref_result$geo_label[msel] = las$geo_label[ams]
+
+# Auto fixes
+msel = !ref_result$geo_label %in% las$geo_label
+mismatches = ref_result$geo_label[msel]
+ams = amatch(mismatches, las$geo_label, method = "osa", maxDist = 3)
+pmatches = cbind(as.character(las$geo_label[ams]),
+                 ref_result$geo_label[msel])
+
+
+las$geo_label[grep("and", las$geo_label)]
+
+las@data = left_join(las@data, ref_result)
  
 summary(las$`% vote leave`)
 las$`% vote leave` = las$`% vote leave` - 50
-qtm(las, "% vote leave", fill.palette = "RdBu")
-
+tm_shape(las) +
+  tm_fill("% vote leave", palette = "RdBu",
+    title = "% vote leave\n(swing)") +
+  tm_borders(lwd = 0.1)
 
