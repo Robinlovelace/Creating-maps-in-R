@@ -1,0 +1,67 @@
+---
+title: "Transforming Coordinate Reference Systems"
+author: "Robin Lovelace"
+date: "June 28, 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+The first stage when doing GIS in R is to identify and load the necessary packages:
+
+```{r}
+library(sp) # foundational package defining sp classes
+library(tmap) # cutting edge GIS functionality
+library(geojsonio) # for saving as geojson
+```
+
+Next we need some data:
+
+```{r}
+f = "statistical-gis-boundaries-london.zip"
+if(!file.exists(f)){
+  u = "https://s3-eu-west-1.amazonaws.com/londondatastore-upload/statistical-gis-boundaries-london.zip"
+  download.file(url = u, destfile = "statistical-gis-boundaries-london.zip")
+  unzip("statistical-gis-boundaries-london.zip")
+}
+```
+
+Load the data into R:
+
+```{r}
+lnd = read_shape("statistical-gis-boundaries-london/ESRI/London_Borough_Excluding_MHW.shp")
+```
+
+What's the bounding box?
+
+```{r}
+bb(lnd)
+```
+
+Transform the CRS:
+
+```{r}
+lnd_wgs = spTransform(lnd, CRSobj = CRS("+init=epsg:4326"))
+bb(lnd_wgs)
+```
+
+Plot the result (on a basemap):
+
+```{r}
+osm_tiles = read_osm(bb(lnd_wgs))
+tm_shape(osm_tiles) +
+  tm_raster() +
+  tm_shape(lnd_wgs) +
+  tm_borders()
+```
+
+Save the output:
+
+```{r}
+geojson_write(lnd_wgs, file = "../data/lnd.geojson")
+```
+
+
+
