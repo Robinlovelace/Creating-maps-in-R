@@ -129,3 +129,16 @@ qtm(uk_lo, fill = "blue") +
   qtm(uk_eroded_lo)
 
 shps = shps_old
+
+# compared with original
+shpb_lo = ms_simplify(shpsb)
+bbox(shpb_lo)
+proj4string(shpb_lo) = CRS("+init=epsg:27700")
+shpb_lo_wgs = spTransform(shpb_lo, CRS("+init=epsg:4326"))
+tm_shape(shpb_lo) +
+  tm_lines(col = "red") +
+  qtm(uk_eroded_lo, fill = "green")
+
+uk_outline = ms_simplify(shpb_lo)
+geojsonio::geojson_write(uk_eroded_lo, file = "/tmp/uk_eroded_lo_LT_NAI_95.geojson")
+geojsonio::geojson_write(uk_outline, file = "/tmp/uk_outline.geojson")

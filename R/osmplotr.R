@@ -15,7 +15,7 @@ summary(h)
 
 # download the cycleways/cyclable routes
 hc = extract_osm_objects(key = "highway", value = "cycleway", bbox = b)
-hb = extract_osm_objects(key = "bicycle", value = "yes", bbox = b)
+hb = extract_osm_objects(key = "highway", value = "yes", bbox = b)
 # hlcn = extract_osm_objects(bbox =  b, extra_pairs = c("network", "ncn")) # failed
 ?opq
 overpass::opq()
