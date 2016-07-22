@@ -587,6 +587,7 @@ right panel.)
 
 ```{r}
 rm(lnd84) # remove the lnd object
+# we will load it back in later with readRDS(file = "data/lnd84.Rds")
 ```
 
 ## Attribute joins
