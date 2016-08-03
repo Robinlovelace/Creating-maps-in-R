@@ -1,0 +1,121 @@
+---
+title: "Review of gtfsr package"
+author: "Robin Lovelace"
+date: "August 2, 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+GTFS is becoming the worldwide standard for sharing information about public transport systems. This makes it hugely important for the transport industry, public sector organisations trying to direct such systems in socially beneficial directions, and for researchers who have a range of motivations including the need to [transition away from fossil fuels to save the world!](http://etheses.whiterose.ac.uk/5027/).
+
+In any case, GTFS data is largely out of reach for the humble citizen like you and me. [Googling "software gtfs data"](https://www.google.co.uk/search?client=ubuntu&channel=fs&q=software+read+gtfs+data&ie=utf-8&oe=utf-8&gfe_rd=cr&ei=DR2hV9zNJoru8wfa-YCwAw) reveals a cottage industry of GTFS editors and viewers, but little in the way of open source software for accessing this vital new file format. A [GIS StackExchange question](http://gis.stackexchange.com/questions/91220/choosing-gtfs-editor-for-creating-and-exporting-routes) further shows the lack of cohesion around a single open source product (the [World Bank](https://github.com/WorldBank-Transport/GTFS-Training-Materials/wiki/Link-repository-for-international-GTFS-training-materials) provides a more up-to-date list of tools that can interact with GTFS data).
+
+R is a powerful language that provides an emerging set of transport tools via packages such as **[stplanr](https://github.com/ropensci/stplanr)**, so rOpenSci is the ideal place for the development of a new package to make GTFS available to the world, in the spirit of citizen science.
+
+## Basic functionality
+
+The package is installed and loaded easily with:
+
+```{r, eval=FALSE}
+devtools::install_github('ropenscilabs/gtfsr')
+library(gtfsr)
+```
+
+The most common thing that someone will want to use the package for, I imagine, is read in a GTFS file. This can be done easily and, based on a few tests of feeds from [transit.land](https://transit.land/feed-registry/), reliably:
+
+```{r, eval=FALSE}
+# this one failed for some reason
+u = "https://www.bjcta.org/wp-content/uploads/2016/05/BJCTA_GTFS_0516.zip"
+# the example in the README works
+u = "http://www.co.fairbanks.ak.us/transportation/MACSDocuments/GTFS.zip"
+# as does this giant one from Rio de Janeiro
+u = "http://dadosabertos2.rio.rj.gov.br/dadoaberto/google-transit/google_transit.zip"
+# as does this one from the USA
+u = "http://www.bart.gov/dev/schedules/google_transit.zip"
+gtfs_obj = import_gtfs(u)
+```
+
+The next logical thing you would want to do is plot the result. (**Suggestion:** make simply loading and plotting GTFS data appear earlier and more prominently in the README.)
+
+This can be done easily with the sensible but clunkily-named `map_gtfs_agency_routes()`. **Suggestion:** rename this verbosely name function or create a new generic plotting function called simply `map_gtfs()`:
+
+```{r, eval=FALSE}
+map_gtfs_agency_routes(gtfs_obj)
+map_gtfs_agency_routes(gtfs_obj, include_stops = TRUE)
+```
+
+I think in most cases users will want to see the stops. **Suggestion:** make `include_stops = TRUE` the default option in this function and the yet-to-be created generic `map_gtfs()`.
+
+## Accessing GTFS feeds
+
+A useful feature of the package, that goes above and beyond other GTFS software, is its ability to search for public GTFS feeds, using the [transitfeeds.com API key](http://transitfeeds.com/api/keys). The guidance on how to get a key in the README is good. However, advice for storing the key could be better: the `set_api_key()` key works fine for one session but it seems the key must be entered afresh every for every new R session. **Suggestion:** recommend setting the key in `.Renviron`, as documented in the [httr vignette](https://cran.r-project.org/web/packages/httr/vignettes/api-packages.html), e.g. with the line `GTFS_API_KEY=XXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX`. Then it could be automatically retrieved with each new session by adding something like the following lines to `get_api_key()`:
+
+```{r, eval=FALSE}
+if(grepl("[[:alnum:]]{8}\\-[[:alnum:]]{4}\\-[[:alnum:]]{4}\\-[[:alnum:]]{4}\\-[[:alnum:]]{12}", Sys.getenv("GTFS_API_KEY")))
+  gtfs_api_key$set(Sys.getenv("GTFS_API_KEY"))
+```
+
+We use a similar technique in **stplanr** with [`cyclestreet_pat`](https://github.com/ropensci/stplanr/blob/3e510df1000c31d1057dc9907029dc392baf38fc/R/routes.R#L261), which we should probably generalise to other API keys...
+
+In any case, the most important thing is that users can quickly view valid gtfs feeds:
+
+```{r, eval=FALSE}
+feedlist_df = filter_feedlist(get_feedlist()) # errors:
+# Error in function_list[[k]](value) : could not find function "mutate"
+```
+
+Note that the above code errors, probably because the function `mutate` is missing a `dplyr::` prefix in the definition of [get_feedlist](https://github.com/ropenscilabs/gtfsr/blob/d1401f174df7a9089bf0da4de89960731b0754b9/R/get-gtfs-feeds.R#L49). (**Suggestion:** Fix this issue).
+
+After **dplyr** has been loaded, the function works:
+
+```{r, eval=FALSE}
+library(dplyr)
+feedlist_df = filter_feedlist(get_feedlist())
+```
+
+As per the documentation, you can then find feeds from a specific country, e.g. Spain:
+
+```{r, eval=FALSE}
+u_spain = filter(feedlist_df, grepl("Spain", loc_t)) %>% 
+  select(url_d)
+# get all gtfs feeds from spain
+gtfs_spain = import_gtfs(u_spain)
+```
+
+Of the 3 imported GTFS feeds, only 1 can be plotted:
+
+```{r, eval=FALSE}
+map_gtfs_agency_routes(gtfs_spain[[1]]) # fails - not a gtfs object
+map_gtfs_agency_routes(gtfs_spain[[2]]) # works
+map_gtfs_agency_routes(gtfs_spain[[3]]) # fails - no route_id
+```
+
+I think that the fact that only 1 of these Spanish GTFS datasets works says more about the variable quality of GTFS data than the package. However, such testing on a wide range of international examples could help further refine the package and make it more accepting of diverse feed formats. **Suggestion:** test **gtfsr** on a wide range of datasets, perhaps using continuous integration, although not sure how this would work with its reliance on external datasets - any ideas?
+
+Data consistency issues aside (which are clearly not the fault of **gtfsr**), the package **clearly does a great job of making GTFS data more accessible to the masses**.
+
+## Compatibility with spatial classes
+
+To increase the utility of GTFS objects, I think it would be fantastic if the package included functions to export them as spatial objects. That would expose them to the power of R's impressive GIS capabilities. **Suggestion:** explore options for converting `gtfs` data classes into spatial objects such as `SpatialLinesDataFrame`.
+
+Note: **stplanr** has a basic function for this: [gtfs2sldf()](https://github.com/ropensci/stplanr/blob/170dda96dc5be352caacd09af3e3b3ac7dbb0f02/R/gtfs.R).
+
+## Documentation
+
+The package's vignette is currently the same as the README. This is useful for now but in the long-run the vignettes should be self-standing. **Suggestion:** make the README shorter and self-standing, make the vignette longer with more links to existing software and documentation for understanding and working with GTFS data.
+
+
+
+
+## Minor issues
+
+The first thing I noticed when cloning this repo was its massive size (44 MB). This is predominently due to previously deleted files in the .git repo. It won't cause issues when installing it but will be a deterrent to potential developers. **Suggestion:** removing the culprits, e.g. using [the BFG repo cleaner](https://rtyley.github.io/bfg-repo-cleaner/).
+
+
+
+
