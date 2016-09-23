@@ -1,3 +1,8 @@
+# devtools::install_github("edzer/sfr")
+library('microbenchmark')
+library('rgdal')
+library('sf')
+
 old = setwd("/home/robin/repos/Creating-maps-in-R/")
 f = "data"
 rgdal_way = function() readOGR(dsn = f, layer = "LondonBoroughs", verbose = FALSE)
