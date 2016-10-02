@@ -1,0 +1,19 @@
+---
+title: 'Visualising spatial data: from R to shiny - workshop'
+author: "Robin Lovelace"
+output: html_document
+---
+
+# Introduction
+
+These exercises are taken from a range of places and aim to get you up-to-speed with the various ways of visualising spatial data with R. It's practical: you'll learn by doing. Rather than explain the pros, cons and use cases of each, this tutorial gets stuck straight in with the action, after a few introductory notes.
+
+Programming is best learned by typing code, running it and experimenting, not by reading long texts or copying and pasting (although these activities can certainly help). I therefore recommend you work through the materials by typing the code chunks into new .R or .Rmd files. That way you can take ownership of the methods and write them in your style, in a way that is optimised for your learning. It should also encourage you to experiment and not follow the examples precisely: feel free to expand on certain code chunks or skip some examples. Applying the methods to your own datasets is strongly encouraged.
+
+Geographic data visualisation in R is part of a wider process: command line GIS. It will normally be done in tandem with other GIS operations. We deliberately focus on visualisation here to give a rapid overview of what is possible using a few datasets, for consistency between the methods. Context helps understanding, however, so we begin with a brief description of the datasets used.
+
+# Data
+
+
+
+
