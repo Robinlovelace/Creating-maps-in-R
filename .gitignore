@@ -33,3 +33,11 @@ bikeWY.geojson
 knitr_figure
 myfile*
 geostat-2015
+vspd-data
+vignettes/*.csv
+vignettes/GBR*
+vignettes/*.json
+*.zip
+*.doc
+*.xls
+road*
