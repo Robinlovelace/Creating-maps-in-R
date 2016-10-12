@@ -355,7 +355,7 @@ qtm(lnd_crashes, dot.col = "yellow") +
 tmap_mode("plot") # return to plotting mode
 ```
 
-![](vspd-base-shiny_files/figure-html/tmap-view-mode.png)
+![](vspd-base-shiny_files/figure-markdown_github/tmap-view-mode.png)
 
 
 ### Exercise {-} 
@@ -378,10 +378,10 @@ m = leaflet() %>%
   addTiles() %>%
   addCircles(data = killed)
 class(m)
-m
+# m # uncomment to print the map
 ```
 
-![](vspd-base-shiny_files/figure-html/leaflet-output.png)
+![](vspd-base-shiny_files/figure-markdown_github/leaflet-output.png)
 
 
 There is much to say about **leaflet**. It is an excellent package on which all other interactive mapping approaches covered in this tutorial (**tmap**, **mapview**, **shiny**) use. Rather than cover the material here, I suggest checking out and working-through the excellent online tutorial on **leaflet** at [rstudio.github.io/leaflet/](https://rstudio.github.io/leaflet/).
@@ -406,7 +406,7 @@ As well as providing the option to save in html (via `htmlwidgets::saveWidget(m@
 mapshot(m, "mapview.png")
 ```
 
-![](vspd-base-shiny_files/figure-html/mapview.png)
+![](vspd-base-shiny_files/figure-markdown_github/mapview.png)
 
 # shiny
 
@@ -434,7 +434,7 @@ library(shiny)
 runApp("cycleViz/")
 ```
 
-![](vspd-base-shiny_files/figure-html/hello-shiny.png)
+![](vspd-base-shiny_files/figure-markdown_github/hello-shiny.png)
 
 For the purposes of prototyping, we can create the app in-line with 
 

@@ -404,7 +404,7 @@ qtm(lnd_crashes, dot.col = "yellow") +
 tmap_mode("plot") # return to plotting mode
 ```
 
-![](vspd-base-shiny_files/figure-html/tmap-view-mode.png)
+![](vspd-base-shiny_files/figure-markdown_github/tmap-view-mode.png)
 
 ### Exercise
 
@@ -437,7 +437,7 @@ m
 
 ![](vspd-base-shiny_files/figure-markdown_github/unnamed-chunk-34-1.png)
 
-![](vspd-base-shiny_files/figure-html/leaflet-output.png)
+![](vspd-base-shiny_files/figure-markdown_github/leaflet-output.png)
 
 There is much to say about **leaflet**. It is an excellent package on which all other interactive mapping approaches covered in this tutorial (**tmap**, **mapview**, **shiny**) use. Rather than cover the material here, I suggest checking out and working-through the excellent online tutorial on **leaflet** at [rstudio.github.io/leaflet/](https://rstudio.github.io/leaflet/).
 
@@ -458,7 +458,7 @@ m # display the map
 
 As well as providing the option to save in html (via `htmlwidgets::saveWidget(m@map, "m.html")`), the `mapshot()` function allows you to save a snapshot of you map at it's initial zoom level:
 
-![](vspd-base-shiny_files/figure-html/mapview.png)
+![](vspd-base-shiny_files/figure-markdown_github/mapview.png)
 
 shiny
 =====
@@ -487,7 +487,7 @@ library(shiny)
 runApp("cycleViz/")
 ```
 
-![](vspd-base-shiny_files/figure-html/hello-shiny.png)
+![](vspd-base-shiny_files/figure-markdown_github/hello-shiny.png)
 
 For the purposes of prototyping, we can create the app in-line with
 

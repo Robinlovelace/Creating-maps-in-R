@@ -37,7 +37,16 @@ vspd-data
 vignettes/*.csv
 vignettes/GBR*
 vignettes/*.json
+vignettes/*.pdf
+vignettes/vspd*/boot*
+vignettes/vspd*/figure-h*
+vignettes/vspd*/Proj*
+vignettes/vspd*/h*
+vignettes/vspd*/leaf*
+vignettes/vspd*/jq*
+vignettes/vspd*/nav*
 *.zip
 *.doc
 *.xls
 road*
+vspd-base-shiny-data
