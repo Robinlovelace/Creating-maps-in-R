@@ -2,14 +2,19 @@
 title: 'Visualising spatial data: from R to shiny - workshop'
 author: "Robin Lovelace"
 output:
-  word_document:
-    toc: yes
-  pdf_document:
-    toc: yes
   html_document:
     self_contained: no
     toc: yes
+  pdf_document:
+    toc: yes
+  word_document:
+    toc: yes
 ---
+
+```{r, echo=FALSE}
+knitr::opts_chunk$set(fig.height = 3)
+```
+
 
 # Introduction
 
@@ -81,8 +86,8 @@ osm_image = tmap::read_osm(x = tmap::bb("Leeds"))
 ```
 
 ```{r, echo=FALSE}
-# saveRDS(osm_image, "../vspd-data/osm-image-leeds.Rds") # save the image
-osm_image = readRDS("vspd-data/osm-image-leeds.Rds")
+# saveRDS(osm_image, "../vspd-base-shiny-data/osm-image-leeds.Rds") # save the image
+osm_image = readRDS("vspd-base-shiny-data/osm-image-leeds.Rds")
 ```
 
 ```{r}
@@ -104,7 +109,7 @@ For consistency, we use a limited number of datasets, which share the same geogr
 - `lnd_msoas`: Areas of London, stored as a `SpatialPolygonsDataFrame`.
 - `lnd_topo`: The topography of London, saved as a `RasterLayer`.
 
-These were created/stored locally in the `vspd-data/` subdirectory of `vignettes/` the working directory of this tutorial. Set your working directly to this folder:
+These were created/stored locally in the `vspd-base-shiny-data/` subdirectory of `vignettes/` the working directory of this tutorial. Set your working directly to this folder:
 
 ```{r}
 # switch to the vignettes directory if not in it already
@@ -117,12 +122,12 @@ Once you have downloaded the datasets, they can be loaded with the following com
 
 ```{r, message=FALSE}
 lnd = readRDS("../data/lnd84.Rds")
-lnd_crashes = readRDS("vspd-data/ac_cycle_lnd.Rds")
+lnd_crashes = readRDS("vspd-base-shiny-data/ac_cycle_lnd.Rds")
 killed = lnd_crashes[lnd_crashes$Casualty_Severity == "Fatal",]
-lnd_commutes = readRDS("vspd-data/l-lnd.Rds")
-lnd_msoas = readRDS("vspd-data/z.Rds")
-lnd_rnet = readRDS("vspd-data/rnet-lnd.Rds")
-lnd_topo = readRDS("vspd-data/lnd-topo.Rds")
+lnd_commutes = readRDS("vspd-base-shiny-data/l-lnd.Rds")
+lnd_msoas = readRDS("vspd-base-shiny-data/z.Rds")
+lnd_rnet = readRDS("vspd-base-shiny-data/rnet-lnd.Rds")
+lnd_topo = readRDS("vspd-base-shiny-data/lnd-topo.Rds")
 ```
 
 # Base graphics
@@ -215,7 +220,8 @@ library(ggmap)
 
 **ggmap** therefore has an emphasis on online data (e.g. providing `geocode()` and `route()` functionality) and basemaps rather than GIS. Unlike the other packages presented here, **ggmap** does not work with data of `Spatial*` classes directly: instead **ggmap**, like **ggplot2**, demands data frames.
 
-```{r}
+```{r, results='hide'}
+# not shown
 killed$lon = coordinates(killed)[,1]
 killed$lat = coordinates(killed)[,2]
 ggplot(data = killed@data, mapping = aes(lon, lat)) +
@@ -293,7 +299,8 @@ qtm(lnd, fill = "Partic_Per")
 
 To see how **tmap** graphics are constructed, let's create an identical graphic the verbose way, changing the colorscheme of the fill and border width to give an indication of the kinds of thing that can be customised:
 
-```{r}
+```{r, eval=FALSE}
+# Not shown
 tm_shape(shp = lnd) +
   tm_fill("Partic_Per", palette = "BrBG") +
   tm_borders(lwd = 3)
@@ -314,7 +321,8 @@ Compare the multi-layered output just created via **tmap** with the equivalent p
 
 **tmap** has a concise interface to create faceted plots, as demonstrated above with **spplot** and **ggplot2**:
 
-```{r}
+```{r, eval=FALSE}
+# Not shown
 tm_shape(killed) +
   tm_dots(col = c("Age_of_Casualty", "Age_of_Driver"), size = 0.1)
 ```
@@ -337,12 +345,6 @@ tm_shape(lnd_rnet) + tm_lines(col = "grey") +
   tm_layout(legend.outside = T)
 ```
 
-
-```{r}
-tm_shape(killed) +
-  tm_dots(col = c("Age_of_Casualty", "Sex_of_Casualty"), size = 0.1)
-```
-
 ## Interactive maps with tmap
 
 To make an interactive map with **tmap**, enter `tmap_mode("view")` and run the same code you have been using for static maps. Below is an example of the multi-layered plot of London used previously:
@@ -357,6 +359,7 @@ tmap_mode("plot") # return to plotting mode
 ```
 
 ![](vspd-base-shiny_files/figure-html/tmap-view-mode.png)
+
 
 ### Exercise {-} 
 
@@ -383,7 +386,8 @@ m
 
 ![](vspd-base-shiny_files/figure-html/leaflet-output.png)
 
-There is much to say about **leaflet** and it is an excellent package on which all other interactive mapping approaches covered in this tutorial (**tmap**, **mapview**, **shiny**) use. Rather than cover the material here, I suggest checking out and working-through the excellent online tutorial on **leaflet** at [rstudio.github.io/leaflet/](https://rstudio.github.io/leaflet/).
+
+There is much to say about **leaflet**. It is an excellent package on which all other interactive mapping approaches covered in this tutorial (**tmap**, **mapview**, **shiny**) use. Rather than cover the material here, I suggest checking out and working-through the excellent online tutorial on **leaflet** at [rstudio.github.io/leaflet/](https://rstudio.github.io/leaflet/).
 
 # mapview
 
@@ -394,12 +398,77 @@ library(mapview)
 ```
 
 ```{r, eval=FALSE}
-mapview(killed) +
-  mapview(lnd_commutes)
+m = mapview(killed) +
+  mapview(lnd_commutes, color = "red")
+m # display the map
 ```
 
+As well as providing the option to save in html (via `htmlwidgets::saveWidget(m@map, "m.html")`), the `mapshot()` function allows you to save a snapshot of you map at it's initial zoom level:
+
+```{r, eval=FALSE, echo=FALSE}
+mapshot(m, "mapview.png")
+```
+
+![](vspd-base-shiny_files/figure-html/mapview.png)
 
 # shiny
+
+**shiny** is a package for creating interactive web applications in R. During the tutorial we will create a web application to explore cycling levels and cycling safety in London.
+
+The first stage is to create a 'minimum viable product', to allow us to view where cycle crashes happen over time. There are two basic components every **shiny** app:
+
+1. The code that defines the user interface on the 'client side' (commonly stored in a file called `ui.R`)
+2. The code that actually does the 'heavy lifting' on the server side, running R instances through software called [shiny-server](https://github.com/rstudio/shiny-server).
+
+We will develop the full application in a folder called `cycleViz` but for the the purposes of prototyping we will develop each component together. Still, it's good practice to make an early start to show where we intend to get to. The following code will create the app folder and populate it with the most basic of shiny apps:
+
+```{r, eval=FALSE}
+dir.create("cycleViz")
+shiny_d = system.file(package = "shiny", "examples/01_hello/")
+f = list.files(shiny_d, pattern = "*.R$", full.names = T)
+file.copy(f, "cycleViz")
+## [1] TRUE TRUE
+```
+
+If the above code worked, congratulations: you have a working shiny app in your working directory, that you can use for the development of a full app. Now test it, and you should see something like the image below:
+
+```{r, eval=FALSE}
+library(shiny)
+runApp("cycleViz/")
+```
+
+![](vspd-base-shiny_files/figure-html/hello-shiny.png)
+
+For the purposes of prototyping, we can create the app in-line with 
+
+```{r}
+# Save this code as app.R in your root directory to run it
+library(shiny)
+library(leaflet)
+# Define UI
+ui = fluidPage(
+  sidebarPanel(
+    sliderInput(inputId = "year", label = "Year of casualty:",
+                value = 2010, min = 2005, max = 2014)
+  ),
+  # Show a plot of the generated distribution
+  mainPanel(
+    leafletOutput("map")
+  )
+)
+
+# Define server logic
+server <- shinyServer(function(input, output) {
+  p = readRDS("killed.Rds")
+  output$map = renderLeaflet({
+    leaflet() %>%
+      # addProviderTiles() %>% 
+      addCircles(data = p[grepl(input$year, p$Date),])
+  })
+})
+# Run the application 
+shinyApp(ui, server)
+```
 
 
 <!-- # Appendix -->
@@ -408,26 +477,26 @@ mapview(killed) +
 
 <!-- ```{r, eval=FALSE} -->
 <!-- u1 = "https://github.com/npct/pct-data/raw/master/london/l.Rds" -->
-<!-- download.file(u1, "vspd-data/l-lnd.Rds") -->
+<!-- download.file(u1, "vspd-base-shiny-data/l-lnd.Rds") -->
 <!-- u2 = "https://github.com/npct/pct-data/raw/master/london/z.Rds" -->
-<!-- download.file(u2, "vspd-data/z.Rds") -->
+<!-- download.file(u2, "vspd-base-shiny-data/z.Rds") -->
 <!-- u3 = "https://github.com/npct/pct-data/raw/master/london/rnet.Rds" -->
-<!-- download.file(u3, "vspd-data/rnet-lnd.Rds") -->
+<!-- download.file(u3, "vspd-base-shiny-data/rnet-lnd.Rds") -->
 <!-- u4 = "https://data.gov.uk/dataset/road-accidents-safety-data/datapackage.zip" -->
-<!-- download.file(u4, "vspd-data/datapackage-stats19.zip") # warning: downloads 0.5 GB -->
+<!-- download.file(u4, "vspd-base-shiny-data/datapackage-stats19.zip") # warning: downloads 0.5 GB -->
 
 <!-- # subsetting the data -->
-<!-- l = readRDS("vspd-data/l-lnd.Rds") -->
+<!-- l = readRDS("vspd-base-shiny-data/l-lnd.Rds") -->
 <!-- lnd_commutes = l[l$all > 500,] -->
-<!-- saveRDS(lnd_commutes, "vspd-data/l-lnd.Rds") -->
+<!-- saveRDS(lnd_commutes, "vspd-base-shiny-data/l-lnd.Rds") -->
 <!-- sp::plot(lnd_commutes) -->
 
-<!-- rnet = readRDS("vspd-data/rnet-lnd.Rds") -->
+<!-- rnet = readRDS("vspd-base-shiny-data/rnet-lnd.Rds") -->
 <!-- summary(rnet$dutch_slc) -->
 <!-- rnet$length = stplanr::gprojected(rnet, fun = rgeos::gLength, byid = T) -->
 <!-- summary(rnet$length) -->
 <!-- lnd_rnet = rnet[rnet$dutch_slc > 1000 | rnet$length > 500,] -->
-<!-- saveRDS(lnd_rnet, "vspd-data/rnet-lnd.Rds") -->
+<!-- saveRDS(lnd_rnet, "vspd-base-shiny-data/rnet-lnd.Rds") -->
 <!-- ``` -->
 
 <!-- The Stats19 data required processing before it could be used: -->
@@ -435,8 +504,8 @@ mapview(killed) +
 <!-- ```{r, eval=FALSE} -->
 <!-- library(stplanr) -->
 <!-- library(dplyr) -->
-<!-- unzip("vspd-data/datapackage-stats19.zip") -->
-<!-- unzip("vspd-data/Stats19_Data_2005-2014.zip") -->
+<!-- unzip("vspd-base-shiny-data/datapackage-stats19.zip") -->
+<!-- unzip("vspd-base-shiny-data/Stats19_Data_2005-2014.zip") -->
 <!-- ac = read_stats19_ac(data_dir = ".") -->
 <!-- ca = read_stats19_ca(data_dir = ".") -->
 <!-- ve = read_stats19_ve(data_dir = ".") -->
@@ -479,16 +548,16 @@ mapview(killed) +
 <!--                            Age_of_Driver, -->
 <!--                            Age_Band_of_Driver -->
 <!--                            ) -->
-<!-- saveRDS(lnd_crashes, "vspd-data/ac_cycle_lnd.Rds") -->
+<!-- saveRDS(lnd_crashes, "vspd-base-shiny-data/ac_cycle_lnd.Rds") -->
 <!-- ``` -->
 
-The topographical data was saved using the **raster** package:
+<!-- The topographical data was saved using the **raster** package: -->
 
-```{r, eval=FALSE}
-eng_topo = raster::getData("alt", country = "GBR")
-lnd_topo = raster::crop(eng_topo, lnd)
-plot(lnd_topo)
-points(killed)
-saveRDS(lnd_topo, "vspd-data/lnd-topo.Rds")
-```
+<!-- ```{r, eval=FALSE} -->
+<!-- eng_topo = raster::getData("alt", country = "GBR") -->
+<!-- lnd_topo = raster::crop(eng_topo, lnd) -->
+<!-- plot(lnd_topo) -->
+<!-- points(killed) -->
+<!-- saveRDS(lnd_topo, "vspd-base-shiny-data/lnd-topo.Rds") -->
+<!-- ``` -->
 
