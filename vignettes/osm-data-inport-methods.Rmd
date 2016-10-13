@@ -1,0 +1,25 @@
+---
+output: 
+  html_document: 
+    keep_md: yes
+---
+
+```{r}
+bench_fun = function() source("../R/osmdatar-download-benchmark.R")
+# Pre rapidxml days
+# system.time(
+#   devtools::install_github("osmdatar/osmdatar", ref = "891d23cf63868b5c603ef7c44aaeaef0cd2debb3")
+# )
+# library(osmdatar)
+# microbenchmark::microbenchmark(bench_fun(), times = 20)
+# detach("package:osmdatar")
+
+
+# Post rapidxml
+system.time(
+  devtools::install_github("osmdatar/osmdatar")
+)
+library(osmdatar)
+microbenchmark::microbenchmark(bench_fun(), times = 20)
+```
+
