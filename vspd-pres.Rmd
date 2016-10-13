@@ -1,7 +1,7 @@
 ---
 title: 'Visualising spatial data with R: from base to shiny'
 author: "Robin Lovelace, University of Leeds, \n `r Sys.Date()`"
-date: "eRum 2016, Poznan. Slides: [rpubs.com/RobinLovelace](http://rpubs.com/RobinLovelace)"
+date: "eRum 2016, Poznan. Slides: [rpubs.com/RobinLovelace](http://rpubs.com/RobinLovelace). Source: [GitHub](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/vspd-pres.Rmd) "
 output:
   ioslides_presentation:
     transition: slower
@@ -12,7 +12,7 @@ logo: /home/robin/Dropbox/Public/img/logos/cdrc-square.png
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## What's this talk all about?
+## What's this talk all about? | Source [wikipedia.org](https://en.wikipedia.org/wiki/John_Snow)
 
 ```{r, out.width="50%"}
 knitr::include_graphics(c("https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Snow-cholera-map-1.jpg/300px-Snow-cholera-map-1.jpg", "https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Chol_an.gif/300px-Chol_an.gif"))

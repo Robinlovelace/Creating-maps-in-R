@@ -439,7 +439,6 @@ runApp("cycleViz/")
 For the purposes of prototyping, we can create the app in-line with 
 
 ```{r, eval=FALSE}
-# Save this code as app.R in your root directory to run it
 library(shiny)
 library(leaflet)
 # Define UI
@@ -456,10 +455,14 @@ ui = fluidPage(
 
 # Define server logic
 server <- shinyServer(function(input, output) {
-  p = readRDS("killed.Rds")
+  p = readRDS("vspd-data/ac_cycle_lnd.Rds")
   output$map = renderLeaflet({
     leaflet() %>%
-      addProviderTiles("Thunderforest.OpenCycleMap") %>%
+      addProviderTiles("Thunderforest.OpenCycleMap") %>% 
+      setView(lng = -0.1, lat = 51.5, zoom = 10)
+    })
+  observe({
+    leafletProxy("map") %>% clearShapes()%>%
       addCircles(data = p[grepl(input$year, p$Date),])
   })
 })
