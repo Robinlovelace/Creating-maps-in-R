@@ -1,0 +1,81 @@
+---
+title: "**stplanr**: A package for transport planning"
+author: "Robin Lovelace"
+date: "`r Sys.Date()`"
+output:
+  ioslides_presentation:
+    transition: slower
+logo: ../figure/its-logo-square.png
+---
+
+```{r, include=FALSE}
+library(stplanr)
+library(sp) # needed for geographical objects
+library(leaflet) # needed for plotting data
+```
+
+## Introduction
+
+Common computational tasks in transportation planning:
+
+- Access to and processing of data on transport infrastructure and behaviour
+- Analysis and visualisation of origin-destination flow data
+- Allocation of flows to the transport (road) network
+- Development of models to estimate transport behaviour
+- The calculation of 'catchment areas' affected by transport infrastructure
+
+## Transparency in transport planning 
+
+Transport planning is notoriously reliant on 'black boxes' and
+the same applies to scientific research into transport systems
+[@Waddell2002].
+
+**stplanr** seeks to address these issues. After the package
+has been installed (see the package's
+[README](https://github.com/Robinlovelace/stplanr) for details),
+it can be loaded in with `library()`:
+
+```{r, eval=FALSE}
+install.packages("stplanr")
+library(stplanr)
+```
+
+## Accessing and converting data
+
+```{r, echo=FALSE}
+d = read.csv(text = "
+cents,            SpatialPointsDataFrame of home locations for flow analysis.
+destination_zones,example destinations data
+destinations,     example destinations data
+flow,             data frame of commuter flows
+flow_dests,       data frame of invented commuter flows with destinations in a different layer than the origins
+flowlines,        SpatialLinesDataFrame of commuter flows
+routes_fast,      SpatialLinesDataFrame of commuter flows on the travel network
+routes_slow,      SpatialLinesDataFrame of commuter flows on the travel network
+zones,            SpatialPolygonsDataFrame of home locations for flow analysis.
+           ")
+knitr::kable(d)
+```
+## 'Flow' or OD data
+
+```{r}
+data("flow", package = "stplanr")
+head(flow[c(1:3, 12)])
+```
+
+## Centroids data
+
+```{r}
+data("cents", package = "stplanr")
+as.data.frame(cents[1:3,-c(3,4)])
+```
+
+## Creating 'desire lines'
+
+```{r}
+l <- od2line(flow = flow, zones = cents)
+# remove lines with no length
+l <- l[!l$Area.of.residence == l$Area.of.workplace,]
+plot(l, lwd = l$All / 10)
+```
+
