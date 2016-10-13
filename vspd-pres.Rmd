@@ -5,7 +5,7 @@ date: "eRum 2016, Poznan. Slides: [rpubs.com/RobinLovelace](http://rpubs.com/Rob
 output:
   ioslides_presentation:
     transition: slower
-logo: /home/robin/Dropbox/Public/img/logos/cdrc-square.png
+logo: figure/its-logo-square.png
 ---
 
 ```{r setup, include=FALSE}
@@ -104,7 +104,7 @@ See http://www.pct.bike/
 **14:00 - 15:00**: Base graphics and ggplot2
 
 > - 14:00 - 14:30 Loading and exploring the data, base graphics
-> - 14:30 - 15:00 ggplot2
+> - 14:30 - 15:00 ggplot2 (bonus: spatial data classes)
 > - 15:00 - 15:30 `**Coffee break**` and discussion/questions
 
 **15:30 - 17:00**: tmap and interactive maps
@@ -130,4 +130,37 @@ See http://www.pct.bike/
 
 Before progressing further: **Any questions?**
 
-  > - Download the input data from here:  https://github.com/Robinlovelace/vspd-base-shiny-data
+- Download the input data from here:  https://github.com/Robinlovelace/vspd-base-shiny-data
+
+- The tutorial itself can be found here: https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/vignettes/vspd-base-shiny.md
+  
+## Further resources I
+
+1: The internet!
+
+Bivand, R. S., Pebesma, E. J., & Rubio, V. G. (2013). Applied spatial data analysis with R. Springer. 2nd ed.
+
+Cheshire, J., & Lovelace, R. (2015). Spatial data visualisation with R. In C. Brunsdon & A. Singleton (Eds.), Geocomputation (pp. 1–14). SAGE Publications. Retrieved from https://github.com/geocomPP/sdv . Full chapter available from
+https://www.researchgate.net/publication/274697165_Spatial_data_visualisation_with_R
+
+Lovelace, R., Cheshire, J., 2014. Introduction to visualising spatial data in R. Comprehensive R Archive Network.
+
+## Further resources II
+
+Dorman, M. (2014). Learning R for Geospatial Analysis. Packt Publishing Ltd.
+
+Everitt, B. S., & Hothorn, T. (2015). HSAUR: A Handbook of Statistical Analyses Using R. Retrieved from http://cran.r-project.org/package=HSAUR
+
+Harris, R. (2012). A Short Introduction to R.
+[social-statistics.org](http://www.social-statistics.org/).
+
+## Further resources III
+
+Lamigueiro, O. P. (2012). solaR: Solar Radiation and Photovoltaic Systems with R. Journal of Statistical Software, 50(9), 1–32. Retrieved from http://www.jstatsoft.org/v50/i09
+
+Wickham, H. (2009). ggplot2: elegant graphics for data analysis. Springer.
+
+
+Wickham, H. (2014). Tidy data. The Journal of Statistical Software, 14(5), Retrieved from http://www.jstatsoft.org/v59/i10
+
+Wilkinson, L. (2005). The grammar of graphics. Springer.
