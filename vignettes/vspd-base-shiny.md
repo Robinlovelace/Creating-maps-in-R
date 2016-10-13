@@ -88,8 +88,8 @@ A comment on packages
 
 Note the use of the `::` operator in previous code chunks. These access the functions within the **sp** and **tmap** packages without having to load them, and highlight which packages the functions were taken from (it can get confusing with so many spatial packages floating around!). This can be useful if for one-off plots but generally it's best to load the package you'll use at the outset of each analysis and use the functions directly.
 
-Dataset used
-------------
+Dataset used and downloading them
+---------------------------------
 
 For consistency, we use a limited number of datasets, which share the same geographic extent (London), throughout this tutorial. We will be using real data related to transport planning. To make the tutorial more exciting, imagine that you are trying to present evidence to support policies that will enable Londoner to 'Go Dutch' and cycle as the main mode of transport. The datasets are as follows:
 
@@ -108,10 +108,23 @@ if(!grepl(pattern = "vignettes", x = getwd())){
 }
 ```
 
+**The datasets can all be downloaded from the following link: [github.com/Robinlovelace/vspd-base-shiny-data](https://github.com/Robinlovelace/vspd-base-shiny-data).**
+
+They can be automatically downloaded and placed into the correct folder as follows:
+
+``` r
+u = "https://github.com/Robinlovelace/vspd-base-shiny-data/archive/master.zip"
+download.file(u, destfile = "master.zip")
+unzip("master.zip")
+dir.create("vspd-base-shiny-data")
+f = list.files(path = "vspd-base-shiny-data-master/", full.names = T)
+file.copy(f, "vspd-base-shiny-data")
+```
+
 Once you have downloaded the datasets, they can be loaded with the following commands (see the Appendix for information on data provenance):
 
 ``` r
-lnd = readRDS("../data/lnd84.Rds")
+lnd = readRDS("vspd-base-shiny-data/lnd84.Rds")
 lnd_crashes = readRDS("vspd-base-shiny-data/ac_cycle_lnd.Rds")
 killed = lnd_crashes[lnd_crashes$Casualty_Severity == "Fatal",]
 lnd_commutes = readRDS("vspd-base-shiny-data/l-lnd.Rds")
@@ -133,7 +146,7 @@ Spatial datasets defined by **sp** classes can be plotted quickly using the base
 plot(home)
 ```
 
-![](vspd-base-shiny_files/figure-markdown_github/unnamed-chunk-12-1.png)
+![](vspd-base-shiny_files/figure-markdown_github/unnamed-chunk-13-1.png)
 
 To verify that **sp** provides this functionality, try 'unloading' the package:
 
@@ -174,7 +187,7 @@ plot(lnd_crashes)
 plot(coordinates(lnd_crashes))
 ```
 
-![](vspd-base-shiny_files/figure-markdown_github/unnamed-chunk-15-1.png)
+![](vspd-base-shiny_files/figure-markdown_github/unnamed-chunk-16-1.png)
 
 ``` r
 par(mfrow = c(1, 1))
@@ -186,7 +199,7 @@ It is instructive to realise that because any arguments available to `plot()` wi
 plot(lnd_crashes, pch = 1, axes = T)
 ```
 
-![](vspd-base-shiny_files/figure-markdown_github/unnamed-chunk-16-1.png)
+![](vspd-base-shiny_files/figure-markdown_github/unnamed-chunk-17-1.png)
 
 The above shows that although they *look* like base graphics, basic maps produced with `plot()` should technically be called '**sp** graphics'. Let's see what else these methods can do, by add polygon and line datasets to the mix:
 
@@ -198,7 +211,7 @@ plot(lnd_crashes[lnd_crashes$Casualty_Severity == "Fatal",],
      col = "red", add = T)
 ```
 
-![](vspd-base-shiny_files/figure-markdown_github/unnamed-chunk-17-1.png)
+![](vspd-base-shiny_files/figure-markdown_github/unnamed-chunk-18-1.png)
 
 The above code shows how the use of `add = TRUE` can be used to create a layered map, with each call to `plot()` overlaying the previous one. This is great for quickly visualising whether datasets spatially overlap. Be warned, however: any plot containing `add = T` will fail if a plot has yet to be called (a problem solved by **tmap** and **ggmap**).
 
@@ -213,7 +226,7 @@ spplot
 spplot(obj = killed, c("Age_of_Casualty", "Age_of_Driver"))
 ```
 
-![](vspd-base-shiny_files/figure-markdown_github/unnamed-chunk-18-1.png)
+![](vspd-base-shiny_files/figure-markdown_github/unnamed-chunk-19-1.png)
 
 `spplot()` is a quick way to compare the spatial distribution of two variables within a spatial dataset. It is limited by the fact that the variables being compared must have range of values (or levels if they are factors). The following fails, for example:
 
@@ -247,7 +260,7 @@ ggplot(data = killed@data, mapping = aes(lon, lat)) +
   coord_map()
 ```
 
-![](vspd-base-shiny_files/figure-markdown_github/unnamed-chunk-21-1.png)
+![](vspd-base-shiny_files/figure-markdown_github/unnamed-chunk-22-1.png)
 
 Note that the above code added the geometry data of the points to the data frame in the data slot of the `killed` geographic object, represented by `@data`. Because there is only one x/y (lon/lat in this case) pair for each row of data, this could be done by creating new columns. To convert more complex spatial data structures (`SpatialLinesDataFrames` and `SpatialPolygonsDataFrames`) into data frames, **ggmap** relies on `ggplot2::fortify()`, which is similar to `raster::geom()`:
 
@@ -288,7 +301,7 @@ ggplot(data = lnd_fortified, aes(long, lat)) +
   coord_map()
 ```
 
-![](vspd-base-shiny_files/figure-markdown_github/unnamed-chunk-23-1.png)
+![](vspd-base-shiny_files/figure-markdown_github/unnamed-chunk-24-1.png)
 
 We can make this map look a little more finished by removing the distracting axis labels, adding borders to the boroughs and changing the legend of the population variable, as illustrated by the code chunk below.
 
@@ -304,7 +317,7 @@ ggplot(data = lnd_fortified, aes(long, lat, group = group)) +
   theme_nothing(legend = T)
 ```
 
-![](vspd-base-shiny_files/figure-markdown_github/unnamed-chunk-24-1.png)
+![](vspd-base-shiny_files/figure-markdown_github/unnamed-chunk-25-1.png)
 
 The above examples show that even though **ggplot2** was designed to make graphing as intuitive as possible, it still requires a decent amount of data preparation and domain-specific knowledge to create nice maps. Before moving on to **tmap**, which resolves some of these issues, we will reproduce the faceted map of the age/space distribution of victims/perpetrators in cycle/vehicle collisions. As you may have guessed, this also requires some data manipulation.
 
@@ -321,7 +334,7 @@ ggplot(killed_df, aes(lon, lat)) +
   coord_map() 
 ```
 
-![](vspd-base-shiny_files/figure-markdown_github/unnamed-chunk-25-1.png)
+![](vspd-base-shiny_files/figure-markdown_github/unnamed-chunk-26-1.png)
 
 What just happened? The relevant data (selected with `dplyr::select()`) was reshaped into 'long' format using `tidyr::gather()`. The age bands were put in an ordered factor using the `factor()` function, and then the data was plotted using the `facet_grid()` function to split the map in two. The results show that young adults, particularly in the 21 to 35 year-old band, are disproportionately killed by older drivers. This result can also be visualised non-spatially with **ggplot2**, so your skills can be cross-transferable:
 
@@ -332,7 +345,7 @@ ggplot(data = killed_df) +
 
     ## Warning: Removed 23 rows containing non-finite values (stat_count).
 
-![](vspd-base-shiny_files/figure-markdown_github/unnamed-chunk-26-1.png)
+![](vspd-base-shiny_files/figure-markdown_github/unnamed-chunk-27-1.png)
 
 tmap
 ====
@@ -344,7 +357,7 @@ library(tmap)
 qtm(lnd, fill = "Partic_Per")
 ```
 
-![](vspd-base-shiny_files/figure-markdown_github/unnamed-chunk-27-1.png)
+![](vspd-base-shiny_files/figure-markdown_github/unnamed-chunk-28-1.png)
 
 `qtm()` is a wrapper function for `tm_shape()`, which is analogous to the plot initialisation function `ggplot()` in **ggplot2**, and functions which draw the features, such as `tm_bubbles()`, `tm_lines()` and `tm_fill()` for plotting points, lines and polygons respectively (see `?vignette('tmap-nutshell')` for further information).
 
@@ -366,7 +379,7 @@ qtm(lnd_crashes, dot.col = "yellow") +
   tm_shape(killed) + tm_dots(col = "red", size = 0.1)
 ```
 
-![](vspd-base-shiny_files/figure-markdown_github/unnamed-chunk-29-1.png)
+![](vspd-base-shiny_files/figure-markdown_github/unnamed-chunk-30-1.png)
 
 ### Exercise
 
@@ -388,7 +401,7 @@ Experiment with the various plotting options within **tmap**, with reference to 
 
 Without looking at the source code, try to replicate the map below (hint: the `auto.palette.mapping` argument may be useful).
 
-![](vspd-base-shiny_files/figure-markdown_github/unnamed-chunk-31-1.png)
+![](vspd-base-shiny_files/figure-markdown_github/unnamed-chunk-32-1.png)
 
 Interactive maps with tmap
 --------------------------
@@ -432,10 +445,8 @@ class(m)
     ## [1] "leaflet"    "htmlwidget"
 
 ``` r
-m
+# m # uncomment to print the map
 ```
-
-![](vspd-base-shiny_files/figure-markdown_github/unnamed-chunk-34-1.png)
 
 ![](vspd-base-shiny_files/figure-markdown_github/leaflet-output.png)
 
@@ -492,7 +503,6 @@ runApp("cycleViz/")
 For the purposes of prototyping, we can create the app in-line with
 
 ``` r
-# Save this code as app.R in your root directory to run it
 library(shiny)
 library(leaflet)
 # Define UI
@@ -509,10 +519,14 @@ ui = fluidPage(
 
 # Define server logic
 server <- shinyServer(function(input, output) {
-  p = readRDS("killed.Rds")
+  p = readRDS("vspd-data/ac_cycle_lnd.Rds")
   output$map = renderLeaflet({
     leaflet() %>%
-      addProviderTiles("Thunderforest.OpenCycleMap") %>%
+      addProviderTiles("Thunderforest.OpenCycleMap") %>% 
+      setView(lng = -0.1, lat = 51.5, zoom = 10)
+    })
+  observe({
+    leafletProxy("map") %>% clearShapes()%>%
       addCircles(data = p[grepl(input$year, p$Date),])
   })
 })

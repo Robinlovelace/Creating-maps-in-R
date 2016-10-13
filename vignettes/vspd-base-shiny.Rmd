@@ -96,7 +96,7 @@ tmap::qtm(osm_image) +
 
 Note the use of the `::` operator in previous code chunks. These access the functions within the **sp** and **tmap** packages without having to load them, and highlight which packages the functions were taken from (it can get confusing with so many spatial packages floating around!). This can be useful if for one-off plots but generally it's best to load the package you'll use at the outset of each analysis and use the functions directly.
 
-## Dataset used
+## Dataset used and downloading them
 
 For consistency, we use a limited number of datasets, which share the same geographic extent (London), throughout this tutorial. We will be using real data related to transport planning. To make the tutorial more exciting, imagine that you are trying to present evidence to support policies that will enable Londoner to 'Go Dutch' and cycle as the main mode of transport. The datasets are as follows:
 
@@ -115,10 +115,23 @@ if(!grepl(pattern = "vignettes", x = getwd())){
 }
 ```
 
+**The datasets can all be downloaded from the following link: [github.com/Robinlovelace/vspd-base-shiny-data](https://github.com/Robinlovelace/vspd-base-shiny-data).**
+
+They can be automatically downloaded and placed into the correct folder as follows:
+
+```{r, eval=FALSE}
+u = "https://github.com/Robinlovelace/vspd-base-shiny-data/archive/master.zip"
+download.file(u, destfile = "master.zip")
+unzip("master.zip")
+dir.create("vspd-base-shiny-data")
+f = list.files(path = "vspd-base-shiny-data-master/", full.names = T)
+file.copy(f, "vspd-base-shiny-data")
+```
+
 Once you have downloaded the datasets, they can be loaded with the following commands (see the Appendix for information on data provenance): 
 
 ```{r, message=FALSE}
-lnd = readRDS("../data/lnd84.Rds")
+lnd = readRDS("vspd-base-shiny-data/lnd84.Rds")
 lnd_crashes = readRDS("vspd-base-shiny-data/ac_cycle_lnd.Rds")
 killed = lnd_crashes[lnd_crashes$Casualty_Severity == "Fatal",]
 lnd_commutes = readRDS("vspd-base-shiny-data/l-lnd.Rds")
