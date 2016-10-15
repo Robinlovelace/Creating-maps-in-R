@@ -575,3 +575,40 @@ shinyApp(ui, server)
 <!-- saveRDS(lnd_topo, "vspd-base-shiny-data/lnd-topo.Rds") -->
 <!-- ``` -->
 
+```{r, echo=FALSE, eval=FALSE}
+# to include
+plot(rnet)
+names(rnet)
+plot(rnet, lwd = rnet$dutch_slc / mean(rnet$dutch_slc))
+rnet_long = rnet[rnet$length > 2000,]
+rnet_short = rnet[rnet$length < 200,]
+plot(rnet_long, add = T, col = "red")
+plot(rnet_short, add = T, col = "green")
+plot(rnet$bicycle, rnet$dutch_slc)
+library(ggplot2)
+ggplot(data = rnet@data, aes(bicycle, dutch_slc)) +
+  geom_point(aes(size = length), alpha = 0.1)
+
+lnd_crashes = readRDS("vspd-data/ac_cycle_lnd.Rds")
+rnet_f = fortify(rnet)
+lnd_crashes_f = lnd_crashes@data
+lnd_crashes_f$long = coordinates(lnd_crashes)[,1]
+lnd_crashes_f$lat = coordinates(lnd_crashes)[,2]
+
+qmap(location = "London") +
+ggplot() +
+  geom_point(data = lnd_crashes_f,
+             aes(x = long, y = lat), alpha = 0.1) +
+  geom_path(data = rnet_f, aes(long, lat, group = group),
+            col = "red")
+    
+
+qmap(location = "London") +
+  
+
+names(lnd_crashes_f)
+ggplot(rnet_f, aes(long, lat)) +
+  geom_path()
+
+```
+
