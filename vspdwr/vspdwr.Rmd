@@ -8,11 +8,11 @@ author:
     email: r.lovelace@leeds.ac.uk
     url: http://www.robinlovelace.net
 title:
-  formatted: "Visualising spatial data in R, from base to \\pkg{shiny}"
+  formatted: "Visualising spatial data with R, from base to \\pkg{shiny}"
   # If you use tex in the formatted title, also supply version without
-  plain:     "Visualising spatial data in R, from base to shiny"
+  plain:     "Visualising spatial data with R, from base to shiny"
   # For running headers, if needed
-  short:     "Visualising spatial data in R"
+  short:     "Visualising spatial data with R"
 abstract: >
   This article traces the development spatial data visualisation methods and capabilities in statistical statistical software since the beginning of the 21^st^ Century. Although the focus is on R, the progression from rudimentary and inflexible bitmap images to interactive online maps is applicable to other languages for statistical programming. The paper is primarily a historical review of the evolving state of the art, with the finding that making informative and aesthetically pleasing maps with R has become a more intuitive and interactive process over time. A secondary purpose of the paper is dissemination of best practice (with reproducible and extensible examples) in the field with a view to the future developments in the context of R's rapidly evolving spatial capabilities.
 keywords:
