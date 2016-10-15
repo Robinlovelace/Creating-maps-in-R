@@ -5,25 +5,24 @@ output:
 ---
 
 ```{r}
-# benchmark:
-bench_fun = function(){
-  bbox <- matrix (c (-0.10, 51.50, -0.08, 51.52), nrow=2, ncol=2)
-  bbox <- paste0 ('(', bbox [2,1], ',', bbox [1,1], ',',bbox [2,2], ',', bbox [1,2], ')')
-  key <- '[highway]'
-  query <- paste0 ('(node', key, bbox, ';way', key, bbox, ';rel', key, bbox, ';')
-  url_base <- 'http://overpass-api.de/api/interpreter?data='
-  query <- paste0 (url_base, query, ');(._;>;);out;')
-  
-  dat <- httr::GET (query, timeout=60)
-  result <- httr::content (dat, "text", encoding='UTF-8')
-}
+
+bbox <- matrix (c (-0.10, 51.50, -0.08, 51.52), nrow=2, ncol=2)
+bbox <- paste0 ('(', bbox [2,1], ',', bbox [1,1], ',',bbox [2,2], ',', bbox [1,2], ')')
+key <- '[highway]'
+query <- paste0 ('(node', key, bbox, ';way', key, bbox, ';rel', key, bbox, ';')
+url_base <- 'http://overpass-api.de/api/interpreter?data='
+query <- paste0 (url_base, query, ');(._;>;);out;')
+dat <- httr::GET (query, timeout=60)
+result <- httr::content (dat, "text", encoding='UTF-8')
 
 # Pre rapidxml days
 system.time(
   devtools::install_github("osmdatar/osmdatar", ref = "891d23cf63868b5c603ef7c44aaeaef0cd2debb3")
 )
+
 library(osmdatar)
-microbenchmark::microbenchmark(bench_fun(), times = 20)
+# benchmark:
+microbenchmark::microbenchmark (dat <- osmdatar:::rcpp_get_lines (result) , times=100L)
 detach("package:osmdatar")
 
 
@@ -32,6 +31,7 @@ system.time(
   devtools::install_github("osmdatar/osmdatar")
 )
 library(osmdatar)
-microbenchmark::microbenchmark(bench_fun(), times = 20)
+
+microbenchmark::microbenchmark (dat <- osmdatar:::rcpp_get_lines (result) , times=100L)
 ```
 
