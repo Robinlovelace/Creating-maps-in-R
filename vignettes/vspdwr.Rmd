@@ -22,6 +22,7 @@ keywords:
 preamble: >
   \usepackage{amsmath}
 output: rticles::jss_article
+bibliography: references.bib
 ---
 
 # Introduction
@@ -62,7 +63,7 @@ if(length(to_install) > 0){
 
 ## Data
 
-Geographic data visualisation in R is part of a wider process: command line GIS. It will normally be done in tandem with other GIS operations. We deliberately focus on visualisation here to give a rapid overview of what is possible using a few datasets, for consistency between the methods. Context helps understanding, however, so we begin with a brief description of the datasets used.
+Geographic data visualisation in R is part of a wider process: command line GIS [@cheshire_spatial_2015]. It will normally be done in tandem with other GIS operations. We deliberately focus on visualisation here to give a rapid overview of what is possible using a few datasets, for consistency between the methods. Context helps understanding, however, so we begin with a brief description of the datasets used.
 
 There are 2 branches of spatial data: raster and vector. Rasters are 2D images composed of pixels that treat space as a series of uniform blocks or raster 'cells'. They be represented as a matrix or array. Vectors are 2D assemblages of points and edges in which the points (and the lines that join them) can exist anywhere in continuous space. Although some exotic data structures are possible (e.g. [voxels](https://en.wikipedia.org/wiki/Voxel)), the majority of spatial datasets can be represented by just 2 types of raster and 3 types of vector object:
 
@@ -90,8 +91,8 @@ osm_image = tmap::read_osm(x = tmap::bb("Leeds"))
 ```
 
 ```{r, echo=FALSE}
-# saveRDS(osm_image, "../vspd-base-shiny-data/osm-image-leeds.Rds") # save the image
-osm_image = readRDS("vspd-base-shiny-data/osm-image-leeds.Rds")
+# saveRDS(osm_image, "../vspd-data/osm-image-leeds.Rds") # save the image
+osm_image = readRDS("vspd-data/osm-image-leeds.Rds")
 ```
 
 ```{r}
@@ -113,9 +114,9 @@ For consistency, we use a limited number of datasets, which share the same geogr
 - `lnd_msoas`: Areas of London, stored as a `SpatialPolygonsDataFrame`.
 - `lnd_topo`: The topography of London, saved as a `RasterLayer`.
 
-These were created/stored locally in the `vspd-base-shiny-data/` subdirectory of `vignettes/` the working directory of this tutorial. Set your working directly to this folder:
+These were created/stored locally in the `vspd-data/` subdirectory of `vignettes/` the working directory of this tutorial. Set your working directly to this folder:
 
-```{r}
+```{r, echo=FALSE}
 # switch to the vignettes directory if not in it already
 if(!grepl(pattern = "vignettes", x = getwd())){
   old = setwd("vignettes")
@@ -130,21 +131,21 @@ They can be automatically downloaded and placed into the correct folder as follo
 u = "https://github.com/Robinlovelace/vspd-base-shiny-data/archive/master.zip"
 download.file(u, destfile = "master.zip")
 unzip("master.zip")
-dir.create("vspd-base-shiny-data")
+dir.create("vspd-data")
 f = list.files(path = "vspd-base-shiny-data-master/", full.names = T)
-file.copy(f, "vspd-base-shiny-data")
+file.copy(f, "vspd-data")
 ```
 
 Once you have downloaded the datasets, they can be loaded with the following commands (see the Appendix for information on data provenance): 
 
 ```{r, message=FALSE}
-lnd = readRDS("vspd-base-shiny-data/lnd84.Rds")
-lnd_crashes = readRDS("vspd-base-shiny-data/ac_cycle_lnd.Rds")
+lnd = readRDS("vspd-data/lnd84.Rds")
+lnd_crashes = readRDS("vspd-data/ac_cycle_lnd.Rds")
 killed = lnd_crashes[lnd_crashes$Casualty_Severity == "Fatal",]
-lnd_commutes = readRDS("vspd-base-shiny-data/l-lnd.Rds")
-lnd_msoas = readRDS("vspd-base-shiny-data/z.Rds")
-lnd_rnet = readRDS("vspd-base-shiny-data/rnet-lnd.Rds")
-lnd_topo = readRDS("vspd-base-shiny-data/lnd-topo.Rds")
+lnd_commutes = readRDS("vspd-data/l-lnd.Rds")
+lnd_msoas = readRDS("vspd-data/z.Rds")
+lnd_rnet = readRDS("vspd-data/rnet-lnd.Rds")
+lnd_topo = readRDS("vspd-data/lnd-topo.Rds")
 ```
 
 ## Code formatting
@@ -163,3 +164,5 @@ Can be inserted in regular R markdown blocks.
 x <- 1:10
 x
 ```
+
+## References
