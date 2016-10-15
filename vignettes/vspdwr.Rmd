@@ -1,0 +1,165 @@
+---
+author:
+  - name: Robin Lovelace
+    affiliation: University of Leeds
+    address: >
+      First line
+      Second line
+    email: r.lovelace@leeds.ac.uk
+    url: http://www.robinlovelace.net
+title:
+  formatted: "Visualising spatial data with R, from base to \\pkg{shiny}"
+  # If you use tex in the formatted title, also supply version without
+  plain:     "Visualising spatial data with R, from base to shiny"
+  # For running headers, if needed
+  short:     "Visualising spatial data with R"
+abstract: >
+  This article traces the development spatial data visualisation methods and capabilities in statistical statistical software since the beginning of the 21^st^ Century. Although the focus is on R, the progression from rudimentary and inflexible bitmap images to interactive online maps is applicable to other languages for statistical programming. The paper is primarily a historical review of the evolving state of the art, with the finding that making informative and aesthetically pleasing maps with R has become a more intuitive and interactive process over time. A secondary purpose of the paper is dissemination of best practice (with reproducible and extensible examples) in the field with a view to the future developments in the context of R's rapidly evolving spatial capabilities.
+keywords:
+  # at least one keyword must be supplied
+  formatted: [visualisation, spatial data, "\\proglang{R}"]
+  plain:     [visualisation, spatial data, R]
+preamble: >
+  \usepackage{amsmath}
+output: rticles::jss_article
+---
+
+# Introduction
+
+The visualisation packages used, in roughly ascending order of release date on CRAN and sophistication/complexity, are described and installed below:
+
+```{r}
+pkgs = c(
+  "sp",       # spatial data classes and functions
+  "ggmap",    # maps the ggplot2 way
+  "tmap",     # powerful and flexible mapping package
+  "leaflet",  # interactive maps via the JavaScript library of the same name
+  "mapview",  # a quick way to create interactive maps (depends on leaflet)
+  "shiny"     # for converting your maps into online applications
+)
+```
+
+```{r, eval=FALSE, echo=FALSE}
+install.packages(pkgs)
+```
+
+
+```{r, echo=FALSE}
+# additional packages used
+pkgs = c(pkgs, c(
+  "OpenStreetMap", # for downloading OpenStreetMap tiles 
+  "rasterVis",# raster visualisation (depends on the raster package)
+  "dplyr",    # data manipulation package
+  "tidyr"     # data reshaping package
+))
+
+(to_install = pkgs[!pkgs %in% installed.packages()])
+if(length(to_install) > 0){
+  install.packages(to_install)
+}
+```
+
+
+## Data
+
+Geographic data visualisation in R is part of a wider process: command line GIS. It will normally be done in tandem with other GIS operations. We deliberately focus on visualisation here to give a rapid overview of what is possible using a few datasets, for consistency between the methods. Context helps understanding, however, so we begin with a brief description of the datasets used.
+
+There are 2 branches of spatial data: raster and vector. Rasters are 2D images composed of pixels that treat space as a series of uniform blocks or raster 'cells'. They be represented as a matrix or array. Vectors are 2D assemblages of points and edges in which the points (and the lines that join them) can exist anywhere in continuous space. Although some exotic data structures are possible (e.g. [voxels](https://en.wikipedia.org/wiki/Voxel)), the majority of spatial datasets can be represented by just 2 types of raster and 3 types of vector object:
+
+- Raster data
+    - Single band raster data: this the same as black and white image. We'll represented as a `RasterLayer` in the **raster** package.
+    - Multi-layered raster data: these are assemblages of multiple raster layers such as color bands (red, green, blue) used for color vision
+
+- Vector data
+    - Points: points on a map, often saved as a `SpatialPointsDataFrame` from the **sp** package.
+    - Lines: points with an order to trace lines, often represented with the `SpatialLinesDataFrame` class in R.
+    - Polygons: representing areas on the map, often saved as a `SpatialPolygonsDataFrame`
+  
+We will be using real world example data from each type. A good way to learn how these data structures work is to construct them from scratch, such as this `SpatialLinesDataFrame` that represents my house:
+
+```{r}
+home_geometry = matrix(data = c(-1.5343, 53.8194), ncol = 2)
+home_data = data.frame(name = "Robin's home")
+home = sp::SpatialPointsDataFrame(coords = home_geometry, data = home_data)
+```
+
+This can then be plotted in context, e.g. using the **tmap** package:
+
+```{r, eval=FALSE}
+osm_image = tmap::read_osm(x = tmap::bb("Leeds"))
+```
+
+```{r, echo=FALSE}
+# saveRDS(osm_image, "../vspd-base-shiny-data/osm-image-leeds.Rds") # save the image
+osm_image = readRDS("vspd-base-shiny-data/osm-image-leeds.Rds")
+```
+
+```{r}
+tmap::qtm(osm_image) +
+  tmap::qtm(home, bubble.size = 1) 
+```
+
+## A comment on packages
+
+Note the use of the `::` operator in previous code chunks. These access the functions within the **sp** and **tmap** packages without having to load them, and highlight which packages the functions were taken from (it can get confusing with so many spatial packages floating around!). This can be useful if for one-off plots but generally it's best to load the package you'll use at the outset of each analysis and use the functions directly.
+
+## Dataset used and downloading them
+
+For consistency, we use a limited number of datasets, which share the same geographic extent (London), throughout this tutorial. We will be using real data related to transport planning. To make the tutorial more exciting, imagine that you are trying to present evidence to support policies that will enable Londoner to 'Go Dutch' and cycle as the main mode of transport. The datasets are as follows:
+
+- `lnd_crashes`: A `SpatialPointsDataFrame` from the 'Stats19' dataset on road traffic collisions reported to the police.
+- `lnd_commutes`: A `SpatialLinesDataFrame` representing commuter desire lines in London.
+- `lnd_rnet`: A network of lines representing the cycling potential in different parts of London.
+- `lnd_msoas`: Areas of London, stored as a `SpatialPolygonsDataFrame`.
+- `lnd_topo`: The topography of London, saved as a `RasterLayer`.
+
+These were created/stored locally in the `vspd-base-shiny-data/` subdirectory of `vignettes/` the working directory of this tutorial. Set your working directly to this folder:
+
+```{r}
+# switch to the vignettes directory if not in it already
+if(!grepl(pattern = "vignettes", x = getwd())){
+  old = setwd("vignettes")
+}
+```
+
+**The datasets can all be downloaded from the following link: [github.com/Robinlovelace/vspd-base-shiny-data](https://github.com/Robinlovelace/vspd-base-shiny-data).**
+
+They can be automatically downloaded and placed into the correct folder as follows:
+
+```{r, eval=FALSE}
+u = "https://github.com/Robinlovelace/vspd-base-shiny-data/archive/master.zip"
+download.file(u, destfile = "master.zip")
+unzip("master.zip")
+dir.create("vspd-base-shiny-data")
+f = list.files(path = "vspd-base-shiny-data-master/", full.names = T)
+file.copy(f, "vspd-base-shiny-data")
+```
+
+Once you have downloaded the datasets, they can be loaded with the following commands (see the Appendix for information on data provenance): 
+
+```{r, message=FALSE}
+lnd = readRDS("vspd-base-shiny-data/lnd84.Rds")
+lnd_crashes = readRDS("vspd-base-shiny-data/ac_cycle_lnd.Rds")
+killed = lnd_crashes[lnd_crashes$Casualty_Severity == "Fatal",]
+lnd_commutes = readRDS("vspd-base-shiny-data/l-lnd.Rds")
+lnd_msoas = readRDS("vspd-base-shiny-data/z.Rds")
+lnd_rnet = readRDS("vspd-base-shiny-data/rnet-lnd.Rds")
+lnd_topo = readRDS("vspd-base-shiny-data/lnd-topo.Rds")
+```
+
+## Code formatting
+
+Don't use markdown, instead use the more precise latex commands:
+
+* \proglang{Java}
+* \pkg{plyr}
+* \code{print("abc")}
+
+# R code
+
+Can be inserted in regular R markdown blocks.
+
+```{r}
+x <- 1:10
+x
+```
