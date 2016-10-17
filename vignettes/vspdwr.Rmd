@@ -63,7 +63,9 @@ if(length(to_install) > 0){
 
 ## Data
 
-Geographic data visualisation in R is part of a wider process: command line GIS [@cheshire_spatial_2015]. It will normally be done in tandem with other GIS operations. We deliberately focus on visualisation here to give a rapid overview of what is possible using a few datasets, for consistency between the methods. Context helps understanding, however, so we begin with a brief description of the datasets used.
+Geographic data visualisation in R is part of a wider process: command line GIS [@cheshire_spatial_2015]. It will normally be done in tandem with other GIS operations. However, this article is focussed narrowly on *visualisation*. Why? Maps are the most common and intuitive way of presenting spatial data and a powerful tool for understanding the geographical distribution of phenomena, from species's response to climate change to the design of sustainable cities.
+  
+## Data
 
 There are 2 branches of spatial data: raster and vector. Rasters are 2D images composed of pixels that treat space as a series of uniform blocks or raster 'cells'. They be represented as a matrix or array. Vectors are 2D assemblages of points and edges in which the points (and the lines that join them) can exist anywhere in continuous space. Although some exotic data structures are possible (e.g. [voxels](https://en.wikipedia.org/wiki/Voxel)), the majority of spatial datasets can be represented by just 2 types of raster and 3 types of vector object:
 
@@ -75,36 +77,6 @@ There are 2 branches of spatial data: raster and vector. Rasters are 2D images c
     - Points: points on a map, often saved as a `SpatialPointsDataFrame` from the **sp** package.
     - Lines: points with an order to trace lines, often represented with the `SpatialLinesDataFrame` class in R.
     - Polygons: representing areas on the map, often saved as a `SpatialPolygonsDataFrame`
-  
-We will be using real world example data from each type. A good way to learn how these data structures work is to construct them from scratch, such as this `SpatialLinesDataFrame` that represents my house:
-
-```{r}
-home_geometry = matrix(data = c(-1.5343, 53.8194), ncol = 2)
-home_data = data.frame(name = "Robin's home")
-home = sp::SpatialPointsDataFrame(coords = home_geometry, data = home_data)
-```
-
-This can then be plotted in context, e.g. using the **tmap** package:
-
-```{r, eval=FALSE}
-osm_image = tmap::read_osm(x = tmap::bb("Leeds"))
-```
-
-```{r, echo=FALSE}
-# saveRDS(osm_image, "../vspd-data/osm-image-leeds.Rds") # save the image
-osm_image = readRDS("vspd-data/osm-image-leeds.Rds")
-```
-
-```{r}
-tmap::qtm(osm_image) +
-  tmap::qtm(home, bubble.size = 1) 
-```
-
-## A comment on packages
-
-Note the use of the `::` operator in previous code chunks. These access the functions within the **sp** and **tmap** packages without having to load them, and highlight which packages the functions were taken from (it can get confusing with so many spatial packages floating around!). This can be useful if for one-off plots but generally it's best to load the package you'll use at the outset of each analysis and use the functions directly.
-
-## Dataset used and downloading them
 
 For consistency, we use a limited number of datasets, which share the same geographic extent (London), throughout this tutorial. We will be using real data related to transport planning. To make the tutorial more exciting, imagine that you are trying to present evidence to support policies that will enable Londoner to 'Go Dutch' and cycle as the main mode of transport. The datasets are as follows:
 
