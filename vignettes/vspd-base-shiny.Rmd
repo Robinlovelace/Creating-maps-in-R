@@ -1,5 +1,5 @@
 ---
-title: 'Visualising spatial data: from R to shiny - workshop'
+title: 'Visualising spatial data: from base to shiny - workshop'
 author: "Robin Lovelace"
 output: github_document
 # output:
