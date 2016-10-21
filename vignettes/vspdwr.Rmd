@@ -44,8 +44,13 @@ Methods for geographic data visualisation are closely bound up with methods for 
 
 There are 2 branches of spatial data: raster and vector. Rasters are 2D images composed of pixels that treat space as a series of uniform blocks or raster 'cells'. They be represented as a matrix or array. Vectors are 2D assemblages of points and edges in which the points (and the lines that join them) can exist anywhere in continuous space. Although some exotic data structures are possible (e.g. [voxels](https://en.wikipedia.org/wiki/Voxel)), the majority of spatial datasets can be represented by just 2 types of raster and 3 types of vector object:
 
+```{r}
+# Note: I think this information would be better presented as a table
+```
+
+
 - Raster data
-    - Single band raster data: this the same as black and white image. We'll represented as a `RasterLayer` in the **raster** package.
+    - Single band raster data: this is essentially a greyscale image, in which each pixel represents an area on Earth's surface. Native formats for these include `SpatialPixelsDataFrame` from **sp** and the `RasterLayer` class from the **raster** package.
     - Multi-layered raster data: these are assemblages of multiple raster layers such as color bands (red, green, blue) used for color vision
 
 - Vector data
@@ -53,7 +58,7 @@ There are 2 branches of spatial data: raster and vector. Rasters are 2D images c
     - Lines: points with an order to trace lines, often represented with the `SpatialLinesDataFrame` class in R.
     - Polygons: representing areas on the map, often saved as a `SpatialPolygonsDataFrame`
 
-For consistency, we use a limited number of datasets, which share the same geographic extent (London), throughout this tutorial. We will be using real data related to transport planning. To make the tutorial more exciting, imagine that you are trying to present evidence to support policies that will enable Londoner to 'Go Dutch' and cycle as the main mode of transport. The datasets are as follows:
+To how each spatial data type can be visualised, the example datasets include at least on of each. To demonstrate how different datasets can be layered, they all have the same geographic extent (Greater London). Real data related to transport planning are used as an illustrative use-case of the visualisation methods. The datasets are as follows:
 
 - `lnd_crashes`: A `SpatialPointsDataFrame` from the 'Stats19' dataset on road traffic collisions reported to the police.
 - `lnd_commutes`: A `SpatialLinesDataFrame` representing commuter desire lines in London.
