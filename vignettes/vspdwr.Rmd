@@ -58,7 +58,7 @@ There are 2 branches of spatial data: raster and vector. Rasters are 2D images c
     - Lines: points with an order to trace lines, often represented with the `SpatialLinesDataFrame` class in R.
     - Polygons: representing areas on the map, often saved as a `SpatialPolygonsDataFrame`
 
-To how each spatial data type can be visualised, the example datasets include at least on of each. To demonstrate how different datasets can be layered, they all have the same geographic extent (Greater London). Real data related to transport planning are used as an illustrative use-case of the visualisation methods. The datasets are as follows:
+To how each spatial data type can be visualised, the example datasets include at least one of each. To demonstrate how different datasets can be layered, they all have the same geographic extent (Greater London). Real data related to transport planning are used as an illustrative use-case of the visualisation methods. The datasets are outlined below (see the Appendix for further details):
 
 - `lnd_crashes`: A `SpatialPointsDataFrame` from the 'Stats19' dataset on road traffic collisions reported to the police.
 - `lnd_commutes`: A `SpatialLinesDataFrame` representing commuter desire lines in London.
@@ -66,31 +66,8 @@ To how each spatial data type can be visualised, the example datasets include at
 - `lnd_msoas`: Areas of London, stored as a `SpatialPolygonsDataFrame`.
 - `lnd_topo`: The topography of London, saved as a `RasterLayer`.
 
-These were created/stored locally in the `vspd-data/` subdirectory of `vignettes/` the working directory of this tutorial. Set your working directly to this folder:
 
-```{r, echo=FALSE}
-# switch to the vignettes directory if not in it already
-if(!grepl(pattern = "vignettes", x = getwd())){
-  old = setwd("vignettes")
-}
-```
-
-**The datasets can all be downloaded from the following link: [github.com/Robinlovelace/vspd-base-shiny-data](https://github.com/Robinlovelace/vspd-base-shiny-data).**
-
-They can be automatically downloaded and placed into the correct folder as follows:
-
-```{r, eval=FALSE}
-u = "https://github.com/Robinlovelace/vspd-base-shiny-data/archive/master.zip"
-download.file(u, destfile = "master.zip")
-unzip("master.zip")
-dir.create("vspd-data")
-f = list.files(path = "vspd-base-shiny-data-master/", full.names = T)
-file.copy(f, "vspd-data")
-```
-
-Once you have downloaded the datasets, they can be loaded with the following commands (see the Appendix for information on data provenance): 
-
-```{r, message=FALSE}
+```{r, message=FALSE, echo=FALSE}
 library(sp)
 lnd = readRDS("vspd-data/lnd84.Rds")
 lnd_crashes = readRDS("vspd-data/ac_cycle_lnd.Rds")
@@ -100,7 +77,6 @@ lnd_msoas = readRDS("vspd-data/z.Rds")
 lnd_rnet = readRDS("vspd-data/rnet-lnd.Rds")
 lnd_topo = readRDS("vspd-data/lnd-topo.Rds")
 ```
-
 
 \section{R packages for visualising spatial data}\label{s:rpack}
 
@@ -115,6 +91,7 @@ pkgs = c(
   "leaflet",  # interactive maps via the JavaScript library of the same name
   "mapview",  # a quick way to create interactive maps (depends on leaflet)
   "shiny"     # for converting your maps into online applications
+    # choroplethr?
 )
 ```
 
@@ -122,8 +99,7 @@ pkgs = c(
 install.packages(pkgs)
 ```
 
-
-```{r, echo=FALSE}
+```{r, echo=FALSE, eval=FALSE}
 # additional packages used
 pkgs = c(pkgs, c(
   "OpenStreetMap", # for downloading OpenStreetMap tiles 
@@ -160,7 +136,7 @@ It is instructive to realise that because any arguments available to `plot()` wi
 plot(lnd_crashes, pch = 1, axes = T)
 ```
 
-The above shows that although they *look* like base graphics, basic maps produced with `plot()` should technically be called '**sp** graphics'. Let's see what else these methods can do, by add polygon and line datasets to the mix:
+The above shows that although they *look* like base graphics, basic maps produced with `plot()` should technically be called **sp** graphics. Adding multiple such layers on top of each other using the `add = T` argument (an extension of `plot()` for `Spatial` data classes) can generate insights into the spatial relationships between one layer and another.
 
 ```{r, eval=FALSE}
 plot(lnd_crashes, col = "yellow")
@@ -170,10 +146,9 @@ plot(lnd_crashes[lnd_crashes$Casualty_Severity == "Fatal",],
      col = "red", add = T)
 ```
 
-The above code shows how the use of `add = TRUE` can be used to create a layered map, with each call to `plot()` overlaying the previous one. This is great for quickly visualising whether datasets spatially overlap. Be warned, however: any plot containing `add = T` will fail if a plot has yet to be called (a problem solved by **tmap** and **ggmap**).
+The above code shows how the use of `add = TRUE` can be used to create a layered map, with each call to `plot()` overlaying the previous one. This is enables quick visualision exploration of data, for example whether datasets spatially overlap. Be warned, however: any plot containing `add = T` will fail if a plot has yet to be called (a problem solved by **tmap** and **ggmap**).
 
 The plots may look a little rudimentary and dated. However, the advantage is that if you are already good with base graphics, you will naturally be good at map making. If you are not proficient with R's base graphics, it is recommended that you skip this phase directly to something more sophisticated like **tmap**.
-
 
 ## spplot
 
@@ -191,20 +166,14 @@ spplot(obj = killed, c("Sex_of_Casualty", "Road_Type"))
 #   all factors should have identical levels
 ```
 
-Due to these limitations we don't consider `spplot()` further in this tutorial. More recent packages offer a more intuitive interface for creating plots with aesthetically pleasing defaults. Furthermore **ggmap** and **tmap** packages also allow for faceted maps.
+More recent packages offer a more intuitive interface for creating plots with aesthetically pleasing defaults. Furthermore **ggmap** and **tmap** packages also allow for faceted maps.
 
 ## ggmap
 
-```{r}
+**ggmap** provides a few extensions to the popular graphics library **ggplot2** for map making. Prime among these is its ability to automatically download tiles from services such as Google Maps, to create static base maps on which the user's own data can be plotted. **ggmap** has an emphasis on online data (e.g. providing `geocode()` and `route()` functionality) rather than GIS. Unlike the other packages presented here, **ggmap** does not work with data of `Spatial*` classes directly: instead **ggmap**, like **ggplot2**, demands data frames.
+
+```{r, results='hide', message=FALSE}
 library(ggmap)
-```
-
-**ggmap** provides a few extensions to the popular graphics library **ggplot2** to make it easier to make maps. It's main role from a visualisation perspective is to provide an easy way to create base-maps by automatically downloading tiles from services such as Google Maps. It is therefore sensible to simply experiment with **ggplot2** before testing out **ggmap**.
-
-**ggmap** therefore has an emphasis on online data (e.g. providing `geocode()` and `route()` functionality) and basemaps rather than GIS. Unlike the other packages presented here, **ggmap** does not work with data of `Spatial*` classes directly: instead **ggmap**, like **ggplot2**, demands data frames.
-
-```{r, results='hide'}
-# not shown
 killed$lon = coordinates(killed)[,1]
 killed$lat = coordinates(killed)[,2]
 ggplot(data = killed@data, mapping = aes(lon, lat)) +
@@ -226,7 +195,7 @@ The output of `fortify()` is a data frame, as illustrated by its first 6 rows, s
 
 Notice that `lnd_fortified` still lacks attribute data, which needs to be joined. We can use `dplyr::left_join()` to do this:
 
-```{r}
+```{r, warning=FALSE}
 lnd_fortified = dplyr::left_join(lnd_fortified, lnd@data, c("id" = "ons_label"))
 ggplot(data = lnd_fortified, aes(long, lat)) +
   geom_polygon(aes(group = group, fill = Pop_2001)) +
@@ -262,9 +231,9 @@ ggplot(killed_df, aes(lon, lat)) +
   coord_map() 
 ```
 
-What just happened? The relevant data (selected with `dplyr::select()`) was reshaped into 'long' format using `tidyr::gather()`. The age bands were put in an ordered factor using the `factor()` function, and then the data was plotted using the `facet_grid()` function to split the map in two. The results show that young adults, particularly in the 21 to 35 year-old band, are disproportionately killed by older drivers. This result can also be visualised non-spatially with **ggplot2**, so your skills can be cross-transferable:
+The results show that young adults, particularly in the 21 to 35 year-old band, are disproportionately killed by older drivers. This result can also be visualised non-spatially with **ggplot2**, so your skills can be cross-transferable:
 
-```{r}
+```{r, warning=FALSE}
 ggplot(data = killed_df) +
   geom_bar(aes(x = Age, fill = Role), position = "dodge")
 ```
@@ -298,25 +267,16 @@ qtm(lnd_crashes, dot.col = "yellow") +
   tm_shape(killed) + tm_dots(col = "red", size = 0.1)
 ```
 
-### Exercise {-}
-
-Compare the multi-layered output just created via **tmap** with the equivalent plot created using base graphics. Which do you prefer and why?
-
 **tmap** has a concise interface to create faceted plots, as demonstrated above with **spplot** and **ggplot2**:
 
 ```{r, eval=FALSE}
-# Not shown
 tm_shape(killed) +
   tm_dots(col = c("Age_of_Casualty", "Age_of_Driver"), size = 0.1)
 ```
 
-This shows that to create a facetted plot, you just pass the names of the variables to the visualisation layer. The above example demonstrates another useful feature of **tmap**: if passed a continuous variable, it automatically created categories (bins) for the output, the `palette` (or colourscheme) of which can be controlled with `palette = "Reds"` The number and nature of the breaks can be controlled by the `n` and `style` arguments in the `tm_*` plotting functions. Setting `n = 4` and `style = "quantile"`, for example, would create bins with equal numbers of elements. Use `breaks` to manually set the location of the breaks. Use the additional function `tm_layout()` to control the layout of the plot. `tm_layout(legend.outside = T)`, for example, will create a self-standing legend outside the panel used by the map.
+The output shows that **tmap** creates facetted plots automatically, when multiple variable names are provided as a visualisation arguement (`col`, short for color, in this case). The example demonstrates another useful feature of **tmap**: if passed a continuous variable, it automatically created categories (bins) for the output, the `palette` (or colourscheme) of which can be controlled with `palette = "Reds"` The number and nature of the breaks can be controlled by the `n` and `style` arguments in the `tm_*` plotting functions. 
 
-### Exercise {-}
-
-Experiment with the various plotting options within **tmap**, with reference to the [tmap vignette](https://mran.microsoft.com/web/packages/tmap/vignettes/tmap-nutshell.html) and examples (e.g. `example(tm_dots)`).
-
-Without looking at the source code, try to replicate the map below (hint: the `auto.palette.mapping` argument may be useful).
+**tmap** has many additional features. The function `tm_layout()`, for example, controls the layout of the plot: `tm_layout(legend.outside = T)`, creates a self-standing legend outside the panel used by the map, as illustrated below.
 
 ```{r, echo=FALSE}
 tm_shape(lnd_rnet) + tm_lines(col = "grey") +
@@ -341,16 +301,8 @@ qtm(lnd_crashes, dot.col = "yellow") +
 tmap_mode("plot") # return to plotting mode
 ```
 
-![](vspd-base-shiny_files/figure-markdown_github/tmap-view-mode.png)
-
-
-
-Maps generated in this way can be saved via the `save_tmap()` function, as demonstrated below.
-
-```{r, eval=FALSE}
-tmap_mode("view")
-m = qtm(killed)
-save_tmap(m, "/path-to/www/map.html")
+```{r, echo=FALSE}
+knitr::include_graphics("vspd-base-shiny_files/figure-markdown_github/tmap-view-mode.png")
 ```
 
 ## leaflet
@@ -363,13 +315,13 @@ m = leaflet() %>%
   addTiles() %>%
   addCircles(data = killed)
 class(m)
-# m # uncomment to print the map
 ```
 
-![](vspd-base-shiny_files/figure-markdown_github/leaflet-output.png)
+```{r, echo=FALSE}
+knitr::include_graphics("vspd-base-shiny_files/figure-markdown_github/leaflet-output.png")
+```
 
-
-There is much to say about **leaflet**. It is an excellent package on which all other interactive mapping approaches covered in this tutorial (**tmap**, **mapview**, **shiny**) use. Rather than cover the material here, I suggest checking out and working-through the excellent online tutorial on **leaflet** at [rstudio.github.io/leaflet/](https://rstudio.github.io/leaflet/).
+Other interactive mapping approaches covered in this paper (**tmap**, **mapview**, **shiny**) use **leaflet** which is well-developed and documented, e.g. on the online tutorial at [rstudio.github.io/leaflet/](https://rstudio.github.io/leaflet/).
 
 ## mapview
 
@@ -391,41 +343,36 @@ As well as providing the option to save in html (via `htmlwidgets::saveWidget(m@
 mapshot(m, "mapview.png")
 ```
 
-![](vspd-base-shiny_files/figure-markdown_github/mapview.png)
+```{r, echo=FALSE}
+knitr::include_graphics("vspd-base-shiny_files/figure-markdown_github/mapview.png")
+```
 
 ## shiny
 
-**shiny** is a package for creating interactive web applications in R. During the tutorial we will create a web application to explore cycling levels and cycling safety in London.
-
-The first stage is to create a 'minimum viable product', to allow us to view where cycle crashes happen over time. There are two basic components every **shiny** app:
-
-1. The code that defines the user interface on the 'client side' (commonly stored in a file called `ui.R`)
-2. The code that actually does the 'heavy lifting' on the server side, running R instances through software called [shiny-server](https://github.com/rstudio/shiny-server).
-
-We will develop the full application in a folder called `cycleViz` but for the the purposes of prototyping we will develop each component together. Still, it's good practice to make an early start to show where we intend to get to. The following code will create the app folder and populate it with the most basic of shiny apps:
-
-```{r, eval=FALSE}
-dir.create("cycleViz")
-shiny_d = system.file(package = "shiny", "examples/01_hello/")
-f = list.files(shiny_d, pattern = "*.R$", full.names = T)
-file.copy(f, "cycleViz")
-## [1] TRUE TRUE
-```
-
-If the above code worked, congratulations: you have a working shiny app in your working directory, that you can use for the development of a full app. Now test it, and you should see something like the image below:
-
-```{r, eval=FALSE}
-library(shiny)
-runApp("cycleViz/")
-```
-
-![](vspd-base-shiny_files/figure-markdown_github/hello-shiny.png)
-
-For the purposes of prototyping, we can create the app in-line with 
-
-
+**shiny** is a package for creating interactive web applications in R. This allows for maps to be created with a level of interactivity that goes beyond the panning, zooming and layer switching functionality presented in the previous sections. **shiny** allows the user to create not only maps but *mapping applications*. Building on the previous examples, **shiny** enables the creation of web applications that allow the user to explore, for example, the relationship between cycling levels and cycling casualties, without needing to run R directly. In terms of public engagement in the geographic visualisation process, this is clearly a huge benefit: people can explore patterns in geographic data by accessing a web page.
 
 <!-- # Appendix -->
+<!-- These were created/stored locally in the `vspd-data/` subdirectory of `vignettes/` the working directory of this tutorial. Set your working directly to this folder: -->
+
+<!-- ```{r, echo=FALSE} -->
+<!-- # switch to the vignettes directory if not in it already -->
+<!-- if(!grepl(pattern = "vignettes", x = getwd())){ -->
+<!--   old = setwd("vignettes") -->
+<!-- } -->
+<!-- ``` -->
+
+<!-- **The datasets can all be downloaded from the following link: [github.com/Robinlovelace/vspd-base-shiny-data](https://github.com/Robinlovelace/vspd-base-shiny-data).** -->
+
+<!-- They can be automatically downloaded and placed into the correct folder as follows: -->
+
+<!-- ```{r, eval=FALSE} -->
+<!-- u = "https://github.com/Robinlovelace/vspd-base-shiny-data/archive/master.zip" -->
+<!-- download.file(u, destfile = "master.zip") -->
+<!-- unzip("master.zip") -->
+<!-- dir.create("vspd-data") -->
+<!-- f = list.files(path = "vspd-base-shiny-data-master/", full.names = T) -->
+<!-- file.copy(f, "vspd-data") -->
+<!-- ``` -->
 
 <!-- The datasets used in this tutorial were downloaded using the code presented below: -->
 
@@ -515,45 +462,42 @@ For the purposes of prototyping, we can create the app in-line with
 <!-- saveRDS(lnd_topo, "vspd-base-shiny-data/lnd-topo.Rds") -->
 <!-- ``` -->
 
-```{r, echo=FALSE, eval=FALSE}
-# to include
-plot(rnet)
-names(rnet)
-plot(rnet, lwd = rnet$dutch_slc / mean(rnet$dutch_slc))
-rnet_long = rnet[rnet$length > 2000,]
-rnet_short = rnet[rnet$length < 200,]
-plot(rnet_long, add = T, col = "red")
-plot(rnet_short, add = T, col = "green")
-plot(rnet$bicycle, rnet$dutch_slc)
-library(ggplot2)
-ggplot(data = rnet@data, aes(bicycle, dutch_slc)) +
-  geom_point(aes(size = length), alpha = 0.1)
+<!-- ```{r, echo=FALSE, eval=FALSE} -->
+<!-- # to include -->
+<!-- plot(rnet) -->
+<!-- names(rnet) -->
+<!-- plot(rnet, lwd = rnet$dutch_slc / mean(rnet$dutch_slc)) -->
+<!-- rnet_long = rnet[rnet$length > 2000,] -->
+<!-- rnet_short = rnet[rnet$length < 200,] -->
+<!-- plot(rnet_long, add = T, col = "red") -->
+<!-- plot(rnet_short, add = T, col = "green") -->
+<!-- plot(rnet$bicycle, rnet$dutch_slc) -->
+<!-- library(ggplot2) -->
+<!-- ggplot(data = rnet@data, aes(bicycle, dutch_slc)) + -->
+<!--   geom_point(aes(size = length), alpha = 0.1) -->
 
-lnd_crashes = readRDS("vspd-data/ac_cycle_lnd.Rds")
-rnet_f = fortify(rnet)
-lnd_crashes_f = lnd_crashes@data
-lnd_crashes_f$long = coordinates(lnd_crashes)[,1]
-lnd_crashes_f$lat = coordinates(lnd_crashes)[,2]
+<!-- lnd_crashes = readRDS("vspd-data/ac_cycle_lnd.Rds") -->
+<!-- rnet_f = fortify(rnet) -->
+<!-- lnd_crashes_f = lnd_crashes@data -->
+<!-- lnd_crashes_f$long = coordinates(lnd_crashes)[,1] -->
+<!-- lnd_crashes_f$lat = coordinates(lnd_crashes)[,2] -->
 
-qmap(location = "London") +
-ggplot() +
-  geom_point(data = lnd_crashes_f,
-             aes(x = long, y = lat), alpha = 0.1) +
-  geom_path(data = rnet_f, aes(long, lat, group = group),
-            col = "red")
-    
-
-qmap(location = "London") +
-  
-
-names(lnd_crashes_f)
-ggplot(rnet_f, aes(long, lat)) +
-  geom_path()
-
-```
+<!-- qmap(location = "London") + -->
+<!-- ggplot() + -->
+<!--   geom_point(data = lnd_crashes_f, -->
+<!--              aes(x = long, y = lat), alpha = 0.1) + -->
+<!--   geom_path(data = rnet_f, aes(long, lat, group = group), -->
+<!--             col = "red") -->
 
 
+<!-- qmap(location = "London") + -->
 
+
+<!-- names(lnd_crashes_f) -->
+<!-- ggplot(rnet_f, aes(long, lat)) + -->
+<!--   geom_path() -->
+
+<!-- ``` -->
 
 # Discussion and conclusion
 
@@ -572,3 +516,4 @@ ggplot(rnet_f, aes(long, lat)) +
 
 
 # References
+
