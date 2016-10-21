@@ -301,7 +301,7 @@ qtm(lnd_crashes, dot.col = "yellow") +
 tmap_mode("plot") # return to plotting mode
 ```
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, out.width="60%"}
 knitr::include_graphics("vspd-base-shiny_files/figure-markdown_github/tmap-view-mode.png")
 ```
 
@@ -317,7 +317,7 @@ m = leaflet() %>%
 class(m)
 ```
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, out.width="60%"}
 knitr::include_graphics("vspd-base-shiny_files/figure-markdown_github/leaflet-output.png")
 ```
 
@@ -343,7 +343,7 @@ As well as providing the option to save in html (via `htmlwidgets::saveWidget(m@
 mapshot(m, "mapview.png")
 ```
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, out.width="60%"}
 knitr::include_graphics("vspd-base-shiny_files/figure-markdown_github/mapview.png")
 ```
 
