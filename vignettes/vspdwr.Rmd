@@ -8,13 +8,13 @@ author:
     email: r.lovelace@leeds.ac.uk
     url: http://www.robinlovelace.net
 title:
-  formatted: "Visualising spatial data with R, from base to \\pkg{shiny}"
+  formatted: "Visualising Spatial Data with R, from base to \\pkg{tmap}"
   # If you use tex in the formatted title, also supply version without
-  plain:     "Visualising spatial data with R, from base to shiny"
+  plain:     "Visualising Spatial Data with R, from base to tmap"
   # For running headers, if needed
-  short:     "Visualising spatial data with R"
+  short:     "Visualising Spatial Data with R"
 abstract: >
-  This article traces the development spatial data visualisation methods and capabilities in statistical statistical software since the beginning of the 21^st^ Century. Although the focus is on R, the progression from rudimentary and inflexible bitmap images to interactive online maps is applicable to other languages for statistical programming. The paper is primarily a historical review of the evolving state of the art, with the finding that making informative and aesthetically pleasing maps with R has become a more intuitive and interactive process over time. A secondary purpose of the paper is dissemination of best practice (with reproducible and extensible examples) in the field with a view to the future developments in the context of R's rapidly evolving spatial capabilities.
+  This article traces the development spatial data visualisation methods and capabilities in statistical statistical software since the beginning of the 21^st^ Century. Although the focus is on R, the progression from rudimentary and inflexible bitmap images to interactive online maps is applicable to other languages for statistical programming. The paper is primarily a historical review of the evolving state of the art, with the finding that making informative and aesthetically pleasing maps with \proglang{R} has become a more intuitive and interactive process over time. A secondary purpose of the paper is dissemination of best practice (with reproducible and extensible examples) in the field with a view to the future developments in the context of \proglang{R}'s rapidly evolving spatial capabilities.
 keywords:
   # at least one keyword must be supplied
   formatted: [visualisation, spatial data, "\\proglang{R}"]
@@ -29,14 +29,14 @@ bibliography: references.bib
 
 Maps have a long history, closely bound-up with scientific progress, imperial expansion and humanity's sense of place on the Earth [e.g. @roller_eratosthenes_2010;@livingston_geographical_1992]. Computer aided maps can be seen as an extension of the story of cartography, the art and science of map making, into the digital age. Although the media have changed, maps are still manifestations of political power and (apparent) scientific objectivity [@dodge_crowdsourced_2013]. Within this long-established cartographic tradition, software dedicated to the geographic visualisation of statistical data is a relatively recent development.
 
-It is the aim of this paper to review the history of software for geographic data visualisation, with reference to R packages. The focus on a single language was deliberate, allowing greater depth of discussion (with reproducible code examples) than would be possible in a paper of the same length that attempted to cover implentations in all languages. Many programs have been developed for map making [@steiniger_2012_2013]. However, the majority do not focus on visualising statistical data (e.g. through choropleth maps, maps for point pattern analysis and raster heatmaps). It is difficult to trace the overall development of the sub-field through the wide range of software products described by @steiniger_2012_2013, which use inconsistent interfaces and some of which have been abandoned or merged.
+It is the aim of this paper to review the history of software for geographic data visualisation, with reference to \proglang{R} packages. The focus on a single language was deliberate, allowing greater depth of discussion (with reproducible code examples) than would be possible in a paper of the same length that attempted to cover implentations in all languages. Many programs have been developed for map making [@steiniger_2012_2013]. However, the majority do not focus on visualising statistical data (e.g. through choropleth maps, maps for point pattern analysis and raster heatmaps). It is difficult to trace the overall development of the sub-field through the wide range of software products described by @steiniger_2012_2013, which use diverse interfaces.
 
-R packages for geographic data visualisation are more consistent. They all rely on the same user interface (unless they are part of a '**shiny** app'), the R command line; make use the same **sp** class system (except **ggmap**), so can be directly compared for plotting the same datasets; and are all maintained to the present day on CRAN; and R's origins in statistical computing mean that they all have at least some geostatistical visualisation capabilities. An additional reason for using R packages to trace the development of geographic visualisation software is that R have often been at the forefront of geographic data visualisation methods, for example through early interfaces to web-mapping libraries. Despite its focus on a single language, this paper therefore aims to provide an indication of the state-of-the-art of geographic data visualisation in statistical software overall.
+R packages for geographic data visualisation are more consistent. They all rely on the same user interface (unless they are part of a '**shiny** app'), the \proglang{R} command line; make use the same **sp** class system (except **ggmap**), so can be directly compared for plotting the same datasets; and are all maintained to the present day on CRAN; and \proglang{R}'s origins in statistical computing mean that they all have at least some geostatistical visualisation capabilities. An additional reason for using \proglang{R} packages to trace the development of geographic visualisation software is that \proglang{R} have often been at the forefront of geographic data visualisation methods, for example through early interfaces to web-mapping libraries. Despite its focus on a single language, this paper therefore aims to provide an indication of the state-of-the-art of geographic data visualisation in statistical software overall.
 
-Geographic data visualisation in R is usually done as part of a wider process, which can be broadly defined as *command line GIS* [@cheshire_spatial_2015]. This article's focus on visualisation is designed to fill a gap in the literature and demonstrate recent developments in the field.  Much has been written about handling, processing and modelling spatial data already [e.g. @dorman_learning_2014;@bivand_applied_2013], but there is little in the academic literature focussed explicitly on spatial data visualisation.
+Geographic data visualisation in \proglang{R} is usually done as part of a wider process, which can be broadly defined as *command line GIS* [@cheshire_spatial_2015]. This article's focus on visualisation is designed to fill a gap in the literature and demonstrate recent developments in the field.  Much has been written about handling, processing and modelling spatial data already [e.g. @dorman_learning_2014;@bivand_applied_2013], but there is little in the academic literature focussed explicitly on spatial data visualisation.
 
 A further motivation for focussing on visualisation is that iteratively creating maps is an excellent way to gain understanding of spatial data and the underlying spatial phenomena that they represent, from species's response to climate change to the design of sustainable cities. Humans are adept and processing and deriving conclusions from visual data:
-"A well-crafted graph [or map] can help you make meaningful comparisons among thousands of pieces of information, extracting patterns not easily found through other methods ... one area where R shines" [@kabacoff_r_2011, p. 45]. For people new to spatial data, visualisation may therefore be a rewarding place to start.
+"A well-crafted graph [or map] can help you make meaningful comparisons among thousands of pieces of information, extracting patterns not easily found through other methods ... one area where \proglang{R} shines" [@kabacoff_r_2011, p. 45]. For people new to spatial data, visualisation may therefore be a rewarding place to start.
 
 # Geographical data in R
 
@@ -60,22 +60,22 @@ There are 2 branches of spatial data: raster and vector. Rasters are 2D images c
 
 To how each spatial data type can be visualised, the example datasets include at least one of each. To demonstrate how different datasets can be layered, they all have the same geographic extent (Greater London). Real data related to transport planning are used as an illustrative use-case of the visualisation methods. The datasets are outlined below (see the Appendix for further details):
 
-- `lnd_crashes`: A `SpatialPointsDataFrame` from the 'Stats19' dataset on road traffic collisions reported to the police.
-- `lnd_commutes`: A `SpatialLinesDataFrame` representing commuter desire lines in London.
-- `lnd_rnet`: A network of lines representing the cycling potential in different parts of London.
-- `lnd_msoas`: Areas of London, stored as a `SpatialPolygonsDataFrame`.
-- `lnd_topo`: The topography of London, saved as a `RasterLayer`.
+- `crashes`: A `SpatialPointsDataFrame` from the 'Stats19' dataset on road traffic collisions reported to the police.
+- `commutes`: A `SpatialLinesDataFrame` representing commuter desire lines in London.
+- `rnet`: A network of lines representing the cycling potential in different parts of London.
+- `msoas`: Areas of London, stored as a `SpatialPolygonsDataFrame`.
+- `topo`: The topography of London, saved as a `RasterLayer`.
 
 
 ```{r, message=FALSE, echo=FALSE}
 library(sp)
 lnd = readRDS("vspd-data/lnd84.Rds")
-lnd_crashes = readRDS("vspd-data/ac_cycle_lnd.Rds")
-killed = lnd_crashes[lnd_crashes$Casualty_Severity == "Fatal",]
-lnd_commutes = readRDS("vspd-data/l-lnd.Rds")
-lnd_msoas = readRDS("vspd-data/z.Rds")
-lnd_rnet = readRDS("vspd-data/rnet-lnd.Rds")
-lnd_topo = readRDS("vspd-data/lnd-topo.Rds")
+crashes = readRDS("vspd-data/ac_cycle_lnd.Rds")
+killed = crashes[crashes$Casualty_Severity == "Fatal",]
+commutes = readRDS("vspd-data/l-lnd.Rds")
+msoas = readRDS("vspd-data/z.Rds")
+rnet = readRDS("vspd-data/rnet-lnd.Rds")
+topo = readRDS("vspd-data/lnd-topo.Rds")
 ```
 
 \section{R packages for visualising spatial data}\label{s:rpack}
@@ -125,30 +125,29 @@ To see the difference between the generic and **sp** versions of `plot()`, let's
 
 ```{r}
 par(mfrow = c(1, 2))
-plot(lnd_crashes)
-plot(coordinates(lnd_crashes))
+plot(killed)
+plot(coordinates(killed))
 par(mfrow = c(1, 1))
 ```
 
 It is instructive to realise that because any arguments available to `plot()` will work for plotting spatial data. Plots of spatial data using `plot()` are therefore as flexible as any `plot()`: very. The following, for example, makes the plot look more like the base version of `plot()`, with the major difference being that the axis breaks use degrees as their units and that the plot has the right height-width proportions:
 
 ```{r}
-plot(lnd_crashes, pch = 1, axes = T)
+plot(killed, pch = 1, axes = T)
 ```
 
 The above shows that although they *look* like base graphics, basic maps produced with `plot()` should technically be called **sp** graphics. Adding multiple such layers on top of each other using the `add = T` argument (an extension of `plot()` for `Spatial` data classes) can generate insights into the spatial relationships between one layer and another.
 
-```{r, eval=FALSE}
-plot(lnd_crashes, col = "yellow")
-plot(lnd, add = T)
-plot(lnd_rnet, add = T, col = "blue")
-plot(lnd_crashes[lnd_crashes$Casualty_Severity == "Fatal",],
-     col = "red", add = T)
+```{r}
+plot(lnd)
+plot(rnet, add = T, col = "blue",
+     lwd = rnet$bicycle / mean(rnet$bicycle))
+plot(killed, col = "yellow", add = T)
 ```
 
 The above code shows how the use of `add = TRUE` can be used to create a layered map, with each call to `plot()` overlaying the previous one. This is enables quick visualision exploration of data, for example whether datasets spatially overlap. Be warned, however: any plot containing `add = T` will fail if a plot has yet to be called (a problem solved by **tmap** and **ggmap**).
 
-The plots may look a little rudimentary and dated. However, the advantage is that if you are already good with base graphics, you will naturally be good at map making. If you are not proficient with R's base graphics, it is recommended that you skip this phase directly to something more sophisticated like **tmap**.
+The plots may look a little rudimentary and dated. However, the advantage is that if you are already good with base graphics, you will naturally be good at map making. If you are not proficient with \proglang{R}'s base graphics, it is recommended that you skip this phase directly to something more sophisticated like **tmap**.
 
 ## spplot
 
@@ -185,19 +184,19 @@ Note that the above code added the geometry data of the points to the data frame
 
 ```{r}
 library(maptools) # a dependency for fortify to work
-lnd_fortified = fortify(lnd, region = "ons_label")
-head(lnd_fortified)
+fortified = fortify(lnd, region = "ons_label")
+head(fortified)
 ```
 
-The output of `fortify()` is a data frame, as illustrated by its first 6 rows, shown above. Now rather than each row of data representing a London borough, each row in `lnd_fortified` now represents a single vertex on the `lnd` object. For this reason the data frame `lnd@data` has `r nrow(lnd)` whereas the `lnd_fortified` object has `r nrow(lnd_fortified)` rows.
+The output of `fortify()` is a data frame, as illustrated by its first 6 rows, shown above. Now rather than each row of data representing a London borough, each row in `fortified` now represents a single vertex on the `lnd` object. For this reason the data frame `lnd@data` has `r nrow(lnd)` whereas the `fortified` object has `r nrow(fortified)` rows.
 
 <!-- Todo: create a dataframe of lat/lon pairs other ways -->
 
-Notice that `lnd_fortified` still lacks attribute data, which needs to be joined. We can use `dplyr::left_join()` to do this:
+Notice that `fortified` still lacks attribute data, which needs to be joined. We can use `dplyr::left_join()` to do this:
 
 ```{r, warning=FALSE}
-lnd_fortified = dplyr::left_join(lnd_fortified, lnd@data, c("id" = "ons_label"))
-ggplot(data = lnd_fortified, aes(long, lat)) +
+fortified = dplyr::left_join(fortified, lnd@data, c("id" = "ons_label"))
+ggplot(data = fortified, aes(long, lat)) +
   geom_polygon(aes(group = group, fill = Pop_2001)) +
   coord_map()
 ```
@@ -207,9 +206,9 @@ We can make this map look a little more finished by removing the distracting axi
 ```{r}
 pbreaks = c(0, 1e5, 2e5, 4e5)
 plabs = c("0 - 100", "200 - 300", "300+")
-lnd_fortified$`Population (1000s)` =
-  cut(lnd_fortified$Pop_2001, breaks = pbreaks, labels = plabs)
-ggplot(data = lnd_fortified, aes(long, lat, group = group)) +
+fortified$`Population (1000s)` =
+  cut(fortified$Pop_2001, breaks = pbreaks, labels = plabs)
+ggplot(data = fortified, aes(long, lat, group = group)) +
   geom_polygon(aes(fill = `Population (1000s)`)) +
   geom_path() +
   coord_map() +
@@ -224,7 +223,7 @@ killed_df = dplyr::select(killed@data,
                    Age_Band_of_Casualty, Age_Band_of_Driver, lon, lat)
 killed_df = gather(killed_df, Role, Age, -lon, -lat)
 ggplot(killed_df, aes(lon, lat)) +
-  geom_path(data = lnd_fortified,
+  geom_path(data = fortified,
                aes(long, lat, group = group)) +
   geom_point(aes(color = Age)) +
   facet_grid(. ~Role) +
@@ -261,9 +260,9 @@ tm_shape(shp = lnd) +
 Thus `tm_shape()` takes a spatial object and subsequent `tm_*()` functions take variable names contained in the `Spatial*DataFrame`. The `+` operator is very useful for building up plots one on top of another. Here is a **tmap** version of the multi-layered plot created towards the end of the base graphics section:
 
 ```{r}
-qtm(lnd_crashes, dot.col = "yellow") +
-  tm_shape(lnd) + tm_borders() +
-  tm_shape(lnd_rnet) + tm_lines("blue") +
+tm_shape(lnd) + tm_borders() +
+  qtm(killed, dot.col = "yellow") +
+  tm_shape(rnet) + tm_lines("blue") +
   tm_shape(killed) + tm_dots(col = "red", size = 0.1)
 ```
 
@@ -279,7 +278,7 @@ The output shows that **tmap** creates facetted plots automatically, when multip
 **tmap** has many additional features. The function `tm_layout()`, for example, controls the layout of the plot: `tm_layout(legend.outside = T)`, creates a self-standing legend outside the panel used by the map, as illustrated below.
 
 ```{r, echo=FALSE}
-tm_shape(lnd_rnet) + tm_lines(col = "grey") +
+tm_shape(rnet) + tm_lines(col = "grey") +
   tm_shape(killed) +
   tm_dots(c("Age_of_Casualty", "Age_of_Driver"),
           breaks = c(0, 20, 40, 60, 100), palette = "RdYlBu",
@@ -294,9 +293,9 @@ To make an interactive map with **tmap**, enter `tmap_mode("view")` and run the 
 
 ```{r, eval=FALSE}
 tmap_mode("view")
-qtm(lnd_crashes, dot.col = "yellow") +
+qtm(killed, dot.col = "yellow") +
   tm_shape(lnd) + tm_borders() +
-  tm_shape(lnd_rnet) + tm_lines("blue") +
+  tm_shape(rnet) + tm_lines("blue") +
   tm_shape(killed) + tm_dots(col = "red", size = 0.1)
 tmap_mode("plot") # return to plotting mode
 ```
@@ -307,7 +306,7 @@ knitr::include_graphics("vspd-base-shiny_files/figure-markdown_github/tmap-view-
 
 ## leaflet
 
-**leaflet** is an R package for interacting with the Leaflet JavaScript library. It creates an object of class `htmlwidget` that is automatically displayed in RStudio, as illustrated below.
+**leaflet** is an \proglang{R} package for interacting with the Leaflet \proglang{JavaScript} library. It creates an object of class `htmlwidget` that is automatically displayed in RStudio, as illustrated below.
 
 ```{r}
 library(leaflet)
@@ -333,7 +332,7 @@ library(mapview)
 
 ```{r, eval=FALSE}
 m = mapview(killed) +
-  mapview(lnd_commutes, color = "red")
+  mapview(commutes, color = "red")
 m # display the map
 ```
 
@@ -349,7 +348,7 @@ knitr::include_graphics("vspd-base-shiny_files/figure-markdown_github/mapview.pn
 
 ## shiny
 
-**shiny** is a package for creating interactive web applications in R. This allows for maps to be created with a level of interactivity that goes beyond the panning, zooming and layer switching functionality presented in the previous sections. **shiny** allows the user to create not only maps but *mapping applications*. Building on the previous examples, **shiny** enables the creation of web applications that allow the user to explore, for example, the relationship between cycling levels and cycling casualties, without needing to run R directly. In terms of public engagement in the geographic visualisation process, this is clearly a huge benefit: people can explore patterns in geographic data by accessing a web page.
+**shiny** is a package for creating interactive web applications in R. This allows for maps to be created with a level of interactivity that goes beyond the panning, zooming and layer switching functionality presented in the previous sections. **shiny** allows the user to create not only maps but *mapping applications*. Building on the previous examples, **shiny** enables the creation of web applications that allow the user to explore, for example, the relationship between cycling levels and cycling casualties, without needing to run \proglang{R} directly. In terms of public engagement in the geographic visualisation process, this is clearly a huge benefit: people can explore patterns in geographic data by accessing a web page.
 
 <!-- # Appendix -->
 <!-- These were created/stored locally in the `vspd-data/` subdirectory of `vignettes/` the working directory of this tutorial. Set your working directly to this folder: -->
@@ -361,43 +360,46 @@ knitr::include_graphics("vspd-base-shiny_files/figure-markdown_github/mapview.pn
 <!-- } -->
 <!-- ``` -->
 
-<!-- **The datasets can all be downloaded from the following link: [github.com/Robinlovelace/vspd-base-shiny-data](https://github.com/Robinlovelace/vspd-base-shiny-data).** -->
+<!-- **The datasets can all be downloaded from the following link: [github.com/Robinlovelace/vspd-data](https://github.com/Robinlovelace/vspd-data).** -->
 
 <!-- They can be automatically downloaded and placed into the correct folder as follows: -->
 
 <!-- ```{r, eval=FALSE} -->
-<!-- u = "https://github.com/Robinlovelace/vspd-base-shiny-data/archive/master.zip" -->
+<!-- u = "https://github.com/Robinlovelace/vspd-data/archive/master.zip" -->
 <!-- download.file(u, destfile = "master.zip") -->
 <!-- unzip("master.zip") -->
 <!-- dir.create("vspd-data") -->
-<!-- f = list.files(path = "vspd-base-shiny-data-master/", full.names = T) -->
+<!-- f = list.files(path = "vspd-data-master/", full.names = T) -->
 <!-- file.copy(f, "vspd-data") -->
 <!-- ``` -->
 
 <!-- The datasets used in this tutorial were downloaded using the code presented below: -->
 
+
 <!-- ```{r, eval=FALSE} -->
 <!-- u1 = "https://github.com/npct/pct-data/raw/master/london/l.Rds" -->
-<!-- download.file(u1, "vspd-base-shiny-data/l-lnd.Rds") -->
+<!-- download.file(u1, "vspd-data/l-lnd.Rds") -->
 <!-- u2 = "https://github.com/npct/pct-data/raw/master/london/z.Rds" -->
-<!-- download.file(u2, "vspd-base-shiny-data/z.Rds") -->
+<!-- download.file(u2, "vspd-data/z.Rds") -->
 <!-- u3 = "https://github.com/npct/pct-data/raw/master/london/rnet.Rds" -->
-<!-- download.file(u3, "vspd-base-shiny-data/rnet-lnd.Rds") -->
+<!-- download.file(u3, "vspd-data/rnet-lnd.Rds") -->
 <!-- u4 = "https://data.gov.uk/dataset/road-accidents-safety-data/datapackage.zip" -->
-<!-- download.file(u4, "vspd-base-shiny-data/datapackage-stats19.zip") # warning: downloads 0.5 GB -->
+<!-- download.file(u4, "vspd-data/datapackage-stats19.zip") # warning: downloads 0.5 GB -->
 
 <!-- # subsetting the data -->
-<!-- l = readRDS("vspd-base-shiny-data/l-lnd.Rds") -->
-<!-- lnd_commutes = l[l$all > 500,] -->
-<!-- saveRDS(lnd_commutes, "vspd-base-shiny-data/l-lnd.Rds") -->
-<!-- sp::plot(lnd_commutes) -->
+<!-- l = readRDS("vspd-data/l-lnd.Rds") -->
+<!-- commutes = l[l$all > 500,] -->
+<!-- saveRDS(commutes, "vspd-data/l-lnd.Rds") -->
+<!-- sp::plot(commutes) -->
 
-<!-- rnet = readRDS("vspd-base-shiny-data/rnet-lnd.Rds") -->
+<!-- rnet = readRDS("~/npct/pct-data/london/rnet.Rds") -->
 <!-- summary(rnet$dutch_slc) -->
 <!-- rnet$length = stplanr::gprojected(rnet, fun = rgeos::gLength, byid = T) -->
 <!-- summary(rnet$length) -->
-<!-- lnd_rnet = rnet[rnet$dutch_slc > 1000 | rnet$length > 500,] -->
-<!-- saveRDS(lnd_rnet, "vspd-base-shiny-data/rnet-lnd.Rds") -->
+<!-- summary(rnet$dutch_slc) -->
+<!-- rnet = rnet[rnet$dutch_slc > 1000 | rnet$length > 500,] -->
+<!-- rnet = rnet[rnet$dutch_slc < 10000,] -->
+<!-- saveRDS(rnet, "vspd-data/rnet-lnd.Rds") -->
 <!-- ``` -->
 
 <!-- The Stats19 data required processing before it could be used: -->
@@ -405,8 +407,8 @@ knitr::include_graphics("vspd-base-shiny_files/figure-markdown_github/mapview.pn
 <!-- ```{r, eval=FALSE} -->
 <!-- library(stplanr) -->
 <!-- library(dplyr) -->
-<!-- unzip("vspd-base-shiny-data/datapackage-stats19.zip") -->
-<!-- unzip("vspd-base-shiny-data/Stats19_Data_2005-2014.zip") -->
+<!-- unzip("vspd-data/datapackage-stats19.zip") -->
+<!-- unzip("vspd-data/Stats19_Data_2005-2014.zip") -->
 <!-- ac = read_stats19_ac(data_dir = ".") -->
 <!-- ca = read_stats19_ca(data_dir = ".") -->
 <!-- ve = read_stats19_ve(data_dir = ".") -->
@@ -429,14 +431,14 @@ knitr::include_graphics("vspd-base-shiny_files/figure-markdown_github/mapview.pn
 <!--   proj4string = CRS(proj4string(lnd)) -->
 <!-- ) -->
 
-<!-- lnd_crashes = ac_cycle_sp[lnd,] -->
-<!-- plot(lnd_crashes) # nearly 40k cyclist casualties -->
-<!-- object.size(lnd_crashes) / 1000000 -->
-<!-- names(lnd_crashes) -->
-<!-- # lnd_crashes$Age_of_Casualty[lnd_crashes$Age_of_Casualty == -1] -->
-<!-- lnd_crashes$Age_Band_of_Driver[is.na(lnd_crashes$Age_Band_of_Driver)] = factor(NA) -->
-<!-- levels(lnd_crashes$Age_Band_of_Casualty) -->
-<!-- lnd_crashes@data = select(lnd_crashes@data, -->
+<!-- crashes = ac_cycle_sp[lnd,] -->
+<!-- plot(killed) # nearly 40k cyclist casualties -->
+<!-- object.size(crashes) / 1000000 -->
+<!-- names(crashes) -->
+<!-- # crashes$Age_of_Casualty[crashes$Age_of_Casualty == -1] -->
+<!-- crashes$Age_Band_of_Driver[is.na(crashes$Age_Band_of_Driver)] = factor(NA) -->
+<!-- levels(crashes$Age_Band_of_Casualty) -->
+<!-- crashes@data = select(crashes@data, -->
 <!--                            Accident_Index, -->
 <!--                            Date, -->
 <!--                            Day_of_Week, -->
@@ -449,23 +451,24 @@ knitr::include_graphics("vspd-base-shiny_files/figure-markdown_github/mapview.pn
 <!--                            Age_of_Driver, -->
 <!--                            Age_Band_of_Driver -->
 <!--                            ) -->
-<!-- saveRDS(lnd_crashes, "vspd-base-shiny-data/ac_cycle_lnd.Rds") -->
+<!-- saveRDS(crashes, "vspd-data/ac_cycle_lnd.Rds") -->
 <!-- ``` -->
 
 <!-- The topographical data was saved using the **raster** package: -->
 
 <!-- ```{r, eval=FALSE} -->
 <!-- eng_topo = raster::getData("alt", country = "GBR") -->
-<!-- lnd_topo = raster::crop(eng_topo, lnd) -->
-<!-- plot(lnd_topo) -->
+<!-- topo = raster::crop(eng_topo, lnd) -->
+<!-- plot(topo) -->
 <!-- points(killed) -->
-<!-- saveRDS(lnd_topo, "vspd-base-shiny-data/lnd-topo.Rds") -->
+<!-- saveRDS(topo, "vspd-data/lnd-topo.Rds") -->
 <!-- ``` -->
 
 <!-- ```{r, echo=FALSE, eval=FALSE} -->
 <!-- # to include -->
 <!-- plot(rnet) -->
 <!-- names(rnet) -->
+
 <!-- plot(rnet, lwd = rnet$dutch_slc / mean(rnet$dutch_slc)) -->
 <!-- rnet_long = rnet[rnet$length > 2000,] -->
 <!-- rnet_short = rnet[rnet$length < 200,] -->
@@ -476,32 +479,30 @@ knitr::include_graphics("vspd-base-shiny_files/figure-markdown_github/mapview.pn
 <!-- ggplot(data = rnet@data, aes(bicycle, dutch_slc)) + -->
 <!--   geom_point(aes(size = length), alpha = 0.1) -->
 
-<!-- lnd_crashes = readRDS("vspd-data/ac_cycle_lnd.Rds") -->
+<!-- crashes = readRDS("vspd-data/ac_cycle_lnd.Rds") -->
 <!-- rnet_f = fortify(rnet) -->
-<!-- lnd_crashes_f = lnd_crashes@data -->
-<!-- lnd_crashes_f$long = coordinates(lnd_crashes)[,1] -->
-<!-- lnd_crashes_f$lat = coordinates(lnd_crashes)[,2] -->
+<!-- crashes_f = crashes@data -->
+<!-- crashes_f$long = coordinates(crashes)[,1] -->
+<!-- crashes_f$lat = coordinates(crashes)[,2] -->
 
-<!-- qmap(location = "London") + -->
-<!-- ggplot() + -->
-<!--   geom_point(data = lnd_crashes_f, -->
-<!--              aes(x = long, y = lat), alpha = 0.1) + -->
-<!--   geom_path(data = rnet_f, aes(long, lat, group = group), -->
-<!--             col = "red") -->
+<!-- # qmap(location = "London") + -->
+<!-- # ggplot() + -->
+<!-- #   geom_point(data = crashes_f, -->
+<!-- #              aes(x = long, y = lat), alpha = 0.1) + -->
+<!-- #   geom_path(data = rnet_f, aes(long, lat, group = group), -->
+<!-- #             col = "red") + -->
+<!-- #   coord_map() -->
 
-
-<!-- qmap(location = "London") + -->
-
-
-<!-- names(lnd_crashes_f) -->
-<!-- ggplot(rnet_f, aes(long, lat)) + -->
-<!--   geom_path() -->
-
+<!-- # names(crashes_f) -->
+<!-- # ggplot(rnet_f, aes(long, lat)) + -->
+<!-- #   geom_path() -->
 <!-- ``` -->
 
 # Discussion and conclusion
 
-# To cite
+# Ideas and references to cite
+
+- Show that **tmap** maps work regardless of the order to the layers, unlike `plot()`, in which `add = TRUE` must be added if it's not the 1st.
 
 @dorling_area_2011
 
@@ -512,7 +513,6 @@ knitr::include_graphics("vspd-base-shiny_files/figure-markdown_github/mapview.pn
 @zastrow_science_2015
 
 @zhang_icon_2004
-
 
 
 # References
