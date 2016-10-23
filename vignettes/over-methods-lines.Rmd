@@ -1,0 +1,57 @@
+---
+output: github_document
+---
+
+I had to remind myself what `gsection()` does despite packaging it up into **stplanr** (the orginal code was written by Barry Rowlingson). It is used primarily in my work as a helper function for `overline()` but I decided to export it in case it's of use/interest to others. Great to see it is!
+
+The function does not return data for a reason: individual segments have different numbers of overlapping routes.
+
+However, it is useful to be able to query data from which the segments come, so let's work through some code, building on your reproducible example, to see what's going on:
+
+```{r}
+library(stplanr)
+length(routes_fast) # too many to visualise segments
+r = routes_fast[3:4,] # take 2 lines to see what's going on
+s = gsection(r) # split into overlapping sections
+class(r) # has data, as you say
+class(s) # does not have data!
+length(r) # 2 lines, as expected
+length(s) # 3 segments with same number of overlaps
+```
+
+As you can see from the output of the above code chunk, there are more segments than there are routes. So surely each segment can be allocated it's own route? No.
+
+This is illustrated below. The 3rd line from the resulting segments `s` (coloured grey) is the result of the overlap between both lines in `r`. So what data values would you expect it to have?
+
+```{r, warning=FALSE}
+library(tmap) # for awesome plotting abilities
+qtm(routes_fast[3:4,], line.lwd = 20, line.alpha = 0.3) +
+  qtm(routes_fast[3,], line.lwd = 5) +
+  qtm(s[1,], line.col = "white") +
+  qtm(s[2,], line.col = "black") +
+  qtm(s[3,], line.col = "grey", line.lwd = 2)
+```
+
+There are different ways to answer this question. The default way in `sp::over()` is to take the first overlap. But this is not what we want as `over()` returns a match even if the lines touch but do not have any shared distance (take a look inside the results to see what I mean):
+
+```{r}
+result_data = over(x = s, y = r)
+result_data
+result_list = over(x = s, y = r, returnList = T)
+```
+
+`result_data` returns the first matching row from data in lines touching each segment - in this case that's simply `routes_fast@data[3,]` repeated 3 times, not very useful!
+
+Assuming you're happy with *the first* match of lines that actually share lengths, you could use the (undocumented) `minDimension` argument of `over()`, described in `vignette("over")`:
+
+```{r}
+over(x = s, y = r, minDimension = 1)
+```
+
+I think adding an argument `return_data` to the function would useful and plan to do so before the next release of **stplanr**. It should probably say something about how many overlapping lines as an option output.
+
+Many thanks for your instigating these investigations in any case: very useful.
+
+
+
+
