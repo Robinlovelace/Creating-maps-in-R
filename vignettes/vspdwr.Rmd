@@ -66,8 +66,9 @@ To how each spatial data type can be visualised, the example datasets include at
 - `msoas`: Areas of London, stored as a `SpatialPolygonsDataFrame`.
 - `topo`: The topography of London, saved as a `RasterLayer`.
 
+These datasets can be found at https://github.com/Robinlovelace/vspd-base-shiny-data and (assuming they are placed in a folder called vspd-data) can be loaded as folows:
 
-```{r, message=FALSE, echo=FALSE}
+```{r, message=FALSE}
 library(sp)
 lnd = readRDS("vspd-data/lnd84.Rds")
 crashes = readRDS("vspd-data/ac_cycle_lnd.Rds")
@@ -350,153 +351,154 @@ knitr::include_graphics("vspd-base-shiny_files/figure-markdown_github/mapview.pn
 
 **shiny** is a package for creating interactive web applications in R. This allows for maps to be created with a level of interactivity that goes beyond the panning, zooming and layer switching functionality presented in the previous sections. **shiny** allows the user to create not only maps but *mapping applications*. Building on the previous examples, **shiny** enables the creation of web applications that allow the user to explore, for example, the relationship between cycling levels and cycling casualties, without needing to run \proglang{R} directly. In terms of public engagement in the geographic visualisation process, this is clearly a huge benefit: people can explore patterns in geographic data by accessing a web page.
 
-<!-- # Appendix -->
-<!-- These were created/stored locally in the `vspd-data/` subdirectory of `vignettes/` the working directory of this tutorial. Set your working directly to this folder: -->
+# Appendix
+These were created/stored locally in the `vspd-data/` subdirectory of `vignettes/` the working directory of this tutorial. Set your working directly to this folder:
 
-<!-- ```{r, echo=FALSE} -->
-<!-- # switch to the vignettes directory if not in it already -->
-<!-- if(!grepl(pattern = "vignettes", x = getwd())){ -->
-<!--   old = setwd("vignettes") -->
-<!-- } -->
-<!-- ``` -->
+```{r, echo=FALSE}
+# switch to the vignettes directory if not in it already
+if(!grepl(pattern = "vignettes", x = getwd())){
+  old = setwd("vignettes")
+}
+```
 
-<!-- **The datasets can all be downloaded from the following link: [github.com/Robinlovelace/vspd-data](https://github.com/Robinlovelace/vspd-data).** -->
+**The datasets can all be downloaded from the following link: [github.com/Robinlovelace/vspd-data](https://github.com/Robinlovelace/vspd-data).**
 
-<!-- They can be automatically downloaded and placed into the correct folder as follows: -->
+They can be automatically downloaded and placed into the correct folder as follows:
 
-<!-- ```{r, eval=FALSE} -->
-<!-- u = "https://github.com/Robinlovelace/vspd-data/archive/master.zip" -->
-<!-- download.file(u, destfile = "master.zip") -->
-<!-- unzip("master.zip") -->
-<!-- dir.create("vspd-data") -->
-<!-- f = list.files(path = "vspd-data-master/", full.names = T) -->
-<!-- file.copy(f, "vspd-data") -->
-<!-- ``` -->
+```{r, eval=FALSE}
+u = "https://github.com/Robinlovelace/vspd-data/archive/master.zip"
+download.file(u, destfile = "master.zip")
+unzip("master.zip")
+dir.create("vspd-data")
+f = list.files(path = "vspd-data-master/", full.names = T)
+file.copy(f, "vspd-data")
+```
 
-<!-- The datasets used in this tutorial were downloaded using the code presented below: -->
+The datasets used in this tutorial were downloaded using the code presented below:
 
 
-<!-- ```{r, eval=FALSE} -->
-<!-- u1 = "https://github.com/npct/pct-data/raw/master/london/l.Rds" -->
-<!-- download.file(u1, "vspd-data/l-lnd.Rds") -->
-<!-- u2 = "https://github.com/npct/pct-data/raw/master/london/z.Rds" -->
-<!-- download.file(u2, "vspd-data/z.Rds") -->
-<!-- u3 = "https://github.com/npct/pct-data/raw/master/london/rnet.Rds" -->
-<!-- download.file(u3, "vspd-data/rnet-lnd.Rds") -->
-<!-- u4 = "https://data.gov.uk/dataset/road-accidents-safety-data/datapackage.zip" -->
-<!-- download.file(u4, "vspd-data/datapackage-stats19.zip") # warning: downloads 0.5 GB -->
+```{r, eval=FALSE}
+u1 = "https://github.com/npct/pct-data/raw/master/london/l.Rds"
+download.file(u1, "vspd-data/l-lnd.Rds")
+u2 = "https://github.com/npct/pct-data/raw/master/london/z.Rds"
+download.file(u2, "vspd-data/z.Rds")
+u3 = "https://github.com/npct/pct-data/raw/master/london/rnet.Rds"
+download.file(u3, "vspd-data/rnet-lnd.Rds")
+u4 = "https://data.gov.uk/dataset/road-accidents-safety-data/datapackage.zip"
+download.file(u4, "vspd-data/datapackage-stats19.zip") # warning: downloads 0.5 GB
 
-<!-- # subsetting the data -->
-<!-- l = readRDS("vspd-data/l-lnd.Rds") -->
-<!-- commutes = l[l$all > 500,] -->
-<!-- saveRDS(commutes, "vspd-data/l-lnd.Rds") -->
-<!-- sp::plot(commutes) -->
+# subsetting the data
+l = readRDS("vspd-data/l-lnd.Rds")
+commutes = l[l$all > 500,]
+saveRDS(commutes, "vspd-data/l-lnd.Rds")
+sp::plot(commutes)
 
-<!-- rnet = readRDS("~/npct/pct-data/london/rnet.Rds") -->
-<!-- summary(rnet$dutch_slc) -->
-<!-- rnet$length = stplanr::gprojected(rnet, fun = rgeos::gLength, byid = T) -->
-<!-- summary(rnet$length) -->
-<!-- summary(rnet$dutch_slc) -->
-<!-- rnet = rnet[rnet$dutch_slc > 1000 | rnet$length > 500,] -->
-<!-- rnet = rnet[rnet$dutch_slc < 10000,] -->
-<!-- saveRDS(rnet, "vspd-data/rnet-lnd.Rds") -->
-<!-- ``` -->
+# get the data from github.com/npct/pct-data/:
+rnet = readRDS("~/npct/pct-data/london/rnet.Rds")
+summary(rnet$dutch_slc)
+rnet$length = stplanr::gprojected(rnet, fun = rgeos::gLength, byid = T)
+summary(rnet$length)
+summary(rnet$dutch_slc)
+rnet = rnet[rnet$dutch_slc > 1000 | rnet$length > 500,]
+rnet = rnet[rnet$dutch_slc < 10000,]
+saveRDS(rnet, "vspd-data/rnet-lnd.Rds")
+```
 
-<!-- The Stats19 data required processing before it could be used: -->
+The Stats19 data required processing before it could be used:
 
-<!-- ```{r, eval=FALSE} -->
-<!-- library(stplanr) -->
-<!-- library(dplyr) -->
-<!-- unzip("vspd-data/datapackage-stats19.zip") -->
-<!-- unzip("vspd-data/Stats19_Data_2005-2014.zip") -->
-<!-- ac = read_stats19_ac(data_dir = ".") -->
-<!-- ca = read_stats19_ca(data_dir = ".") -->
-<!-- ve = read_stats19_ve(data_dir = ".") -->
-<!-- levels(ve$Age_Band_of_Driver)[2:3] = c("01 - 05",  "06 - 10") -->
-<!-- levels(ca$Age_Band_of_Casualty)[2:3] = c("01 - 05",  "06 - 10") -->
-<!-- ve_not_cycle = filter(ve, Vehicle_Type != "Pedal cycle") -->
-<!-- ve_not_cycle = ve_not_cycle[!duplicated(ve_not_cycle$Accident_Index),] -->
-<!-- ac_joined = inner_join(ac, ca, "Accident_Index") -->
-<!-- ac_cycle = filter(ac_joined, Casualty_Type == "Cyclist") -->
-<!-- ac_cycle = filter(ac_cycle, !is.na(Latitude)) -->
-<!-- ac_cycle = left_join(ac_cycle, ve_not_cycle, "Accident_Index") -->
-<!-- summary(ac_cycle$Vehicle_Type) -->
-<!-- summary(ac_cycle$Casualty_Severity) -->
-<!-- # ac_cycle_sev = filter(ac_cycle, Casualty_Severity == "Fatal" | -->
-<!-- #                         Casualty_Severity == "Serious") -->
-<!-- lnd = readRDS("../data/lnd84.Rds") -->
-<!-- ac_cycle_sp = SpatialPointsDataFrame( -->
-<!--   coords = cbind(ac_cycle$Longitude, ac_cycle$Latitude), -->
-<!--   data = as.data.frame(ac_cycle), # fails if it's a tibble -->
-<!--   proj4string = CRS(proj4string(lnd)) -->
-<!-- ) -->
+```{r, eval=FALSE}
+library(stplanr)
+library(dplyr)
+unzip("vspd-data/datapackage-stats19.zip")
+unzip("vspd-data/Stats19_Data_2005-2014.zip")
+ac = read_stats19_ac(data_dir = ".")
+ca = read_stats19_ca(data_dir = ".")
+ve = read_stats19_ve(data_dir = ".")
+levels(ve$Age_Band_of_Driver)[2:3] = c("01 - 05",  "06 - 10")
+levels(ca$Age_Band_of_Casualty)[2:3] = c("01 - 05",  "06 - 10")
+ve_not_cycle = filter(ve, Vehicle_Type != "Pedal cycle")
+ve_not_cycle = ve_not_cycle[!duplicated(ve_not_cycle$Accident_Index),]
+ac_joined = inner_join(ac, ca, "Accident_Index")
+ac_cycle = filter(ac_joined, Casualty_Type == "Cyclist")
+ac_cycle = filter(ac_cycle, !is.na(Latitude))
+ac_cycle = left_join(ac_cycle, ve_not_cycle, "Accident_Index")
+summary(ac_cycle$Vehicle_Type)
+summary(ac_cycle$Casualty_Severity)
+# ac_cycle_sev = filter(ac_cycle, Casualty_Severity == "Fatal" |
+#                         Casualty_Severity == "Serious")
+lnd = readRDS("../data/lnd84.Rds")
+ac_cycle_sp = SpatialPointsDataFrame(
+  coords = cbind(ac_cycle$Longitude, ac_cycle$Latitude),
+  data = as.data.frame(ac_cycle), # fails if it's a tibble
+  proj4string = CRS(proj4string(lnd))
+)
 
-<!-- crashes = ac_cycle_sp[lnd,] -->
-<!-- plot(killed) # nearly 40k cyclist casualties -->
-<!-- object.size(crashes) / 1000000 -->
-<!-- names(crashes) -->
-<!-- # crashes$Age_of_Casualty[crashes$Age_of_Casualty == -1] -->
-<!-- crashes$Age_Band_of_Driver[is.na(crashes$Age_Band_of_Driver)] = factor(NA) -->
-<!-- levels(crashes$Age_Band_of_Casualty) -->
-<!-- crashes@data = select(crashes@data, -->
-<!--                            Accident_Index, -->
-<!--                            Date, -->
-<!--                            Day_of_Week, -->
-<!--                            Time, -->
-<!--                            Road_Type, -->
-<!--                            Age_of_Casualty, -->
-<!--                            Age_Band_of_Casualty, -->
-<!--                            Sex_of_Casualty, -->
-<!--                            Casualty_Severity, -->
-<!--                            Age_of_Driver, -->
-<!--                            Age_Band_of_Driver -->
-<!--                            ) -->
-<!-- saveRDS(crashes, "vspd-data/ac_cycle_lnd.Rds") -->
-<!-- ``` -->
+crashes = ac_cycle_sp[lnd,]
+plot(killed) # nearly 40k cyclist casualties
+object.size(crashes) / 1000000
+names(crashes)
+# crashes$Age_of_Casualty[crashes$Age_of_Casualty == -1]
+crashes$Age_Band_of_Driver[is.na(crashes$Age_Band_of_Driver)] = factor(NA)
+levels(crashes$Age_Band_of_Casualty)
+crashes@data = select(crashes@data,
+                           Accident_Index,
+                           Date,
+                           Day_of_Week,
+                           Time,
+                           Road_Type,
+                           Age_of_Casualty,
+                           Age_Band_of_Casualty,
+                           Sex_of_Casualty,
+                           Casualty_Severity,
+                           Age_of_Driver,
+                           Age_Band_of_Driver
+                           )
+saveRDS(crashes, "vspd-data/ac_cycle_lnd.Rds")
+```
 
-<!-- The topographical data was saved using the **raster** package: -->
+The topographical data was saved using the **raster** package:
 
-<!-- ```{r, eval=FALSE} -->
-<!-- eng_topo = raster::getData("alt", country = "GBR") -->
-<!-- topo = raster::crop(eng_topo, lnd) -->
-<!-- plot(topo) -->
-<!-- points(killed) -->
-<!-- saveRDS(topo, "vspd-data/lnd-topo.Rds") -->
-<!-- ``` -->
+```{r, eval=FALSE}
+eng_topo = raster::getData("alt", country = "GBR")
+topo = raster::crop(eng_topo, lnd)
+plot(topo)
+points(killed)
+saveRDS(topo, "vspd-data/lnd-topo.Rds")
+```
 
-<!-- ```{r, echo=FALSE, eval=FALSE} -->
-<!-- # to include -->
-<!-- plot(rnet) -->
-<!-- names(rnet) -->
+```{r, echo=FALSE, eval=FALSE}
+# to include
+plot(rnet)
+names(rnet)
 
-<!-- plot(rnet, lwd = rnet$dutch_slc / mean(rnet$dutch_slc)) -->
-<!-- rnet_long = rnet[rnet$length > 2000,] -->
-<!-- rnet_short = rnet[rnet$length < 200,] -->
-<!-- plot(rnet_long, add = T, col = "red") -->
-<!-- plot(rnet_short, add = T, col = "green") -->
-<!-- plot(rnet$bicycle, rnet$dutch_slc) -->
-<!-- library(ggplot2) -->
-<!-- ggplot(data = rnet@data, aes(bicycle, dutch_slc)) + -->
-<!--   geom_point(aes(size = length), alpha = 0.1) -->
+plot(rnet, lwd = rnet$dutch_slc / mean(rnet$dutch_slc))
+rnet_long = rnet[rnet$length > 2000,]
+rnet_short = rnet[rnet$length < 200,]
+plot(rnet_long, add = T, col = "red")
+plot(rnet_short, add = T, col = "green")
+plot(rnet$bicycle, rnet$dutch_slc)
+library(ggplot2)
+ggplot(data = rnet@data, aes(bicycle, dutch_slc)) +
+  geom_point(aes(size = length), alpha = 0.1)
 
-<!-- crashes = readRDS("vspd-data/ac_cycle_lnd.Rds") -->
-<!-- rnet_f = fortify(rnet) -->
-<!-- crashes_f = crashes@data -->
-<!-- crashes_f$long = coordinates(crashes)[,1] -->
-<!-- crashes_f$lat = coordinates(crashes)[,2] -->
+crashes = readRDS("vspd-data/ac_cycle_lnd.Rds")
+rnet_f = fortify(rnet)
+crashes_f = crashes@data
+crashes_f$long = coordinates(crashes)[,1]
+crashes_f$lat = coordinates(crashes)[,2]
 
-<!-- # qmap(location = "London") + -->
-<!-- # ggplot() + -->
-<!-- #   geom_point(data = crashes_f, -->
-<!-- #              aes(x = long, y = lat), alpha = 0.1) + -->
-<!-- #   geom_path(data = rnet_f, aes(long, lat, group = group), -->
-<!-- #             col = "red") + -->
-<!-- #   coord_map() -->
+# qmap(location = "London") +
+# ggplot() +
+#   geom_point(data = crashes_f,
+#              aes(x = long, y = lat), alpha = 0.1) +
+#   geom_path(data = rnet_f, aes(long, lat, group = group),
+#             col = "red") +
+#   coord_map()
 
-<!-- # names(crashes_f) -->
-<!-- # ggplot(rnet_f, aes(long, lat)) + -->
-<!-- #   geom_path() -->
-<!-- ``` -->
+# names(crashes_f)
+# ggplot(rnet_f, aes(long, lat)) +
+#   geom_path()
+```
 
 # Discussion and conclusion
 
