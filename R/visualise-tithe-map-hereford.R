@@ -3,6 +3,7 @@
 # Dependencies
 library(sp)
 library(leaflet)
+library(raster)
 
 # 1: pre-processing
 tmp = geojsonio::geojson_read("data/TMparcels_simplified.geojson", what = "sp")
@@ -26,7 +27,7 @@ for(i in 1:nrow(tmp)){
 leaflet() %>% addTiles() %>%
   addPolygons(data = tmp, weight = 1, color = "#000000", popup = lab_list,
             fillColor= ~ pal(LandUse),
-            fillOpacity=0.7
+            fillOpacity = 0.5
             ) %>% 
   addLegend(pal = pal, values = tmp$LandUse)
 
@@ -64,3 +65,8 @@ for(i in 1:nrow(tmp)){
   df_html = htmlTable::htmlTable(df_tab, rnames = F)
   lab_list[[i]] = df_html
 }
+
+r = stack("data/TMO_georef.tif")
+ri = r$TMO_georef.1
+plotRGB(r)
+mapview::viewRGB(r)
