@@ -7,6 +7,9 @@ library(raster)
 
 # 1: pre-processing
 tmp = geojsonio::geojson_read("data/TMparcels_simplified.geojson", what = "sp")
+field_vars = c("Owner", "Occupier", "FieldName", "LandUse")
+field_var_names = c("Owner", "Occupier", "Field name", "Land use")
+tmp@data[field_vars] = apply(tmp@data[field_vars], 2, as.character)
 bbox(tmp)
 proj4string(tmp) = CRS("+init=epsg:27700")
 tmp = spTransform(tmp, CRSobj = CRS("+init=epsg:4326"))
@@ -17,19 +20,27 @@ pal = colorFactor(palette = cols, domain = tmp$LandUse)
 lab_list = vector(mode = "list", length = length(tmp))
 i = 1
 for(i in 1:nrow(tmp)){
-  df_tab = data.frame(Attribute = c("Owner", "Occupier", "Field name", "Land use"),
+  df_tab = data.frame(Attribute = field_vars,
                       Value = c(tmp$Owner[i], tmp$Occupier[i], tmp$FieldName[i], tmp$LandUse[i]))
   df_html = htmlTable::htmlTable(df_tab, rnames = F)
   lab_list[[i]] = df_html
 }
-
+# these were generated with gdal2tiles.py TMO_georef_4326.tif
+tithe_url = "https://raw.githubusercontent.com/Robinlovelace/tithe-map-tiles/master/TMO_georef_4326/{z}/{x}/{y}.png"
 # Generate interactive map of field boundaries
-leaflet() %>% addTiles() %>%
+leaflet() %>%
+  addTiles(urlTemplate = tithe_url, group = "Tithe original", options = tileOptions(tms = T)) %>% 
+  addTiles(group = "OSM") %>%
+  addProviderTiles(provider = "Esri.WorldImagery", group = "Satellite") %>% 
   addPolygons(data = tmp, weight = 1, color = "#000000", popup = lab_list,
             fillColor= ~ pal(LandUse),
-            fillOpacity = 0.5
+            fillOpacity = 0.6,
+            group = "Tithe map"
             ) %>% 
-  addLegend(pal = pal, values = tmp$LandUse)
+  addLegend(pal = pal, values = tmp$LandUse, title = "Land use (1840)") %>% 
+  addLayersControl(baseGroups = c("Tithe original", "OSM", "Satellite"), overlayGroups = c("Tithe map"),
+                   options = layersControlOptions(collapsed = F))
+  
 
 # # # # # # # # # # # # # #
 # Out-takes + experiments #
@@ -37,6 +48,10 @@ leaflet() %>% addTiles() %>%
 
 # The leaflet way
 leaflet() %>% addTiles() %>% addPolygons(data = tmp)
+
+leaflet() %>%
+  addTiles(urlTemplate = tithe_url, options = tileOptions(tms = T)) %>% 
+  addPolygons(data = tmp)
 
 # Mapview way:
 mapview::mapview(tmp)
