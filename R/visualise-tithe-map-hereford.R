@@ -26,7 +26,7 @@ for(i in 1:nrow(tmp)){
   lab_list[[i]] = df_html
 }
 # these were generated with gdal2tiles.py TMO_georef_4326.tif
-tithe_url = "https://raw.githubusercontent.com/Robinlovelace/tithe-map-tiles/master/TMO_georef_4326/{z}/{x}/{y}.png"
+tithe_url = "https://www.mapbox.com/studio/tilesets/robinlovelace.ae9wdjpx/{z}/{x}/{y}.png"
 # Generate interactive map of field boundaries
 leaflet() %>%
   addTiles(urlTemplate = tithe_url, group = "Tithe original", options = tileOptions(tms = T)) %>% 
@@ -52,6 +52,28 @@ leaflet() %>% addTiles() %>% addPolygons(data = tmp)
 leaflet() %>%
   addTiles(urlTemplate = tithe_url, options = tileOptions(tms = T)) %>% 
   addPolygons(data = tmp)
+
+# With mapbox tiles
+# devtools::install_github('rstudio/leaflet')
+# devtools::install_github('bhaskarvk/leaflet.mapbox')
+library(leaflet.mapbox)
+
+leafletMapbox(access_token = Sys.getenv("MAPBOX")) %>%
+  addMapboxTileLayer(mapbox.classicStyleIds$dark)
+
+leafletMapbox(access_token = Sys.getenv("MAPBOX")) %>%
+  addMapboxTileLayer(id = "robinlovelace.ae9wdjpx", group = "Tithe original", options = tileOptions(tms = T)) %>% 
+  addTiles(group = "OSM") %>%
+  addProviderTiles(provider = "Esri.WorldImagery", group = "Satellite") %>% 
+  addPolygons(data = tmp, weight = 1, color = "#000000", popup = lab_list,
+              fillColor= ~ pal(LandUse),
+              fillOpacity = 0.6,
+              group = "Tithe map"
+  ) %>% 
+  addLegend(pal = pal, values = tmp$LandUse, title = "Land use (1840)") %>% 
+  addLayersControl(baseGroups = c("Tithe original", "OSM", "Satellite"), overlayGroups = c("Tithe map"),
+                   options = layersControlOptions(collapsed = F))
+
 
 # Mapview way:
 mapview::mapview(tmp)
