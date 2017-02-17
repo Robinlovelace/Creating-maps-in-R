@@ -5,7 +5,7 @@ date: "Slides: [rpubs.com/RobinLovelace](http://rpubs.com/RobinLovelace)"
 output:
   ioslides_presentation:
     transition: slower
-logo: /home/robin/Dropbox/Public/img/logos/cdrc-square.png
+# logo: /home/robin/Dropbox/Public/img/logos/cdrc-square.png
 ---
 
 ```{r, echo=FALSE}
@@ -29,6 +29,15 @@ library(png)
 # 
 # ## Introduction
 ```
+
+## Course outline
+
+- An introduction to R based on Collin Gillespie's Introduction to R (13:30 - 14:00)
+- Practical: Working through the Introduction to R booklet (14:00 - 15:00)
+- Demonstration of working with transport data in R (15:00 - 15:30)
+- Practical: Working through R for [Spatial Planning and Analysis](https://github.com/ITSLeeds/SSPA/blob/master/r4transport.Rmd) (15:30 - 16:30)
+- Additional practical: Do the question and answer challenges in the **nclRintroduction** package
+- Advanced practical: reproducing the results in the [stplanr-paper](https://cran.r-project.org/web/packages/stplanr/vignettes/stplanr-paper.html)  vignette.
 
 ## Context | See the [thesis-reproducible](https://github.com/Robinlovelace/thesis-reproducible/) repo
 
@@ -71,31 +80,27 @@ grid.raster(readPNG("../figure/coventry-centroids.png"))
 - **Versatility**: unified solution to *almost* any numerical problem, graphical capabilities
 - **Ethics** removes economic barrier to statistics, is open and democratic
 
-## R is up and coming I
+## R is up and coming | Source: [r4stats](http://r4stats.com/articles/popularity/)
 
-![scholar-searches1](figure/fig_7a.png) 
 
-Source: [r4stats.com](http://r4stats.com/articles/popularity/) 
-
-## II - Increasing popularity in academia
-
-![scholar-searches2](https://r4stats.files.wordpress.com/2012/04/fig_2f_scholarlyimpactallstat2.png)
-
-Source: [r4stats.com](http://r4stats.com/articles/popularity/) 
-
-## III - R vs Python
-
-```{r, echo=FALSE, fig.height=4}
-grid.raster(readPNG("~/Pictures/Selection_198.png"))
-# ![rvpytho](figure/so-rel.png)
+```{r, echo=FALSE, out.width="100%"}
+knitr::include_graphics("../figure/r-popularity.png")
 ```
+
+
+Source: [r4stats.com](http://r4stats.com/articles/popularity/) 
+
+
+## III - R vs Python | Source: [kdnuggets](http://www.kdnuggets.com/2015/05/r-vs-python-data-science.html)
+
+![](http://www.kdnuggets.com/wp-content/uploads/r-vs-python-numbers.jpg)
 
 
 Source: [Data Camp](http://i0.wp.com/blog.datacamp.com/wp-content/uploads/2015/05/R-vs-Python-216-2.png)
 
 ## IV - employment market
 
-![jobs](figure/jobs.png)
+![jobs](../figure/jobs.png)
 
 Source: [revolution analytics](http://blog.revolutionanalytics.com/2013/08/job-trends-for-statistics-packages.html)
 
@@ -153,19 +158,11 @@ Course agenda
 
 - Taking it further + Q & A (16:15 onwards)
 
-```{r, echo=FALSE}
-# The package used for this course can be installed with the following:
-if(!require(devtools))
-  install.packages("devtools")
-if(!require(nclRintroduction))
-  devtools::install_github("rcourses/nclRintroduction", build_vignettes = T)
-library(nclRintroduction)
-vignette(package = "nclRintroduction")
 ```
 
 ## Demonstration 1: The RStudio IDE
 
-![](https://support.rstudio.com/hc/en-us/article_attachments/202195467/Screen_Shot_2015-06-25_at_4.57.29_PM.png)
+![](../figure/rstudio-proj.png)
 
 ## R as a giant calculator
 
@@ -222,8 +219,10 @@ ls()
 
 ## Harmonograph example
 
-```{r, echo=FALSE, warning=FALSE}
-t <- 1:1000 / 10
+- Complex outputs can be created with simple inputs
+
+```{r, warning=FALSE}
+t <- 1:1000 / 10 
 x <- sin(t) * exp(t * - 0.01)
 y <- sin(pi / 2 + t / 3) * exp(t * -0.01)
 plot(x, y, "lines")
@@ -378,9 +377,9 @@ length(x)
 
 
 
-## Practical 2
+## Practical 
 
-- Work through Chapter 2 in Colin Gillespie's Introduction to R handout
+- Work through Colin Gillespie's Introduction to R booklet
 
 > - Optional: install the R package
 
@@ -392,106 +391,123 @@ library(nclRintroduction)
 vignette(package = "nclRintroduction", "practical1")
 ```
 
-# Reading and writing data (13:30 - 14:30)
+## Demo: Transport data with R
 
-## Reading data into R can tricky
-
-- There are dozens of data formats
-- Some data formats require additional packages
-- Text encoding can cause additional problems
-
-## Inequality data from the world bank
-
-- Download data from http://www.mas.ncl.ac.uk/~ncsg3/Rcourse/movie.txt
-- Open the file with Notepad++
-- Read it in with `read.csv(ineq.csv)`.
-
-```{r, echo=FALSE}
-# url <- "http://www.metoffice.gov.uk/pub/data/weather/uk/climate/stationdata/bradforddata.txt"
-# download.file("http://www.metoffice.gov.uk/pub/data/weather/uk/climate/stationdata/bradforddata.txt", "bradforddata.txt")
-# df <- read.table("bradforddata.txt", skip = 5, as.is = T)
-# df <- read.fwf("bradforddata.txt", widths = 5, skip = 5)
-```
-
-## Importing a simple .csv
+- Let's see how R can be used to analyse transport data:
 
 ```{r}
-# Download from the internet:
-# url <- "http://www.mas.ncl.ac.uk/~ncsg3/Rcourse/movie.txt"
-# download.file(url, "movie.txt")
-movie <- read.csv("../movie.txt", header=TRUE, stringsAsFactors=FALSE)
+library(stplanr)
+data("routes_fast")
+plot(routes_fast)
 ```
 
-## Practical 3: work through Chapter 3
+## Practical - work through the tutorial
 
-> - What is the size of the data saved as a .csv?
-> - How big is the data save as .Rds?
-> - What about if you save it as .xlsx?
+- See the source code here: https://github.com/ITSLeeds/SSPA/blob/master/r4transport.Rmd
+- Experiment with the content
 
-## Practical 3 - Reading R in the wild
+<!-- # Reading and writing data (13:30 - 14:30) -->
 
-> - Identify a medium/large dataset of interest
-> - Read it into R
-> - If you finish early: go back to the subsetting stage
-> - If you finish that: find more datasets!
-> - Try saving the data with different file formats
+<!-- ## Reading data into R can tricky -->
 
-# Data manipulation (14:30 - 15:00)
+<!-- - There are dozens of data formats -->
+<!-- - Some data formats require additional packages -->
+<!-- - Text encoding can cause additional problems -->
 
-## An example dataset
+<!-- ## Inequality data from the world bank -->
 
-- It's good to start small before going BIG
-- A quick exploration with the diamonds dataset:
+<!-- - Download data from http://www.mas.ncl.ac.uk/~ncsg3/Rcourse/movie.txt -->
+<!-- - Open the file with Notepad++ -->
+<!-- - Read it in with `read.csv(ineq.csv)`. -->
 
-```{r}
-library(ggplot2)
-diamonds[1:3,]
+<!-- ```{r, echo=FALSE} -->
+<!-- # url <- "http://www.metoffice.gov.uk/pub/data/weather/uk/climate/stationdata/bradforddata.txt" -->
+<!-- # download.file("http://www.metoffice.gov.uk/pub/data/weather/uk/climate/stationdata/bradforddata.txt", "bradforddata.txt") -->
+<!-- # df <- read.table("bradforddata.txt", skip = 5, as.is = T) -->
+<!-- # df <- read.fwf("bradforddata.txt", widths = 5, skip = 5) -->
+<!-- ``` -->
+
+<!-- ## Importing a simple .csv -->
+
+<!-- ```{r} -->
+<!-- # Download from the internet: -->
+<!-- # url <- "http://www.mas.ncl.ac.uk/~ncsg3/Rcourse/movie.txt" -->
+<!-- # download.file(url, "movie.txt") -->
+<!-- movie <- read.csv("../movie.txt", header=TRUE, stringsAsFactors=FALSE) -->
+<!-- ``` -->
+
+<!-- ## Practical 3: work through Chapter 3 -->
+
+<!-- > - What is the size of the data saved as a .csv? -->
+<!-- > - How big is the data save as .Rds? -->
+<!-- > - What about if you save it as .xlsx? -->
+
+<!-- ## Practical 3 - Reading R in the wild -->
+
+<!-- > - Identify a medium/large dataset of interest -->
+<!-- > - Read it into R -->
+<!-- > - If you finish early: go back to the subsetting stage -->
+<!-- > - If you finish that: find more datasets! -->
+<!-- > - Try saving the data with different file formats -->
+
+<!-- # Data manipulation (14:30 - 15:00) -->
+
+<!-- ## An example dataset -->
+
+<!-- - It's good to start small before going BIG -->
+<!-- - A quick exploration with the diamonds dataset: -->
+
+<!-- ```{r} -->
+<!-- library(ggplot2) -->
+<!-- diamonds[1:3,] -->
+<!-- ``` -->
+
+<!-- ## Selecting rows -->
+
+<!-- The base R way -->
+
+<!-- ```{r} -->
+<!-- summary(diamonds$color) -->
+<!-- head(diamonds[diamonds$color == "I",]) -->
+<!-- ``` -->
+
+<!-- The dplyr way -->
+
+<!-- ```{r} -->
+<!-- library(dplyr) -->
+<!-- filter(diamonds, color == "I") -->
+<!-- ``` -->
+
+<!-- ## dplyr is clever -->
+
+<!-- ```{r} -->
+<!-- sum(diamonds$color == "I" | diamonds$color == "J") -->
+<!-- dfs <- filter(diamonds, color == "I" | color == "J") -->
+<!-- nrow(dfs) -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- arrange(diamonds, desc(z)) -->
+<!-- ``` -->
+
+## Using the 'nclRintroduction' package
+
+```{r, eval=FALSE}
+if(!require(devtools))
+  install.packages("devtools")
+if(!require(nclRintroduction))
+  devtools::install_github("rcourses/nclRintroduction", build_vignettes = T)
+library(nclRintroduction)
+vignette(package = "nclRintroduction")
 ```
 
-## Selecting rows
+## Advanced challenge
 
-The base R way
+- Reproduce the work documented in the `stplanr-paper` vignette
 
-```{r}
-summary(diamonds$color)
-head(diamonds[diamonds$color == "I",])
+```{r, eval=FALSE}
+vignette("stplanr-paper")
 ```
 
-The dplyr way
+- Experiment with the example datasets - can you make different versions of the plots?
 
-```{r}
-library(dplyr)
-filter(diamonds, color == "I")
-```
-
-## dplyr is clever
-
-```{r}
-sum(diamonds$color == "I" | diamonds$color == "J")
-dfs <- filter(diamonds, color == "I" | color == "J")
-nrow(dfs)
-```
-
-```{r}
-arrange(diamonds, desc(z))
-```
-
-
-
-## Work using the dplyr package data processing
-
-Work through the worked example here:
-
-http://r4ds.had.co.nz/transform.html
-
-# Summary statistics (15:00 - 15:30)
-
-## Practical 4
-
-# Plotting with R (15:45 - 16:15)
-
-## Feedback
-
-Your feedback is greatly appreciated.
-
-Please complete the online form here:
