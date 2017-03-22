@@ -1080,8 +1080,7 @@ A couple of basic plots show the package's intuitive
 syntax and attractive default parameters.
 
 ```{r, eval=FALSE, message=FALSE}
-# Create our first tmap map (not shown)
-qtm(shp = lnd, fill = "Partic_Per", fill.palette = "-Blues")
+qtm(shp = lnd, fill = "Partic_Per", fill.palette = "-Blues") # not shown
 ```
 
 ```{r, fig.cap="Side-by-side maps of sports participation and population"}
@@ -1089,10 +1088,10 @@ qtm(shp = lnd, fill = c("Partic_Per", "Pop_2001"), fill.palette = "Blues", ncol 
 ```
 
 The plot above shows the ease with which tmap can create maps
-next to each other for different variables. Figure 13 illustrates
+next to each other for different variables. The plot produced by the following code chunk (not shown) demonstrates
 the power of the `tm_facets` command. Note that all the maps created with the `qtm` function can also be created with `tm_shape`, followed by `tm_fill` (or another `tm_` function).
 
-```{r, fig.cap="Facetted map of London Boroughs created by tmap"}
+```{r, fig.cap="Facetted map of London Boroughs created by tmap", eval=FALSE}
 tm_shape(lnd) +
     tm_fill("Pop_2001", thres.poly = 0) +
 tm_facets("name", free.coords = TRUE, drop.units = TRUE)
@@ -1103,85 +1102,64 @@ To create a basemap with tmap, you can use the `read_osm` function, from the [**
 ```{r, fig.cap="London's population in 2001."}
 # Transform the coordinate reference system
 lnd_wgs = spTransform(lnd, CRS("+init=epsg:4326"))
-osm_tiles = tmaptools::read_osm(bbox(lnd_wgs))
-tm_shape(osm_tiles) + # download images from OSM
-  tm_raster() +
-  tm_shape(lnd_wgs) +
+osm_tiles = tmaptools::read_osm(bbox(lnd_wgs)) # download images from OSM
+tm_shape(osm_tiles) + tm_raster() + tm_shape(lnd_wgs) +
   tm_fill("Pop_2001", fill.title = "Population, 2001", scale = 0.8, alpha = 0.5) +
   tm_layout(legend.position = c(0.89,0.02))
 ```
 
-Note that another way to make **tmap** maps have a basemap is by entering `tmap_mode("view")`. This will make the maps appear on a zoomable webmap powered by **leaflet**.
+Another way to make **tmap** maps have a basemap is by entering `tmap_mode("view")`. This will make the maps appear on a zoomable webmap powered by **leaflet**.
 There are many other intuitive and powerful functions in **tmap**. Check the documentation to find out more:
 
 ```{r, eval=FALSE}
 ?tmap # get more info on tmap
 ```
 
-
-
-A more established plotting paradigm is **ggplot2**
-package. This has been subsequently
-adapted to maps thank to **ggmap**, as described below.
+<!-- A more established plotting paradigm is **ggplot2** -->
+<!-- package. This has been subsequently -->
+<!-- adapted to maps thank to **ggmap**, as described below. -->
 
 ## **ggmap**
 
 **ggmap** is based on the **ggplot2** package,
 an implementation of the Grammar of Graphics (Wilkinson 2005).
-This section focusses primarily on **ggplot2**. More on **ggmap** 
-can be found in the vignettes accompanying this tutorial:
-https://github.com/Robinlovelace/Creating-maps-in-R/tree/master/vignettes
-
 **ggplot2** can replace
 the base graphics in R (the functions you have been plotting with so far).
-It contains default options that match good visualisation practice.
-
-**ggplot2** is one of the best documented packages in R.
-This documentation can be found on-line and it is recommended you
-test out the examples and play with them:
+It contains default options that match good visualisation practice
+and is well-documented:
 http://docs.ggplot2.org/current/ .
 
-Good examples of graphs can also be found on the website
-[cookbook-r.com](http://www.cookbook-r.com/Graphs/).
-
-Load the package with `library(ggplot2)`.
-It is worth noting that the base `plot()` function requires less
-data preparation but more effort in control of features.
-`qplot()` and `ggplot()` from **ggplot2**
-require some additional work to format the spatial data but select
-colours and legends automatically, with sensible defaults.
-
-As a first attempt with **ggplot2** we can create a scatter plot with the attribute data in the `lnd` object created previously. Type:
+As a first attempt with **ggplot2** we can create a scatter plot with the attribute data in the `lnd` object created previously:
 
 ```{r}
 p <- ggplot(lnd@data, aes(Partic_Per, Pop_2001))
 ```
 
-What you have just done is set up a ggplot object where
-you say where you want the input data to come from.
-`lnd@data` is actually a data frame contained within the
-wider spatial object `lnd` (the `@` enables you to
-access the attribute table of the shapefile). The characters inside the `aes` argument
-refer to the parts of that data frame you wish to use (the variables `Partic_Per` and `Pop_2001`).
-This has to happen within the brackets of `aes()`, which means,
-roughly speaking 'aesthetics that vary'.
+<!-- What you have just done is set up a ggplot object where -->
+<!-- you say where you want the input data to come from. -->
+<!-- `lnd@data` is actually a data frame contained within the -->
+<!-- wider spatial object `lnd` (the `@` enables you to -->
+<!-- access the attribute table of the shapefile). The characters inside the `aes` argument -->
+<!-- refer to the parts of that data frame you wish to use (the variables `Partic_Per` and `Pop_2001`). -->
+<!-- This has to happen within the brackets of `aes()`, which means, -->
+<!-- roughly speaking 'aesthetics that vary'. -->
 
-If you just type p and hit enter you get the error `No layers in plot`.
-This is because you have not told `ggplot` what you want
-to do with the data. We do this by adding so-called "geoms",
-in this case `geom_point()`.
+<!-- If you just type p and hit enter you get the error `No layers in plot`. -->
+<!-- This is because you have not told `ggplot` what you want -->
+<!-- to do with the data. We do this by adding so-called "geoms", -->
+<!-- in this case `geom_point()`. -->
 
-```{r fig.cap="A simple graphic produced with **ggplot2**", fig.height=1.7, fig.width=3}
-p + geom_point()
-```
+<!-- ```{r fig.cap="A simple graphic produced with **ggplot2**", fig.height=1.7, fig.width=3} -->
+<!-- p + geom_point() -->
+<!-- ``` -->
 
-Within the brackets you can alter the nature of the points. Try something like `p + geom_point(colour = "red", size=2)` and experiment.
+<!-- Within the brackets you can alter the nature of the points. Try something like `p + geom_point(colour = "red", size=2)` and experiment. -->
 
-If you want to scale the points by borough population and colour them by sports participation this is also fairly easy by adding another `aes()` argument.
+<!-- If you want to scale the points by borough population and colour them by sports participation this is also fairly easy by adding another `aes()` argument. -->
 
-```{r fig.cap="ggplot with aesthetics", eval=FALSE}
-p + geom_point(aes(colour=Partic_Per, size=Pop_2001)) # not shown
-```
+<!-- ```{r fig.cap="ggplot with aesthetics", eval=FALSE} -->
+<!-- p + geom_point(aes(colour=Partic_Per, size=Pop_2001)) # not shown -->
+<!-- ``` -->
 
 The real power of **ggplot2** lies in its ability to add layers to a plot. In this case we can add text to the plot.
 
