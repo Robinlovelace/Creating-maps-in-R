@@ -1105,8 +1105,7 @@ the power of the `tm_facets` command. Note that all the maps created with the `q
 ```{r, fig.cap="Facetted map of London Boroughs created by tmap"}
 tm_shape(lnd) +
     tm_fill("Pop_2001", thres.poly = 0) +
-tm_facets("name", free.coords=TRUE, drop.shapes=TRUE) +
-    tm_layout(legend.show = FALSE, title.position = c("center", "center"), title.size = 20)
+tm_facets("name", free.coords = TRUE, drop.units = TRUE)
 ```
 
 To create a basemap with tmap, you can use the `read_osm` function as follows. Note that you must first transform the data into a *geographical* CRS:
