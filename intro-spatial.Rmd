@@ -666,7 +666,6 @@ to aggregate the crimes at the borough level, ready to join to our spatial
 crime_data <- read.csv("data/mps-recordedcrime-borough.csv",
   stringsAsFactors = FALSE)
 
-head(crime_data, 3) # display first 3 lines
 head(crime_data$CrimeType) # information about crime type
 
 # Extract "Theft & Handling" crimes and save
@@ -718,35 +717,14 @@ could equally be used. Note that when we ask for help for a function
 that is not loaded, nothing happens, indicating we need to load it:
 
 ```{r, results='hide', eval=FALSE}
-?left_join # error flagged
-??left_join
-library(dplyr) # load the powerful dplyr package (use plyr if unavailable)
-?left_join # should now be loaded (use join if unavailable)
+library(dplyr) # load dplyr 
 ```
 
-The above code demonstrates how to search for functions that are not currently
-loaded in R, using the `??` notation (short for `help.search` in the same way
-that `?` is short for `help`). Note, you will need to have the **dplyr** package,
-which provides fast and intuitive functions for processing data, installed for
-this to work. After **dplyr** is loaded, a single question mark is sufficient to 
-load the associated help.
-
-The documentation for the `left_join` function
-will be displayed if the plyr package is available (if not,
-use `install.packages()` to install it).
 We use `left_join` because we want the length of the data frame
 to remain unchanged, with variables from new data appended in
-new columns. Or, in R's rather terse documentation:
-"return all rows from x, and all columns from x and y."
-The `*join` commands (including `inner_join` and `anti_join`) are more
-concise when joining variables have the
-same name across both datasets. If they do not, there are two options: 
-1) rename one of them to match the other; 
-2) specify the association within the `*join` function.
-Renaming is not always convinient, sometimes it is better not to change the
-original data set. If you want to rename one of the variables, **dplyr** is 
-also helpful here as it contains a useful function `rename` (see `?rename`). 
-Here we will specify teh association between variables in the two data sets:
+new columns (see `?left_join`).
+The `*join` commands (including `inner_join` and `anti_join`) assume, by default, that matching variables have the same name.
+Here we will specify the association between variables in the two data sets:
 
 ```{r, echo=FALSE, message=FALSE}
 # Load dplyr package
@@ -760,10 +738,6 @@ head(crime_ag$Borough) # the variables to join
 
 # head(left_join(lnd@data, crime_ag)) # test it works
 lnd@data <- left_join(lnd@data, crime_ag, by = c('name' = 'Borough'))
-
-# the renaming option (uncomment to try it out)
-# crime_ag <- rename(crime_ag, name = Borough) # rename the 'Borough' heading to 'name'
-# lnd@data <- left_join(lnd@data, crime_ag)
 ```
 
 Take a look at the new `lnd@data` object. You should
@@ -797,50 +771,46 @@ grid.raster(readPNG("figure/lnd-crime.png"))
 > **Optional challenge:** create a map of additional variables in London
 
 With the attribute joining skills you have learned in this section,
-you should now be able to take datasets from many sources and
-join them to your geographical data. To test your skills, try to
-join additional borough-level variables to the `lnd` object.
-An excellent dataset on this can be found on the the 
-[data.london.gov.uk](http://data.london.gov.uk/dataset/london-borough-profiles)
-website. 
+you should now be able to take datasets from many sources, e.g. [data.london.gov.uk](http://data.london.gov.uk/dataset/london-borough-profiles), and
+join them to your geographical data. 
 
-Using this dataset and the methods developed above, Figure 8 was
-created: the proportion of council seats won by the Conservatives
-in the 2014 local elections. The **challenge** is to create 
-a similar map of a different variable (you may need to skip to
-Part IV to plot continuous variables).^[Hint: the solution relies on the
-**rgeos** function `gCentroid()`. To
-see how this map was created, see the code
-in intro-spatial.Rmd at [github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial.Rmd](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial.Rmd).]
+<!-- Using this dataset and the methods developed above, Figure 8 was -->
+<!-- created: the proportion of council seats won by the Conservatives -->
+<!-- in the 2014 local elections. The **challenge** is to create  -->
+<!-- a similar map of a different variable (you may need to skip to -->
+<!-- Part IV to plot continuous variables).^[Hint: the solution relies on the -->
+<!-- **rgeos** function `gCentroid()`. To -->
+<!-- see how this map was created, see the code -->
+<!-- in intro-spatial.Rmd at [github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial.Rmd](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial.Rmd).] -->
 
-```{r, echo=FALSE, results='hide', message=FALSE, warning=FALSE, fig.cap="Proportion of council seats won by Conservatives in the 2014 local elections using data from data.london.gov and joined using the methods presented in this section", , out.width="48%", fig.align="center"}
-# install.packages("ggmap")
-library(maptools)
-library(ggmap)
-borough_dat <- read.csv("data/london-borough-profiles-2014.csv")
-names(borough_dat)
-borough_dat <- dplyr::rename(borough_dat, conservative = Proportion.of.seats.won.by.Conservatives.in.2014.election)
-borough_dat$conservative <- as.numeric(as.character(borough_dat$conservative))
-summary(borough_dat$conservative)
-head(lnd$ons_label)
-head(borough_dat$Code)
-# check the joining variables work
-summary(borough_dat$Code %in% lnd$ons_label)
-# select the data to join
-to_join <- select(borough_dat, Code, conservative)
-lnd@data <- left_join(lnd@data, to_join, by = c('ons_label' = 'Code'))
+<!-- ```{r, echo=FALSE, results='hide', message=FALSE, warning=FALSE, fig.cap="Proportion of council seats won by Conservatives in the 2014 local elections using data from data.london.gov and joined using the methods presented in this section", , out.width="48%", fig.align="center"} -->
+<!-- # install.packages("ggmap") -->
+<!-- library(maptools) -->
+<!-- library(ggmap) -->
+<!-- borough_dat <- read.csv("data/london-borough-profiles-2014.csv") -->
+<!-- names(borough_dat) -->
+<!-- borough_dat <- dplyr::rename(borough_dat, conservative = Proportion.of.seats.won.by.Conservatives.in.2014.election) -->
+<!-- borough_dat$conservative <- as.numeric(as.character(borough_dat$conservative)) -->
+<!-- summary(borough_dat$conservative) -->
+<!-- head(lnd$ons_label) -->
+<!-- head(borough_dat$Code) -->
+<!-- # check the joining variables work -->
+<!-- summary(borough_dat$Code %in% lnd$ons_label) -->
+<!-- # select the data to join -->
+<!-- to_join <- select(borough_dat, Code, conservative) -->
+<!-- lnd@data <- left_join(lnd@data, to_join, by = c('ons_label' = 'Code')) -->
 
-lnd_f <- fortify(lnd, region = "ons_label")
-lnd_f <- left_join(lnd_f, to_join, by = c('id' = 'Code'))
+<!-- lnd_f <- fortify(lnd, region = "ons_label") -->
+<!-- lnd_f <- left_join(lnd_f, to_join, by = c('id' = 'Code')) -->
 
-map <- ggplot(lnd_f, aes(long, lat, group = group, fill = conservative)) +
-  geom_polygon() +
-  coord_equal() +
-  labs(x = "Easting (m)", y = "Northing (m)", fill = "% Tory") +
-  scale_fill_continuous(low = "grey", high = "blue") +
-  theme_nothing(legend = T)
-map
-```
+<!-- map <- ggplot(lnd_f, aes(long, lat, group = group, fill = conservative)) + -->
+<!--   geom_polygon() + -->
+<!--   coord_equal() + -->
+<!--   labs(x = "Easting (m)", y = "Northing (m)", fill = "% Tory") + -->
+<!--   scale_fill_continuous(low = "grey", high = "blue") + -->
+<!--   theme_nothing(legend = T) -->
+<!-- map -->
+<!-- ``` -->
 
 ## Clipping and spatial joins
 
@@ -870,7 +840,7 @@ we will convert the 'stations' object to this:
 ```{r fig.cap="Sampling and plotting stations"}
 # Create reprojected stations object
 stations <- spTransform(stations, CRSobj = CRS(proj4string(lnd)))
-plot(lnd) # plot London for context (see Figure 9)
+plot(lnd) # plot London 
 points(stations) # overlay the station points
 ```
 
@@ -885,7 +855,7 @@ so that only those falling within London boroughs are retained we can use
 
 ```{r fig.cap="The clipped stations dataset"}
 stations <- stations[lnd, ] 
-plot(stations) # test the clip succeeded (see Figure 10)
+plot(stations) # test the clip succeeded
 ```
 
 ```{r, echo=F,eval=FALSE}
@@ -1099,7 +1069,7 @@ tm_facets("name", free.coords = TRUE, drop.units = TRUE)
 
 To create a basemap with tmap, you can use the `read_osm` function, from the [**tmaptools** package](https://github.com/mtennekes/tmaptools) as follows. Note that you must first transform the data into a *geographical* CRS:
 
-```{r, fig.cap="London's population in 2001."}
+```{r, fig.cap="London's population in 2001.", fig.width=4}
 # Transform the coordinate reference system
 lnd_wgs = spTransform(lnd, CRS("+init=epsg:4326"))
 osm_tiles = tmaptools::read_osm(bbox(lnd_wgs)) # download images from OSM
@@ -1132,6 +1102,7 @@ http://docs.ggplot2.org/current/ .
 As a first attempt with **ggplot2** we can create a scatter plot with the attribute data in the `lnd` object created previously:
 
 ```{r}
+library(ggplot2)
 p <- ggplot(lnd@data, aes(Partic_Per, Pop_2001))
 ```
 
@@ -1178,91 +1149,51 @@ For this to work, either the **maptools** or **rgeos** packages must be installe
 
 ```{r, warning=FALSE}
 library(rgeos)
-lnd_f <- fortify(lnd) # you may need to load maptools
+lnd_f <- fortify(lnd) 
 ```
 
 This step has lost the attribute information associated with the lnd object. We can add it back using the `left_join`
-function (this performs a data join). To use this function, ensure you have the dplyr package installed and loaded.
-To find out how it works look at
-the output of typing `?left_join`. As usual the help documentation
-is a little sparse here, so let's consider what it means in more
-detail. The help document explains that `left_join` retains all rows from the
-original dataset `x`, whereas `inner_join` only
-retains rows in `x` which have a match in `y`. If there is no match in the
-joining variable, `inner_join` simply adds `NA` values for the new
-variables for the affect rows.
+function from the **dplyr** package
+(see `?left_join`).
 
-```{r}
+```{r, results='hide'}
 head(lnd_f, n = 2) # peak at the fortified data
 lnd$id <- row.names(lnd) # allocate an id variable to the sp data
 head(lnd@data, n = 2) # final check before join (requires shared variable name)
 lnd_f <- left_join(lnd_f, lnd@data) # join the data
 ```
 
-Take a look at the `lnd_f` object to see its contents (which stands for "London, fortified"). You should see a large data frame containing the coordinates (Easting and Northing points as the data are in British National Grid format) alongside the attribute information associated with each London Borough. If you type `print(lnd_f)` you will see just how many coordinate pairs are required!
-To keep the output to a minimum, take a peek at the first 2 lines of the object using just the `head` command:
-
-```{r}
-lnd_f[1:2, 1:8]
-```
-
-It is now straightforward to produce a map using all the built-in tools
-(such as setting the breaks in the data) that **ggplot2** has to offer.
-`coord_equal()` is the equivalent of asp=T in regular plots with R:
+The new`lnd_f` object contains coordinates alongside the attribute information associated with each London Borough.
+It is now straightforward to produce a map with
+**ggplot2**.
+`coord_equal()` is the equivalent of `asp = T` in regular plots with R:
 
 ```{r fig.cap="Map of Lond Sports Participation"}
 map <- ggplot(lnd_f, aes(long, lat, group = group, fill = Partic_Per)) +
-  geom_polygon() +
-  coord_equal() +
+  geom_polygon() + coord_equal() +
   labs(x = "Easting (m)", y = "Northing (m)",
     fill = "% Sports\nParticipation") +
   ggtitle("London Sports Participation")
 ```
 
-Now, just typing `map` should result in your first ggplot-made map of London!
-There is a lot going on in the code above, so think about it line by line:
-what have each of the elements of code above been designed to do?
-Also note how the `aes()` components can be combined into one set of brackets
-after `ggplot`, that has relevance for all layers, rather than being
-broken into separate parts as we did above.
-The different plot functions still know what to do with these.
-The `group=group` points ggplot to the group column added by
-`fortify()` and it identifies the groups of coordinates that pertain
-to individual polygons (in this case London Boroughs).
-
+Entering `map` should result in your first ggplot-made map of London.
 The default colours are really nice but we may wish to produce the map in black and white,
-which should produce a map like the one shown below. Try changing the colours.
+which should produce a map like the one shown below. Try changing the colours and saving plots with `ggsave()`.
 
 ```{r fig.cap="Greyscale map"}
 map + scale_fill_gradient(low = "white", high = "black")
 ```
 
-To save a plot image you just need to use `ggsave` after each plot, e.g.
-`ggsave("my_map.pdf")` will save the map as a pdf, with default settings. For
-a larger map, you could try the following:
-
-```{r, eval=FALSE}
-ggsave("large_plot.png", scale = 3, dpi = 400)
-```
-
-
-
 ## Creating interactive maps with **leaflet**
 
-[Leaflet](http://leafletjs.com/) is probably the world's premier web
+[Leaflet](http://leafletjs.com/) is the world's premier web
 mapping system, serving hundreds of thousands of maps worldwide each day.
 The JavaScript library actively developed at
 [github.com/Leaflet/Leaflet](https://github.com/Leaflet/Leaflet),
 has a strong user community. It is fast, powerful and easy to learn.
 
-A recent package developed by RStudio, called 
-**leaflet**^[We also refer to this as **rstudio/leaflet**, after the
-project's on-line home at 
-[github.com/rstudio/leaflet](https://github.com/rstudio/leaflet),
-to avoid confusion with the JavaScript library.]
-provides R bindings to Leaflet.
-**rstudio/leaflet**
-allows the creation and deployment of interactive web maps in few
+The **leaflet** package
+creates interactive web maps in few
 lines of code. One of the exciting things about the package is
 its tight integration with the R package for interactive on-line
 visualisation, **shiny**.
@@ -1349,10 +1280,9 @@ Rename the date variable (use `?gsub` and Google 'regex' to find out more).
 lnd_f$date <- gsub(pattern = "Pop_", replacement = "", lnd_f$date)
 ```
 
-We can now use faceting to produce one map per year
-(Fig. 19).
+We can now use faceting to produce one map per year:
 
-```{r fig.cap="Faceted plot of the distribution of London's population over time", fig.height=6, fig.width=6}
+```{r fig.cap="Faceted plot of the distribution of London's population over time", fig.height=6, fig.width=5}
 ggplot(data = lnd_f, # the input data
   aes(x = long, y = lat, fill = pop/1000, group = group)) + # define variables
   geom_polygon() + # plot the boroughs
@@ -1403,17 +1333,11 @@ the present tutorial. These can be found on the
 
 Other advanced tutorials include
 
-- "Using spatial data" from the
-[useR 2013 conference page](http://www.edii.uclm.es/~useR-2013//Tutorials/Bivand.html)
-- "Geographically Weighted PCA", an in-depth and advanced tutorial by
-[Chris Brunsdon](https://rpubs.com/chrisbrunsdon/99675)
--"The Spatial Autoregression Regression Model and Correlation", another advanced
-tutorial, also by [Chris Brunsdon](https://rpubs.com/chrisbrunsdon/sarcorr)
-- "Using R as a GIS", a long and detailed online tutorial by [Francisco Rodriguez-Sanchez](https://pakillo.github.io/R-GIS-tutorial/).
+- The Simple Features vignettes.
 - "solaR: Solar Radiation and Photovoltaic Systems with R", a [technical
 academic paper](http://www.jstatsoft.org/v50/i09/paper)
 on the solaR package which contains a number of spatial
-function (.
+functions.
 
 Such tutorials are worth doing as they will help you
 understand R's spatial 'ecosystem' as a cohesive whole
@@ -1423,83 +1347,74 @@ the sum of its parts.
 
 The supportive on-line communities surrounding large open source programs such as R
 are one of their greatest assets, so we recommend you become an active
-"[open source citizen](http://blog.cleverelephant.ca/2013/10/being-open-source-citizen.html)" rather than a passive consumer (Ramsey & Dubovsky, 2013).
+"[open source citizen](http://blog.cleverelephant.ca/2013/10/being-open-source-citizen.html)" rather than a passive consumer.
 
-This does not necessarily mean writing a new package or contributing
-to R's 'Core Team' --- it can simply involve helping
-others use R. We therefore conclude the tutorial with a list of resources
-that will help you further sharpen you R skills, find help and contribute
-to the growing on-line R community:
+Good resources
+that will help you further sharpen you R skills include:
 
 * R's homepage hosts a wealth of [official](http://cran.r-project.org/manuals.html) and [contributed](http://cran.r-project.org/other-docs.html) guides.
 http://cran.r-project.org
 * [StackOverflow](http://stackoverflow.com/search?q=[r]) and [GIS.StackExchange](http://gis.stackexchange.com/) groups (the "[R]" search term limits the results). If your question has not been answered yet, just ask, preferably with a reproducible example.
 * R's [mailing lists](http://www.r-project.org/mail.html), especially [R-sig-geo](https://stat.ethz.ch/pipermail/r-sig-geo/). See [r-project.org/mail.html](http://www.r-project.org/mail.html).
 
-Books: despite the strength of R's on-line community, nothing beats a physical book for concentrated learning. We recommend the following:
-
- * Everitt and Hothorn (updated 2015): This handbook of statistical analyses is
- available online as an [R package](https://cran.r-project.org/web/packages/HSAUR/).
  * Dorman (2014): detailed exposition of spatial data in R, with a focus on raster data. A [free sample](https://www.packtpub.com/packtlib/book/Big%20Data%20&%20Business%20Intelligence/9781783984367/4) of this book is available online.
- * Wickham (2009): 'ggplot2: elegant graphics for data analysis'
  * Bivand et al. (2013) : 'Applied spatial data analysis with R' - provides a dense and detailed overview of spatial data analysis.
- * Kabacoff (2011): 'R in action' is a general R book with many fun worked examples.
  
- \clearpage
- 
-# R quick reference
+<!--  \clearpage -->
 
-`#`: comments all text until line end
+<!-- # R quick reference -->
 
-`df <- data.frame(x = 1:9, y = (1:9)^2`: create new object of class `data.frame`, called df, and assign values
+<!-- `#`: comments all text until line end -->
 
-`help(plot)`: ask R for basic help on function, the same as `?plot`. Replace `plot` with any function (e.g. `spTransform`).
+<!-- `df <- data.frame(x = 1:9, y = (1:9)^2`: create new object of class `data.frame`, called df, and assign values -->
 
-`library(ggplot2)`: load a package (replace **ggplot2** with your package name)
+<!-- `help(plot)`: ask R for basic help on function, the same as `?plot`. Replace `plot` with any function (e.g. `spTransform`). -->
 
-`install.packages("ggplot2")`: install package --- note quotation marks
+<!-- `library(ggplot2)`: load a package (replace **ggplot2** with your package name) -->
 
-`setwd("C:/Users/username/Desktop/")`: set R's *working directory* (set it to your project's folder)
+<!-- `install.packages("ggplot2")`: install package --- note quotation marks -->
 
-`nrow(df)`: count the number of rows in the object `df`
+<!-- `setwd("C:/Users/username/Desktop/")`: set R's *working directory* (set it to your project's folder) -->
 
-`summary(df)`: summary statistics of the object `df`
+<!-- `nrow(df)`: count the number of rows in the object `df` -->
 
-`head(df)`: display first 6 lines of object `df`
+<!-- `summary(df)`: summary statistics of the object `df` -->
 
-`plot(df)`: plot object `df`
+<!-- `head(df)`: display first 6 lines of object `df` -->
 
-`save(df, "C:/Users/username/Desktop/" )`: save df object to specified location
+<!-- `plot(df)`: plot object `df` -->
 
-`rm(df)`: remove the `df` object
+<!-- `save(df, "C:/Users/username/Desktop/" )`: save df object to specified location -->
 
-`proj4string(df)`: query coordinate reference system of `df` object
+<!-- `rm(df)`: remove the `df` object -->
 
-`spTransform(df, CRS("+init=epsg:4326")`: reproject `df` object to WGS84
+<!-- `proj4string(df)`: query coordinate reference system of `df` object -->
+
+<!-- `spTransform(df, CRS("+init=epsg:4326")`: reproject `df` object to WGS84 -->
 
 
-# Further information
+<!-- # Further information -->
 
-An up-to-date version of this tutorial is maintained at
-[https://github.com/Robinlovelace/Creating-maps-in-R](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial-rl.pdf). The source files used to create this tutorial, including
-the input data can be downloaded as a
-[zip file](https://github.com/Robinlovelace/Creating-maps-in-R/archive/master.zip),
-as described below. The entire tutorial was written in
-[RMarkdown](http://rmarkdown.rstudio.com/), which
-allows R code to run as the document compiles, ensuring reproducibility.
+<!-- An up-to-date version of this tutorial is maintained at -->
+<!-- [https://github.com/Robinlovelace/Creating-maps-in-R](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial-rl.pdf). The source files used to create this tutorial, including -->
+<!-- the input data can be downloaded as a -->
+<!-- [zip file](https://github.com/Robinlovelace/Creating-maps-in-R/archive/master.zip), -->
+<!-- as described below. The entire tutorial was written in -->
+<!-- [RMarkdown](http://rmarkdown.rstudio.com/), which -->
+<!-- allows R code to run as the document compiles, ensuring reproducibility. -->
 
-Any suggested improvements or new
-[vignettes](https://github.com/Robinlovelace/Creating-maps-in-R/tree/master/vignettes) are welcome, via email
-to Robin or by [forking](https://help.github.com/articles/fork-a-repo)
-the [master version](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial.Rmd) of this document.
+<!-- Any suggested improvements or new -->
+<!-- [vignettes](https://github.com/Robinlovelace/Creating-maps-in-R/tree/master/vignettes) are welcome, via email -->
+<!-- to Robin or by [forking](https://help.github.com/articles/fork-a-repo) -->
+<!-- the [master version](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial.Rmd) of this document. -->
 
-The colourful syntax highlighting in this document is thanks to
-[RMarkdown](http://rmarkdown.rstudio.com/).
-We try to follow best practice in terms of style, roughly following
-Google's style guide, an in-depth guide written by
-[Johnson (2013)](http://cran.r-project.org/web/packages/rockchalk/vignettes/Rstyle.pdf)
-and a [chapter](http://adv-r.had.co.nz/Style.html) from
-[*Advanced R*](http://adv-r.had.co.nz/) (Wickham, in press).
+<!-- The colourful syntax highlighting in this document is thanks to -->
+<!-- [RMarkdown](http://rmarkdown.rstudio.com/). -->
+<!-- We try to follow best practice in terms of style, roughly following -->
+<!-- Google's style guide, an in-depth guide written by -->
+<!-- [Johnson (2013)](http://cran.r-project.org/web/packages/rockchalk/vignettes/Rstyle.pdf) -->
+<!-- and a [chapter](http://adv-r.had.co.nz/Style.html) from -->
+<!-- [*Advanced R*](http://adv-r.had.co.nz/) (Wickham, in press). -->
 
 # Acknowledgements
 
@@ -1513,11 +1428,9 @@ and encouraged feedback from participants.
 The final thanks is to all users and developers of open source software
 for making powerful tools such as R accessible and enjoyable to use.
 
-If you have found this tutorial useful in your work, please cite it:
+If you have found this tutorial useful in your work, please [cite](https://raw.githubusercontent.com/Robinlovelace/Creating-maps-in-R/master/citation.bib) it:
 
 Lovelace, R., & Cheshire, J. (2014). Introduction to visualising spatial data in R. National Centre for Research Methods Working Papers, 14(03). Retrieved from https://github.com/Robinlovelace/Creating-maps-in-R
-
-The bibtex entry for this item can be downloaded from https://raw.githubusercontent.com/Robinlovelace/Creating-maps-in-R/master/citation.bib or [here](https://raw.githubusercontent.com/Robinlovelace/Creating-maps-in-R/master/citation.bib).
 
 # References
 
@@ -1528,28 +1441,11 @@ https://www.researchgate.net/publication/274697165_Spatial_data_visualisation_wi
 
 Dorman, M. (2014). Learning R for Geospatial Analysis. Packt Publishing Ltd.
 
-Everitt, B. S., & Hothorn, T. (2015). HSAUR: A Handbook of Statistical Analyses Using R. Retrieved from http://cran.r-project.org/package=HSAUR
-
 Gillespie, Colin, and Robin Lovelace. 2016. Efficient R Programming: A Practical Guide to Smarter Programming. O’Reilly Media. https://csgillespie.github.io/efficientR/.
-
-
-Harris, R. (2012). A Short Introduction to R.
-[social-statistics.org](http://www.social-statistics.org/).
-
-Johnson, P. E. (2013). R Style. An Rchaeological Commentary. The Comprehensive R Archive Network.
 
 Kabacoff, R. (2011). R in Action. Manning Publications Co.
 
 Lamigueiro, O. P. (2012). solaR: Solar Radiation and Photovoltaic Systems with R. Journal of Statistical Software, 50(9), 1–32. Retrieved from http://www.jstatsoft.org/v50/i09
-
-Ramsey, P., & Dubovsky, D. (2013). Geospatial Software's Open Future.
-GeoInformatics, 16(4).
-
-Torfs and Brauer (2012). A (very) short Introduction to R. The Comprehensive R Archive Network.
-
-Wickham, H. (2009). ggplot2: elegant graphics for data analysis. Springer.
-
-Wickham, H. (in press). [Advanced R](http://adv-r.had.co.nz/). CRC Press.
 
 Wickham, H. (2014). Tidy data. The Journal of Statistical Software, 14(5), Retrieved from http://www.jstatsoft.org/v59/i10
 
