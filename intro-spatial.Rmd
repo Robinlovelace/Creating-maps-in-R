@@ -55,9 +55,10 @@ We assume no prior knowledge of spatial data analysis but some
 experience with R will help.
 If you have not used R before, it may be worth following an
 introductory tutorial, such as
-"A (very) short introduction to R"
-([Torfs and Brauer, 2012](http://cran.r-project.org/doc/contrib/Torfs+Brauer-Short-R-Intro.pdf)).
-This is how the tutorial is organised:
+*Efficient R Programming*
+([Gillespie and Lovelace, 2016](http://cran.r-project.org/doc/contrib/Torfs+Brauer-Short-R-Intro.pdf)), the official [Introduction to R](https://cran.r-project.org/doc/manuals/r-release/R-intro.html) or tutorials suggested on [rstudio.com](https://www.rstudio.com/online-learning/) and [cran.r-project.org](https://cran.r-project.org/other-docs.html).
+
+Now you know some R, it's time to turn your attention towards spatial data with R. To that end, this tutorial is organised as follows:
 
 1. Introduction: provides a guide to R's syntax and preparing for the tutorial
 2. Spatial data in R: describes basic spatial functions in R
@@ -1108,12 +1109,12 @@ tm_shape(lnd) +
 tm_facets("name", free.coords = TRUE, drop.units = TRUE)
 ```
 
-To create a basemap with tmap, you can use the `read_osm` function as follows. Note that you must first transform the data into a *geographical* CRS:
+To create a basemap with tmap, you can use the `read_osm` function, from the [**tmaptools** package](https://github.com/mtennekes/tmaptools) as follows. Note that you must first transform the data into a *geographical* CRS:
 
 ```{r, fig.cap="London's population in 2001."}
 # Transform the coordinate reference system
 lnd_wgs = spTransform(lnd, CRS("+init=epsg:4326"))
-osm_tiles = read_osm(bbox(lnd_wgs))
+osm_tiles = tmaptools::read_osm(bbox(lnd_wgs))
 tm_shape(osm_tiles) + # download images from OSM
   tm_raster() +
   tm_shape(lnd_wgs) +
@@ -1561,6 +1562,9 @@ https://www.researchgate.net/publication/274697165_Spatial_data_visualisation_wi
 Dorman, M. (2014). Learning R for Geospatial Analysis. Packt Publishing Ltd.
 
 Everitt, B. S., & Hothorn, T. (2015). HSAUR: A Handbook of Statistical Analyses Using R. Retrieved from http://cran.r-project.org/package=HSAUR
+
+Gillespie, Colin, and Robin Lovelace. 2016. Efficient R Programming: A Practical Guide to Smarter Programming. O’Reilly Media. https://csgillespie.github.io/efficientR/.
+
 
 Harris, R. (2012). A Short Introduction to R.
 [social-statistics.org](http://www.social-statistics.org/).
