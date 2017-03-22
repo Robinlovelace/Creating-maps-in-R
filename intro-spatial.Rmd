@@ -893,168 +893,169 @@ plot(stations) # test the clip succeeded (see Figure 10)
 # save(stations, file="data/stations.RData")
 ```
 
-The above line of code says: "output all `stations` within
-the `lnd` object bounds". This is an incredibly concise way
-of clipping and has the added advantage of being consistent
-with R's syntax for non-spatial clipping.
-To prove it worked, only stations within the London boroughs appear in the plot.
+<!-- The above line of code says: "output all `stations` within -->
+<!-- the `lnd` object bounds", a concise way -->
+<!-- of clipping that is consistent -->
+<!-- with R's syntax for non-spatial clipping. -->
+<!-- To prove it worked, only stations within the London boroughs appear in the plot. -->
 
 `gIntersects` can achieve the same result, but with more lines of code
 (see [www.rpubs.com/RobinLovelace](http://www.rpubs.com/RobinLovelace/11796) for more on this) .
-It may seem confusing that two different functions
-can be used to generate the same result. However,
-this is a common issue in R; the question
-is finding the most appropriate solution.
 
-In its less concise form (without use of square brackets),
-`over` takes two main input arguments:
-the target layer (the layer to be altered) and the
-source layer by which the target layer is to be clipped.
-The output of `over` is a data frame of the same
-dimensions as the original object (in this case `stations`),
-except that the points which fall outside the zone of interest are set to a value of `NA` ("no answer").
-We can use this to make a subset of the original polygons,
-remembering the square bracket notation described in the first section.
-We create a new object, `sel` (short for "selection"),
-containing the indices of all relevant polygons:
+<!-- It may seem confusing that two different functions -->
+<!-- can be used to generate the same result. However, -->
+<!-- this is a common issue in R; the question -->
+<!-- is finding the most appropriate solution. -->
 
-```{r, eval=FALSE}
-sel <- over(stations_backup, lnd)
-stations2 <- stations_backup[!is.na(sel[,1]),]
-```
+<!-- In its less concise form (without use of square brackets), -->
+<!-- `over` takes two main input arguments: -->
+<!-- the target layer (the layer to be altered) and the -->
+<!-- source layer by which the target layer is to be clipped. -->
+<!-- The output of `over` is a data frame of the same -->
+<!-- dimensions as the original object (in this case `stations`), -->
+<!-- except that the points which fall outside the zone of interest are set to a value of `NA` ("no answer"). -->
+<!-- We can use this to make a subset of the original polygons, -->
+<!-- remembering the square bracket notation described in the first section. -->
+<!-- We create a new object, `sel` (short for "selection"), -->
+<!-- containing the indices of all relevant polygons: -->
 
-Typing `summary(sel)` should provide insight into how this
-worked: it is a data frame with 1801 NA values, representing
-zones outside of the London polygon.
-Note that the preceding two lines of code is equivalent to the
-single line of code, `stations <- stations[lnd, ]`.
-The next section demonstrates
-spatial aggregation, a more advanced version of spatial subsetting.
+<!-- ```{r, eval=FALSE} -->
+<!-- sel <- over(stations_backup, lnd) -->
+<!-- stations2 <- stations_backup[!is.na(sel[,1]),] -->
+<!-- ``` -->
 
-## Spatial aggregation
+<!-- Typing `summary(sel)` should provide insight into how this -->
+<!-- worked: it is a data frame with 1801 NA values, representing -->
+<!-- zones outside of the London polygon. -->
+<!-- Note that the preceding two lines of code is equivalent to the -->
+<!-- single line of code, `stations <- stations[lnd, ]`. -->
+<!-- The next section demonstrates -->
+<!-- spatial aggregation, a more advanced version of spatial subsetting. -->
 
-As with R's very terse code for spatial subsetting, the base function
-`aggregate` (which provides summaries of variables based on some grouping variable)
-also behaves differently when the inputs are spatial objects.
+<!-- ## Spatial aggregation -->
 
-```{r}
-stations_agg <- aggregate(x = stations["CODE"], by = lnd, FUN = length)
-head(stations_agg@data)
-```
+<!-- As with R's very terse code for spatial subsetting, the base function -->
+<!-- `aggregate` (which provides summaries of variables based on some grouping variable) -->
+<!-- also behaves differently when the inputs are spatial objects. -->
 
-The above code performs a number of steps in just one line:
+<!-- ```{r} -->
+<!-- stations_agg <- aggregate(x = stations["CODE"], by = lnd, FUN = length) -->
+<!-- head(stations_agg@data) -->
+<!-- ``` -->
 
-- `aggregate` identifies which `lnd` polygon (borough) each `station` is located in and groups them accordingly. The use of the syntax `stations["CODE"]` tells R that we are
-interested in the spatial data from `stations` and its `CODE` variable (any variable
-could have been used here as we are merely counting how many points exist).
-- It counts the number of `stations` points in each borough, using the function `length`.
-- A new spatial object is created, with the same geometry as `lnd`, and assigned the name `stations_agg`, the count of stations.
+<!-- The above code performs a number of steps in just one line: -->
 
-It may seem confusing that the result of the aggregated function is a new shape,
-not a list of numbers --- this is because values are assigned to the elements within
-the `lnd` object. To extract the raw count data, one could enter `stations_agg$CODE`.
-This variable could be added to the original `lnd` object as a new field, as follows:
+<!-- - `aggregate` identifies which `lnd` polygon (borough) each `station` is located in and groups them accordingly. The use of the syntax `stations["CODE"]` tells R that we are -->
+<!-- interested in the spatial data from `stations` and its `CODE` variable (any variable -->
+<!-- could have been used here as we are merely counting how many points exist). -->
+<!-- - It counts the number of `stations` points in each borough, using the function `length`. -->
+<!-- - A new spatial object is created, with the same geometry as `lnd`, and assigned the name `stations_agg`, the count of stations. -->
 
-```{r}
-lnd$n_points <- stations_agg$CODE
-```
+<!-- It may seem confusing that the result of the aggregated function is a new shape, -->
+<!-- not a list of numbers --- this is because values are assigned to the elements within -->
+<!-- the `lnd` object. To extract the raw count data, one could enter `stations_agg$CODE`. -->
+<!-- This variable could be added to the original `lnd` object as a new field, as follows: -->
 
-As shown below, the spatial implementation of
-`aggregate` can provide summary statistics of variables, as well as simple counts.
-In this case we take the variable `NUMBER`
-and find its mean value for the stations in each ward.^[See the 
-miniature Vignette 'Clipping and aggregating spatial data with
-gIntersects' for more information on this: http://rpubs.com/RobinLovelace/83834 .]
+<!-- ```{r} -->
+<!-- lnd$n_points <- stations_agg$CODE -->
+<!-- ``` -->
 
-```{r}
-lnd_n <- aggregate(stations["NUMBER"], by = lnd, FUN = mean)
-```
+<!-- As shown below, the spatial implementation of -->
+<!-- `aggregate` can provide summary statistics of variables, as well as simple counts. -->
+<!-- In this case we take the variable `NUMBER` -->
+<!-- and find its mean value for the stations in each ward.^[See the  -->
+<!-- miniature Vignette 'Clipping and aggregating spatial data with -->
+<!-- gIntersects' for more information on this: http://rpubs.com/RobinLovelace/83834 .] -->
 
-For an optional advanced task, let us analyse and plot the result.
+<!-- ```{r} -->
+<!-- lnd_n <- aggregate(stations["NUMBER"], by = lnd, FUN = mean) -->
+<!-- ``` -->
 
-```{r fig.cap="Choropleth map of mean values of stations in each borough"}
-q <- cut_number(lnd_n$NUMBER,4) # a nice little function from ggplot2
-q <- factor(q, labels = grey.colors(n = 4))
-summary(q) # check what we've created
+<!-- For an optional advanced task, let us analyse and plot the result. -->
 
-qc <- as.character(q) # convert to character class to plot
-plot(lnd_n, col = qc) # plot (not shown in printed tutorial)
-legend(legend = paste0("Q", 1:4), fill = levels(q), "topright")
-areas <- sapply(lnd_n@polygons, function(x) x@area)
-```
+<!-- ```{r fig.cap="Choropleth map of mean values of stations in each borough"} -->
+<!-- q <- cut_number(lnd_n$NUMBER,4) # a nice little function from ggplot2 -->
+<!-- q <- factor(q, labels = grey.colors(n = 4)) -->
+<!-- summary(q) # check what we've created -->
 
-This results in a simple choropleth map and a new vector containing the area of each
-borough (the basis for Fig. 11). As an additional step, try comparing the mean
-area of each borough with the
-mean value of `stations` points within it: `plot(lnd_n$NUMBER, areas)`.
+<!-- qc <- as.character(q) # convert to character class to plot -->
+<!-- plot(lnd_n, col = qc) # plot (not shown in printed tutorial) -->
+<!-- legend(legend = paste0("Q", 1:4), fill = levels(q), "topright") -->
+<!-- areas <- sapply(lnd_n@polygons, function(x) x@area) -->
+<!-- ``` -->
 
-*Adding different symbols for tube stations and train stations*
+<!-- This results in a simple choropleth map and a new vector containing the area of each -->
+<!-- borough (the basis for Fig. 11). As an additional step, try comparing the mean -->
+<!-- area of each borough with the -->
+<!-- mean value of `stations` points within it: `plot(lnd_n$NUMBER, areas)`. -->
 
-Imagine now that we want to display all tube and train stations
-on top of the previously created choropleth map. How would we do this?
-The shape of points in R is determined by the `pch` argument, as demonstrated by the
-result of entering the following code: `plot(1:10, pch=1:10)`.
-To apply this knowledge to our map, try adding the following
-code to the chunk above (output not shown):
+<!-- *Adding different symbols for tube stations and train stations* -->
 
-```{r, eval=F}
-levels(stations$LEGEND) # see A roads and rapid transit stations (RTS) (not shown)
-sel <- grepl("A Road Sing|Rapid", stations$LEGEND) # selection for plotting 
-sym <- as.integer(stations$LEGEND[sel]) # symbols
-points(stations[sel,], pch = sym)
-legend(legend = c("A Road", "RTS"), "bottomright", pch = unique(sym))
-```
+<!-- Imagine now that we want to display all tube and train stations -->
+<!-- on top of the previously created choropleth map. How would we do this? -->
+<!-- The shape of points in R is determined by the `pch` argument, as demonstrated by the -->
+<!-- result of entering the following code: `plot(1:10, pch=1:10)`. -->
+<!-- To apply this knowledge to our map, try adding the following -->
+<!-- code to the chunk above (output not shown): -->
 
-```{r , echo=FALSE, eval=FALSE}
-# , fig.cap="Symbol levels for train station types in London"
-q <- cut(lnd_n$NUMBER, breaks= c(quantile(lnd_n$NUMBER)), include.lowest=T)
-clr <- as.character(factor(q, labels = paste0("grey", seq(20, 80, 20))))
-plot(lnd_n, col = clr)
-legend(legend = paste0("q", 1:4), fill = paste0("grey", seq(20, 80, 20)), "topright")
-sel <- grepl("A Road Sing|Rapid", stations$LEGEND) # selection for plotting 
-sym <- as.integer(stations$LEGEND[sel]) # symbols
-points(stations[sel,], pch = sym)
-legend(legend = c("A Road", "RTS"), "bottomright", pch = unique(sym))
-```
+<!-- ```{r, eval=F} -->
+<!-- levels(stations$LEGEND) # see A roads and rapid transit stations (RTS) (not shown) -->
+<!-- sel <- grepl("A Road Sing|Rapid", stations$LEGEND) # selection for plotting  -->
+<!-- sym <- as.integer(stations$LEGEND[sel]) # symbols -->
+<!-- points(stations[sel,], pch = sym) -->
+<!-- legend(legend = c("A Road", "RTS"), "bottomright", pch = unique(sym)) -->
+<!-- ``` -->
 
-The above block of code first identifies which types of transport
-points are present in the map with `levels` (this command only works on
-factor data). Next we select a subset of `stations` using a new command, `grepl`, to
-determine which points we want to plot. Note that `grepl`'s first argument
-is a text string (hence the quote marks) and the second is a factor
-(try typing `class(stations$LEGEND)` to test this).
-`grepl` uses *regular expressions* to match whether each element in a vector
-of text or factor names match the text pattern we want. In this case,
-because we are only interested in roundabouts that are A roads and
-Rapid Transit systems (RTS). Note the use of the vertical separator `|` to
-indicate that we want to match `LEGEND` names that contain either "A Road"
-*or* "Rapid". Based on the positive matches (saved as `sel`, a vector of
-`TRUE` and `FALSE` values), we subset the stations. Finally we plot these as points,
-using the integer of their name to decide the symbol and add a legend.
-(See the documentation of `?legend` for detail on the complexities of
-legend creation in R's base graphics.)
+<!-- ```{r , echo=FALSE, eval=FALSE} -->
+<!-- # , fig.cap="Symbol levels for train station types in London" -->
+<!-- q <- cut(lnd_n$NUMBER, breaks= c(quantile(lnd_n$NUMBER)), include.lowest=T) -->
+<!-- clr <- as.character(factor(q, labels = paste0("grey", seq(20, 80, 20)))) -->
+<!-- plot(lnd_n, col = clr) -->
+<!-- legend(legend = paste0("q", 1:4), fill = paste0("grey", seq(20, 80, 20)), "topright") -->
+<!-- sel <- grepl("A Road Sing|Rapid", stations$LEGEND) # selection for plotting  -->
+<!-- sym <- as.integer(stations$LEGEND[sel]) # symbols -->
+<!-- points(stations[sel,], pch = sym) -->
+<!-- legend(legend = c("A Road", "RTS"), "bottomright", pch = unique(sym)) -->
+<!-- ``` -->
 
-This may seem a frustrating and unintuitive way of altering
-map graphics compared with something like QGIS. That's because it is!
-It may not be worth stressing too
-much about base graphics because there are intuitive alternatives
-for quickly creating beautiful maps in R, including
-**tmap**, **ggplot** and **leaflet**. 
+<!-- The above block of code first identifies which types of transport -->
+<!-- points are present in the map with `levels` (this command only works on -->
+<!-- factor data). Next we select a subset of `stations` using a new command, `grepl`, to -->
+<!-- determine which points we want to plot. Note that `grepl`'s first argument -->
+<!-- is a text string (hence the quote marks) and the second is a factor -->
+<!-- (try typing `class(stations$LEGEND)` to test this). -->
+<!-- `grepl` uses *regular expressions* to match whether each element in a vector -->
+<!-- of text or factor names match the text pattern we want. In this case, -->
+<!-- because we are only interested in roundabouts that are A roads and -->
+<!-- Rapid Transit systems (RTS). Note the use of the vertical separator `|` to -->
+<!-- indicate that we want to match `LEGEND` names that contain either "A Road" -->
+<!-- *or* "Rapid". Based on the positive matches (saved as `sel`, a vector of -->
+<!-- `TRUE` and `FALSE` values), we subset the stations. Finally we plot these as points, -->
+<!-- using the integer of their name to decide the symbol and add a legend. -->
+<!-- (See the documentation of `?legend` for detail on the complexities of -->
+<!-- legend creation in R's base graphics.) -->
+
+<!-- This may seem a frustrating and unintuitive way of altering -->
+<!-- map graphics compared with something like QGIS. That's because it is! -->
+<!-- It may not be worth stressing too -->
+<!-- much about base graphics because there are intuitive alternatives -->
+<!-- for quickly creating beautiful maps in R, including -->
+<!-- **tmap**, **ggplot** and **leaflet**.  -->
 
 \clearpage
 
 # Part IV: Making maps with tmap, ggplot2 and leaflet
 
-This fourth part introduces
-alternative methods for creating maps with R that overcome
-some of the limitations and clunkiness of R's base graphics. 
-Having worked hard to manipulate the spatial data,
-it is now time to display the results clearly, beautifully
-and, in the case of **leaflet**, interactively.
+<!-- This section introduces -->
+<!-- alternative methods for creating maps with R that overcome -->
+<!-- some of the limitations and clunkiness of R's base graphics.  -->
+<!-- Having worked hard to manipulate the spatial data, -->
+<!-- it is now time to display the results clearly, beautifully -->
+<!-- and, in the case of **leaflet**, interactively. -->
 
-We try the newest of the three packages, **tmap**, first
-as it is the easiest to use. Then we progress to explore the
-powerful **ggplot2** paradigm before outlining **leaflet**.
+<!-- We try the newest of the three packages, **tmap**, first -->
+<!-- as it is the easiest to use. Then we progress to explore the -->
+<!-- powerful **ggplot2** paradigm before outlining **leaflet**. -->
 
 ## **tmap**
 
