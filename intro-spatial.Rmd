@@ -92,8 +92,6 @@ can be downloaded from [http://cran.r-project.org/](http://cran.r-project.org/).
 
 We also suggest that you use an R editor, such as [RStudio](http://www.rstudio.com/), as this will improve the user-experience and help with the learning process. This can be downloaded from http://www.rstudio.com. The R Studio interface is comprised of a number of windows, the most important being the console window and the script window. Anything you type directly into the console window will not be saved, so use the script window to create scripts which you can save for later use. There is also a Data Environment window which lists the dataframes and objects being used. Familiarise yourself with the R Studio interface before getting started on the tutorial.       
 
-
-
 When writing code in any language, it is good practice to use consistent and clear conventions, and R is no exception. 
 Adding comments to your code is also useful; make these meaningful so you remember what the code is doing when you revisit it at a later date. 
 You can add a comment by using the `#` symbol before or after a line of code, as illustrated in the block of code below. This code should create Figure 1 if typed correctly into the Console window: 
@@ -112,7 +110,7 @@ grid.raster(readPNG("figure/plot1.png"))
 This first line in this block of code creates a new *object* called `x` and assigns it to a range of integers between 1 and 400. The second line creates another object called `y` which is assigned to a mathematical formula, and the third line plots the two together to create the plot shown. 
 
 Note `<-`, the directional "arrow" assignment symbol which creates a new object and assigns it to the value you have given.^[Tip: typing `Alt -` on the keyboard will create the arrow in RStudio.
-The equals sign `=` also works but is rarely used.]
+The equals sign `=` also works.]
 
 If you require help on any function, use the `help` command,
 e.g. `help(plot)`. Because R users love being concise,
@@ -227,8 +225,8 @@ please see Cheshire and Lovelace (2014).
 
 ## The structure of spatial data in R
 
-Spatial objects like the `lnd` object are made up of a number of different *slots*, the key *slots* being `@data` and `@polygons` (or `@lines` for line data). The data *slot* can be thought of as an attribute table and the geometry *slot* is the polygons that make up the physcial boundaries. Specific *slots*
-are accessed using the @ symbol. Let's now analyse the sport object with some basic commands:
+Spatial objects like the `lnd` object are made up of a number of different *slots*, the key *slots* being `@data` (non geographic *attribute data*) and `@polygons` (or `@lines` for line data). The data *slot* can be thought of as an attribute table and the geometry *slot* is the polygons that make up the physcial boundaries. Specific *slots*
+are accessed using the `@` symbol. Let's now analyse the sport object with some basic commands:
 
 ```{r}
 head(lnd@data, n = 2)
@@ -361,7 +359,7 @@ text(coordinates(cent_lnd), "Central\nLondon")
 
 ## Selecting quadrants
 
-In this example we will now interrogate the shapefile for London and split it into quadrants using lines of latitude and longitude. This will work in a similar way to the previous example. Once we have the centre point we will then use this create the lines of latitude and longitude on which the centre of the wards will be tested against.
+<!-- In this example we will now interrogate the shapefile for London and split it into quadrants using lines of latitude and longitude. This will work in a similar way to the previous example. Once we have the centre point we will then use this create the lines of latitude and longitude on which the centre of the wards will be tested against. -->
 The code below should help understand the way spatial data work in R.
 
 
@@ -436,43 +434,41 @@ lnd@data$quadrant[west & south] <- "southwest"
 par(mfrow=c(1,1)) # return to default par
 ```
 
+<!-- ## Attribute data -->
 
+<!-- As we discovered in the previous section, shapefiles contain both attribute data and geometry data, both of which are automatically loaded into R when the  -->
+<!-- `readOGR` function is used. Let's look again at the attribute data of the `lnd` object by looking at the headings contained within it: `names(lnd)` -->
+<!-- Remember, the attribute data is contained in the `data` *slot* that can be accessed using the `@` symbol: `lnd@data`. This is useful if you do not wish to work with the spatial components of the data at all times. -->
 
-## Attribute data
+<!-- Type `summary(lnd)` to get some additional information about the -->
+<!-- data object. Spatial objects in R contain -->
+<!-- much additional information: -->
 
-As we discovered in the previous section, shapefiles contain both attribute data and geometry data, both of which are automatically loaded into R when the 
-`readOGR` function is used. Let's look again at the attribute data of the `lnd` object by looking at the headings contained within it: `names(lnd)`
-Remember, the attribute data is contained in the `data` *slot* that can be accessed using the `@` symbol: `lnd@data`. This is useful if you do not wish to work with the spatial components of the data at all times.
+<!-- ``` -->
+<!-- summary(lnd) -->
 
-Type `summary(lnd)` to get some additional information about the
-data object. Spatial objects in R contain
-much additional information:
+<!-- ## Object of class SpatialPolygonsDataFrame -->
+<!-- ## Coordinates: -->
+<!-- ## min max -->
+<!-- ## x 503571.2 561941.1 -->
+<!-- ## y 155850.8 200932.5 -->
+<!-- ## Is projected: TRUE -->
+<!-- ## proj4string : -->
+<!-- ## [+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 ....] -->
 
-```
-summary(lnd)
+<!-- ... -->
+<!-- ``` -->
 
-## Object of class SpatialPolygonsDataFrame
-## Coordinates:
-## min max
-## x 503571.2 561941.1
-## y 155850.8 200932.5
-## Is projected: TRUE
-## proj4string :
-## [+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 ....]
-
-...
-```
-
-The first line of the above output tells us that `lnd` is a special spatial class: a `SpatialPolygonsDataFrame`.
-This means it is composed of
-various polygons, each of which has a number of attributes.
-(Summaries of the attribute data are also provided, but are not printed above.) This is the ideal
-class of data to represent administrative zones. The coordinates tell
-us what the maximum and minimum x and y values are (the spatial extent of the data - useful for plotting).
-Finally, we are told something of the coordinate reference system
-with the `Is projected` and `proj4string` lines.
-In this case, we have a projected system, which means the data is relative to some point on the Earth's surface.
-We will cover reprojecting data in the next part of the tutorial.
+<!-- The first line of the above output tells us that `lnd` is a special spatial class: a `SpatialPolygonsDataFrame`. -->
+<!-- This means it is composed of -->
+<!-- various polygons, each of which has a number of attributes. -->
+<!-- (Summaries of the attribute data are also provided, but are not printed above.) This is the ideal -->
+<!-- class of data to represent administrative zones. The coordinates tell -->
+<!-- us what the maximum and minimum x and y values are (the spatial extent of the data - useful for plotting). -->
+<!-- Finally, we are told something of the coordinate reference system -->
+<!-- with the `Is projected` and `proj4string` lines. -->
+<!-- In this case, we have a projected system, which means the data is relative to some point on the Earth's surface. -->
+<!-- We will cover reprojecting data in the next part of the tutorial. -->
 
 \clearpage
 
@@ -1107,7 +1103,7 @@ qtm(shp = lnd, fill = "Partic_Per", fill.palette = "-Blues")
 ```
 
 ```{r, fig.cap="Side-by-side maps of sports participation and population"}
-qtm(shp = lnd, fill = c("Partic_Per", "Pop_2001"), fill.palette = "Blues", ncol = 2, fill.n = c(4, 4)) 
+qtm(shp = lnd, fill = c("Partic_Per", "Pop_2001"), fill.palette = "Blues", ncol = 2) 
 ```
 
 The plot above shows the ease with which tmap can create maps
