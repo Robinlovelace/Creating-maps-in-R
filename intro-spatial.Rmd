@@ -790,7 +790,7 @@ tm_shape(osm_tiles) +
   tm_layout(legend.position = c(0.89,0.02))
 ```
 
-```{r, echo=FALSE, fig.cap="Number of thefts per borough."}
+```{r, echo=FALSE, fig.cap="Number of thefts per borough.", out.width="48%", fig.align="center"}
 grid.raster(readPNG("figure/lnd-crime.png"))
 ```
 
@@ -813,7 +813,7 @@ Part IV to plot continuous variables).^[Hint: the solution relies on the
 see how this map was created, see the code
 in intro-spatial.Rmd at [github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial.Rmd](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial.Rmd).]
 
-```{r, echo=FALSE, results='hide', message=FALSE, warning=FALSE, fig.cap="Proportion of council seats won by Conservatives in the 2014 local elections using data from data.london.gov and joined using the methods presented in this section"}
+```{r, echo=FALSE, results='hide', message=FALSE, warning=FALSE, fig.cap="Proportion of council seats won by Conservatives in the 2014 local elections using data from data.london.gov and joined using the methods presented in this section", , out.width="48%", fig.align="center"}
 # install.packages("ggmap")
 library(maptools)
 library(ggmap)
@@ -847,10 +847,7 @@ map
 In addition to joining by attribute (e.g. Borough
 name), it is also possible to do
 [spatial joins](http://help.arcgis.com/en/arcgisdesktop/10.0/help/index.html#//00080000000q000000)
-in R. There are three main types: many-to-one, where
-the values of many intersecting objects contribute to a new variable in
-the main table, one-to-many, or one-to-one. We will be conducting a many-to-one spatial join and using transport infrastructure points such as
-tube stations and roundabouts as the spatial data to join,
+in R. We use transport infrastructure points as the spatial data to join,
 with the aim of finding out about how many are found in each London borough.
 
 ```{r, results='hide'}
@@ -864,8 +861,7 @@ bbox(stations) # the extent, 'bounding box' of stations
 bbox(lnd) # return the bounding box of the lnd object
 ```
 
-The above code loads the data correctly, but also shows that
-there are problems with it: the Coordinate Reference System (CRS)
+The `proj4string()` function shows that the Coordinate Reference System (CRS)
 of `stations` differs from that of our `lnd` object.
 OSGB 1936 (or [EPSG 27700](http://spatialreference.org/ref/epsg/27700/))
 is the official CRS for the UK, so
@@ -873,9 +869,7 @@ we will convert the 'stations' object to this:
  
 ```{r fig.cap="Sampling and plotting stations"}
 # Create reprojected stations object
-stations27700 <- spTransform(stations, CRSobj = CRS(proj4string(lnd)))
-stations <- stations27700 # overwrite the stations object 
-rm(stations27700) # remove the stations27700 object to clear up
+stations <- spTransform(stations, CRSobj = CRS(proj4string(lnd)))
 plot(lnd) # plot London for context (see Figure 9)
 points(stations) # overlay the station points
 ```
