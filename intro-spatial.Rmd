@@ -874,25 +874,17 @@ plot(lnd) # plot London for context (see Figure 9)
 points(stations) # overlay the station points
 ```
 
-Now we can clearly see that the `stations` points overlay the boroughs.
-The problem is that the spatial extent of `stations` is
+Note the `stations` points now overlay the boroughs but that
+the spatial extent of `stations` is
 greater than that of `lnd`.
-We will create a spatially determined subset of the
-stations object that fall inside greater London. This is *clipping*.
 
-Two functions can be used to clip `stations`
-so that only those falling within London boroughs are retained:
-`sp::over`, and `rgeos::gIntersects` (the word preceding the `::` symbol refers to the package which the function is from).
-Use `?` followed by the function to get help on each. Whether
-`gIntersects` or `over` is needed depends
-on the spatial data classes being compared (Bivand et al. 2013).
-
-In this tutorial we will use the `over` function as it is easiest to use.
-In fact, it can be called just by using square brackets:
+To clip the `stations`
+so that only those falling within London boroughs are retained we can use
+`sp::over`, or simply the square bracket notation for subsetting tabular data
+(enter `?gIntersects` to find out another way to do this):
 
 ```{r fig.cap="The clipped stations dataset"}
-stations_backup <- stations # backup the stations object
-stations <- stations_backup[lnd, ] 
+stations <- stations[lnd, ] 
 plot(stations) # test the clip succeeded (see Figure 10)
 ```
 
