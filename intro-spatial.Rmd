@@ -237,9 +237,20 @@ mean(lnd$Partic_Per) # short for mean(lnd@data$Partic_Per)
 
 Take a look at the output created (note the table format of the data and the column names). There are two important symbols at work in the above block of code: the `@` symbol in the first line of code is used to refer to the data *slot* of the `lnd` object. The `$` symbol refers to the `Partic_Per` column (a variable within the table) in the `data` *slot*, which was identified from the result of running the first line of code. 
 
-The `head` function in the first line of the code above simply means "show the first few lines of data", i.e. the head. It's default is to output the first 6 rows of the dataset (try simply `head(lnd@data)`),
-but we can specify the number of lines with `n = 2` after the comma.
-The second line of the code above calculates the mean value of the variable `Partic_Per` (sports participation per 100 people) for each of the zones in the `lnd` object.
+The `head` function in the first line of the code above simply means "show the first few lines of data" (try entering `head(lnd@data)`, see `?head` for more details).
+The second line calculates finds the mean sports participation per 100 people for zones in London.
+The results works because we are dealing with numeric data.
+To check the classes of all the variables in a spatial dataset, you can use the following command:
+
+```{r}
+sapply(lnd@data, class)
+```
+
+This shows that, unexpectedly, `Pop_2001` is a factor. We can *coerce* the variable into the correct, numeric, format with the following command:
+
+```{r}
+lnd$Pop_2001 <- as.numeric(as.character(lnd$Pop_2001))
+```
 
 Type the function again but this time hit `tab` before completing the command. RStudio has auto-complete functionality which can save you a lot of time in the long run (see Figure 3).
 
