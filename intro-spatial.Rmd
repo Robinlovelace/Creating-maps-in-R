@@ -1062,18 +1062,13 @@ plot(stations) # test the clip succeeded (see Figure 10)
 [**tmap**](https://github.com/mtennekes/tmap)
 was created
 to overcome some of the limitations of base graphics
-and **ggmap/ggplot2**. The focus is on
-generating 'thematic maps' (which show a variable change
-over space) quickly and easily. A concise introduction to
+and **ggmap**. A concise introduction to
 **tmap** can be accessed (after the package is installed)
 by using the vignette function:
 
 ```{r, eval=FALSE}
 # install.packages("tmap") # install the CRAN version
-# to download the development version, use the devtools package
-# devtools::install_github("mtennekes/tmap", subdir = "pkg", build_vignette = TRUE)
 library(tmap)
-vignette(package = "tmap") # available vignettes in tmap
 vignette("tmap-nutshell")
 ```
 
