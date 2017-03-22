@@ -1095,7 +1095,7 @@ syntax and attractive default parameters.
 qtm(shp = lnd, fill = "Partic_Per", fill.palette = "-Blues")
 ```
 
-```{r, fig.cap="Side-by-side maps of crimes and % voting conservative"}
+```{r, fig.cap="Side-by-side maps of sports participation and population"}
 qtm(shp = lnd, fill = c("Partic_Per", "Pop_2001"), fill.palette = c("Blues"), ncol = 2)
 ```
 
