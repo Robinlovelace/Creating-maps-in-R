@@ -365,12 +365,12 @@ The code below should help understand the way spatial data work in R.
 
 ```{r}
 # Find the centre of the london area
-lat <- coordinates(gCentroid(lnd))[[1]]
-lng <- coordinates(gCentroid(lnd))[[2]]
+lng <- coordinates(gCentroid(lnd))[[1]]
+lat <- coordinates(gCentroid(lnd))[[2]]
 
 # arguments to test whether or not a coordinate is east or north of the centre
-east <- sapply(coordinates(lnd)[,1], function(x) x > lat)
-north <- sapply(coordinates(lnd)[,2], function(x) x > lng)
+east <- sapply(coordinates(lnd)[,1], function(x) x > lng)
+north <- sapply(coordinates(lnd)[,2], function(x) x > lat)
 
 # test if the coordinate is east and north of the centre
 lnd@data$quadrant[east & north] <- "northeast"
