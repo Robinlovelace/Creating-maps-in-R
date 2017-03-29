@@ -1,0 +1,23 @@
+---
+output: github_document
+---
+
+```{r, echo=FALSE}
+knitr::opts_knit$set(root.dir = "..")
+```
+
+
+This tutorial aims to teach the basics of point pattern analysis in R.
+
+```{r}
+library(sp)
+```
+
+
+The input data is
+
+```{r}
+cycle_hire = rgdal::readOGR("data/cycle_hire.geojson")
+plot(cycle_hire)
+```
+
