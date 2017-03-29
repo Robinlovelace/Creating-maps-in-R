@@ -1,23 +1,32 @@
 ---
+title: 'Point Pattern analysis and spatial interpolation with R'
 output: github_document
+bibliography: references.bib
 ---
 
 ```{r, echo=FALSE}
 knitr::opts_knit$set(root.dir = "..")
 ```
 
-
-This tutorial aims to teach the basics of point pattern analysis in R.
+This tutorial teaches the basics of point pattern analysis in R.
+It is influenced by the chapter on Spatial Point Pattern Analysis in *Applied Spatial Data Analysis with R* [@bivand_applied_2013] and an [online tutorial](http://rspatial.org/analysis/rst/8-pointpat.html) on Point Pattern Analyis by Robert Hijmans.
 
 ```{r}
 library(sp)
 ```
 
+The input datasets are on 'Boris Bikes' docking stations around London, and can be read-in and visualised with the following commands:
 
-The input data is
-
-```{r}
+```{r cycle-hire1}
 cycle_hire = rgdal::readOGR("data/cycle_hire.geojson")
+cycle_hire_osm = rgdal::readOGR("data/cycle_hire-osm.geojson")
 plot(cycle_hire)
+points(cycle_hire_osm, col = "red")
 ```
+
+It is immediately clear that these two datasets are closely related (they have a high degree of spatial correlation) and have a distinctive pattern.
+But how to describe that quantitively, and extrapolate the values from the plotted location to other areas?
+
+It is the purpose of this tutorial to provide the knowhow to answer such questions.
+
 
