@@ -12,6 +12,11 @@ Point Pattern analysis and spatial interpolation with R
     -   [Exercises](#exercises-2)
 -   [Point distance analysis](#point-distance-analysis)
 -   [Spatial interpolation](#spatial-interpolation)
+    -   [Exercises](#exercises-3)
+-   [Voronoi polygon interpoloation](#voronoi-polygon-interpoloation)
+    -   [Exercises](#exercises-4)
+-   [Interpolation with the gstat package](#interpolation-with-the-gstat-package)
+    -   [Exercises](#exercises-5)
 -   [References](#references)
 
 Introduction
@@ -23,7 +28,16 @@ We will use the **sp** package for this rather than the newer **sf** package, as
 
 ``` r
 library(sp)
+library(tmap)
 library(raster)
+library(mapview)
+```
+
+    ## Loading required package: leaflet
+
+``` r
+library(dismo)
+library(gstat)
 ```
 
 Data
@@ -192,11 +206,6 @@ More useful, in terms of characterising the geographical characteristics of each
 
 ``` r
 library(mapview)
-```
-
-    ## Loading required package: leaflet
-
-``` r
 mapview(rc > 12) +
   mapview(cycle_hire)
 ```
@@ -258,7 +267,116 @@ plot(distance, Gd)
 Spatial interpolation
 =====================
 
+Spatial interpolation refers to methods of estimating the value of something in one place, based on measurements taken elsewhere. It depends on spatial autocorrelation, defined in Waldo Tobler's 'first law of Geography' as follows (Miller 2004):
+
+> Everything is related to everything else, but near things are more related than distant thing
+
+Building on the example of cycle hire points in london, we can ask the question: what is the expected number of bikes for a stand in location x, given knowledge of the existing data.
+
+Thus spatial interpolation requires a dependent variable, which is summarised numerically and visually below:
+
+``` r
+summary(cycle_hire$nbikes)
+```
+
+    ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+    ##     0.0     3.0    11.0    12.2    19.0    51.0
+
+``` r
+tm_shape(cycle_hire) +
+  tm_symbols(col = "nbikes", palette = "YlOrRd", alpha = 0.6, style = "quantile")
+```
+
+![](point-pattern_files/figure-markdown_github/unnamed-chunk-13-1.png)
+
+There is a clear spatial pattern to this: there are more bikes parked in the outer docking stations. We can say that verbally, but how to we represent that on the map?
+
+A first port of call would be to rasterise the result, using the the raster representation of the study area contained in the object `r` to find the mean per cell:
+
+``` r
+rnbikes = rasterize(cycle_hire, r, field = "nbikes", fun = mean)
+plot(rnbikes)
+```
+
+![](point-pattern_files/figure-markdown_github/unnamed-chunk-14-1.png)
+
+What about estimating the values of cells outside the current network area? We can use **raster**'s `focal()` function to estimate that.
+
+``` r
+w = matrix(1, nc = 9, nr = 9)
+r_interp1 = focal(x = rnbikes, w = w, fun = mean, NAonly = TRUE, na.rm = TRUE, pad = TRUE)
+plot(r_interp1)
+points(cycle_hire)
+```
+
+![](point-pattern_files/figure-markdown_github/unnamed-chunk-15-1.png)
+
+Exercises
+---------
+
+-   Experiment with different matrix sizes of `w` in the above code block. What difference does the size make?
+-   Note that the 9x9 cell focal point leads to an 'over smoothing' of the results. Find a way to include only values from touching cells in the results.
+
+Voronoi polygon interpoloation
+==============================
+
+The raster cell method of spatial interpolation was fun, but not that sophisticated or spatially precise, with a resolution of around 1 km.
+
+The next simplest solution is to break the area up into pieces and assign the value of the entire area to the value of the point it contains:
+
+``` r
+library(dismo)
+v = voronoi(cycle_hire)
+v = intersect(v, r)
+```
+
+    ## Warning in intersect(x, y): non identical CRS
+
+``` r
+tm_shape(v) +
+  tm_fill("nbikes", palette = "YlOrRd", style = "quantile") +
+  qtm(cycle_hire, symbols.size = 0.2)
+```
+
+![](point-pattern_files/figure-markdown_github/unnamed-chunk-16-1.png)
+
+Exercises
+---------
+
+-   Create a point at a random location on the map and plot it prominently on top of the previously plotted layers.
+-   What would be it's estimated 'nbikes' a) from the voronoi polygon interpolation and b) from the raster interpolation.
+-   Which do you think is most accurate?
+
+Interpolation with the gstat package
+====================================
+
+**gstat** provides a number of functions for spatial prediction and interpolation using a range of models. The most basic of these, and a workhorse for spatial interpolation is Inverse Distance Weighting (IDW):
+
+``` r
+library(gstat)
+gs = gstat(formula = nbikes~1, locations = cycle_hire)
+r_idw = interpolate(r, gs)
+```
+
+    ## [inverse distance weighted interpolation]
+
+``` r
+plot(r_idw)
+```
+
+![](point-pattern_files/figure-markdown_github/unnamed-chunk-17-1.png)
+
+Exercises
+---------
+
+-   Look at the original data - what could explain the spatial distribution of the `nbikes` variable?
+-   Experiment with the spatial resolution - we're using 1 km grid cells which are huge!
+-   Try using other methods described in Rober Hijman's [tutorial](http://rspatial.org/analysis/rst/4-interpolation.html) on spatial interpolation.
+-   Try cross-validating the results. Which performs best?
+
 References
 ==========
 
 Bivand, Roger S, Edzer J Pebesma, and Virgilio Gómez-Rubio. 2013. *Applied Spatial Data Analysis with R*. Vol. 747248717. Springer.
+
+Miller, Harvey J. 2004. *Tobler’s First Law and Spatial Analysis*. Vol. 94. March 2015.
