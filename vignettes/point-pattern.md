@@ -6,9 +6,12 @@ Point Pattern analysis and spatial interpolation with R
 -   [Point density](#point-density)
     -   [Exercises](#exercises)
     -   [Challenges](#challenges)
--   [Points in polygons](#points-in-polygons)
+-   [Points in polygons and raster cells](#points-in-polygons-and-raster-cells)
     -   [Exercises](#exercises-1)
     -   [Challenge](#challenge)
+    -   [Exercises](#exercises-2)
+-   [Point distance analysis](#point-distance-analysis)
+-   [Spatial interpolation](#spatial-interpolation)
 -   [References](#references)
 
 Introduction
@@ -99,6 +102,7 @@ This is not a good indicator of the density of the bike hire scheme overall, bec
 ``` r
 bb_hire = as(extent(cycle_hire), "SpatialPolygons")
 crs(bb_hire) = crs(lnd)
+c_area = area(bb_hire) / 1e6
 ```
 
 Exercises
@@ -120,8 +124,8 @@ Challenges
 -   Reproduce the result using **sp** code.
 -   Reproduce the resuts using **sf** code.
 
-Points in polygons
-==================
+Points in polygons and raster cells
+===================================
 
 A useful level of analysis at which to analyse the geographical distribution of points is the zone-level. We can aggregate the points per zone and provide summary statistics. Starting with the number of points per polygon, this would calculated as follows:
 
@@ -157,6 +161,102 @@ Find the average density of cycle hire points per zone in London.
 <!-- lnd$NAME[which.max(lnd$cycle_hire_density)] -->
 <!-- ``` -->
 ![](point-pattern_files/figure-markdown_github/zonedense-1.png)
+
+A problem with the zonal representation of point density is that the results are dependent on the somewhat arbitrary shapes and sizes of the zones in which the points are aggregated. To overcome this problem we can create a raster representation of the points:
+
+``` r
+r = raster(bb_hire, ncol = 16, nrow = 10)
+rc = rasterize(cycle_hire@coords, r, fun = "count")
+plot(rc)
+points(cycle_hire)
+plot(lnd, add = TRUE)
+```
+
+![](point-pattern_files/figure-markdown_github/unnamed-chunk-7-1.png)
+
+This is already very useful. The results show that there are 5 clusters of cycle parking with much higher density than the surrounding areas. We can visualise these clusters using a static plot as follows:
+
+``` r
+plot(rc)
+```
+
+![](point-pattern_files/figure-markdown_github/unnamed-chunk-8-1.png)
+
+``` r
+plot(rc > 12)
+```
+
+![](point-pattern_files/figure-markdown_github/unnamed-chunk-8-2.png)
+
+More useful, in terms of characterising the geographical characteristics of each cluster, would be to plot these 5 clusters interactively. Do this with **mapview**:
+
+``` r
+library(mapview)
+```
+
+    ## Loading required package: leaflet
+
+``` r
+mapview(rc > 12) +
+  mapview(cycle_hire)
+```
+
+![](point-pattern_files/figure-markdown_github/unnamed-chunk-9-1.png)
+
+The resulting interactive plot draws attention to the areas of high point density, such as the area surrounding Victoria station, illustrated below.
+
+![](point-pattern_files/figure-markdown_github/victoria-plot.png)
+
+Exercises
+---------
+
+-   Explore the interactive map created by **mapview** above.
+-   Try to explain the location of the high density clusters: what are they near?
+-   Where would you suggest building more cycle hire points?
+
+Point distance analysis
+=======================
+
+Another important characteristic of point patterns is the distances between points, which can be calculated using **raster**'s `dist()` function:
+
+``` r
+d = spDists(cycle_hire, longlat = TRUE)
+dm = as.matrix(d)
+dm[1:3, 1:5]
+```
+
+    ##          [,1]     [,2]     [,3]      [,4]     [,5]
+    ## [1,] 0.000000 6.913473 1.966592 0.7700464 5.164896
+    ## [2,] 6.913473 0.000000 8.205219 6.3051094 2.916743
+    ## [3,] 1.966592 8.205219 0.000000 2.7062514 5.915129
+
+The results show the distance, in km, form every point to every other. The `dm` object is known as a distance matrix: not the diagonal of zero values. This distance matrix is very useful for various types of analysis, a couple of which we'll explore below.
+
+To find the minimum distance of each point to every other, we can use the `apply` function, for each row, and then select the top 5:
+
+``` r
+diag(dm) <- NA
+dmin = apply(X = dm, MARGIN = 1, FUN = min, na.rm = TRUE)
+sel_isolated = order(dmin, decreasing = TRUE)[1:5]
+plot(cycle_hire, col = "grey", main = "Isolated points")
+points(cycle_hire[sel_isolated,])
+```
+
+![](point-pattern_files/figure-markdown_github/unnamed-chunk-11-1.png)
+
+Another plot that is useful is that of the 'G function' for exploring the extent to which points cluster or separate compared with what would be expected from a random distribution (Bivand, Pebesma, and Gómez-Rubio 2013):
+
+``` r
+distance <- sort(unique(round(dmin, digits = 3)))
+Gd <- sapply(distance, function(x) sum(dmin < x))
+Gd <- Gd / length(dmin)
+plot(distance, Gd)
+```
+
+![](point-pattern_files/figure-markdown_github/unnamed-chunk-12-1.png)
+
+Spatial interpolation
+=====================
 
 References
 ==========

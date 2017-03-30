@@ -72,6 +72,7 @@ We can coerce the bounding box (or extent in **raster** terminology) of the stat
 ```{r}
 bb_hire = as(extent(cycle_hire), "SpatialPolygons")
 crs(bb_hire) = crs(lnd)
+c_area = area(bb_hire) / 1e6
 ```
 
 ## Exercises
@@ -92,7 +93,7 @@ crs(bb_hire) = crs(lnd)
 - Reproduce the result using **sp** code.
 - Reproduce the resuts using **sf** code.
 
-# Points in polygons
+# Points in polygons and raster cells
 
 A useful level of analysis at which to analyse the geographical distribution of points is the zone-level.
 We can aggregate the points per zone and provide summary statistics.
@@ -129,5 +130,81 @@ Find the average density of cycle hire points per zone in London.
 <!-- ``` -->
 
 ![](point-pattern_files/figure-markdown_github/zonedense-1.png)
+
+A problem with the zonal representation of point density is that the results are dependent on the somewhat arbitrary shapes and sizes of the zones in which the points are aggregated.
+To overcome this problem we can create a raster representation of the points:
+
+```{r}
+r = raster(bb_hire, ncol = 16, nrow = 10)
+rc = rasterize(cycle_hire@coords, r, fun = "count")
+plot(rc)
+points(cycle_hire)
+plot(lnd, add = TRUE)
+```
+
+This is already very useful.
+The results show that there are 5 clusters of cycle parking with much higher density than the surrounding areas.
+We can visualise these clusters using a static plot as follows:
+
+```{r}
+plot(rc)
+plot(rc > 12)
+```
+
+More useful, in terms of characterising the geographical characteristics of each cluster, would be to plot these 5 clusters interactively.
+Do this with **mapview**:
+
+```{r}
+library(mapview)
+mapview(rc > 12) +
+  mapview(cycle_hire)
+```
+
+The resulting interactive plot draws attention to the areas of high point density, such as the area surrounding Victoria station, illustrated below.
+
+![](point-pattern_files/figure-markdown_github/victoria-plot.png)
+
+## Exercises
+
+- Explore the interactive map created by **mapview** above.
+- Try to explain the location of the high density clusters: what are they near?
+- Where would you suggest building more cycle hire points? 
+
+# Point distance analysis
+
+Another important characteristic of point patterns is the distances between points, which can be calculated using **raster**'s `dist()` function:
+
+```{r}
+d = spDists(cycle_hire, longlat = TRUE)
+dm = as.matrix(d)
+dm[1:3, 1:5]
+```
+
+The results show the distance, in km, form every point to every other.
+The `dm` object is known as a distance matrix: not the diagonal of zero values.
+This distance matrix is very useful for various types of analysis, a couple of which we'll explore below.
+
+To find the minimum distance of each point to every other, we can use the `apply` function, for each row, and then select the top 5:
+
+```{r}
+diag(dm) <- NA
+dmin = apply(X = dm, MARGIN = 1, FUN = min, na.rm = TRUE)
+sel_isolated = order(dmin, decreasing = TRUE)[1:5]
+plot(cycle_hire, col = "grey", main = "Isolated points")
+points(cycle_hire[sel_isolated,])
+```
+
+Another plot that is useful is that of the 'G function' for exploring the extent to which points cluster or separate compared with what would be expected from a random distribution [@bivand_applied_2013]:
+
+```{r}
+distance <- sort(unique(round(dmin, digits = 3)))
+Gd <- sapply(distance, function(x) sum(dmin < x))
+Gd <- Gd / length(dmin)
+plot(distance, Gd)
+```
+
+# Spatial interpolation
+
+
 
 # References
