@@ -1,6 +1,16 @@
 Point Pattern analysis and spatial interpolation with R
 ================
 
+-   [Introduction](#introduction)
+    -   [Data](#data)
+-   [Point density](#point-density)
+    -   [Exercises](#exercises)
+    -   [Challenges](#challenges)
+-   [References](#references)
+
+Introduction
+============
+
 This tutorial teaches the basics of point pattern analysis in R. It is influenced by the chapter on Spatial Point Pattern Analysis in *Applied Spatial Data Analysis with R* (Bivand, Pebesma, and Gómez-Rubio 2013) and an [online tutorial](http://rspatial.org/analysis/rst/8-pointpat.html) on Point Pattern Analyis by Robert Hijmans.
 
 We will use the **sp** package for this rather than the newer **sf** package, as point pattern analysis is more established for the formers `Spatial` class system than the latter's `sf` classes. We will also use **raster** as it has concise and well-designed functions for spatial data:
@@ -9,6 +19,9 @@ We will use the **sp** package for this rather than the newer **sf** package, as
 library(sp)
 library(raster)
 ```
+
+Data
+----
 
 This tutorial assumes you have downloaded the GitHub repo [`robinlovelace/Creating-maps-in-R`](https://github.com/Robinlovelace/Creating-maps-in-R) and that the working directory of your R session is the root directory of this project.
 
@@ -52,7 +65,10 @@ plot(lnd, add = TRUE)
 
 It is immediately clear that the two datasets on cycle hire points are closely related (they have a high degree of spatial correlation) and have a distinctive pattern. `cycle_hire` represents official data on cycle parking, and will be the main point dataset analysed. `cycle_hire_osm` is the community contributed dataset on cycle hire locations, downloaded from OpenStreetMap. Both sets of points overlay some of London's 33 boroughs, the central ones, and seem to follow the River Thames, especially along the north bank of the river. But how to describe that information quantitively, and extrapolate the values from the plotted location to other areas?
 
-It is the purpose of this tutorial to provide the knowhow to answer such questions, that should be extensible to many applications that involve point data.
+It is the purpose of this tutorial to provide the know-how to answer such questions, that should be extensible to many applications that involve point data.
+
+Point density
+=============
 
 A basic statistic to compute on points within a polygon is the number of points per polygon, and the related statistic of point density. Let's first compute that for London overall, before doing a zone-by-zone breakdown:
 
