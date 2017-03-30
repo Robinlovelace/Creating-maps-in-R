@@ -6,6 +6,9 @@ Point Pattern analysis and spatial interpolation with R
 -   [Point density](#point-density)
     -   [Exercises](#exercises)
     -   [Challenges](#challenges)
+-   [Points in polygons](#points-in-polygons)
+    -   [Exercises](#exercises-1)
+    -   [Challenge](#challenge)
 -   [References](#references)
 
 Introduction
@@ -116,6 +119,53 @@ Challenges
 
 -   Reproduce the result using **sp** code.
 -   Reproduce the resuts using **sf** code.
+
+Points in polygons
+==================
+
+A useful level of analysis at which to analyse the geographical distribution of points is the zone-level. We can aggregate the points per zone and provide summary statistics. Starting with the number of points per polygon, this would calculated as follows:
+
+``` r
+cycle_hire_ag = aggregate(cycle_hire["id"], lnd, FUN = "length")
+```
+
+Exercises
+---------
+
+Based on an analysis of the `cycle_hire_ag`:
+
+-   How many zones contain no cycle hire points?
+-   What is the average number of cycle hire points per zone?
+
+Challenge
+---------
+
+Find the average density of cycle hire points per zone in London.
+
+-   Plot the result in an attractive map (e.g. as shown below).
+-   Find which zone has the highest density of cycle hire points.
+
+``` r
+lnd_areas = area(lnd) / 1e6
+lnd$`cycle_hire_density` = cycle_hire_ag$id / lnd_areas
+library(tmap)
+bb = tmaptools::bb(cycle_hire, 2)
+ft = "Cycle hire density\n(per square km)"
+# tmap_mode("view")
+(m = qtm(lnd, "cycle_hire_density", fill.title = ft, bbox = bb))
+```
+
+![](point-pattern_files/figure-markdown_github/zonedense-1.png)
+
+``` r
+# save_tmap(tm = m, filename = "figure/cyle-hire-lnd.png", width = 600)
+lnd$NAME[which.max(lnd$cycle_hire_density)]
+```
+
+    ## [1] City of London
+    ## 33 Levels: Barking and Dagenham Barnet Bexley Brent Bromley ... Westminster
+
+![](point-pattern_files/figure-markdown_github/zonedense-1.png)
 
 References
 ==========
