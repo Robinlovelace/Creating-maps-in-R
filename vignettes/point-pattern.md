@@ -145,26 +145,17 @@ Find the average density of cycle hire points per zone in London.
 -   Plot the result in an attractive map (e.g. as shown below).
 -   Find which zone has the highest density of cycle hire points.
 
-``` r
-lnd_areas = area(lnd) / 1e6
-lnd$`cycle_hire_density` = cycle_hire_ag$id / lnd_areas
-library(tmap)
-bb = tmaptools::bb(cycle_hire, 2)
-ft = "Cycle hire density\n(per square km)"
-# tmap_mode("view")
-(m = qtm(lnd, "cycle_hire_density", fill.title = ft, bbox = bb))
-```
-
-![](point-pattern_files/figure-markdown_github/zonedense-1.png)
-
-``` r
-# save_tmap(tm = m, filename = "figure/cyle-hire-lnd.png", width = 600)
-lnd$NAME[which.max(lnd$cycle_hire_density)]
-```
-
-    ## [1] City of London
-    ## 33 Levels: Barking and Dagenham Barnet Bexley Brent Bromley ... Westminster
-
+<!-- ```{r zonedense} -->
+<!-- lnd_areas = area(lnd) / 1e6 -->
+<!-- lnd$`cycle_hire_density` = cycle_hire_ag$id / lnd_areas -->
+<!-- library(tmap) -->
+<!-- bb = tmaptools::bb(cycle_hire, 2) -->
+<!-- ft = "Cycle hire density\n(per square km)" -->
+<!-- # tmap_mode("view") -->
+<!-- (m = qtm(lnd, "cycle_hire_density", fill.title = ft, bbox = bb)) -->
+<!-- # save_tmap(tm = m, filename = "figure/cyle-hire-lnd.png", width = 600) -->
+<!-- lnd$NAME[which.max(lnd$cycle_hire_density)] -->
+<!-- ``` -->
 ![](point-pattern_files/figure-markdown_github/zonedense-1.png)
 
 References
