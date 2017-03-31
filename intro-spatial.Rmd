@@ -373,6 +373,7 @@ east <- sapply(coordinates(lnd)[,1], function(x) x > easting_lnd)
 north <- sapply(coordinates(lnd)[,2], function(x) x > northing_lnd)
 
 # test if the coordinate is east and north of the centre
+lnd$quadrant <- "unknown" # prevent NAs in result
 lnd@data$quadrant[east & north] <- "northeast"
 ```
 
