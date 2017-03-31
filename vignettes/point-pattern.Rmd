@@ -15,7 +15,7 @@ knitr::opts_knit$set(root.dir = "..")
 This tutorial teaches the basics of point pattern analysis in R.
 It is influenced by the chapter on Spatial Point Pattern Analysis in *Applied Spatial Data Analysis with R* [@bivand_applied_2013] and an [online tutorial](http://rspatial.org/analysis/rst/8-pointpat.html) on Point Pattern Analyis by Robert Hijmans.
 
-We will use the **sp** package for this rather than the newer **sf** package, as point pattern analysis is more established for the formers `Spatial` class system than the latter's `sf` classes. We will also use **raster** as it has concise and well-designed functions for spatial data:
+We will use the **sp** package for this rather than the newer **sf** package, as point pattern analysis is more established for the former `Spatial` class system than the latter's `sf` classes. We will also use **raster** as it has concise and well-designed functions for spatial data:
 
 ```{r}
 library(sp)
@@ -47,7 +47,7 @@ It is immediately clear that the two datasets on cycle hire points are closely r
 `cycle_hire` represents official data on cycle parking, and will be the main point dataset analysed.
 `cycle_hire_osm` is the community contributed dataset on cycle hire locations, downloaded from OpenStreetMap.
 Both sets of points overlay some of London's 33 boroughs, the central ones, and seem to follow the River Thames, especially along the north bank of the river.
-But how to describe that information quantitively, and extrapolate the values from the plotted location to other areas?
+But how to describe that information quantitatively, and extrapolate the values from the plotted location to other areas?
 
 It is the purpose of this tutorial to provide the know-how to answer such questions, that should be extensible to many applications that involve point data.
 
@@ -65,8 +65,7 @@ The results show that there are 742 cycle hire points and that London covers an 
 That represents on average roughly one cycle parking rental space per 2 square kilometers, or half a rental point per square kilometer, as revealed by the results of the calculation below:
 
 ```{r}
-nrow(cycle_hire) /
-  lnd_area
+nrow(cycle_hire) / lnd_area
 ```
 
 This is not a good indicator of the density of the bike hire scheme overall, because they are so concentrated in central London.
@@ -95,7 +94,7 @@ c_area = area(bb_hire) / 1e6
 ## Challenges
 
 - Reproduce the result using **sp** code.
-- Reproduce the resuts using **sf** code.
+- Reproduce the results using **sf** code.
 
 # Points in polygons and raster cells
 
@@ -185,13 +184,13 @@ dm[1:3, 1:5]
 ```
 
 The results show the distance, in km, form every point to every other.
-The `dm` object is known as a distance matrix: not the diagonal of zero values.
+The `dm` object is known as a distance matrix: note the diagonal of zero values.
 This distance matrix is very useful for various types of analysis, a couple of which we'll explore below.
 
 To find the minimum distance of each point to every other, we can use the `apply` function, for each row, and then select the top 5:
 
 ```{r}
-diag(dm) <- NA
+diag(dm) = NA
 dmin = apply(X = dm, MARGIN = 1, FUN = min, na.rm = TRUE)
 sel_isolated = order(dmin, decreasing = TRUE)[1:5]
 plot(cycle_hire, col = "grey", main = "Isolated points")
@@ -201,9 +200,9 @@ points(cycle_hire[sel_isolated,])
 Another plot that is useful is that of the 'G function' for exploring the extent to which points cluster or separate compared with what would be expected from a random distribution [@bivand_applied_2013]:
 
 ```{r}
-distance <- sort(unique(round(dmin, digits = 3)))
-Gd <- sapply(distance, function(x) sum(dmin < x))
-Gd <- Gd / length(dmin)
+distance = sort(unique(round(dmin, digits = 3)))
+Gd = sapply(distance, function(x) sum(dmin < x))
+Gd = Gd / length(dmin)
 plot(distance, Gd)
 ```
 
@@ -216,7 +215,7 @@ It depends on spatial autocorrelation, defined in Waldo Tobler's 'first law of G
 related  to  everything  else,  but  near  things  are
 more  related  than  distant  thing
 
-Building on the example of cycle hire points in london, we can ask the question: what is the expected number of bikes for a stand in location x, given knowledge of the existing data.
+Building on the example of cycle hire points in London, we can ask the question: what is the expected number of bikes for a stand in location x, given knowledge of the existing data.
 
 Thus spatial interpolation requires a dependent variable, which is summarised numerically and visually below:
 
@@ -250,7 +249,7 @@ points(cycle_hire)
 - Experiment with different matrix sizes of `w` in the above code block. What difference does the size make?
 - Note that the 9x9 cell focal point leads to an 'over smoothing' of the results. Find a way to include only values from touching cells in the results.
 
-# Voronoi polygon interpoloation
+# Voronoi polygon interpolation
 
 The raster cell method of spatial interpolation was fun, but not that sophisticated or spatially precise, with a resolution of around 1 km.
 
@@ -287,7 +286,7 @@ plot(r_idw)
 
 - Look at the original data - what could explain the spatial distribution of the `nbikes` variable?
 - Experiment with the spatial resolution - we're using 1 km grid cells which are huge!
-- Try using other methods described in Rober Hijman's [tutorial](http://rspatial.org/analysis/rst/4-interpolation.html) on spatial interpolation.
+- Try using other methods described in Robert Hijman's [tutorial](http://rspatial.org/analysis/rst/4-interpolation.html) on spatial interpolation.
 - Try cross-validating the results. Which performs best?
 
 # References
