@@ -13,7 +13,7 @@ knitr::opts_knit$set(root.dir = "..")
 # Introduction
 
 This tutorial teaches the basics of point pattern analysis in R.
-It is influenced by the chapter on Spatial Point Pattern Analysis in *Applied Spatial Data Analysis with R* [@bivand_applied_2013] and an [online tutorial](http://rspatial.org/analysis/rst/8-pointpat.html) on Point Pattern Analyis by Robert Hijmans.
+It is influenced by the chapter on Spatial Point Pattern Analysis in *Applied Spatial Data Analysis with R* [@bivand_applied_2013] and an [online tutorial](http://rspatial.org/analysis/rst/8-pointpat.html) on Point Pattern Analysis by Robert Hijmans.
 
 We will use the **sp** package for this rather than the newer **sf** package, as point pattern analysis is more established for the former `Spatial` class system than the latter's `sf` classes. We will also use **raster** as it has concise and well-designed functions for spatial data:
 
@@ -32,7 +32,7 @@ This tutorial assumes you have downloaded the GitHub repo [`robinlovelace/Creati
 
 <!-- Could say how to this with download.file... -->
 
-The input datasets, cunningly stored in the `data/` directory,  are on 'Boris Bikes' docking stations around London, and can be read-in and visualised with the following commands:
+The input datasets, cunningly stored in the `data/` directory, are on 'Boris Bikes' docking stations around London, and can be read-in and visualised with the following commands:
 
 ```{r cycle-hire1}
 lnd = rgdal::readOGR("data/lnd.geojson")
@@ -183,7 +183,7 @@ dm = as.matrix(d)
 dm[1:3, 1:5]
 ```
 
-The results show the distance, in km, form every point to every other.
+The results show the distance, in km, from every point to every other.
 The `dm` object is known as a distance matrix: note the diagonal of zero values.
 This distance matrix is very useful for various types of analysis, a couple of which we'll explore below.
 
@@ -194,7 +194,7 @@ diag(dm) = NA
 dmin = apply(X = dm, MARGIN = 1, FUN = min, na.rm = TRUE)
 sel_isolated = order(dmin, decreasing = TRUE)[1:5]
 plot(cycle_hire, col = "grey", main = "Isolated points")
-points(cycle_hire[sel_isolated,])
+points(cycle_hire[sel_isolated, ])
 ```
 
 Another plot that is useful is that of the 'G function' for exploring the extent to which points cluster or separate compared with what would be expected from a random distribution [@bivand_applied_2013]:
