@@ -26,8 +26,8 @@ Aditional material
 
 Coffee & set-up: 09:00 - 09:15
 
-- Introduction - R for spatial data (Handout Part I): 09:15 - 09:30
-- Loading and interrogating spatial data (Part II): 09:30 - 10:00
+- Introduction - R for spatial data (Handout Part I): 09:30 - 09:40
+- Loading and interrogating spatial data (Part II): 09:40 - 10:00
 - Manipulating spatial objects (Part III): 10:00 - 10:45
 
 Coffee break: 10:45 - 11:00
@@ -89,7 +89,7 @@ Source: Cheshire and Lovelace (2014) - [available online](https://github.com/geo
 
 ## The 'ggplot2' way of doing things
 
-![ggplot2 way](../figure/Greyscale_map.png)
+![ggplot2 way](../figure/faceteg.png)
 
 Source: [This tutorial](https://github.com/Robinlovelace/Creating-maps-in-R)!
 
@@ -109,4 +109,61 @@ The main document to accompany this tutorial is a [pdf](https://github.com/Robin
 
 - All course material can be found online at [github.com/Robinlovelace/Creating-maps-in-R](https://github.com/Robinlovelace/Creating-maps-in-R)
 
-- In there course notes for today can be found in a file called 2017-03-31-spatial data-lnd.Rmd in the [course-info]() folder.
+- In there course notes for today can be found in a file called `2017-03-31-spatial data-lnd.Rmd` in the [course-info](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/course-info/2017-03-31-spatial-data-lnd.Rmd) folder.
+
+## Getting the data and example code
+
+```{r, eval=FALSE}
+# get data (if you don't have it already)
+u = "https://github.com/Robinlovelace/Creating-maps-in-R/archive/master.zip"
+download.file(u, "master.zip")
+unzip("master.zip")
+```
+
+- Open the `.Rproj` file in the resulting folder
+
+## Example: stations in central London
+
+```{r, eval=FALSE}
+library(rgdal)
+lnd = readOGR("data/london_sport.shp")
+```
+
+## sf - code for reading world dataset
+
+```{r, eval=FALSE}
+install.packages("devtools") # if not already installed
+devtools::install_github("nowosad/spData")
+library(dplyr)
+lnd@data %>%
+  filter(grepl("s", name)) %>% 
+  arrange(Partic_Per)
+
+```
+
+## Accessing data
+
+```{r, eval=FALSE}
+install.packages("rnaturalearth")
+countries = rnaturalearth::countries110
+plot(countries)
+```
+
+## Routing
+
+```{r, eval=FALSE}
+library(stplanr)
+r = route_cyclestreet(from = "Senate House, London", to = "Leeds")
+qtm(r)
+rg = route_graphhopper(from = "Senate House, London", "London King's cross")
+rg = route_graphhopper(from = "Senate House, London", "London King's cross")
+rc = route_graphhopper(from = "Senate House, London", "London King's cross", vehicle = "car")
+qtm(rg)+
+  qtm(rc, lines.col = "green")
+```
+
+
+
+
+
+

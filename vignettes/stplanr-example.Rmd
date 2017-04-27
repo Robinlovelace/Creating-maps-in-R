@@ -1,7 +1,7 @@
 ---
 title: "**stplanr**: A package for transport planning"
 author: "Robin Lovelace, University of Leeds, [ITS](www.its.leeds.ac.uk/)/[LIDA](http://www.lida.leeds.ac.uk/)"
-date: "Presented in Poznan at eRum, 2016-10-13"
+date: "`r Sys.Date()"
 output:
   ioslides_presentation:
     transition: slower
@@ -148,13 +148,13 @@ viaroute() # worldwide, any mode
 
 ## Test
 
-```{r}
-r = route_graphhopper(from = "Leeds", to = "Poznan", vehicle = "bike")
+```{r, echo=FALSE}
+r = route_cyclestreet(from = "London", to = "Leeds, UK")
 ```
 
 ```{r, echo=FALSE}
 # saveRDS(r, "data/leeds-to-poz.Rds")
-# r = readRDS("data/leeds-to-poz.Rds")
+r = readRDS("data/leeds-to-poz.Rds")
 ```
 
 ```{r}
@@ -194,8 +194,8 @@ plot(routes_fast, add = T, col = "red")
 
 - Download and test the dev version with:
 
-```{r, echo=FALSE}
-
+```{r, eval=FALSE}
+devtools::install_github("ropensci/stplanr")
 ```
 
 - Create issues on our [issue tracker](https://github.com/ropensci/stplanr/issues)
