@@ -1075,10 +1075,17 @@ To create a basemap with tmap, you can use the `read_osm` function, from the [**
 ```{r, fig.cap="London's population in 2001.", fig.width=4}
 # Transform the coordinate reference system
 lnd_wgs = spTransform(lnd, CRS("+init=epsg:4326"))
-osm_tiles = tmaptools::read_osm(bbox(lnd_wgs)) # download images from OSM
-tm_shape(osm_tiles) + tm_raster() + tm_shape(lnd_wgs) +
-  tm_fill("Pop_2001", fill.title = "Population, 2001", scale = 0.8, alpha = 0.5) +
-  tm_layout(legend.position = c(0.89,0.02))
+if(curl::has_internet()) {
+  osm_tiles = tmaptools::read_osm(bbox(lnd_wgs)) # download images from OSM
+  tm_shape(osm_tiles) + tm_raster() +
+    tm_shape(lnd_wgs) +
+    tm_fill("Pop_2001", fill.title = "Population, 2001", scale = 0.8, alpha = 0.5) +
+    tm_layout(legend.position = c(0.89, 0.02)) 
+} else {
+  tm_shape(lnd_wgs) +
+    tm_fill("Pop_2001", fill.title = "Population, 2001", scale = 0.8, alpha = 0.5) +
+    tm_layout(legend.position = c(0.89, 0.02))
+}
 ```
 
 Another way to make **tmap** maps have a basemap is by entering `tmap_mode("view")`. This will make the maps appear on a zoomable webmap powered by **leaflet**.
