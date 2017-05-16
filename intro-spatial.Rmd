@@ -208,13 +208,19 @@ R to handle a broader range of spatial data formats. If you've not already
 
 ```{r, message=FALSE, results='hide'}
 library(rgdal)
-lnd <- readOGR(dsn = "data", layer = "london_sport")
+lnd <- readOGR(dsn = "data/LondonBoroughs.shp")
+# lnd <- readOGR(dsn = "data", layer = "london_sport")
 ```
 
-In the second line of code above the `readOGR` function is used to load a shapefile and assign it to a new spatial object called "lnd"; short for London. `readOGR` is a *function* which accepts two *arguments*: `dsn` which stands for "data source name" and specifies the directory in which the file is stored, and `layer` which specifies the file name (note that there is no need to include the file extention .shp). The *arguments* are separated by a comma and the order in which they are specified is important. You do not have to explicitly type `dsn=` or `layer=` as R knows which order they appear, so `readOGR("data", "london_sport")` would work just as well. For clarity, it is good practice to include argument names when learning new functions so we will continue to do so.
+In the second line of code above the `readOGR` function is used to load a shapefile and assign it to a new spatial object called `lnd`, short for London.
 
-The file we assigned to the `lnd` object contains the population of London Boroughs in 2001 and the percentage of the population participating in sporting activities. 
-This data originates from the
+`readOGR` is a *function* of the **rgdal** package, the first *argument* of which `dsn`: "data source name", the file or directory of the geographic data to be loaded.
+Thanks to recent developments in **rgdal**, the layer no longer has to be specified (as it is in the 3 line of code which has been *commented
+out*).^[The
+third line of code is included for historical interest and to provide an opportunity to discuss R functions and their arguments (the values inside a function's brackets) in detail. Note the arguments are separated by a comma. The order in which they are specified is important. You do not have to explicitly type `dsn =` or `layer =` as R knows which order they appear. `readOGR("data", "london_sport")` would work just as well. For clarity, it is good practice to include argument names when learning new functions so we will continue to do so.
+]
+
+`lnd` is now an object representing the population of London Boroughs in 2001 and the percentage of the population participating in sporting activities according to the
 [Active People Survey](http://data.london.gov.uk/datastore/package/active-people-survey-kpi-data-borough).
 The boundary data is from the [Ordnance Survey](http://www.ordnancesurvey.co.uk/oswebsite/opendata/).
 
@@ -615,7 +621,7 @@ To reaffirm our starting point, let's re-load the
 ```{r, eval=FALSE}
 library(rgdal) # ensure rgdal is loaded
 # Create new object called "lnd" from "london_sport" shapefile
-lnd <- readOGR(dsn = "data", "london_sport")
+lnd <- readOGR("data/london_sport.shp")
 plot(lnd) # plot the lnd object (not shown)
 nrow(lnd) # return the number of rows (not shown)
 ```
@@ -826,7 +832,7 @@ with the aim of finding out about how many are found in each London borough.
 ```{r, results='hide'}
 library(rgdal)
 # create new stations object using the "lnd-stns" shapefile.
-stations <- readOGR(dsn = "data", layer = "lnd-stns")
+stations <- readOGR(dsn = "data/lnd-stns.shp")
 # stations = read_shape("data/lnd-stns.shp") # from tmap
 proj4string(stations) # this is the full geographical detail.
 proj4string(lnd) # what's the coordinate reference system (CRS)
