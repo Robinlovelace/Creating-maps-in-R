@@ -118,9 +118,53 @@ The main document to accompany this tutorial is a [pdf](https://github.com/Robin
 u = "https://github.com/Robinlovelace/Creating-maps-in-R/archive/master.zip"
 download.file(u, "master.zip")
 unzip("master.zip")
+
+
+
+
+
+
+
+
+
+
+
+
 ```
 
 - Open the `.Rproj` file in the resulting folder
+
+```{r}
+# use Ctrl-Enter
+x = 1:5
+y = x^2
+plot(x, y)
+
+library(sp)
+library(rgdal)
+lnd = readOGR("data/london_sport.shp")
+names(lnd)
+lnd$quadrant = "unknown"
+
+plot(lnd)
+llgridlines(obj = lnd)
+
+load("data/stations.RData")
+
+points(stations)
+lnd_zone = lnd[5,]
+plot(lnd_zone)
+stations_in_zone =
+  stations[lnd_zone,]
+points(stations_in_zone, col = "red" )
+library(tmap)
+tmap_mode("view")
+qtm(lnd)
+library(dplyr)
+lnd@data %>% 
+  filter(Partic_Per > 25)
+```
+
 
 ## Example: stations in central London
 
@@ -128,42 +172,6 @@ unzip("master.zip")
 library(rgdal)
 lnd = readOGR("data/london_sport.shp")
 ```
-
-## sf - code for reading world dataset
-
-```{r, eval=FALSE}
-install.packages("devtools") # if not already installed
-devtools::install_github("nowosad/spData")
-library(dplyr)
-lnd@data %>%
-  filter(grepl("s", name)) %>% 
-  arrange(Partic_Per)
-
-```
-
-## Accessing data
-
-```{r, eval=FALSE}
-install.packages("rnaturalearth")
-countries = rnaturalearth::countries110
-plot(countries)
-```
-
-## Routing
-
-```{r, eval=FALSE}
-library(stplanr)
-r = route_cyclestreet(from = "Senate House, London", to = "Leeds")
-qtm(r)
-rg = route_graphhopper(from = "Senate House, London", "London King's cross")
-rg = route_graphhopper(from = "Senate House, London", "London King's cross")
-rc = route_graphhopper(from = "Senate House, London", "London King's cross", vehicle = "car")
-qtm(rg)+
-  qtm(rc, lines.col = "green")
-```
-
-
-
 
 
 
