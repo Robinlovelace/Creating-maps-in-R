@@ -380,12 +380,23 @@ north <- sapply(coordinates(lnd)[,2], function(x) x > northing_lnd)
 
 # test if the coordinate is east and north of the centre
 lnd$quadrant <- "unknown" # prevent NAs in result
-lnd@data$quadrant[east & north] <- "northeast"
+lnd$quadrant[east & north] <- "northeast"
 ```
 
 > **Challenge**: Based on the the above code as refrence try and find the remaining 3 quadrants and colour them as per Figure 6 below.
 Hint - you can use the **llgridlines** function in order to overlay the long-lat lines.
 For bonus points try to desolve the quadrants so the map is left with only 4 polygons.  
+
+```{r, echo=FALSE, eval=FALSE}
+lnd$quadrant[!east & north] <- "northwest"
+lnd$quadrant[east & !north] <- "southeast"
+lnd$quadrant[!east & !north] <- "southwest"
+library(tmap)
+qtm(lnd, fill = "quadrant")
+lnd_disolved = rgeos::gUnaryUnion(spgeom = lnd, id = lnd$quadrant)
+plot(lnd_disolved)
+```
+
 
 ```{r, echo=FALSE, fig.cap="The 4 quadrants of London"}
 grid.raster(readPNG("figure/lnd-quads.png"))
