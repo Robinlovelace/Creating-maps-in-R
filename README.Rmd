@@ -4,17 +4,17 @@ author: Robin Lovelace (R.Lovelace@leeds.ac.uk), James Cheshire, Rachel Oldroyd 
   others
 date: "`r Sys.Date()`. See [github.com/Robinlovelace/Creating-maps-in-R](https://github.com/Robinlovelace/Creating-maps-in-R)
   for latest version"
-output:
-  pdf_document:
-    fig_cap: yes
-    fig_height: 3.5
-    fig_width: 4.5
-    highlight: pygments
-    keep_tex: yes
-    toc: yes
-  html_document:
-    toc: yes
-  word_document: default
+output: github_document
+  # pdf_document:
+  #   fig_cap: yes
+  #   fig_height: 3.5
+  #   fig_width: 4.5
+  #   highlight: pygments
+  #   keep_tex: yes
+  #   toc: yes
+  # html_document:
+  #   toc: yes
+  # word_document: default
 ---
 
 
@@ -48,6 +48,16 @@ R's 'base' graphics and various dedicated map-making packages for R including
 **tmap** and **leaflet**. It teaches the basics of using R as a
 fast, user-friendly and extremely powerful command-line
 Geographic Information System (GIS).
+
+By the end of the tutorial you should have the confidence and skills needed to convert a diverse range of geographical and non-geographical datasets into meaningful analyses and visualisations. Using data and code provided in this repository all of the results are reproducible, culminating in publication-quality maps such as the faceted map of London's population below:
+
+![image-lnd](https://raw.githubusercontent.com/Robinlovelace/Creating-maps-in-R/master/figure/facet_london.png)
+
+The course will even show you how to make your maps animated:
+
+![](https://raw.githubusercontent.com/Robinlovelace/Creating-maps-in-R/master/figure/lnd-animated.gif)
+
+If you have any feedback on this tutorial please let us know via email or via this repository. Contibutions to the `.Rmd` file ([intro-spatial.Rmd](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial.Rmd)) are welcome. Happy mapping!
 
 The tutorial is practical in nature: you will load-in,
 visualise and manipulate spatial data.
