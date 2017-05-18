@@ -4,17 +4,18 @@ author: Robin Lovelace (R.Lovelace@leeds.ac.uk), James Cheshire, Rachel Oldroyd 
   others
 date: "`r Sys.Date()`. See [github.com/Robinlovelace/Creating-maps-in-R](https://github.com/Robinlovelace/Creating-maps-in-R)
   for latest version"
-output: github_document
-  # pdf_document:
-  #   fig_cap: yes
-  #   fig_height: 3.5
-  #   fig_width: 4.5
-  #   highlight: pygments
-  #   keep_tex: yes
-  #   toc: yes
-  # html_document:
-  #   toc: yes
-  # word_document: default
+# output: github_document
+output:
+  pdf_document:
+    fig_cap: yes
+    fig_height: 3.5
+    fig_width: 4.5
+    highlight: pygments
+    keep_tex: yes
+    toc: yes
+  html_document:
+    toc: yes
+  word_document: default
 ---
 
 
