@@ -57,7 +57,10 @@ The course will even show you how to make your maps animated:
 
 ![](https://raw.githubusercontent.com/Robinlovelace/Creating-maps-in-R/master/figure/lnd-animated.gif)
 
-If you have any feedback on this tutorial please let us know via email or via this repository. Contibutions to the `.Rmd` file ([intro-spatial.Rmd](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial.Rmd)) are welcome. Happy mapping!
+An up-to-date pdf version of this tutorial is maintained for teaching purposes in the file
+[intro-spatial-rl.pdf](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial-rl.pdf).
+
+If you have any feedback on this tutorial please let us know via email or via this repository. Contibutions to the `.Rmd` file ([README.Rmd](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/README.Rmd)) are welcome. Happy mapping!
 
 The tutorial is practical in nature: you will load-in,
 visualise and manipulate spatial data.
@@ -350,8 +353,8 @@ more specifically:
 > **Challenge**: Select all zones whose geographic centroid lies within 10 km of the geographic centroid of inner 
 London.^[To
 see how this map was created, see the code
-in intro-spatial.Rmd. This may be loaded by typing
-`file.edit("intro-spatial.Rmd")` or online at [github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial.Rmd](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial.Rmd).]
+in [README.Rmd](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/README.Rmd)  . This may be loaded by typing
+`file.edit("README.Rmd")` or online at [github.com/Robinlovelace/Creating-maps-in-R/blob/master/README.Rmd](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/README.Rmd).]
 
 ```{r, echo=FALSE, fig.cap="Zones in London whose centroid lie within 10 km of the geographic centroid of the City of London. Note the distinction between zones which only touch or 'intersect' with the buffer (light blue) and zones whose centroid is within the buffer (darker blue).", message=FALSE}
 library(rgeos)
@@ -769,7 +772,7 @@ join them to your geographical data.
 <!-- Part IV to plot continuous variables).^[Hint: the solution relies on the -->
 <!-- **rgeos** function `gCentroid()`. To -->
 <!-- see how this map was created, see the code -->
-<!-- in intro-spatial.Rmd at [github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial.Rmd](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial.Rmd).] -->
+<!-- in README.Rmd at [github.com/Robinlovelace/Creating-maps-in-R/blob/master/README.Rmd](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/README.Rmd).] -->
 
 <!-- ```{r, echo=FALSE, results='hide', message=FALSE, warning=FALSE, fig.cap="Proportion of council seats won by Conservatives in the 2014 local elections using data from data.london.gov and joined using the methods presented in this section", , out.width="48%", fig.align="center"} -->
 <!-- # install.packages("ggmap") -->
@@ -1390,8 +1393,6 @@ http://cran.r-project.org
 
 <!-- # Further information -->
 
-<!-- An up-to-date version of this tutorial is maintained at -->
-<!-- [https://github.com/Robinlovelace/Creating-maps-in-R](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial-rl.pdf). The source files used to create this tutorial, including -->
 <!-- the input data can be downloaded as a -->
 <!-- [zip file](https://github.com/Robinlovelace/Creating-maps-in-R/archive/master.zip), -->
 <!-- as described below. The entire tutorial was written in -->
@@ -1401,7 +1402,7 @@ http://cran.r-project.org
 <!-- Any suggested improvements or new -->
 <!-- [vignettes](https://github.com/Robinlovelace/Creating-maps-in-R/tree/master/vignettes) are welcome, via email -->
 <!-- to Robin or by [forking](https://help.github.com/articles/fork-a-repo) -->
-<!-- the [master version](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial.Rmd) of this document. -->
+<!-- the [master version](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/README.Rmd) of this document. -->
 
 <!-- The colourful syntax highlighting in this document is thanks to -->
 <!-- [RMarkdown](http://rmarkdown.rstudio.com/). -->
@@ -1447,5 +1448,5 @@ Wickham, H. (2014). Tidy data. The Journal of Statistical Software, 14(5), Retri
 Wilkinson, L. (2005). The grammar of graphics. Springer.
 
 ```{r, echo=FALSE, eval=FALSE}
-system("mv intro-spatial.pdf intro-spatial-rl.pdf") # change name
+system("mv README.pdf intro-spatial-rl.pdf") # change name
 ```

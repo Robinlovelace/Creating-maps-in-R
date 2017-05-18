@@ -16,7 +16,9 @@ The course will even show you how to make your maps animated:
 
 ![](https://raw.githubusercontent.com/Robinlovelace/Creating-maps-in-R/master/figure/lnd-animated.gif)
 
-If you have any feedback on this tutorial please let us know via email or via this repository. Contibutions to the `.Rmd` file ([intro-spatial.Rmd](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial.Rmd)) are welcome. Happy mapping!
+An up-to-date pdf version of this tutorial is maintained for teaching purposes in the file [intro-spatial-rl.pdf](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial-rl.pdf).
+
+If you have any feedback on this tutorial please let us know via email or via this repository. Contibutions to the `.Rmd` file ([README.Rmd](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/README.Rmd)) are welcome. Happy mapping!
 
 The tutorial is practical in nature: you will load-in, visualise and manipulate spatial data. We assume no prior knowledge of spatial data analysis but some experience with R will help. If you have not used R before, it may be worth following an introductory tutorial, such as *Efficient R Programming* ([Gillespie and Lovelace, 2016](https://csgillespie.github.io/efficientR/)), *R for Data Science* ([Grolemund and Wickham, 2016](http://r4ds.had.co.nz/)) or tutorials suggested on [rstudio.com](https://www.rstudio.com/online-learning/) and [cran.r-project.org](https://cran.r-project.org/other-docs.html).
 
@@ -485,7 +487,7 @@ With the attribute joining skills you have learned in this section, you should n
 <!-- Part IV to plot continuous variables).^[Hint: the solution relies on the -->
 <!-- **rgeos** function `gCentroid()`. To -->
 <!-- see how this map was created, see the code -->
-<!-- in intro-spatial.Rmd at [github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial.Rmd](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial.Rmd).] -->
+<!-- in README.Rmd at [github.com/Robinlovelace/Creating-maps-in-R/blob/master/README.Rmd](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/README.Rmd).] -->
 <!-- ```{r, echo=FALSE, results='hide', message=FALSE, warning=FALSE, fig.cap="Proportion of council seats won by Conservatives in the 2014 local elections using data from data.london.gov and joined using the methods presented in this section", , out.width="48%", fig.align="center"} -->
 <!-- # install.packages("ggmap") -->
 <!-- library(maptools) -->
@@ -970,8 +972,6 @@ Good resources that will help you further sharpen you R skills include:
 <!-- `proj4string(df)`: query coordinate reference system of `df` object -->
 <!-- `spTransform(df, CRS("+init=epsg:4326")`: reproject `df` object to WGS84 -->
 <!-- # Further information -->
-<!-- An up-to-date version of this tutorial is maintained at -->
-<!-- [https://github.com/Robinlovelace/Creating-maps-in-R](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial-rl.pdf). The source files used to create this tutorial, including -->
 <!-- the input data can be downloaded as a -->
 <!-- [zip file](https://github.com/Robinlovelace/Creating-maps-in-R/archive/master.zip), -->
 <!-- as described below. The entire tutorial was written in -->
@@ -980,7 +980,7 @@ Good resources that will help you further sharpen you R skills include:
 <!-- Any suggested improvements or new -->
 <!-- [vignettes](https://github.com/Robinlovelace/Creating-maps-in-R/tree/master/vignettes) are welcome, via email -->
 <!-- to Robin or by [forking](https://help.github.com/articles/fork-a-repo) -->
-<!-- the [master version](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial.Rmd) of this document. -->
+<!-- the [master version](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/README.Rmd) of this document. -->
 <!-- The colourful syntax highlighting in this document is thanks to -->
 <!-- [RMarkdown](http://rmarkdown.rstudio.com/). -->
 <!-- We try to follow best practice in terms of style, roughly following -->
@@ -1020,7 +1020,7 @@ Wilkinson, L. (2005). The grammar of graphics. Springer.
 
 [2] The third line of code is included for historical interest and to provide an opportunity to discuss R functions and their arguments (the values inside a function's brackets) in detail. Note the arguments are separated by a comma. The order in which they are specified is important. You do not have to explicitly type `dsn =` or `layer =` as R knows which order they appear. `readOGR("data", "london_sport")` would work just as well. For clarity, it is good practice to include argument names when learning new functions so we will continue to do so.
 
-[3] To see how this map was created, see the code in intro-spatial.Rmd. This may be loaded by typing `file.edit("intro-spatial.Rmd")` or online at [github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial.Rmd](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/intro-spatial.Rmd).
+[3] To see how this map was created, see the code in [README.Rmd](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/README.Rmd) . This may be loaded by typing `file.edit("README.Rmd")` or online at [github.com/Robinlovelace/Creating-maps-in-R/blob/master/README.Rmd](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/README.Rmd).
 
 [4] Note: entering `projInfo()` provides additional CRS options. [spatialreference.org](http://spatialreference.org/) provides more information about EPSG codes.
 
