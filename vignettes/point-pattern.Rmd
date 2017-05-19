@@ -1,10 +1,14 @@
 ---
 title: 'Point Pattern analysis and spatial interpolation with R'
 output:
-  pdf_document
+  github_document: 
+    toc: yes
 bibliography: references.bib
-always_allow_html: yes
 ---
+
+```{r, echo=FALSE}
+knitr::opts_knit$set(root.dir = "..")
+```
 
 # Introduction
 
@@ -28,12 +32,12 @@ This tutorial assumes you have downloaded the GitHub repo [`robinlovelace/Creati
 
 <!-- Could say how to this with download.file... -->
 
-The input datasets, cunningly stored in the `../data/` directory, are on 'Boris Bikes' docking stations around London, and can be read-in and visualised with the following commands:
+The input datasets, cunningly stored in the `data/` directory, are on 'Boris Bikes' docking stations around London, and can be read-in and visualised with the following commands:
 
 ```{r cycle-hire1}
-lnd = rgdal::readOGR("../data/lnd.geojson")
-cycle_hire = rgdal::readOGR("../data/cycle_hire.geojson")
-cycle_hire_osm = rgdal::readOGR("../data/cycle_hire-osm.geojson")
+lnd = rgdal::readOGR("data/lnd.geojson")
+cycle_hire = rgdal::readOGR("data/cycle_hire.geojson")
+cycle_hire_osm = rgdal::readOGR("data/cycle_hire-osm.geojson")
 plot(cycle_hire)
 points(cycle_hire_osm, col = "red")
 plot(lnd, add = TRUE)
@@ -99,8 +103,6 @@ We can aggregate the points per zone and provide summary statistics.
 Starting with the number of points per polygon, this would calculated as follows:
 
 ```{r}
-proj4string(cycle_hire) = proj4string(lnd)
-
 cycle_hire_ag = aggregate(cycle_hire["id"], lnd, FUN = "length")
 ```
 

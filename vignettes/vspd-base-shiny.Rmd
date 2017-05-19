@@ -1,7 +1,11 @@
 ---
 title: 'Visualising spatial data: from base to shiny - workshop'
 author: "Robin Lovelace"
-output: pdf_document
+output: github_document
+# output:
+#   html_document:
+#     self_contained: no
+#     toc: yes
 ---
 
 ```{r, echo=FALSE}
@@ -30,14 +34,13 @@ pkgs = c(
   "OpenStreetMap", # for downloading OpenStreetMap tiles 
   "rasterVis",# raster visualisation (depends on the raster package)
   "dplyr",    # data manipulation package
-  "tidyr",     # data reshaping package
-  "reshape2"
+  "tidyr"     # data reshaping package
 )
 ```
 
 They can all be installed with `install.packages(pkgs)`. Less time consuming in many cases will be to install only those packages that have not yet been installed, e.g. via:
 
-```{r}
+```{r, eval=FALSE}
 (to_install = pkgs[!pkgs %in% installed.packages()])
 if(length(to_install) > 0){
   install.packages(to_install)
@@ -49,55 +52,6 @@ It is worth keeping your packages and R version up-to-date. To ensure the former
 ```{r, eval=FALSE}
 update.packages(oldPkgs = pkgs)
 ```
-
-
-### Dataset used and downloading them
-
-For consistency, we use a limited number of datasets, which share the same geographic extent (London), throughout this tutorial. We will be using real data related to transport planning. To make the tutorial more exciting, imagine that you are trying to present evidence to support policies that will enable Londoner to 'Go Dutch' and cycle as the main mode of transport. The datasets are as follows:
-
-- `lnd_crashes`: A `SpatialPointsDataFrame` from the 'Stats19' dataset on road traffic collisions reported to the police.
-- `lnd_commutes`: A `SpatialLinesDataFrame` representing commuter desire lines in London.
-- `lnd_rnet`: A network of lines representing the cycling potential in different parts of London.
-- `lnd_msoas`: Areas of London, stored as a `SpatialPolygonsDataFrame`.
-- `lnd_topo`: The topography of London, saved as a `RasterLayer`.
-
-These were created/stored locally in the `vspd-base-shiny-data/` subdirectory of `vignettes/` the working directory of this tutorial. Set your working directly to this folder:
-
-```{r}
-# switch to the vignettes directory if not in it already
-if(!grepl(pattern = "vignettes", x = getwd())){
-  old = setwd("vignettes")
-}
-```
-
-**The datasets can all be downloaded from the following link: [github.com/Robinlovelace/vspd-base-shiny-data](https://github.com/Robinlovelace/vspd-base-shiny-data).**
-
-They can be automatically downloaded and placed into the correct folder as follows:
-
-```{r}
-if(!dir.exists("vspd-base-shiny-data")) {
-  u = "https://github.com/Robinlovelace/vspd-base-shiny-data/archive/master.zip"
-  download.file(u, destfile = "master.zip")
-  unzip("master.zip")
-  dir.create("vspd-base-shiny-data")
-  f = list.files(path = "vspd-base-shiny-data-master/", full.names = T)
-  file.copy(f, "vspd-base-shiny-data")
-}
-```
-
-Once you have downloaded the datasets, they can be loaded with the following commands (see the Appendix for information on data provenance): 
-
-```{r, message=FALSE}
-library(sp)
-lnd = readRDS("vspd-base-shiny-data/lnd84.Rds")
-lnd_crashes = readRDS("vspd-base-shiny-data/ac_cycle_lnd.Rds")
-killed = lnd_crashes[lnd_crashes$Casualty_Severity == "Fatal",]
-lnd_commutes = readRDS("vspd-base-shiny-data/l-lnd.Rds")
-lnd_msoas = readRDS("vspd-base-shiny-data/z.Rds")
-lnd_rnet = readRDS("vspd-base-shiny-data/rnet-lnd.Rds")
-lnd_topo = readRDS("vspd-base-shiny-data/lnd-topo.Rds")
-```
-
 
 ## Data
 
@@ -125,7 +79,7 @@ home = sp::SpatialPointsDataFrame(coords = home_geometry, data = home_data)
 This can then be plotted in context, e.g. using the **tmap** package:
 
 ```{r, eval=FALSE}
-osm_image = tmaptools::read_osm(x = tmaptools::bb("Leeds"))
+osm_image = tmap::read_osm(x = tmap::bb("Leeds"))
 ```
 
 ```{r, echo=FALSE}
@@ -141,6 +95,50 @@ tmap::qtm(osm_image) +
 ## A comment on packages
 
 Note the use of the `::` operator in previous code chunks. These access the functions within the **sp** and **tmap** packages without having to load them, and highlight which packages the functions were taken from (it can get confusing with so many spatial packages floating around!). This can be useful if for one-off plots but generally it's best to load the package you'll use at the outset of each analysis and use the functions directly.
+
+## Dataset used and downloading them
+
+For consistency, we use a limited number of datasets, which share the same geographic extent (London), throughout this tutorial. We will be using real data related to transport planning. To make the tutorial more exciting, imagine that you are trying to present evidence to support policies that will enable Londoner to 'Go Dutch' and cycle as the main mode of transport. The datasets are as follows:
+
+- `lnd_crashes`: A `SpatialPointsDataFrame` from the 'Stats19' dataset on road traffic collisions reported to the police.
+- `lnd_commutes`: A `SpatialLinesDataFrame` representing commuter desire lines in London.
+- `lnd_rnet`: A network of lines representing the cycling potential in different parts of London.
+- `lnd_msoas`: Areas of London, stored as a `SpatialPolygonsDataFrame`.
+- `lnd_topo`: The topography of London, saved as a `RasterLayer`.
+
+These were created/stored locally in the `vspd-base-shiny-data/` subdirectory of `vignettes/` the working directory of this tutorial. Set your working directly to this folder:
+
+```{r}
+# switch to the vignettes directory if not in it already
+if(!grepl(pattern = "vignettes", x = getwd())){
+  old = setwd("vignettes")
+}
+```
+
+**The datasets can all be downloaded from the following link: [github.com/Robinlovelace/vspd-base-shiny-data](https://github.com/Robinlovelace/vspd-base-shiny-data).**
+
+They can be automatically downloaded and placed into the correct folder as follows:
+
+```{r, eval=FALSE}
+u = "https://github.com/Robinlovelace/vspd-base-shiny-data/archive/master.zip"
+download.file(u, destfile = "master.zip")
+unzip("master.zip")
+dir.create("vspd-base-shiny-data")
+f = list.files(path = "vspd-base-shiny-data-master/", full.names = T)
+file.copy(f, "vspd-base-shiny-data")
+```
+
+Once you have downloaded the datasets, they can be loaded with the following commands (see the Appendix for information on data provenance): 
+
+```{r, message=FALSE}
+lnd = readRDS("vspd-base-shiny-data/lnd84.Rds")
+lnd_crashes = readRDS("vspd-base-shiny-data/ac_cycle_lnd.Rds")
+killed = lnd_crashes[lnd_crashes$Casualty_Severity == "Fatal",]
+lnd_commutes = readRDS("vspd-base-shiny-data/l-lnd.Rds")
+lnd_msoas = readRDS("vspd-base-shiny-data/z.Rds")
+lnd_rnet = readRDS("vspd-base-shiny-data/rnet-lnd.Rds")
+lnd_topo = readRDS("vspd-base-shiny-data/lnd-topo.Rds")
+```
 
 # Base graphics
 
