@@ -1,10 +1,16 @@
-# Reproducible workflow for transport planning
+#' Reproducible workflow for transport planning
 
+#' How I got here: http://rpubs.com/RobinLovelace/282944
+#' Context - the propensity to cycle tool:
+#' http://rpubs.com/RobinLovelace/278921
 old = setwd("vignettes")
 
 # How to represent movement on a map?
 o = c(5, 51)
 d = c(8, 52)
+
+sqrt((o[1] - d[1])^2 + (o[2] - d[2])^2) # what does that mean?
+geosphere::distGeo(o, d)
 
 plot(rbind(o, d))
 lines(rbind(o, d))
@@ -21,7 +27,13 @@ library(stplanr)
 # r_sp = route_graphhopper(from = o, to = d, vehicle = "bike")
 # saveRDS(r_sp, "route-utrecht-munster.Rds")
 r_sp = readRDS("route-utrecht-munster.Rds")
+r_sf = sf::st_as_sf(r_sp)
 plot(r_sp)
+plot(r_sf)
+
+rgeos::gLength(r_sp)
+(d = sf::st_length(r_sf))
+units::set_units(d, km)
 
 library(tmap)
 r_bb = tmaptools::bb(r_sp, 2)
@@ -35,9 +47,16 @@ qtm(Europe) +
 # https://cran.r-project.org/web/packages/stplanr/vignettes/introducing-stplanr.html
 head(cents)
 head(flow)
+sum(flow$All)
 rd = od2line(flow = flow, zones = cents)
 plot(rd)
 
+# routes_fast = line2route(rd) # needs cyclestreets api key
+routes_fast$All = rd$All
+rnet = overline(routes_fast, attrib = "All")
+plot(rnet, lwd = rnet$All / mean(flow$All))
+plot(routes_fast, lwd = routes_fast$All / mean(flow$All), col = "red", add = T)
+
 #' Output the result
-# knitr::spin("munster-code.R", format = "md")
+# knitr::spin("munster-code.R", format = "Rmd")
 # setwd(old)

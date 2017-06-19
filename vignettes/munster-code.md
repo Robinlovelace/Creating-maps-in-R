@@ -1,8 +1,10 @@
+Reproducible workflow for transport planning
+How I got here: http://rpubs.com/RobinLovelace/282944
+Context - the propensity to cycle tool:
+http://rpubs.com/RobinLovelace/278921
 
 
 ```r
-# Reproducible workflow for transport planning
-
 old = setwd("vignettes")
 ```
 
@@ -15,6 +17,22 @@ old = setwd("vignettes")
 o = c(5, 51)
 d = c(8, 52)
 
+sqrt((o[1] - d[1])^2 + (o[2] - d[2])^2) # what does that mean?
+```
+
+```
+## [1] 3.162278
+```
+
+```r
+geosphere::distGeo(o, d)
+```
+
+```
+## [1] 236143.5
+```
+
+```r
 plot(rbind(o, d))
 lines(rbind(o, d))
 ```
@@ -55,10 +73,46 @@ With graphhopper
 # r_sp = route_graphhopper(from = o, to = d, vehicle = "bike")
 # saveRDS(r_sp, "route-utrecht-munster.Rds")
 r_sp = readRDS("route-utrecht-munster.Rds")
+r_sf = sf::st_as_sf(r_sp)
 plot(r_sp)
 ```
 
 ![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png)
+
+```r
+plot(r_sf)
+```
+
+![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-2.png)
+
+```r
+rgeos::gLength(r_sp)
+```
+
+```
+## Warning in RGEOSMiscFunc(spgeom, byid, "rgeos_length"): Spatial object is
+## not projected; GEOS expects planar coordinates
+```
+
+```
+## [1] 2.697298
+```
+
+```r
+(d = sf::st_length(r_sf))
+```
+
+```
+## 200151.5 m
+```
+
+```r
+units::set_units(d, km)
+```
+
+```
+## 200.1515 km
+```
 
 ```r
 library(tmap)
@@ -68,7 +122,7 @@ qtm(Europe) +
   qtm(r_sp)
 ```
 
-![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-2.png)
+![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-3.png)
 
 ```r
 # try with tmap_mode("view")
@@ -133,17 +187,35 @@ head(flow)
 ```
 
 ```r
+sum(flow$All)
+```
+
+```
+## [1] 2816
+```
+
+```r
 rd = od2line(flow = flow, zones = cents)
 plot(rd)
 ```
 
-![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-3.png)
+![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-4.png)
+
+```r
+# routes_fast = line2route(rd) # needs cyclestreets api key
+routes_fast$All = rd$All
+rnet = overline(routes_fast, attrib = "All")
+plot(rnet, lwd = rnet$All / mean(flow$All))
+plot(routes_fast, lwd = routes_fast$All / mean(flow$All), col = "red", add = T)
+```
+
+![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-5.png)
 
 Output the result
 
 
 ```r
-# knitr::spin("munster-code.R", format = "md")
+# knitr::spin("munster-code.R", format = "Rmd")
 # setwd(old)
 ```
 
