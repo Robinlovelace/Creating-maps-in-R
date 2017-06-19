@@ -1,9 +1,14 @@
 #' Reproducible workflow for transport planning
 
 #' How I got here: http://rpubs.com/RobinLovelace/282944
+#' 
 #' Context - the propensity to cycle tool:
 #' http://rpubs.com/RobinLovelace/278921
-old = setwd("vignettes")
+#' 
+#' 
+#' 
+if(!grepl(pattern = "vig", getwd()))
+  old = setwd("vignettes")
 
 # How to represent movement on a map?
 o = c(5, 51)
@@ -56,6 +61,19 @@ routes_fast$All = rd$All
 rnet = overline(routes_fast, attrib = "All")
 plot(rnet, lwd = rnet$All / mean(flow$All))
 plot(routes_fast, lwd = routes_fast$All / mean(flow$All), col = "red", add = T)
+
+# if this fails, navigate to the following link and download manually:
+# https://github.com/npct/pct-data/raw/master/liverpool-city-region/l.Rds
+u_pct = "https://github.com/npct/pct-data/raw/master/liverpool-city-region/l.Rds"
+
+download.file(u_pct, "l.Rds")
+library(tmap)
+library(stplanr) # loads sp
+
+## Loading required package: sp
+
+l = readRDS("l.Rds")
+tm_shape(l) + tm_lines(lwd = "all")
 
 #' Output the result
 # knitr::spin("munster-code.R", format = "Rmd")
