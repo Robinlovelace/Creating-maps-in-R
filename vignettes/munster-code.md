@@ -40,6 +40,20 @@ lines(rbind(o, d))
 
 ```r
 library(stplanr)
+```
+
+```
+## 
+## Attaching package: 'stplanr'
+```
+
+```
+## The following object is masked _by_ '.GlobalEnv':
+## 
+##     routes_fast
+```
+
+```r
 (o = geo_code("Utrecht"))
 ```
 
@@ -73,16 +87,10 @@ With graphhopper
 # saveRDS(r_sp, "route-utrecht-munster.Rds")
 r_sp = readRDS("route-utrecht-munster.Rds")
 r_sf = sf::st_as_sf(r_sp)
-plot(r_sp)
 ```
 
-![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png)
+## Treatment of units
 
-```r
-plot(r_sf)
-```
-
-![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-2.png)
 
 ```r
 rgeos::gLength(r_sp)
@@ -114,6 +122,49 @@ units::set_units(d, km)
 ```
 
 ```r
+plot(r_sp)
+```
+
+![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4-1.png)
+
+```r
+plot(r_sf)
+```
+
+![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4-2.png)
+
+```r
+devtools::install_github("tidyverse/ggplot2")
+```
+
+```
+## Skipping install of 'ggplot2' from a github remote, the SHA1 (f1bef79e) has not changed since last install.
+##   Use `force = TRUE` to force installation
+```
+
+```r
+library(ggplot2)
+
+r_fort = fortify(r_sp)
+ggplot(r_fort) + geom_path(aes(long, lat))
+```
+
+![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4-3.png)
+
+```r
+ggplot(r_fort) + geom_path(aes(long, lat)) + coord_map()
+```
+
+![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4-4.png)
+
+```r
+# with the new sf method
+ggplot(r_sf) + geom_sf() # much easier!
+```
+
+![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4-5.png)
+
+```r
 library(tmap)
 r_bb = tmaptools::bb(r_sp, 2)
 data("Europe")
@@ -121,7 +172,7 @@ qtm(Europe) +
   qtm(r_sp)
 ```
 
-![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-3.png)
+![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4-6.png)
 
 ```r
 # try with tmap_mode("view")
@@ -198,7 +249,7 @@ rd = od2line(flow = flow, zones = cents)
 plot(rd)
 ```
 
-![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-4.png)
+![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4-7.png)
 
 ```r
 # routes_fast = line2route(rd) # needs cyclestreets api key
@@ -208,7 +259,7 @@ plot(rnet, lwd = rnet$All / mean(flow$All))
 plot(routes_fast, lwd = routes_fast$All / mean(flow$All), col = "red", add = T)
 ```
 
-![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-5.png)
+![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4-8.png)
 
 ```r
 # if this fails, navigate to the following link and download manually:
@@ -225,7 +276,7 @@ l = readRDS("l.Rds")
 tm_shape(l) + tm_lines(lwd = "all")
 ```
 
-![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-6.png)
+![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4-9.png)
 
 Output the result
 

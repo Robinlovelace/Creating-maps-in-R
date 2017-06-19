@@ -33,12 +33,23 @@ library(stplanr)
 # saveRDS(r_sp, "route-utrecht-munster.Rds")
 r_sp = readRDS("route-utrecht-munster.Rds")
 r_sf = sf::st_as_sf(r_sp)
-plot(r_sp)
-plot(r_sf)
 
+#' ## Treatment of units
 rgeos::gLength(r_sp)
 (d = sf::st_length(r_sf))
 units::set_units(d, km)
+
+plot(r_sp)
+plot(r_sf)
+devtools::install_github("tidyverse/ggplot2")
+library(ggplot2)
+
+r_fort = fortify(r_sp)
+ggplot(r_fort) + geom_path(aes(long, lat))
+ggplot(r_fort) + geom_path(aes(long, lat)) + coord_map()
+
+# with the new sf method
+ggplot(r_sf) + geom_sf() # much easier!
 
 library(tmap)
 r_bb = tmaptools::bb(r_sp, 2)
