@@ -4,7 +4,12 @@ How I got here: http://rpubs.com/RobinLovelace/282944
 Context - the propensity to cycle tool:
 http://rpubs.com/RobinLovelace/278921
 
+Geographic data can save the world: 
+http://rpubs.com/RobinLovelace/272796
 
+## Comment on 'tidy' dplyr pipes
+
+See https://csgillespie.github.io/efficientR/data-carpentry.html#chaining-operations
 
 
 
@@ -40,20 +45,6 @@ lines(rbind(o, d))
 
 ```r
 library(stplanr)
-```
-
-```
-## 
-## Attaching package: 'stplanr'
-```
-
-```
-## The following object is masked _by_ '.GlobalEnv':
-## 
-##     routes_fast
-```
-
-```r
 (o = geo_code("Utrecht"))
 ```
 
@@ -265,8 +256,8 @@ plot(routes_fast, lwd = routes_fast$All / mean(flow$All), col = "red", add = T)
 # if this fails, navigate to the following link and download manually:
 # https://github.com/npct/pct-data/raw/master/liverpool-city-region/l.Rds
 u_pct = "https://github.com/npct/pct-data/raw/master/liverpool-city-region/l.Rds"
-
-download.file(u_pct, "l.Rds")
+if(!exists("l.Rds"))
+  download.file(u_pct, "l.Rds")
 library(tmap)
 library(stplanr) # loads sp
 
@@ -278,6 +269,8 @@ tm_shape(l) + tm_lines(lwd = "all")
 
 ![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4-9.png)
 
+Exercise
+Reproduce this code: http://rpubs.com/RobinLovelace/273513
 Output the result
 
 

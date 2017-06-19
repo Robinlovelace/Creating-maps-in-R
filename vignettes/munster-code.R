@@ -5,7 +5,12 @@
 #' Context - the propensity to cycle tool:
 #' http://rpubs.com/RobinLovelace/278921
 #' 
+#' Geographic data can save the world: 
+#' http://rpubs.com/RobinLovelace/272796
 #' 
+#' ## Comment on 'tidy' dplyr pipes
+#' 
+#' See https://csgillespie.github.io/efficientR/data-carpentry.html#chaining-operations
 #' 
 if(!grepl(pattern = "vig", getwd()))
   old = setwd("vignettes")
@@ -76,8 +81,8 @@ plot(routes_fast, lwd = routes_fast$All / mean(flow$All), col = "red", add = T)
 # if this fails, navigate to the following link and download manually:
 # https://github.com/npct/pct-data/raw/master/liverpool-city-region/l.Rds
 u_pct = "https://github.com/npct/pct-data/raw/master/liverpool-city-region/l.Rds"
-
-download.file(u_pct, "l.Rds")
+if(!exists("l.Rds"))
+  download.file(u_pct, "l.Rds")
 library(tmap)
 library(stplanr) # loads sp
 
@@ -85,6 +90,9 @@ library(stplanr) # loads sp
 
 l = readRDS("l.Rds")
 tm_shape(l) + tm_lines(lwd = "all")
+
+#' Exercise
+#' Reproduce this code: http://rpubs.com/RobinLovelace/273513
 
 #' Output the result
 # knitr::spin("munster-code.R", format = "Rmd")
