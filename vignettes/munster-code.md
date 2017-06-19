@@ -3,6 +3,14 @@
 ```r
 # Reproducible workflow for transport planning
 
+old = setwd("vignettes")
+```
+
+```
+## Error in setwd("vignettes"): cannot change working directory
+```
+
+```r
 # How to represent movement on a map?
 o = c(5, 51)
 d = c(8, 52)
@@ -32,48 +40,35 @@ library(stplanr)
 ##  7.626135 51.960665
 ```
 
-```r
-r_osrm = viaroute(startlat = o[2], startlng = o[1], endlat = d[2], endlng = d[1])
-```
+With OSRM
 
-```
-## Error in if (grepl("application/json", httrreq$headers$`content-type`) == : argument is of length zero
-```
 
 ```r
-r_sp = viaroute2sldf(r_osrm)
+# r_osrm = viaroute(startlat = o[2], startlng = o[1], endlat = d[2], endlng = d[1])
+# r_sp = viaroute2sldf(r_osrm)
 ```
 
-```
-## Error in viaroute2sldf(r_osrm): object 'r_osrm' not found
-```
+With graphhopper
+
 
 ```r
+# r_sp = route_graphhopper(from = o, to = d, vehicle = "bike")
+# saveRDS(r_sp, "route-utrecht-munster.Rds")
+r_sp = readRDS("route-utrecht-munster.Rds")
 plot(r_sp)
 ```
 
-```
-## Error in plot(r_sp): object 'r_sp' not found
-```
+![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png)
 
 ```r
 library(tmap)
 r_bb = tmaptools::bb(r_sp, 2)
-```
-
-```
-## Error in get_bb(x, cx = cx, cy = cy, width = width, height = height, xlim = xlim, : object 'r_sp' not found
-```
-
-```r
 data("Europe")
 qtm(Europe) +
   qtm(r_sp)
 ```
 
-```
-## Error in qtm(r_sp): object 'r_sp' not found
-```
+![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-2.png)
 
 ```r
 # try with tmap_mode("view")
@@ -142,14 +137,13 @@ rd = od2line(flow = flow, zones = cents)
 plot(rd)
 ```
 
-![plot of chunk unnamed-chunk-1](figure/unnamed-chunk-1-2.png)
+![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-3.png)
 
 Output the result
 
 
 ```r
-# old = setwd("vignettes")
-# knitr::spin("munster-code.R")
+# knitr::spin("munster-code.R", format = "md")
 # setwd(old)
 ```
 

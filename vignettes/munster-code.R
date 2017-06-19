@@ -1,5 +1,7 @@
 # Reproducible workflow for transport planning
 
+old = setwd("vignettes")
+
 # How to represent movement on a map?
 o = c(5, 51)
 d = c(8, 52)
@@ -11,9 +13,14 @@ library(stplanr)
 (o = geo_code("Utrecht"))
 (d = geo_code("Munster"))
 
-r_osrm = viaroute(startlat = o[2], startlng = o[1], endlat = d[2], endlng = d[1])
-r_sp = viaroute2sldf(r_osrm)
+#' With OSRM
+# r_osrm = viaroute(startlat = o[2], startlng = o[1], endlat = d[2], endlng = d[1])
+# r_sp = viaroute2sldf(r_osrm)
 
+#' With graphhopper
+# r_sp = route_graphhopper(from = o, to = d, vehicle = "bike")
+# saveRDS(r_sp, "route-utrecht-munster.Rds")
+r_sp = readRDS("route-utrecht-munster.Rds")
 plot(r_sp)
 
 library(tmap)
@@ -32,6 +39,5 @@ rd = od2line(flow = flow, zones = cents)
 plot(rd)
 
 #' Output the result
-# old = setwd("vignettes")
 # knitr::spin("munster-code.R", format = "md")
 # setwd(old)
