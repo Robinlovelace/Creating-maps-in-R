@@ -31,4 +31,7 @@ head(flow)
 rd = od2line(flow = flow, zones = cents)
 plot(rd)
 
-
+#' Output the result
+# old = setwd("vignettes")
+# knitr::spin("munster-code.R", format = "md")
+# setwd(old)
