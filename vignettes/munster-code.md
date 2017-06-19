@@ -1,4 +1,8 @@
-Reproducible workflow for transport planning
+# Reproducible workflow for transport planning
+
+## Finding and reproducing this example
+
+See https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/vignettes/munster-code.md
 How I got here: http://rpubs.com/RobinLovelace/282944
 
 Context - the propensity to cycle tool:
@@ -49,8 +53,7 @@ library(stplanr)
 ```
 
 ```
-##      lon      lat 
-##  5.12142 52.09074
+## Error: is.data.frame(x) is not TRUE
 ```
 
 ```r
