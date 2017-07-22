@@ -1,12 +1,12 @@
 Introduction to visualising spatial data in R
 ================
-Robin Lovelace (<R.Lovelace@leeds.ac.uk>), James Cheshire, Rachel Oldroyd and others
-2017-05-18. See [github.com/Robinlovelace/Creating-maps-in-R](https://github.com/Robinlovelace/Creating-maps-in-R) for latest version
 
 Preface
 -------
 
-This tutorial is an introduction to analysing spatial data in R, specifically through map-making with R's 'base' graphics and various dedicated map-making packages for R including **tmap** and **leaflet**. It teaches the basics of using R as a fast, user-friendly and extremely powerful command-line Geographic Information System (GIS).
+This tutorial is an introduction to visualising and analysing spatial data in R based on the **sp** class system. For a guide to the more recent **sf** package check out [Chapter 2](http://robinlovelace.net/geocompr/spatial-class.html) of the in-development book [Geocomputation with R](http://robinlovelace.net/geocompr) which is freely available at [robinlovelace.net/geocompr](http://robinlovelace.net/geocompr).
+
+Although **sf** supersedes **sp** in many ways, there is still merit in learning the content in this tutorial, which teaches principles that will be useful regardless of software. Specifically this tutorial focusses on map-making with R's 'base' graphics and various dedicated map-making packages for R including **tmap** and **leaflet**. It aims to teach the basics of using R as a fast, user-friendly and extremely powerful command-line Geographic Information System (GIS).
 
 By the end of the tutorial you should have the confidence and skills needed to convert a diverse range of geographical and non-geographical datasets into meaningful analyses and visualisations. Using data and code provided in this repository all of the results are reproducible, culminating in publication-quality maps such as the faceted map of London's population below:
 
@@ -48,7 +48,7 @@ We also suggest that you use an R editor, such as [RStudio](http://www.rstudio.c
 
 When writing code in any language, it is good practice to use consistent and clear conventions, and R is no exception. Adding comments to your code is also useful; make these meaningful so you remember what the code is doing when you revisit it at a later date. You can add a comment by using the `#` symbol before or after a line of code, as illustrated in the block of code below. This code should create Figure 1 if typed correctly into the Console window:
 
-![Basic plot of x and y (right) and code used to generate the plot (right).](README_files/figure-markdown_github/unnamed-chunk-2-1.png)
+![Basic plot of x and y (right) and code used to generate the plot (right).](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-2-1.png)
 
 This first line in this block of code creates a new *object* called `x` and assigns it to a range of integers between 1 and 400. The second line creates another object called `y` which is assigned to a mathematical formula, and the third line plots the two together to create the plot shown.
 
@@ -96,7 +96,7 @@ Open the existing 'Creating-maps-in-R' project using `File -> Open File...` on t
 
 Alternatively, use the *project menu* to open the project or create a new one. It is *highly recommended* that you use RStudio's projects to organise your R work and that you organise your files into sub-folders (e.g. `code`, `input-data`, `figures`) to avoid digital clutter (Figure 2). The RStudio website contains an overview of the software: [rstudio.com/products/rstudio/](http://www.rstudio.com/products/rstudio/).
 
-![The RStudio environment with the project tab poised to open the Creating-maps-in-R project.](README_files/figure-markdown_github/unnamed-chunk-5-1.png)
+![The RStudio environment with the project tab poised to open the Creating-maps-in-R project.](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-5-1.png)
 
 Opening a project sets the current working directory to the project's parent folder, the `Creating-maps-in-R` folder in this case. If you ever need to change your working directory, you can use the 'Session' menu at the top of the page or use the [`setwd` command](http://www.statmethods.net/interface/workspace.html).
 
@@ -160,7 +160,7 @@ lnd$Pop_2001 <- as.numeric(as.character(lnd$Pop_2001))
 
 Type the function again but this time hit `tab` before completing the command. RStudio has auto-complete functionality which can save you a lot of time in the long run (see Figure 3).
 
-![Tab-autocompletion in action: display from RStudio after typing `lnd@` then `tab` to see which slots are in `lnd`](README_files/figure-markdown_github/unnamed-chunk-11-1.png)
+![Tab-autocompletion in action: display from RStudio after typing `lnd@` then `tab` to see which slots are in `lnd`](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-11-1.png)
 
 To explore `lnd` object further, try typing `nrow(lnd)` (display number of rows) and record how many zones the dataset contains. You can also try `ncol(lnd)`.
 
@@ -216,7 +216,7 @@ sel <- lnd$Partic_Per > 25
 plot(lnd[ sel, ], col = "turquoise", add = TRUE) # add selected zones to map
 ```
 
-![Simple plot of London with areas of high sports participation highlighted in blue](README_files/figure-markdown_github/unnamed-chunk-16-1.png)
+![Simple plot of London with areas of high sports participation highlighted in blue](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-16-1.png)
 
 Congratulations! You have just interrogated and visualised a spatial object: where are areas with high levels of sports participation in London? The map tells us. Do not worry for now about the intricacies of how this was achieved: you have learned vital basics of how R works as a language; we will cover this in more detail in subsequent sections.
 
@@ -224,7 +224,7 @@ As a bonus stage, select and plot only zones that are close to the centre of Lon
 
 > **Challenge**: Select all zones whose geographic centroid lies within 10 km of the geographic centroid of inner London.[3]
 
-![Zones in London whose centroid lie within 10 km of the geographic centroid of the City of London. Note the distinction between zones which only touch or 'intersect' with the buffer (light blue) and zones whose centroid is within the buffer (darker blue).](README_files/figure-markdown_github/unnamed-chunk-17-1.png)
+![Zones in London whose centroid lie within 10 km of the geographic centroid of the City of London. Note the distinction between zones which only touch or 'intersect' with the buffer (light blue) and zones whose centroid is within the buffer (darker blue).](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-17-1.png)
 
 Selecting quadrants
 -------------------
@@ -248,7 +248,7 @@ lnd$quadrant[east & north] <- "northeast"
 
 > **Challenge**: Based on the the above code as refrence try and find the remaining 3 quadrants and colour them as per Figure 6. Hint - you can use the **llgridlines** function in order to overlay the long-lat lines. For bonus points try to desolve the quadrants so the map is left with only 4 polygons.
 
-<img src="README_files/figure-markdown_github/unnamed-chunk-19-1.png" alt="The 4 quadrants of London and dissolved borders. Challenge: recreate a plot that looks like this." height="5cm" /><img src="README_files/figure-markdown_github/unnamed-chunk-19-2.png" alt="The 4 quadrants of London and dissolved borders. Challenge: recreate a plot that looks like this." height="5cm" />
+<img src="README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-19-1.png" alt="The 4 quadrants of London and dissolved borders. Challenge: recreate a plot that looks like this." height="5cm" /><img src="README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-19-2.png" alt="The 4 quadrants of London and dissolved borders. Challenge: recreate a plot that looks like this." height="5cm" />
 <p class="caption">
 The 4 quadrants of London and dissolved borders. Challenge: recreate a plot that looks like this.
 </p>
@@ -461,8 +461,8 @@ head(crime_ag$Borough) # the variables to join
 lnd@data <- left_join(lnd@data, crime_ag, by = c('name' = 'Borough'))
 ```
 
-    ## Warning in left_join_impl(x, y, by$x, by$y, suffix$x, suffix$y): joining
-    ## character vector and factor, coercing into character vector
+    ## Warning: Column `name`/`Borough` joining factor and character vector,
+    ## coercing into character vector
 
 Take a look at the new `lnd@data` object. You should see new variables added, meaning the attribute join was successful. Congratulations! You can now plot the rate of theft crimes in London by borough (see Fig 8).
 
@@ -471,7 +471,7 @@ library(tmap) # load tmap package (see Section IV)
 qtm(lnd, "CrimeCount") # plot the basic map
 ```
 
-<img src="README_files/figure-markdown_github/unnamed-chunk-39-1.png" alt="Number of thefts per borough." width="48%" />
+<img src="README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-39-1.png" alt="Number of thefts per borough." width="48%" />
 <p class="caption">
 Number of thefts per borough.
 </p>
@@ -539,7 +539,7 @@ plot(lnd) # plot London
 points(stations) # overlay the station points
 ```
 
-![Sampling and plotting stations](README_files/figure-markdown_github/unnamed-chunk-41-1.png)
+![Sampling and plotting stations](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-41-1.png)
 
 Note the `stations` points now overlay the boroughs but that the spatial extent of `stations` is greater than that of `lnd`.
 
@@ -550,7 +550,7 @@ stations <- stations[lnd, ]
 plot(stations) # test the clip succeeded
 ```
 
-![The clipped stations dataset](README_files/figure-markdown_github/unnamed-chunk-42-1.png)
+![The clipped stations dataset](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-42-1.png)
 
 <!-- The above line of code says: "output all `stations` within -->
 <!-- the `lnd` object bounds", a concise way -->
@@ -710,7 +710,7 @@ qtm(shp = lnd, fill = "Partic_Per", fill.palette = "-Blues") # not shown
 qtm(shp = lnd, fill = c("Partic_Per", "Pop_2001"), fill.palette = "Blues", ncol = 2) 
 ```
 
-![Side-by-side maps of sports participation and population](README_files/figure-markdown_github/unnamed-chunk-47-1.png)
+![Side-by-side maps of sports participation and population](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-47-1.png)
 
 The plot above shows the ease with which tmap can create maps next to each other for different variables. The plot produced by the following code chunk (not shown) demonstrates the power of the `tm_facets` command. Note that all the maps created with the `qtm` function can also be created with `tm_shape`, followed by `tm_fill` (or another `tm_` function).
 
@@ -740,7 +740,7 @@ if(curl::has_internet()) {
 
     ## Warning: Current projection unknown. Long lat coordinates (wgs84) assumed.
 
-![London's population in 2001.](README_files/figure-markdown_github/unnamed-chunk-49-1.png)
+![London's population in 2001.](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-49-1.png)
 
 Another way to make **tmap** maps have a basemap is by entering `tmap_mode("view")`. This will make the maps appear on a zoomable webmap powered by **leaflet**. There are many other intuitive and powerful functions in **tmap**. Check the documentation to find out more:
 
@@ -790,7 +790,7 @@ p + geom_point(aes(colour = Partic_Per, size = Pop_2001)) +
   geom_text(size = 2, aes(label = name))
 ```
 
-![ggplot for text](README_files/figure-markdown_github/unnamed-chunk-52-1.png)
+![ggplot for text](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-52-1.png)
 
 This idea of layers (or geoms) is quite different from the standard plot functions in R, but you will find that each of the functions does a lot of clever stuff to make plotting much easier (see the documentation for a full list).
 
@@ -832,7 +832,7 @@ Entering `map` should result in your first ggplot-made map of London. The defaul
 map + scale_fill_gradient(low = "white", high = "black")
 ```
 
-![Greyscale map](README_files/figure-markdown_github/unnamed-chunk-56-1.png)
+![Greyscale map](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-56-1.png)
 
 Creating interactive maps with **leaflet**
 ------------------------------------------
@@ -852,7 +852,7 @@ leaflet() %>%
   addPolygons(data = lnd84)
 ```
 
-![The lnd84 object loaded in rstudio via the leaflet package](README_files/figure-markdown_github/unnamed-chunk-58-1.png)
+![The lnd84 object loaded in rstudio via the leaflet package](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-58-1.png)
 
 Advanced Task: Faceting for Maps
 --------------------------------
@@ -891,8 +891,8 @@ lnd_f <- left_join(lnd_f, ltidy)
 
     ## Joining, by = "ons_label"
 
-    ## Warning in left_join_impl(x, y, by$x, by$y, suffix$x, suffix$y): joining
-    ## factors with different levels, coercing to character vector
+    ## Warning: Column `ons_label` joining factors with different levels, coercing
+    ## to character vector
 
 Rename the date variable (use `?gsub` and Google 'regex' to find out more).
 
@@ -916,7 +916,7 @@ ggplot(data = lnd_f, # the input data
     axis.ticks = element_blank()) # remove axis ticks
 ```
 
-![Faceted plot of the distribution of London's population over time](README_files/figure-markdown_github/unnamed-chunk-65-1.png)
+![Faceted plot of the distribution of London's population over time](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-65-1.png)
 
 ``` r
 # ggsave("figure/facet_london.png", width = 9, height = 9) # save figure

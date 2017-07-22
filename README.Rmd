@@ -1,21 +1,21 @@
 ---
 title: "Introduction to visualising spatial data in R"
-author: Robin Lovelace (R.Lovelace@leeds.ac.uk), James Cheshire, Rachel Oldroyd and
-  others
-date: "`r Sys.Date()`. See [github.com/Robinlovelace/Creating-maps-in-R](https://github.com/Robinlovelace/Creating-maps-in-R)
-  for latest version"
-# output: github_document
-output:
-  pdf_document:
-    fig_cap: yes
-    fig_height: 3.5
-    fig_width: 4.5
-    highlight: pygments
-    keep_tex: yes
-    toc: yes
-  html_document:
-    toc: yes
-  word_document: default
+# author: Robin Lovelace (R.Lovelace@leeds.ac.uk), James Cheshire, Rachel Oldroyd and
+#   others
+# date: "`r Sys.Date()`. See [github.com/Robinlovelace/Creating-maps-in-R](https://github.com/Robinlovelace/Creating-maps-in-R)
+#   for latest version"
+output: github_document
+# output:
+#   pdf_document:
+#     fig_cap: yes
+#     fig_height: 3.5
+#     fig_width: 4.5
+#     highlight: pygments
+#     keep_tex: yes
+#     toc: yes
+#   html_document:
+#     toc: yes
+#   word_document: default
 ---
 
 
@@ -44,9 +44,13 @@ knit_hooks$set(par=function(before, options, envir){
 
 ## Preface
 
-This tutorial is an introduction to analysing spatial data in R, specifically through map-making with
+This tutorial is an introduction to visualising and analysing spatial data in R based on the **sp** class system.
+For a guide to the more recent **sf** package check out [Chapter 2](http://robinlovelace.net/geocompr/spatial-class.html) of the in-development book [Geocomputation with R](http://robinlovelace.net/geocompr) which is freely available at [robinlovelace.net/geocompr](http://robinlovelace.net/geocompr).
+
+Although **sf** supersedes **sp** in many ways, there is still merit in learning the content in this tutorial, which teaches principles that will be useful regardless of software.
+Specifically this tutorial focusses on map-making with
 R's 'base' graphics and various dedicated map-making packages for R including
-**tmap** and **leaflet**. It teaches the basics of using R as a
+**tmap** and **leaflet**. It aims to teach the basics of using R as a
 fast, user-friendly and extremely powerful command-line
 Geographic Information System (GIS).
 
@@ -309,7 +313,7 @@ R has powerful subsetting capabilities that can be accessed very concisely using
 lnd@data[lnd$Partic_Per < 13, 1:3]
 ```
 
-The above line of code asked R to select only the rows from the `lnd` object, where sports participation is lower than 15,
+The above line of code asked R to select only the rows from the `lnd` object, where sports participation is lower than 13,
 in this case rows 17, 21 and 32, which are Harrow, Newham and the city centre respectively. The square brackets work as follows:
 anything before the comma refers to the rows that will be selected, anything after
 the comma refers to the number of columns that should be returned. 
