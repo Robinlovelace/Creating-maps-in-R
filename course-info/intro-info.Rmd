@@ -1,67 +1,62 @@
 ---
-title: "Introduction to R and RStudio"
-output: word_document
+title: "Spatial Data with R: futureproof foundations"
+author: "Robin Lovelace"
+date: "2017-10-06"
+output: github_document
 ---
 
-## Description
+# Description
 
-This one day course will get you up-to-speed with using R and RStudio for daily data processing, analysis and visualisation tasks.
-It is practical, so you'll 'learn by doing'.
-Based on material produced by
-[Colin Gillespie](http://www.mas.ncl.ac.uk/~ncsg3/)
-at the [University of Newcastle](http://www.ncl.ac.uk/maths/rcourse/), with
-additional detail on data manipulation.
+This one day course will get you up-to-speed with using R and RStudio for daily working with spatial data.
+You will learn about R's powerful geospatial data processing, analysis and visualisation capabilities.
+It is practical and hands-on: you'll *learn by doing*.
+It assumes you already use R and want to extend your knowledge for spatial data applications.
+It will cover the recently developed **sf** package, which is compatible with the **tidyverse**, representing the cutting-edge of spatial data applications.
+It will provide a solid foundation (including spatial aggregation, joining, CRSs, visualisation) on which advanced analysis analysis workflows can be built.
 
-## Learning outcomes
+# Learning outcomes
 
 By the end of the course participants will:
 
-- Understand the syntax of the R language
-- Be able to use RStudio for productively working on R projects
-- Be able to read in data into R from a variety of sources
-- Be confident in how R works to create attractive and insightful graphical outputs
+ - Understand R's spatial ecosystem and which packages are 'future proof'
+ - Know how to optimise RStudio for productive working with spatial data (you should already be proficient with RStudio)
+ - Be able to read and write a variety of spatial data formats
+ - Be proficient at common spatial operations including subsetting, cropping, aggregation and transformation
+ - Be a confident map maker using the powerful **tmap** package
+ - Know where to look for learning more advanced methods
 
-## Agenda 
+## Course materials
 
-- 9:00 - 9:30: Registration and refreshments
+The course will be based on the first 5 chapters of the forethcoming book *Geocomputation with R* plus some additional materials:
 
-- An introduction to R and RStudio (9:30 - 10:30)
+- An introduction to geographic data in R
+- Spatial data operations
+- Geographic data I/O
+- Introduction to visualising spatial data with R
+- Point pattern analysis and rasterization
 
-> - Practical 1 (Chapter 1)
+## Course agenda (Morning)
 
-- Basic R functions and behaviour (10:30 - 12:30)
+Refreshments & set-up: (09:00 - 09:30)
 
-> - Practical 2 (Chapter 2)
+- R's spatial ecosystem: (09:30 - 10:00)
+- R and RStudio for spatial data (10:00 - 10:30)
+- An interactive spatial data workflow: (10:00 - 10:45)
 
-**LUNCH: 12:30 - 13:30**
+Coffee break: (10:45 - 11:00)
 
-- Reading and writing data (13:30 - 14:30)
+- Geographic data in R: simple features (11:00 - 12:00)
+- Raster data classes and functions (12:00 - 12:30)
 
-> - Practical 3
+LUNCH and looking at your data (12:30 - 13:30)
 
-- Data manipulation (14:30 - 15:00)
+- Spatial data operations (13:30 - 14:30)
+- Visualisation (14:30 - 15:00)
 
-- Summary statistics (15:00 - 15:30)
+Coffee break: 15:00 - 15:15
 
-> - Practical 4
-
-**15:30 - 15:45 Refreshments**
-
-- Plotting with R (15:45 - 16:15)
-
-> - Practical 5
-
-- Taking it further + Q & A (16:15 onwards)
-
-```{r, echo=FALSE}
-# The package used for this course can be installed with the following:
-# devtools::install_github("rcourses/nclRintroduction", build_vignettes = T)
-library(nclRintroduction)
-vignette(package = "nclRintroduction")
-```
-
-## Prerequisites
-
-No knowledge of R and RStudio is assumed.
+- Geographic data I/O: (15:15 - 15:45)
+- Point pattern analysis, interpolation and rasterization: (15:45 - 16:00)
+- Working with your data and next steps (16:00 - 16:30)
 
 
