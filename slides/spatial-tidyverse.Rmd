@@ -1,0 +1,24 @@
+---
+title: "Spatial data and the tidyverse"
+subtitle: "🌐<br/>  new tools for geocomputation with R"
+author: "Robin Lovelace and Jakub Nowosad"
+date: "`r Sys.Date()`"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+# Introduction
+
+Blurb
+
+---
+
+# Thanks + references
+
+Slides created via the R package [**xaringan**](https://github.com/yihui/xaringan).
+
