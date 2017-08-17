@@ -36,7 +36,6 @@ vignette("tidy-data")
 - Historically spatial R packages have not been compatible with the **tidyverse**
 
 ---
-
 background-image: url("https://pbs.twimg.com/media/CvzEQcfWIAAIs-N.jpg")
 background-size: cover
 
@@ -54,13 +53,13 @@ background-size: cover
 That's the topic of this workshop
 
 ---
+background-image: url("https://media1.giphy.com/media/Hw5LkPYy9yfVS/giphy.gif")
 
 # Geocomputation with R
 
 - A book we are working on for CRC Press (to be published in 2018)
 - Chapters 3 and 4 of this book form the basis of the worked examples presented here
 
-background-image: url("https://media1.giphy.com/media/Hw5LkPYy9yfVS/giphy.gif")
 
 ---
 
