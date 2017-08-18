@@ -44,7 +44,7 @@ background-size: cover
 # Enter sf
 
 - **sf** is a recently developed package for spatial (vector) data
-- Combines the functionality of 3 previous packages: **sp**, **rgeos** and **rgdal**
+- Combines the functionality of three previous packages: **sp**, **rgeos** and **rgdal**
 - Has many advantages, including:
     - Faster data I/O
     - More geometry types supported
@@ -60,12 +60,11 @@ background-image: url("https://media1.giphy.com/media/Hw5LkPYy9yfVS/giphy.gif")
 - A book we are working on for CRC Press (to be published in 2018)
 - Chapters 3 and 4 of this book form the basis of the worked examples presented here
 
-
 ---
 
 # Prerequisites
 
-- Install the required packages
+- Install the required packages. You need a recent version of the GDAL, GEOS, Proj.4, and UDUNITS libraries installed for this to work on Mac and Linux. More information on that at https://github.com/r-spatial/sf#installling.
 
 ```{r, eval=FALSE}
 devtools::install_github("robinlovelace/geocompr")
