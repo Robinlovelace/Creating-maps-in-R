@@ -17,6 +17,28 @@ output:
 # download.file("https://raw.githubusercontent.com/Robinlovelace/geocompr/master/packages.bib", "packages.bib")
 ```
 
+This mini-workshop will introduce you to recent developments that enable work with spatial data 'in the tidyverse'. By this we mean handling spatial datasets using functions (such as ` %>% ` and `filter()`) and concepts (such as type stability) from R packages that are part of the metapackage **tidyverse**, which can now be installed from CRAN with the following command:
+
+```{r, eval=FALSE}
+install.packages("tidyverse")
+```
+
+This functionality is possible thanks to **sf**, a recent package (first release in 2016) that implements the open standard data model *simple features*. Get **sf** with:
+
+```{r, eval=FALSE}
+install.packages("sf")
+```
+
+The workshop will briefly introduce both packages (which should be installed on your computer before attending) before demonstrating how they can work in harmony using a dataset from the **spData** package, which can be installed with:
+
+```{r, eval=FALSE}
+install.packages("spData")
+```
+
+The workshop is based on our work on the forthcoming book *Geocomputation with R* - please take a look at the book and its source code prior to the workshop here: [github.com/Robinlovelace/geocompr](https://github.com/Robinlovelace/geocompr). 
+
+---
+
 
 # Context
 
