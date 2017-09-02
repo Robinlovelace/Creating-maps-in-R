@@ -43,12 +43,8 @@ The workshop is based on our work on the forthcoming book *Geocomputation with R
 # Context
 
 - Software for 'data science' is evolving
-- In R, packages **ggplot2** and **dplyr** have become immensly popular
-- These use 'tidy data' for consistency and speed of processing, from ):
-
-```{r, eval=FALSE}
-vignette("tidy-data")
-```
+- In R, packages **ggplot2** and **dplyr** have become immensly popular and now they are a part of the **tidyverse**
+- These packages use the 'tidy data' principles for consistency and speed of processing (from `vignette("tidy-data")`):
 
 
 >    - Each variable forms a column.
@@ -102,7 +98,7 @@ library(sf)
 
 - Check it's all working, e.g. with this command:
 
-```{r}
+```{r, eval=FALSE}
 world %>%
   plot()
 ```
@@ -113,3 +109,5 @@ world %>%
 
 Slides created via the R package [**xaringan**](https://github.com/yihui/xaringan).
 
+
+add a list of resources (e.g. vignette for sf) and packages websites (e.g. tmap, sf, leaflet)
