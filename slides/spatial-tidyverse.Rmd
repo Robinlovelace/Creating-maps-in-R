@@ -43,7 +43,7 @@ The workshop is based on our work on the forthcoming book *Geocomputation with R
 # Context
 
 - Software for 'data science' is evolving
-- In R, packages **ggplot2** and **dplyr** have become immensly popular and now they are a part of the **tidyverse**
+- In R, packages **ggplot2** and **dplyr** have become immensely popular and now they are a part of the **tidyverse**
 - These packages use the 'tidy data' principles for consistency and speed of processing (from `vignette("tidy-data")`):
 
 
@@ -105,17 +105,16 @@ world %>%
 
 ---
 
-My ideas for the workshop content:
-1. how to read vector data
-2. how the sf objects are structured 
-3. how they are different from the sp objects
-3. how to convert sf to sp, and sp to sf
-4. how apply non-spatial operations on the sf objects (combined example of subsetting, aggregation, joining) + how to remove a geometry from the sf objects (with plots)
-5. how to apply spatial operations on the sf objects (combined example of spatial subsetting and aggregation) (with plots)
-6. how to save vector data
-7. mention the raster package (it's not very tidyverse, however you can ajust it, for example using sfraster) + stars
-8. one more time mention the book + encurage people to contribute
-
+M<!-- My ideas for the workshop content: -->
+<!-- 1. how to read vector data -->
+<!-- 2. how the sf objects are structured  -->
+<!-- 3. how they are different from the sp objects -->
+<!-- 3. how to convert sf to sp, and sp to sf -->
+<!-- 4. how apply non-spatial operations on the sf objects (combined example of subsetting, aggregation, joining) + how to remove a geometry from the sf objects (with plots) -->
+<!-- 5. how to apply spatial operations on the sf objects (combined example of spatial subsetting and aggregation) (with plots) -->
+<!-- 6. how to save vector data -->
+<!-- 7. mention the raster package (it's not very tidyverse, however you can adjust it, for example using sfraster) + stars -->
+<!-- 8. one more time mention the book + encourage people to contribute -->
 ---
 
 # Thanks + references
