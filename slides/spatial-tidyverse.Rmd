@@ -105,7 +105,7 @@ world %>%
 
 ---
 
-M<!-- My ideas for the workshop content: -->
+<!-- My ideas for the workshop content: -->
 <!-- 1. how to read vector data -->
 <!-- 2. how the sf objects are structured  -->
 <!-- 3. how they are different from the sp objects -->
