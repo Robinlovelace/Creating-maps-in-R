@@ -166,7 +166,7 @@ print(world$geom, n = 3)
 
 
 - The **sp** package is a predecessor of the **sf** package 
-- together with the **rgdal** and **rgeos** package it creates a powerful tool to works with spatial data
+- Together with the **rgdal** and **rgeos** package, it creates a powerful tool to works with spatial data
 - Many spatial R packages still depends on the **sp** package, therefore it is important to know how to convert **sp** to and from **sf** objects
 
 ```{r}
@@ -175,12 +175,16 @@ world_sp = as(world, "Spatial")
 world_sf = st_as_sf(world_sp)
 ```
 
-<!-- sp has more complicated structure -->
+- The structures in the **sp** packages are more complicated:
 
-```{r}
+```{r, eval=FALSE}
 str(world_sf)
 str(world_sp)
 ```
+  
+- Moreover, many of the **sp** functions are not "pipeable" (it's hard to combine them with the **tidyverse**)
+
+
 
 ---
 ## Non-spatial operations on the sf objects
