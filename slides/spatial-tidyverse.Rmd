@@ -232,14 +232,18 @@ class(world_df)
 ## CRS
 
 ```{r}
-world_3410 = st_transform(world, 3410)
-st_crs(world_3410)
+na_2163 = world %>%
+  filter(continent == "North America") %>% 
+  st_transform(2163) #US National Atlas Equal Area
+st_crs(na_2163)
 ```
 
 ```{r, echo=FALSE, eval=FALSE}
+na = world %>%
+  filter(continent == "North America") 
 png('slides/figs/coord_compare.png', width = 1000, height = 250)
 par(mfrow = c(1, 2), mar=c(0,0,0,0))
-plot(world[0]);plot(world_3410[0])
+plot(na[0]);plot(na_2163[0])
 dev.off()
 ```
 
@@ -271,13 +275,12 @@ dev.off()
 ---
 ## tmap
 
-- https://cran.r-project.org/web/packages/tmap/vignettes/tmap-nutshell.html
-
+https://cran.r-project.org/web/packages/tmap/vignettes/tmap-nutshell.html
 ```{r, fig.align='center', fig.height=4}
 library(tmap)
 tm_shape(world, projection="wintri") +
-        tm_polygons("lifeExp", style="pretty", palette="RdYlGn",
-                    auto.palette.mapping=FALSE, title=c("Life expactancy")) +
+        tm_polygons("lifeExp", title=c("Life expactancy"),
+          style="pretty", palette="RdYlGn", auto.palette.mapping=FALSE) +
         tm_style_grey()
 ```
 
@@ -287,18 +290,21 @@ tm_shape(world, projection="wintri") +
 ```{r, eval=FALSE}
 library(leaflet)
 leaflet(world) %>%
-        addProviderTiles(providers$Stamen.Watercolor) %>% 
-        # addTiles() %>%
-        addPolygons()
+        addTiles() %>%
+        addPolygons(color = "#444444", weight = 1, fillOpacity = 0.5,
+                    fillColor = ~colorQuantile("YlOrRd", lifeExp)(lifeExp),
+                    popup = paste(round(world$lifeExp, 2)))
 ```
 
 ```{r, echo=FALSE, message=FALSE}
 library(widgetframe)
 library('leaflet')
 l = leaflet(world) %>%
-        addProviderTiles(providers$Stamen.Watercolor) %>% 
-        # addTiles() %>%
-        addPolygons()
+  addTiles() %>%
+  addPolygons(color = "#444444", weight = 1,
+                    opacity = 1, fillOpacity = 0.5,
+                    fillColor = ~colorQuantile("YlOrRd", lifeExp)(lifeExp),
+                    popup = paste(round(world$lifeExp, 2)))
 frameWidget(l, height = '400')
 ```
 
