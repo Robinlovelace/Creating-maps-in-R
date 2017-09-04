@@ -237,6 +237,8 @@ It's a big topic which includes:
 
 See [Chapter 4](http://robinlovelace.net/geocompr/spatial-data-operations.html#spatial-operations-on-raster-data) of *Geocomputation with R* 
 
+---
+
 ## Spatial subsetting
 
 ```{r}
@@ -249,6 +251,8 @@ plot(near_lnd$geom)
 ```
 
 - What is going with the country miles away?
+
+---
 
 ## Multi-objects
 
@@ -264,6 +268,8 @@ Which have more than 1?
 data.frame(near_lnd$name_long,
            sapply(near_lnd$geom, length))
 ```
+
+---
 
 ## Subsetting contiguous polygons
 
@@ -379,11 +385,11 @@ We encourage contributions on any part of the book, including:
 
 Please see [our_style.md](https://github.com/Robinlovelace/geocompr/blob/master/our_style.md) for the book's style.
 
----
+<!-- --- -->
 
-## Thanks + references
+<!-- ## Thanks + references -->
 
-Slides created via the R package [**xaringan**](https://github.com/yihui/xaringan).
+<!-- Slides created via the R package [**xaringan**](https://github.com/yihui/xaringan). -->
 
 <!-- add a list of resources (e.g. vignette for sf) and packages websites (e.g. tmap, sf, leaflet) -->
 
