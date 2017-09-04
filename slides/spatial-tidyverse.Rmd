@@ -113,7 +113,7 @@ world %>%
 
 ---
 
-## Reading spatial data
+## Reading and writing spatial data
 
 ```{r}
 library(sf)
@@ -123,7 +123,7 @@ vector_filepath
 world = st_read(vector_filepath)
 ```
 
-A list of supported formats could be found using `sf::st_drivers()`.
+Counterpart to `st_read()` is the `st_write` function, e.g. `st_write(world, 'data/new_world.gpkg')`. A full list of supported formats could be found using `sf::st_drivers()`.
 
 ---
 
@@ -310,14 +310,6 @@ frameWidget(l, height = '400')
 
 ---
 
-## Writing spatial data
-
-```{r, eval=FALSE}
-st_write(world, 'data/new_world.gpkg')
-```
-
----
-
 ## Raster data in the tidyverse
 
 Raster data is not yet closely connected to the **tidyverse**, however:
@@ -343,8 +335,9 @@ Please see [our_style.md](https://github.com/Robinlovelace/geocompr/blob/master/
 
 ---
 
-# #Thanks + references
+## Thanks + references
 
 Slides created via the R package [**xaringan**](https://github.com/yihui/xaringan).
 
-a<!-- add a list of resources (e.g. vignette for sf) and packages websites (e.g. tmap, sf, leaflet) -->
+<!-- add a list of resources (e.g. vignette for sf) and packages websites (e.g. tmap, sf, leaflet) -->
+
