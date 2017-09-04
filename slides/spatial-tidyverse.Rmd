@@ -175,18 +175,20 @@ world_sp = as(world, "Spatial")
 world_sf = st_as_sf(world_sp)
 ```
 
-- The structures in the **sp** packages are more complicated:
-
-```{r, eval=FALSE}
-str(world_sf)
-str(world_sp)
-```
+- The structures in the **sp** packages are more complicated - `str(world_sf)` vs `str(world_sp)`
   
 - Moreover, many of the **sp** functions are not "pipeable" (it's hard to combine them with the **tidyverse**)
 
+```{r, eval = FALSE}
+world_sp %>% 
+  filter(name_long == "England")
+```
 
+`Error in UseMethod("filter_") : 
+  no applicable method for 'filter_' applied to an object of class "c('SpatialPolygonsDataFrame', 'SpatialPolygons', 'Spatial')"`
 
 ---
+
 ## Non-spatial operations on the sf objects
 
 ```{r, warning=FALSE}
