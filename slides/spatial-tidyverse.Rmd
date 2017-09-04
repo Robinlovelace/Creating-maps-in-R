@@ -318,7 +318,14 @@ st_write(world, 'data/new_world.gpkg')
 
 ---
 
-# mention the raster package (it's not very tidyverse, however you can adjust it, for example using sfraster) + stars
+## Raster data in the tidyverse
+
+Raster data is not yet closely connected to the **tidyverse**, however:
+
+- Some functions from the **raster** package works well in `pipes`
+- You can convert vector data to the `Spatial*` form using `as(my_vector, "Spatial")`before working on raster-vector interactions
+- There are some initial efforts to bring raster data closer to the **tidyverse**, such as [tabularaster](https://github.com/hypertidy/tabularaster), [sfraster](https://github.com/mdsumner/sfraster), or [fasterize](https://github.com/ecohealthalliance/fasterize)
+- The development of the new s[tars](https://github.com/r-spatial/stars), package focused on multidimensional, large datasets should start soon. It will allow pipe-based workflows
 
 ---
 
