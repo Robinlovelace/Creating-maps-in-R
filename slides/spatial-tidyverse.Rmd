@@ -329,15 +329,22 @@ Raster data is not yet closely connected to the **tidyverse**, however:
 
 ---
 
-# one more time mention the book + encourage people to contribute
+## Geocomputation with R
 
-https://github.com/robinlovelace/geocompr
+The online version of the book is at http://robinlovelace.net/geocompr/ and its source code at https://github.com/robinlovelace/geocompr.
+
+We encourage contributions on any part of the book, including:
+
+- Improvements to the text, e.g. clarifying unclear sentences, fixing typos (see guidance from [Yihui Xie](https://yihui.name/en/2013/06/fix-typo-in-documentation/))
+- Changes to the code, e.g. to do things in a more efficient way
+- Suggestions on content (see the project's [issue tracker](https://github.com/Robinlovelace/geocompr/issues) and the [work-in-progress](https://github.com/Robinlovelace/geocompr/tree/master/work-in-progress) folder for chapters in the pipeline)
+
+Please see [our_style.md](https://github.com/Robinlovelace/geocompr/blob/master/our_style.md) for the book's style.
 
 ---
 
-# Thanks + references
+# #Thanks + references
 
 Slides created via the R package [**xaringan**](https://github.com/yihui/xaringan).
 
-add a list of resources (e.g. vignette for sf) and packages websites (e.g. tmap, sf, leaflet)
-
+a<!-- add a list of resources (e.g. vignette for sf) and packages websites (e.g. tmap, sf, leaflet) -->
