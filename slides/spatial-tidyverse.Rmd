@@ -84,7 +84,7 @@ background-image: url("https://media1.giphy.com/media/Hw5LkPYy9yfVS/giphy.gif")
 ## Geocomputation with R
 
 - A book we are working on for CRC Press (to be published in 2018)
-- Chapters 3 and 4 of this book form the basis of the worked examples presented here
+- Chapters 3 ~~and 4~~ of this book form the basis of the worked examples presented here
 
 ---
 
