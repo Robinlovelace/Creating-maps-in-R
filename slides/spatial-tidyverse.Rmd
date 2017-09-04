@@ -113,7 +113,7 @@ world %>%
 
 ---
 
-## Reading spatial data
+## Reading and writing spatial data
 
 ```{r}
 library(sf)
@@ -123,7 +123,7 @@ vector_filepath
 world = st_read(vector_filepath)
 ```
 
-A list of supported formats could be found using `sf::st_drivers()`.
+Counterpart to `st_read()` is the `st_write` function, e.g. `st_write(world, 'data/new_world.gpkg')`. A full list of supported formats could be found using `sf::st_drivers()`.
 
 ---
 
@@ -310,14 +310,6 @@ frameWidget(l, height = '400')
 
 ---
 
-## Writing spatial data
-
-```{r, eval=FALSE}
-st_write(world, 'data/new_world.gpkg')
-```
-
----
-
 ## Raster data in the tidyverse
 
 Raster data is not yet closely connected to the **tidyverse**, however:
@@ -329,15 +321,23 @@ Raster data is not yet closely connected to the **tidyverse**, however:
 
 ---
 
-# one more time mention the book + encourage people to contribute
+## Geocomputation with R
 
-https://github.com/robinlovelace/geocompr
+The online version of the book is at http://robinlovelace.net/geocompr/ and its source code at https://github.com/robinlovelace/geocompr.
+
+We encourage contributions on any part of the book, including:
+
+- Improvements to the text, e.g. clarifying unclear sentences, fixing typos (see guidance from [Yihui Xie](https://yihui.name/en/2013/06/fix-typo-in-documentation/))
+- Changes to the code, e.g. to do things in a more efficient way
+- Suggestions on content (see the project's [issue tracker](https://github.com/Robinlovelace/geocompr/issues) and the [work-in-progress](https://github.com/Robinlovelace/geocompr/tree/master/work-in-progress) folder for chapters in the pipeline)
+
+Please see [our_style.md](https://github.com/Robinlovelace/geocompr/blob/master/our_style.md) for the book's style.
 
 ---
 
-# Thanks + references
+## Thanks + references
 
 Slides created via the R package [**xaringan**](https://github.com/yihui/xaringan).
 
-add a list of resources (e.g. vignette for sf) and packages websites (e.g. tmap, sf, leaflet)
+<!-- add a list of resources (e.g. vignette for sf) and packages websites (e.g. tmap, sf, leaflet) -->
 
