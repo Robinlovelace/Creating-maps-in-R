@@ -226,6 +226,53 @@ class(world_df)
 
 ## Spatial operations
 
+It's a big topic which includes:
+
+- Spatial subsetting
+- Spatial joining/aggregation
+- Topological relations
+- Distances
+- Spatial geometry modification
+- Raster operations (map algebra)
+
+See [Chapter 4](http://robinlovelace.net/geocompr/spatial-data-operations.html#spatial-operations-on-raster-data) of *Geocomputation with R* 
+
+## Spatial subsetting
+
+```{r}
+lnd_buff = lnd[1, ] %>% 
+  st_transform(crs = 27700) %>%  # uk CRS
+  st_buffer(500000) %>%
+  st_transform(crs = 4326)
+near_lnd = world[lnd_buff, ]
+plot(near_lnd$geom)
+```
+
+- What is going with the country miles away?
+
+## Multi-objects
+
+Some objects have multiple geometries
+
+```{r}
+st_geometry_type(near_lnd)
+```
+
+Which have more than 1?
+
+```{r}
+data.frame(near_lnd$name_long,
+           sapply(near_lnd$geom, length))
+```
+
+## Subsetting contiguous polygons
+
+```{r}
+near_lnd_new = world %>% 
+  st_cast(to = "POLYGON") %>% 
+  filter(st_intersects(., lnd_buff, sparse = FALSE))
+plot(near_lnd_new$geometry)
+```
 
 ---
 
@@ -271,7 +318,6 @@ dev.off()
 
 ![](figs/plot_compare.png)
 
-
 ---
 ## tmap
 
@@ -285,6 +331,7 @@ tm_shape(world, projection="wintri") +
 ```
 
 ---
+
 ## leaflet
 
 ```{r, eval=FALSE}
@@ -338,6 +385,8 @@ https://github.com/robinlovelace/geocompr
 # Thanks + references
 
 Slides created via the R package [**xaringan**](https://github.com/yihui/xaringan).
+
+Any feedback? 
 
 add a list of resources (e.g. vignette for sf) and packages websites (e.g. tmap, sf, leaflet)
 
