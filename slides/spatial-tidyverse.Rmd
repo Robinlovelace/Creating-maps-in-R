@@ -5,8 +5,6 @@ author: "Robin Lovelace and Jakub Nowosad"
 date: "`r Sys.Date()`"
 output:
   xaringan::moon_reader:
-    chakra: libs/remark-latest.min.js
-    lib_dir: libs
     nature:
       highlightStyle: github
       highlightLines: true
