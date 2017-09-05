@@ -330,6 +330,7 @@ dev.off()
 https://cran.r-project.org/web/packages/tmap/vignettes/tmap-nutshell.html
 ```{r, fig.align='center', fig.height=4}
 library(tmap)
+tmap_mode("view")
 tm_shape(world, projection="wintri") +
         tm_polygons("lifeExp", title=c("Life expactancy"),
           style="pretty", palette="RdYlGn", auto.palette.mapping=FALSE) +
