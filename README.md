@@ -4,7 +4,7 @@ Introduction to visualising spatial data in R
 Preface
 -------
 
-This tutorial is an introduction to visualising and analysing spatial data in R based on the **sp** class system. For a guide to the more recent **sf** package check out [Chapter 2](http://robinlovelace.net/geocompr/spatial-class.html) of the in-development book [Geocomputation with R](https://github.com/Robinlovelace/geocompr), the source code of which can be found at [robinlovelace.net/geocompr](https://github.com/Robinlovelace/geocompr).
+This tutorial is an introduction to visualising and analysing spatial data in R based on the **sp** class system. For a guide to the more recent **sf** package check out [Chapter 2](http://robinlovelace.net/geocompr/spatial-class.html) of the in-development book [Geocomputation with R](https://github.com/Robinlovelace/geocompr), the source code of which can be found at [github.com/Robinlovelace/geocompr](https://github.com/Robinlovelace/geocompr).
 
 Although **sf** supersedes **sp** in many ways, there is still merit in learning the content in this tutorial, which teaches principles that will be useful regardless of software. Specifically this tutorial focusses on map-making with R's 'base' graphics and various dedicated map-making packages for R including **tmap** and **leaflet**. It aims to teach the basics of using R as a fast, user-friendly and extremely powerful command-line Geographic Information System (GIS).
 
