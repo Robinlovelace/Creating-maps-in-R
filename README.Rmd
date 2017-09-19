@@ -45,7 +45,7 @@ knit_hooks$set(par=function(before, options, envir){
 ## Preface
 
 This tutorial is an introduction to visualising and analysing spatial data in R based on the **sp** class system.
-For a guide to the more recent **sf** package check out [Chapter 2](http://robinlovelace.net/geocompr/spatial-class.html) of the in-development book [Geocomputation with R](http://robinlovelace.net/geocompr) which is freely available at [robinlovelace.net/geocompr](http://robinlovelace.net/geocompr).
+For a guide to the more recent **sf** package check out [Chapter 2](http://robinlovelace.net/geocompr/spatial-class.html) of the in-development book [Geocomputation with R](https://github.com/Robinlovelace/geocompr), the source code of which can be found at [robinlovelace.net/geocompr](https://github.com/Robinlovelace/geocompr).
 
 Although **sf** supersedes **sp** in many ways, there is still merit in learning the content in this tutorial, which teaches principles that will be useful regardless of software.
 Specifically this tutorial focusses on map-making with
@@ -1146,15 +1146,13 @@ This idea of layers (or geoms) is quite different from the standard plot functio
  
 In the following steps we will create a map to show the percentage of the population in each London Borough who regularly participate in sports activities.
 
-**ggmap** requires spatial data to be supplied as `data.frame`, using
-`fortify()`.  The generic plot() function can use `Spatial*` objects directly; **ggplot2** cannot. Therefore we need to extract them as a data frame. The fortify function was written specifically for this purpose.
-For this to work, either the **maptools** or **rgeos** packages must be installed.
+**ggmap** requires spatial data to be supplied as `data.frame`, using `tidy()`. The generic plot() function can use `Spatial*` objects directly; **ggplot2** cannot. Therefore we need to extract them as a data frame. The `tidy` function was written specifically for this purpose. For this to work, **broom** package must be installed.
 
-```{r, warning=FALSE}
-library(rgeos)
-lnd_f <- fortify(lnd) 
+```{r}
+lnd_f <- broom::tidy(lnd)
 ```
 
+  		  
 This step has lost the attribute information associated with the lnd object. We can add it back using the `left_join`
 function from the **dplyr** package
 (see `?left_join`).

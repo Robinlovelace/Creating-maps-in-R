@@ -4,7 +4,7 @@ Introduction to visualising spatial data in R
 Preface
 -------
 
-This tutorial is an introduction to visualising and analysing spatial data in R based on the **sp** class system. For a guide to the more recent **sf** package check out [Chapter 2](http://robinlovelace.net/geocompr/spatial-class.html) of the in-development book [Geocomputation with R](http://robinlovelace.net/geocompr) which is freely available at [robinlovelace.net/geocompr](http://robinlovelace.net/geocompr).
+This tutorial is an introduction to visualising and analysing spatial data in R based on the **sp** class system. For a guide to the more recent **sf** package check out [Chapter 2](http://robinlovelace.net/geocompr/spatial-class.html) of the in-development book [Geocomputation with R](https://github.com/Robinlovelace/geocompr), the source code of which can be found at [robinlovelace.net/geocompr](https://github.com/Robinlovelace/geocompr).
 
 Although **sf** supersedes **sp** in many ways, there is still merit in learning the content in this tutorial, which teaches principles that will be useful regardless of software. Specifically this tutorial focusses on map-making with R's 'base' graphics and various dedicated map-making packages for R including **tmap** and **leaflet**. It aims to teach the basics of using R as a fast, user-friendly and extremely powerful command-line Geographic Information System (GIS).
 
@@ -799,8 +799,7 @@ In the following steps we will create a map to show the percentage of the popula
 **ggmap** requires spatial data to be supplied as `data.frame`, using `tidy()`. The generic plot() function can use `Spatial*` objects directly; **ggplot2** cannot. Therefore we need to extract them as a data frame. The `tidy` function was written specifically for this purpose. For this to work, **broom** package must be installed.
 
 ``` r
-library(broom)
-lnd_f <- tidy(lnd) 
+lnd_f <- broom::tidy(lnd)
 ```
 
     ## Regions defined for each Polygons
@@ -877,9 +876,9 @@ Merge the population data with the London borough geometry contained within our 
 head(lnd_f, 2) # identify shared variables with ltidy 
 ```
 
-    ##       long      lat order  hole piece id group ons_label    name
-    ## 1 541177.7 173555.7     1 FALSE     1  0   0.1      00AF Bromley
-    ## 2 541872.2 173305.8     2 FALSE     1  0   0.1      00AF Bromley
+    ##       long      lat order  hole piece group id ons_label    name
+    ## 1 541177.7 173555.7     1 FALSE     1   0.1  0      00AF Bromley
+    ## 2 541872.2 173305.8     2 FALSE     1   0.1  0      00AF Bromley
     ##   Partic_Per Pop_2001  quadrant CrimeCount
     ## 1       21.7   295535 southeast      15172
     ## 2       21.7   295535 southeast      15172
