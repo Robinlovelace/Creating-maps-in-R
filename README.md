@@ -796,11 +796,11 @@ This idea of layers (or geoms) is quite different from the standard plot functio
 
 In the following steps we will create a map to show the percentage of the population in each London Borough who regularly participate in sports activities.
 
-**ggmap** requires spatial data to be supplied as `data.frame`, using `fortify()`. The generic plot() function can use `Spatial*` objects directly; **ggplot2** cannot. Therefore we need to extract them as a data frame. The fortify function was written specifically for this purpose. For this to work, either the **maptools** or **rgeos** packages must be installed.
+**ggmap** requires spatial data to be supplied as `data.frame`, using `tidy()`. The generic plot() function can use `Spatial*` objects directly; **ggplot2** cannot. Therefore we need to extract them as a data frame. The `tidy` function was written specifically for this purpose. For this to work, **broom** package must be installed.
 
 ``` r
-library(rgeos)
-lnd_f <- fortify(lnd) 
+library(broom)
+lnd_f <- tidy(lnd) 
 ```
 
     ## Regions defined for each Polygons
