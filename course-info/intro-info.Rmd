@@ -50,7 +50,9 @@ Coffee break: (10:45 - 11:00)
 
 LUNCH and looking at your data (12:30 - 13:30)
 
-- Spatial data operations (13:30 - 14:30)
+ 
+- Worked example: car fleet analysis with Craig Morton (13:30 - 14:15)
+- Spatial data operations (14:15 - 14:30)
 - Visualisation (14:30 - 15:00)
 
 Coffee break: 15:00 - 15:15
