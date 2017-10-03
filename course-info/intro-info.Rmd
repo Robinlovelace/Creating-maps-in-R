@@ -38,38 +38,52 @@ In preparation for the course you should:
 
 ## Course materials
 
-The course will be based on the first 5 chapters of the forethcoming book *Geocomputation with R* plus some additional materials:
+The course will be based on Chapter 4 of [Geocomputation with R](http://robinlovelace.net/geocompr/attr.html) of the forethcoming book *Geocomputation with R* plus some additional materials:
 
 - An introduction to geographic data in R
-- Spatial data operations
+    - Chapter 2 of [Geocomputation with R](http://robinlovelace.net/geocompr/spatial-class.html)
 - Geographic data I/O
+    - Chapter 5 of [Geocomputation with R](http://robinlovelace.net/geocompr/read-write.html)
 - Introduction to visualising spatial data with R
+    - [Creating-maps-in-R](https://github.com/Robinlovelace/Creating-maps-in-R) GitHub tutorial
 - Point pattern analysis and rasterization
+    - [Point Pattern analysis and spatial interpolation with R
+](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/vignettes/point-pattern.md) from the previous tutorial
 
-## Course agenda (Morning)
+## Course agenda
 
 Refreshments & set-up: (09:00 - 09:30)
 
 - R's spatial ecosystem: (09:30 - 10:00)
+    - See section [1.4 of Geocomputation with R](http://robinlovelace.net/geocompr/intro.html#rs-spatial-ecosystem)
 - R and RStudio for spatial data (10:00 - 10:30)
+    - See [Section 2.5 of Efficient R Programming](https://csgillespie.github.io/efficientR/set-up.html#rstudio)
 - An interactive spatial data workflow: (10:00 - 10:45)
+    - See [Spatial Data and the tidyverse](http://robinlovelace.net/presentations/spatial-tidyverse.html#1)
 
 Coffee break: (10:45 - 11:00)
 
 - Geographic data in R: simple features (11:00 - 12:00)
+    - Online tutorial: [2.1.1 of Geocomputation with R](http://robinlovelace.net/geocompr/spatial-class.html#vector-data)
+    - Printed handout: [2.1](http://robinlovelace.net/geocompr/spatial-data-operations.html#spatial-subsetting)
 - Raster data classes and functions (12:00 - 12:30)
+    - Online tutorial: [2.2 of Geocomputation with R](http://robinlovelace.net/geocompr/spatial-class.html#raster-data)
 
 LUNCH and looking at your data (12:30 - 13:30)
-
  
 - Worked example: car fleet analysis with Craig Morton (13:30 - 14:15)
-- Spatial data operations (14:15 - 14:30)
-- Visualisation (14:30 - 15:00)
+- Spatial data operations (14:15 - 15:00)
+    - Printed handout
 
 Coffee break: 15:00 - 15:15
 
 - Geographic data I/O: (15:15 - 15:45)
-- Point pattern analysis, interpolation and rasterization: (15:45 - 16:00)
-- Working with your data and next steps (16:00 - 16:30)
+
+- Consolidating knowledge (15:45 - 16:15)
+    - Completing the printed hand-out OR
+    - Point pattern analysis, interpolation and rasterization
+    - Working on your own data
+    
+- Wrap-up and next steps (16:15 - 16:30)
 
 
