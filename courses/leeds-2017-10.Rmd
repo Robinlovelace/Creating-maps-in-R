@@ -6,6 +6,11 @@ This document provides a how for the course on 2017-10-06 in LIDA Leeds.
 
 It is primarily intended to provide a set of links for course participants but can also host code examples and notes from the workshop.
 
+## Slides
+
+- See the 'slides' folder in for the text: [github.com/Robinlovelace/geocompr](https://github.com/Robinlovelace/geocompr/blob/master/slides/)
+- For compiled slides on Spatial Data and the Tidyverse see [robinlovelace.net/presentations/spatial-tidyverse.html](http://robinlovelace.net/presentations/spatial-tidyverse.html#1)
+
 ## Links
 
 - [Geocomputation with R](http://robinlovelace.net/geocompr/)
