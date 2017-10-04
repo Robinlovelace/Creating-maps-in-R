@@ -13,6 +13,7 @@ It is primarily intended to provide a set of links for course participants but c
 
 ## Links
 
+- Agenda  and other course details on GitHub at [course-info/intro-info.Rmd](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/course-info/intro-info.Rmd)
 - [Geocomputation with R](http://robinlovelace.net/geocompr/)
 
 - An introduction to geographic data in R
