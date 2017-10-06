@@ -93,7 +93,80 @@ world_unite = world %>%
 dplyr::select(world, continent)
 ```
 
+Link to Craig's stuff:
 
+https://github.com/clmorton/HEV
+
+## Spatial operations
+
+Spatial subsetting.
+
+```{r}
+library(sf)
+library(tidyverse)
+library(spData)
+
+africa = world %>% 
+  filter(continent == "Africa")
+plot(africa)
+bb = st_bbox(africa)
+set.seed(2017)
+lat_random = runif(n = 100, min = bb[1], max = bb[3])
+lon_random = runif(n = 100, min = bb[2], max = bb[4])
+mat_random = cbind(lat_random, lon_random)
+p = st_multipoint(x = mat_random) %>% 
+  st_sfc() %>% 
+  st_cast(to = "POINT") %>% 
+  st_sf()
+plot(africa$geom)
+plot(p, add = T)
+
+p_in_africa = p[africa, ] # error
+st_crs(p) = st_crs(africa)
+p_in_africa = p[africa, ]
+plot(p_in_africa, add = T, cex = 3)
+
+# worked question: how to do this in the tidyverse?
+# work on chapter 4: spatial operations
+
+center = st_sf(geometry = st_sfc(st_point(c(0, 0)), crs = 4326))
+buff = st_buffer(x = center, dist = 20)
+plot(buff)
+
+
+```
+
+## Spatial operations
+
+```{r}
+a_poly = st_polygon(list(rbind(c(-1, -1), c(1, -1), c(1, 1), c(-1, -1))))
+a = st_sfc(a_poly)
+
+# l_line = st_linestring(x = matrix(c(-1, -1, -0.5, 1), , 2))
+# l = st_sfc(l_line)
+
+p_matrix = matrix(c(0.5, 1, -1, 0, 0, 1, 0.5, 1), ncol = 2)
+p_multi = st_multipoint(x = p_matrix)
+p = st_sf(st_cast(st_sfc(p_multi), "POINT"))
+
+plot(a, border = "red", col = "grey", axes = TRUE)
+plot(l, add = TRUE)
+plot(p, add = TRUE, lab = 1:4)
+text(p_matrix[, 1] + 0.1, p_matrix[, 2] - 0.1, 1:4)
+
+st_intersects(p, a)
+
+st_intersects(p, a, sparse = FALSE)
+
+sel = st_intersects(p, a, sparse = FALSE)[, 1]
+p[sel, ]
+
+st_disjoint(p, a, sparse = FALSE)[, 1]
+
+st_within(p, a, sparse = FALSE)
+
+st_touches(p, a, sparse = FALSE)
+```
 
 
 
