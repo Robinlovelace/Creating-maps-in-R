@@ -67,6 +67,7 @@ Coffee break: (10:45 - 11:00)
 
 - Raster data classes and functions (11:00 - 11:15)
     - Online tutorial: [2.2 of Geocomputation with R](http://robinlovelace.net/geocompr/spatial-class.html#raster-data)
+    - OR continue with section 3.2
 - Raster attribute data (11:15 - 12:00)
     - [Section 3.3](http://robinlovelace.net/geocompr/attr.html#manipulating-raster-objects) of handouts
 - Free working (12:00 - 12:30)
