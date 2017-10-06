@@ -6,6 +6,12 @@ This document provides a how for the course on 2017-10-06 in LIDA Leeds.
 
 It is primarily intended to provide a set of links for course participants but can also host code examples and notes from the workshop.
 
+
+## Course feedback
+
+Please fill-in this form to help us improve the course:
+ https://leeds.onlinesurveys.ac.uk/rspatial2017 
+
 ## Slides
 
 - See the 'slides' folder in for the text: [github.com/Robinlovelace/geocompr](https://github.com/Robinlovelace/geocompr/blob/master/slides/)
@@ -74,7 +80,29 @@ library(spData)
 st_bbox(world)
 ```
 
-Selecting 'rook' and 'queen' relations
+
+
+```{r}
+library(sf)
+library(raster)
+library(tidyverse)
+library(spData)
+world_unite = world %>%
+  tidyr::unite("con_reg", continent:region_un, sep = ":", remove = TRUE)
+
+dplyr::select(world, continent)
+```
+
+
+
+
+
+
+
+ 
+## Advanced topological relations
+ 
+ Selecting 'rook' and 'queen' relations
 Source: 
 
 ```{r}
@@ -98,25 +126,3 @@ p_minDim2 = p_sf %>%
   filter(st_within(., y = p_sf[5,], sparse = FALSE)) 
 nrow(p_minDim2)
 ```
-
-```{r}
-library(sf)
-library(raster)
-library(tidyverse)
-library(spData)
-world_unite = world %>%
-  tidyr::unite("con_reg", continent:region_un, sep = ":", remove = TRUE)
-
-dplyr::select(world, continent)
-```
-
-
-
-
-
-
-
-## Course feedback
-
-Please fill-in this form to help us improve the course:
- https://leeds.onlinesurveys.ac.uk/rspatial2017 
