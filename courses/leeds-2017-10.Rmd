@@ -110,3 +110,13 @@ world_unite = world %>%
 dplyr::select(world, continent)
 ```
 
+
+
+
+
+
+
+## Course feedback
+
+Please fill-in this form to help us improve the course:
+ https://leeds.onlinesurveys.ac.uk/rspatial2017 
