@@ -108,7 +108,16 @@ library(spData)
 
 africa = world %>% 
   filter(continent == "Africa")
+# %>% 
+#   filter(grepl("k", name_long))
 plot(africa)
+
+africa = filter(.data = world, continent == "Africa")
+
+africa = world[world$continent == "Africa", ]
+
+plot(africa)
+plot(africa$geom)
 bb = st_bbox(africa)
 set.seed(2017)
 lat_random = runif(n = 100, min = bb[1], max = bb[3])
@@ -118,6 +127,8 @@ p = st_multipoint(x = mat_random) %>%
   st_sfc() %>% 
   st_cast(to = "POINT") %>% 
   st_sf()
+# without the pipe %>% %>% 
+# st_sf(st_cast(x = st_sfc(st_multipoint(x = mat_random)) , to = "POINT"))
 plot(africa$geom)
 plot(p, add = T)
 
@@ -128,6 +139,8 @@ plot(p_in_africa, add = T, cex = 3)
 
 # worked question: how to do this in the tidyverse?
 # work on chapter 4: spatial operations
+
+
 
 center = st_sf(geometry = st_sfc(st_point(c(0, 0)), crs = 4326))
 buff = st_buffer(x = center, dist = 20)
@@ -168,17 +181,16 @@ st_within(p, a, sparse = FALSE)
 st_touches(p, a, sparse = FALSE)
 ```
 
+
 ## Getting development versions of pkgs
-
+ 
 Problem: no access to urban_agglomerations dataset
-
+ 
 Solution: install latest version of spData
-
+ 
 ```{r}
 devtools::install_github("nowosad/spData")
 ```
-
-
 
 
  
