@@ -168,6 +168,15 @@ st_within(p, a, sparse = FALSE)
 st_touches(p, a, sparse = FALSE)
 ```
 
+## Getting development versions of pkgs
+
+Problem: no access to urban_agglomerations dataset
+
+Solution: install latest version of spData
+
+```{r}
+devtools::install_github("nowosad/spData")
+```
 
 
 
