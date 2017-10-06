@@ -59,6 +59,7 @@ p_sf = st_as_sf(p)
 ```
 
 An intro to raster
+
 ```{r}
 library(spDataLarge)
 library(raster)
@@ -73,5 +74,39 @@ library(spData)
 st_bbox(world)
 ```
 
+Selecting 'rook' and 'queen' relations
+Source: 
 
+```{r}
+library(sp)
+g = SpatialGrid(GridTopology(c(0, 0), c(1, 1), c(3, 3)))
+p = as(g, "SpatialPolygons")
+library(sf)
+library(tidyverse)
+p_sf = st_as_sf(p)
+st_rook = function(a, b = a) st_relate(a, b, pattern = "F***1****")
+st_queen <- function(a, b = a) st_relate(a, b, pattern = "F***T****")
+p_queen = p_sf %>%
+  mutate(NB_ROOK = st_queen(., b = p_sf[5,])) %>%
+  filter(NB_ROOK == 1)
+nrow(p_queen)
+p_rook = p_sf %>%
+  mutate(NB_ROOK = st_rook(., b = p_sf[5,])) %>% 
+  filter(NB_ROOK == 1)
+nrow(p_rook)
+p_minDim2 = p_sf %>%
+  filter(st_within(., y = p_sf[5,], sparse = FALSE)) 
+nrow(p_minDim2)
+```
+
+```{r}
+library(sf)
+library(raster)
+library(tidyverse)
+library(spData)
+world_unite = world %>%
+  tidyr::unite("con_reg", continent:region_un, sep = ":", remove = TRUE)
+
+dplyr::select(world, continent)
+```
 
