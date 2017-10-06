@@ -25,3 +25,53 @@ It is primarily intended to provide a set of links for course participants but c
 - Point pattern analysis and rasterization
     - [Point Pattern analysis and spatial interpolation with R
 ](https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/vignettes/point-pattern.md) from the previous tutorial
+
+## Demos
+
+```{r}
+1:9
+x = 1:9
+y = x^2
+plot(x, y)
+library(spData)
+library(sf)
+library(tidyverse)
+
+world
+data(world)
+world_df = as_data_frame(world)
+```
+
+Edit a file from the command line:
+
+```{r, eval=FALSE}
+file.edit("course-info/course-info.Rmd")
+```
+
+sp to sf translation
+
+```{r}
+library(sp)
+g = SpatialGrid(GridTopology(c(0, 0), c(1, 1), c(3, 3)))
+p = as(g, "SpatialPolygons")
+library(sf)
+p_sf = st_as_sf(p)
+```
+
+An intro to raster
+```{r}
+library(spDataLarge)
+library(raster)
+raster_filepath = system.file("raster/srtm.tif", package = "spDataLarge")
+new_raster = raster(raster_filepath)
+new_raster
+class(new_raster)
+plot(new_raster)
+mapview::mapview(new_raster)
+extent(new_raster)
+library(spData)
+st_bbox(world)
+```
+
+
+
