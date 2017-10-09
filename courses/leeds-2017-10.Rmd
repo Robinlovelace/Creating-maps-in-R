@@ -192,6 +192,35 @@ Solution: install latest version of spData
 devtools::install_github("nowosad/spData")
 ```
 
+## Data I/O
+
+- Online
+
+```{r}
+url = file.path("http://www.naturalearthdata.com/http//www.naturalearthdata.com",
+                "download/10m/cultural/ne_10m_parks_and_protected_lands.zip")
+download.file(url = url,
+              destfile = "USA_parks.zip")
+unzip(zipfile = "USA_parks.zip")
+usa_parks = st_read("ne_10m_parks_and_protected_lands_area.shp")
+files_to_remove = list.files(pattern = "ne_10m_parks")
+file.remove(files_to_remove)
+```
+
+- with osmdata
+
+```{r}
+install.packages("osmdata")
+library(osmdata)
+library(dplyr)
+q = opq(bbox = "leeds uk") %>% 
+  add_osm_feature(key = "leisure", value = "park")
+parks = osmdata_sf(q)
+parks_polygon = parks$osm_polygons
+plot(parks_polygon$geometry)
+mapview::mapview(parks_polygon)
+```
+
 
  
 ## Advanced topological relations
