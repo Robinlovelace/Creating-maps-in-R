@@ -35,6 +35,15 @@ In preparation for the course you should:
     - A more detailed account by Gillespie and Lovelace (2017): https://csgillespie.github.io/efficientR/set-up.html#rstudio
 - Take a look at how GitHub works - we'll be using it for sharing course materials and sharing links and examples during the course, e.g. by reading this page (and following the tutorial if really keen): https://guides.github.com/activities/hello-world/
 
+You must have the following packages installed:
+
+```{r, eval=FALSE}
+install.packages("sf")
+install.packages("tmap")
+install.packages("spData")
+```
+
+
 
 ## Course materials
 
