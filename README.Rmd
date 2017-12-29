@@ -750,6 +750,7 @@ qtm(lnd, "CrimeCount") # plot the basic map
 ```{r, echo=FALSE, eval=FALSE}
 # This is the modified version of the code, to create the map displayed
 library(tmap) 
+library(tmaptools)
 lnd_wgs = spTransform(lnd, CRS("+init=epsg:4326"))
 osm_tiles = read_osm(bbox(lnd_wgs))
 lnd_wgs$Thefts <- lnd$CrimeCount / 10000 
