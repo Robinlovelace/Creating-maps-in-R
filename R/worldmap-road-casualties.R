@@ -50,11 +50,13 @@ World@data = rename(World@data, `Road deaths\nper 100,000` = value)
 
 # plot the result - thanks to tmap: 
 # https://github.com/mtennekes/tmap
-world_eck = set_projection(World, "eck4")
+world_eck = tmaptools::set_projection(World, "eck4")
 x = tm_shape(world_eck) +
   tm_borders("grey20") +
   tm_grid(projection="longlat", labels.size = .5, alpha = 0.2) +
-  tm_fill("Road deaths\nper 100,000") +
+  tm_fill("Road deaths\nper 100,000", n = 4) +
   tm_text("name", size="AREA")
-
+x +
+  tm_style_bw()
 tmap::save_tmap(x, "road-casualties.png")
+tmap::save_tmap(x, "road-casualties.svg")
