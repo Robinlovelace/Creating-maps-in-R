@@ -53,7 +53,7 @@ A bit about R
 Why R?
 ========================================================
 
-- **Performace**: stable, light and fast
+- **Performance**: stable, light and fast
 - **Support network** 
  - documentation, community, developers
 - **Reproducibility**
